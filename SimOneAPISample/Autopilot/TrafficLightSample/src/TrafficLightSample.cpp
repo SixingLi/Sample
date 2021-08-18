@@ -5,8 +5,8 @@
 #include "SimOnePNCAPI.h"
 #include "public/common/MLaneInfo.h"
 #include "public/common/MLaneId.h"
-#include "util/UtilDriver.h"
-#include "util/UtilMath.h"
+#include "UtilDriver.h"
+#include "UtilMath.h"
 #include <iostream>
 #include "assert.h"
 

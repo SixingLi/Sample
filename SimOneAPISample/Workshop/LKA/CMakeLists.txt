@@ -17,7 +17,7 @@ ENDIF()
 file(GLOB_RECURSE srcs *.h *.hh *i *.hpp *.c *.cc *.cpp)
 target_sources(LKA PRIVATE ${srcs})
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
-
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../../WorkShop/util")
 SetDefaultTargetProperties(LKA)
 
 IF (WIN32)

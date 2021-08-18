@@ -15,6 +15,7 @@ source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 include_directories("${CMAKE_CURRENT_LIST_DIR}/include/")
 include_directories("${INCLUDE_DIR}")
 include_directories(${CMAKE_CURRENT_LIST_DIR}/eigen/3.2.3/include/eigen3)
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../../WorkShop/util")
 #include_directories("${3RDPARTY}")
 
 # find_package(OpenCV REQUIRED)

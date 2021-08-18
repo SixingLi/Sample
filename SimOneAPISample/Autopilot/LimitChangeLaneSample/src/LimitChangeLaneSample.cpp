@@ -3,8 +3,8 @@
 #include <cmath>
 #include <sstream>
 
-#include "util/UtilDriver.h"
-#include "util/UtilMath.h"
+#include "UtilDriver.h"
+#include "UtilMath.h"
 #include "utilTargetObstacle.h"
 
 #include "SimOneSensorAPI.h"

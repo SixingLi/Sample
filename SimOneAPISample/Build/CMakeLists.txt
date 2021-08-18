@@ -23,16 +23,14 @@ SET(SIMONE_API_SAMPLE ${CMAKE_CURRENT_LIST_DIR}/..)
 SET(3RDPARTY ${CMAKE_CURRENT_LIST_DIR}/../../../../3rdparty)
 SET(BINARY_OUT_PATH ${SIMONE_API_SAMPLE}/bin/Release)
 SET(SIMONE_PATH_ROOT ${CMAKE_CURRENT_LIST_DIR}/../../../..)
-SET(BRIDGE_SM_ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
+SET(SIMONE_API_ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
+add_custom_target(autoconfig ALL DEPENDS)
 
 function(SetDefaultTargetProperties target)
 	set_target_properties(${target} PROPERTIES
 		CXX_STANDARD 14
 	)
 	set_target_properties(${target} PROPERTIES
-		# ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../Output/lib
-		# LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../Output/lib
-		# RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../Output/bin
 		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../bin
 	)
 endfunction()

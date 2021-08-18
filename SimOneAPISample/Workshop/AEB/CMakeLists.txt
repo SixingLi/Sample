@@ -8,6 +8,7 @@ target_sources(AEB PRIVATE "src/AEBSample.cpp" ${headers})
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
 include_directories("${INCLUDE_DIR}")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../../WorkShop/util")
 
 IF (WIN32)
     add_definitions(-D_WIN32_WINNT=0x0501)

@@ -14,7 +14,8 @@ target_sources(Curve PRIVATE "src/CurveSample.cpp" ${headers})
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
 # include_directories("${SIMONE_API}/include/")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/include/")
+include_directories("${SIMONE_API_ROOT}/SimOneAPISample/include/")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../../WorkShop/util")
 include_directories("${INCLUDE_DIR}")
 #include_directories("${3RDPARTY}")
 

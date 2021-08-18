@@ -10,6 +10,8 @@ add_definitions(-DNOMINMAX)
 add_definitions(-DUNICODE)
 add_definitions(-D_UNICODE)
 
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../../WorkShop/util")
+
 IF (MSVC)
     string(REPLACE "/MDd" "/MD" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 ENDIF()

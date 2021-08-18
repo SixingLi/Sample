@@ -5,7 +5,7 @@
 #include "SSD/SimString.h"
 #include "public/common/MLaneInfo.h"
 #include "public/common/MLaneId.h"
-#include "util/UtilDriver.h"
+#include "UtilDriver.h"
 #include "assert.h"
 #include "SimOneSensorAPI.h"
 #include "SimOneV2XAPI.h"

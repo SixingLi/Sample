@@ -3,7 +3,7 @@
 #include "SSD/SimString.h"
 #include "public/common/MLaneInfo.h"
 #include "public/common/MLaneId.h"
-#include "util/GetSignType.h"
+#include "GetSignType.h"
 #include "SimOneSensorAPI.h"
 #include "SimOneServiceAPI.h"
 #include "SimOneHDMapAPI.h"
