@@ -10,7 +10,7 @@
 #include "cybertron/network/Message.hpp"
 #include "cybertron/network/MessageRouter.hpp"
 #include "cybertron/node/StartupArguments.hpp"
-#include "Node/Coordinator.pb.h"
+//#include "Node/Coordinator.pb.h"
 #include "Node/Timer.pb.h"
 #include "Node/HotArea.pb.h"
 #include "Node/NodeCommon.pb.h"
