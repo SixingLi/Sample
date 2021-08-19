@@ -39,11 +39,8 @@ extern "C"
 	SIMONE_NET_API void SimOneAPI::SetDriverName(int mainVehicleId, const char* name) {
 		if (mainVehicleId < MAX_MAINVEHICLE_NUM) {
 			memcpy(gDriverNameArray[mainVehicleId], name, MAX_DRIVER_NAME_LEN);
-			//strncpy(gDriverNameArray[mainVehicleId], name, MAX_DRIVER_NAME_LEN);
-			//gDriverNameArray[mainVehicleId][MAX_DRIVER_NAME_LEN - 1] = '\0';
 		}
 	}
-
 
 	SIMONE_NET_API bool SimOneAPI::SetVehicleEvent(int mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent) {
 		return SimOneAPIService::GetInstance()->sendVehicleEventInfoReq(mainVehicleId, pEvent);

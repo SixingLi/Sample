@@ -94,19 +94,6 @@ extern "C"
 		SIMONE_NET_API bool SetServerInfo(const char *serverIP = "127.0.0.1", int port = 23789);
 
 		/*!
-		StartSimOneNode 启动node，输入主车ID，一个主车ID，只能去连一次birdgeIO,如果当前主车ID被占用了，会报错
-		\li function:
-		*	StartSimOneNode
-		\li brief:
-		*	Get the version number of the current library
-		@param
-		*	startCase: case start callback,endCase: case end callback,registerNodeId:connect bridgeIO node id
-		@return
-		*	Success or not
-		*/
-		SIMONE_NET_API bool StartSimOneNode(void(*startCase)(), void(*endCase)(), int registerNodeId = 0);
-
-		/*!
 		SimOneAPIInitialized
 		\li function:
 		*	SimOneAPIInitialized
@@ -117,7 +104,7 @@ extern "C"
 		@return
 		*	None
 		*/
-		SIMONE_NET_API void SimOneAPIInitialized(int hostVehicleId, bool isFrameSync);
+		SIMONE_NET_API bool SimOneAPIInitialized(int hostVehicleId, bool isFrameSync, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
 
 		/*!
 		停止API node

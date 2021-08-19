@@ -29,6 +29,8 @@ IF (WIN32)
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/SIMONEAPI.dll ${BINARY_OUT_PATH}/SimOneAPI.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/SSD.dll ${BINARY_OUT_PATH}/SSD.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/tsf.dll ${BINARY_OUT_PATH}/tsf.dll
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/V2X_ASN_New4Span.dll ${BINARY_OUT_PATH}/V2X_ASN_New4Span.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/HDMapModule.dll ${BINARY_OUT_PATH}/HDMapModule.dll
         )
 

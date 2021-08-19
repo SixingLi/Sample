@@ -14,7 +14,6 @@ extern "C"
 {
 #endif
 #define MAX_DRIVER_NAME_LEN 10
-    static char gDriverNameArray[MAX_MAINVEHICLE_NUM][MAX_DRIVER_NAME_LEN];
 
 	SIMONE_NET_API bool SimOneAPI::GetHDMapData(SimOne_Data_Map& hdMap)
 	{

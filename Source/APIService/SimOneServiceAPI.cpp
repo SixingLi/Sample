@@ -12,7 +12,6 @@ extern "C"
 {
 #endif
 #define MAX_DRIVER_NAME_LEN 10
-    static char gDriverNameArray[MAX_MAINVEHICLE_NUM][MAX_DRIVER_NAME_LEN];
 
 	SIMONE_NET_API bool SimOneAPI::Start()
 	{
@@ -40,60 +39,56 @@ extern "C"
 		return true;
 	}
 
-	SIMONE_NET_API bool SimOneAPI::StartSimOneNode(void(*startCase)(), void(*endCase)(), int registerNodeId) {
-		//gMainVehicleId = mainVehicleId;
-		SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId);
-		// clear driver name
-		for (int i = 0; i < MAX_MAINVEHICLE_NUM; i++) {
-			memset(gDriverNameArray[i], 0, MAX_DRIVER_NAME_LEN);
-		}
-
-		return true;
-	}
-	SIMONE_NET_API void SimOneAPI::SimOneAPIInitialized(int hostVehicleId, bool isFrameSync)
+	SIMONE_NET_API bool SimOneAPI::SimOneAPIInitialized(int hostVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
 	{
-		StartSimOneNode(0, 0);
-		SimOneNodeReady();
-		while (true) {
-			if (GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Running) {
+
+		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneNodeReady()) {
+			while (true) {
+				if (GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Running) {
+					break;
+				}
+			}
+
+			while (true)
+			{
+				bool bRet = SubMainVehicle(hostVehicleId, isFrameSync);
+				if (!bRet) {
+					std::cout << "failed to subscribe main vehicle" << std::endl;
+					std::this_thread::sleep_for(std::chrono::milliseconds(100));
+					continue;
+				}
 				break;
 			}
-		}
-		while (true)
-		{
-			bool bRet = SubMainVehicle(hostVehicleId, isFrameSync);
-			if (!bRet) {
-				std::cout << "failed to subscribe main vehicle" << std::endl;
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
-				continue;
-			}
-			break;
-		}
 
-		SimOne_Data_MainVehicle_Status mainVehicleStatus;
+			SimOne_Data_MainVehicle_Status mainVehicleStatus;
 
-		while (true)
-		{
-			bool bRet = GetMainVehicleStatus(&mainVehicleStatus);
-			if (!bRet) {
+			while (true)
+			{
+				bool bRet = GetMainVehicleStatus(&mainVehicleStatus);
+				if (!bRet) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				}
+				if (mainVehicleStatus.mainVehicleId == hostVehicleId && mainVehicleStatus.mainVehicleStatus > 0) {
+					std::cout << "mainVehicle is ready" << std::endl;
+					break;
+				}
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
-			if (mainVehicleStatus.mainVehicleId == hostVehicleId && mainVehicleStatus.mainVehicleStatus > 0) {
-				std::cout << "mainVehicle is ready" << std::endl;
-				break;
-			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			return true;
+		}
+		else {
+			std::cout << "mainVehicle is not ready" << std::endl;
+			return false;
 		}
 	}
+
 	SIMONE_NET_API bool SimOneAPI::StopSimOneNode() {
 		return SimOneAPIService::GetInstance()->Stop();
 	}
 	SIMONE_NET_API bool SimOneAPI::SimOneNodeReady() {
-		SimOneAPIService::GetInstance()->SimOneNodeReady();
-		return true;
+		return SimOneAPIService::GetInstance()->SimOneNodeReady();
 	}
 	SIMONE_NET_API bool SimOneAPI::SubMainVehicle(int mainVehicleId, bool isJoinTimeLoop) {
-		//gMainVehicleId = mainVehicleId;
 		return SimOneAPIService::GetInstance()->SubMainVehicle(mainVehicleId, isJoinTimeLoop);
 	}
 	SIMONE_NET_API  bool SimOneAPI::GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo) {
@@ -103,13 +98,11 @@ extern "C"
 		return SimOneAPIService::GetInstance()->GetVersion();
 	}
 
-
 	SIMONE_NET_API  bool SimOneAPI::SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, SimOne_ClientType toNodeType) {
 		return SimOneAPIService::GetInstance()->SendRouteMessage(length, pBuffer, msgId, toNodeId, toNodeType);
 	}
 	SIMONE_NET_API bool SimOneAPI::ReceiveRouteMessageCB(void(*cb)(int fromId, SimOne_ClientType fromType, int length, const void* pBuffer, int commandId)) {
-		SimOneAPIService::GetInstance()->ReceiveRouteMessageCB(cb);
-		return true;
+		return SimOneAPIService::GetInstance()->ReceiveRouteMessageCB(cb);
 	}
 	SIMONE_NET_API SimOne_Case_Status SimOneAPI::GetCaseRunStatus() {
 		return (SimOne_Case_Status)SimOneAPIService::GetInstance()->GetCaseStatus();

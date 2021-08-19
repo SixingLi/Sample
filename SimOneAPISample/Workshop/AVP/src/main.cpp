@@ -149,11 +149,10 @@ int main(int argc, char* argv[])
 	std::unique_ptr<SimOne_Data_WayPoints> wayPointsPtr = std::make_unique<SimOne_Data_WayPoints>();
 
 	bool leaveAfterParked = true;
+	bool isJoinTimeLoop = true;
+	int MainVehicleId = 0;
+	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
 
-	/* 1. Initialize and join sync */
-	SimOneAPI::StartSimOneNode(0, 0);
-	SimOneAPI::SimOneNodeReady();
-	SimOneAPI::SubMainVehicle(0, true);
 	SimOneAPI::SetDriverName(0, "AVP");
 
 	int timeoutSecond = 20;
