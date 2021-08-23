@@ -72,18 +72,18 @@ IF (WIN32)
 	SET(FOUNDATION_DBG_LIB_PATH ${SIMONE_PATH_FOUNDATION}/Build/build/lib/Debug)
 	SET(FOUNDATION_REL_LIB_PATH ${SIMONE_PATH_FOUNDATION}/Build/build/lib/Release)
 
+	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/protobuf.lib)
+	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronCore.lib)
+	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronBridgeBase.lib)
+	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronSensorBase.lib)
+	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronLogApi.lib)
+
 	IF (NOT WITHOUT_HDMAP)
 		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/win64/debug/SSD.lib)
 		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/win64/debug/HDMapModule.lib)
 		target_link_libraries(${CMAKE_BUILD_NAME} optimized ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/win64/release/SSD.lib)
 		target_link_libraries(${CMAKE_BUILD_NAME} optimized ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/win64/release/HDMapModule.lib)
 	ENDIF()
-
-	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/protobuf.lib)
-	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronCore.lib)
-	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronBridgeBase.lib)
-	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronSensorBase.lib)
-	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronLogApi.lib)
 
 	target_link_libraries(${CMAKE_BUILD_NAME} optimized ${FOUNDATION_REL_LIB_PATH}/protobuf.lib)
 	target_link_libraries(${CMAKE_BUILD_NAME} optimized ${FOUNDATION_REL_LIB_PATH}/CybertronCore.lib)
@@ -102,9 +102,12 @@ ELSEIF (UNIX)
 	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/libCybertronBridgeBase.a)
 	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/libCybertronSensorBase.a)
 	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/libCybertronLogApi.a)
+
 	IF (NOT WITHOUT_HDMAP)
-		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/release/libSSD.so)
-		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libHDMapModule.so)
+		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/debug/libSSD.so)
+		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/debug/libHDMapModule.so)
+		target_link_libraries(${CMAKE_BUILD_NAME} optimized ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/release/libSSD.so)
+		target_link_libraries(${CMAKE_BUILD_NAME} optimized ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libHDMapModule.so)
 	ENDIF()
 
 	target_link_libraries(${CMAKE_BUILD_NAME} optimized ${FOUNDATION_REL_LIB_PATH}/libCybertronCore.a  -pthread -lrt)
@@ -112,10 +115,6 @@ ELSEIF (UNIX)
 	target_link_libraries(${CMAKE_BUILD_NAME} optimized ${FOUNDATION_REL_LIB_PATH}/libCybertronBridgeBase.a)
 	target_link_libraries(${CMAKE_BUILD_NAME} optimized ${FOUNDATION_REL_LIB_PATH}/libCybertronSensorBase.a)
 	target_link_libraries(${CMAKE_BUILD_NAME} optimized ${FOUNDATION_REL_LIB_PATH}/libCybertronLogApi.a)
-	IF (NOT WITHOUT_HDMAP)
-		target_link_libraries(${CMAKE_BUILD_NAME} optimized ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/release/libSSD.so)
-		target_link_libraries(${CMAKE_BUILD_NAME} optimized ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libHDMapModule.so)
-	ENDIF()
 
 	set(CURL_LIB_PATH ${CYBERTRON_PATH_ROOT}/3rdparty/libcurl)
 	include_directories("${CURL_LIB_PATH}/include")
@@ -165,9 +164,18 @@ ELSEIF (UNIX)
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${CMAKE_BINARY_DIR}/lib/lib${CMAKE_BUILD_NAME}.so ${CMAKE_CURRENT_LIST_DIR}/../Build/build_debug/bin/debug/lib${CMAKE_BUILD_NAME}.so
 	)
 	ELSEIF (${CMAKE_BUILD_TYPE} STREQUAL "Release")
-		add_custom_command(TARGET ${CMAKE_BUILD_NAME}
-		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${CMAKE_BINARY_DIR}/lib/libSource.so ${CMAKE_CURRENT_LIST_DIR}/../Build/build_release/bin/release/libSource.so
-	)
+		IF (NOT WITHOUT_HDMAP)
+		add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/release/libSSD.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libSSD.so
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libHDMapModule.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libHDMapModule.so
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libProtobufModule.a ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libProtobufModule.a
+			)
+		ENDIF()
+
+		add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/lib${CMAKE_BUILD_NAME}.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/lib${CMAKE_BUILD_NAME}.so
+		)
 	ENDIF()
 ENDIF()

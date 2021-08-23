@@ -31,7 +31,7 @@ IF (WITHOUT_PNC)
 	add_definitions(-DWITHOUT_PNC)
 ENDIF()
 
-OPTION(WITHOUT_V2X "Build ${CMAKE_BUILD_NAME} without Planning and Control" OFF)
+OPTION(WITHOUT_V2X "Build ${CMAKE_BUILD_NAME} without V2X" OFF)
 IF (WITHOUT_V2X)
 	add_definitions(-DWITHOUT_V2X)
 ENDIF()
@@ -206,7 +206,7 @@ ELSEIF (UNIX)
 		IF (NOT WITHOUT_V2X)
 			add_custom_command(TARGET autoconfig
 			POST_BUILD
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/Source/Sensor/SimOneSensorAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneSensorAPI.h
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/Source/Sensor/SimOneV2XAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneV2XAPI.h 
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/include/tsf.h ${SIMONE_API_ROOT}/${OutPutDir}/include/tsf.h
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/lib/linux/release/libtsf.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libtsf.so
 
@@ -218,9 +218,9 @@ ELSEIF (UNIX)
 	
 	IF (NOT WITHOUT_HDMAP)
 		add_custom_command(TARGET autoconfig
-		POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/hdmap/lib/linux/${CMAKE_BUILD_TYPE}/ ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/
-			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/SSD/lib/linux/${CMAKE_BUILD_TYPE}/ ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/
+		POST_BUILD #${SIMONE_API_ROOT}/../../3rdparty/hdmap/lib/win64/${CMAKE_BUILD_TYPE}/ ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/win64/
+			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/hdmap/lib/linux/release/ ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/
+			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/SSD/lib/linux/release/ ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/
 			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/SSD/include/SSD ${SIMONE_API_ROOT}/${OutPutDir}/include/SSD/
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/hdmap/include/public/libexport.h ${SIMONE_API_ROOT}/${OutPutDir}/include/public/libexport.h
 			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/hdmap/include/public/common/ ${SIMONE_API_ROOT}/${OutPutDir}/include/public/common/
