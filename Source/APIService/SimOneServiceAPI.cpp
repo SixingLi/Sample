@@ -13,23 +13,6 @@ extern "C"
 #endif
 #define MAX_DRIVER_NAME_LEN 10
 
-	SIMONE_NET_API bool SimOneAPI::Start()
-	{
-		bool ret = SimOneAPIService::GetInstance()->Start();
-		int count = 0;
-		while (true) {
-			if (SimOneAPI::SubMainVehicle(0, false))
-				break;
-			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-			count++;
-			if (count > 10) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
 	SIMONE_NET_API bool SimOneAPI::GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
 		return SimOneAPIService::GetInstance()->GetMainVehicleStatus(pMainVehicleStatus);
 	}
@@ -42,7 +25,7 @@ extern "C"
 	SIMONE_NET_API bool SimOneAPI::SimOneAPIInitialized(int hostVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
 	{
 
-		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneNodeReady()) {
+		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneAPIService::GetInstance()->SimOneNodeReady()) {
 			while (true) {
 				if (GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Running) {
 					break;
@@ -51,7 +34,7 @@ extern "C"
 
 			while (true)
 			{
-				bool bRet = SubMainVehicle(hostVehicleId, isFrameSync);
+				bool bRet = SimOneAPIService::GetInstance()->SubMainVehicle(hostVehicleId, isFrameSync);
 				if (!bRet) {
 					std::cout << "failed to subscribe main vehicle" << std::endl;
 					std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -85,12 +68,7 @@ extern "C"
 	SIMONE_NET_API bool SimOneAPI::StopSimOneNode() {
 		return SimOneAPIService::GetInstance()->Stop();
 	}
-	SIMONE_NET_API bool SimOneAPI::SimOneNodeReady() {
-		return SimOneAPIService::GetInstance()->SimOneNodeReady();
-	}
-	SIMONE_NET_API bool SimOneAPI::SubMainVehicle(int mainVehicleId, bool isJoinTimeLoop) {
-		return SimOneAPIService::GetInstance()->SubMainVehicle(mainVehicleId, isJoinTimeLoop);
-	}
+
 	SIMONE_NET_API  bool SimOneAPI::GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo) {
 		return SimOneAPIService::GetInstance()->GetMainVehicleList(pMainVehicleInfo);
 	}
@@ -128,6 +106,12 @@ extern "C"
 	}
 	SIMONE_NET_API void SimOneAPI::NextFrame(int frame) {
 		SimOneAPIService::GetInstance()->nextFrame(frame);
+	}
+
+	SIMONE_NET_API bool SimOneAPI::SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame)) {
+		SimOneAPIService::GetInstance()->SetFrameStartCB(FrameStart);
+		SimOneAPIService::GetInstance()->SetFrameStartCB(FrameEnd);
+		return true;
 	}
 
 #ifdef __cplusplus

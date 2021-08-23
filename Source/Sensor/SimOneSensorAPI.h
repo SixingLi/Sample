@@ -59,34 +59,6 @@ extern "C"
 	namespace SimOneAPI {
 
 		/*!
-		设置是否允许收发目标级数据
-		\li function:
-		*	SetSensorObjectbasedDataEnable
-		\li brief:
-		*	Set the sensor data to receive data level
-		@param
-		*   enable: true:receive object data, false:do not receive object data
-		@return
-		*	Success or not
-		*/
-		SIMONE_NET_API bool SetSensorObjectbasedDataEnable(bool enable);
-
-		/*!
-		仿真场景中每帧的回调,每帧开始和结束时调用回调函数
-		\li function:
-		*	SetFrameCB
-		\li brief:
-		*	The callback function is called at the beginning and end of each frame.
-		@param
-		*   FrameStart:Callback function at the beginning of the frame FrameEnd:Callback function at the end of the frame
-		@return
-		*	Success or not
-		*/
-		SIMONE_NET_API bool SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame));
-
-
-
-		/*!
 		获取主车GPS信息
 		\li function:
 		*	GetGps
@@ -193,6 +165,7 @@ extern "C"
 		*	Success or not
 		*/
 		SIMONE_NET_API bool GetUltrasonicRadar(int mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonic);
+
 		/*
 		获得所有超声波雷达信息
 		\li function:
@@ -207,6 +180,7 @@ extern "C"
 		*	Success or not
 		*/
 		SIMONE_NET_API bool GetUltrasonicRadars(int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics);
+
 		/*!
 		超生波雷达真值信息更新回调
 		\li function:
@@ -306,7 +280,6 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-
 		SIMONE_NET_API bool GetTrafficLight(int mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight* pTrafficLight);
 
 
@@ -327,7 +300,7 @@ extern "C"
 		SIMONE_NET_API bool GetSensorLaneInfo(int mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo);
 
 		/*!
-		获取传感器检测到车道与车道线数据
+		获取传感器检测到车道与车道线数据回调
 		\li function:
 		*	SetSensorLaneInfoCB
 

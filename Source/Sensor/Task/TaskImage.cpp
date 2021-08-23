@@ -63,71 +63,68 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 	const std::string sensorId = SimOneAPIService::GetInstance()->GetSensorIdFromId(pSensorContext->sensorId);
 	const string sensorKey = std::to_string(pSensorContext->mainVehicleId).append("_").append(sensorId);
 
-	//imageDetections
 
-	if (SimOneAPIService::GetInstance()->IsNeedSendObjectbasedData())
+	SimOne_Data_SensorDetections *pImageDetections = NULL;
+	SimOne_Data_SensorDetectionsMap::iterator it = mLastSensorDetectionsMap.find(sensorKey);
+	if (it != mLastSensorDetectionsMap.end()) {
+		pImageDetections = it->second;
+	}
+	else
 	{
-		SimOne_Data_SensorDetections *pImageDetections = NULL;
-		SimOne_Data_SensorDetectionsMap::iterator it = mLastSensorDetectionsMap.find(sensorKey);
-		if (it != mLastSensorDetectionsMap.end()) {
-			pImageDetections = it->second;
-		}
-		else
-		{
-			pImageDetections = new SimOne_Data_SensorDetections;
-		}
+		pImageDetections = new SimOne_Data_SensorDetections;
+	}
 
-		pImageDetections->timestamp = pSensorContext->timestamp;
-		pImageDetections->frame = pSensorContext->frame;
-		pImageDetections->objectSize = ImageDataSrc.ground_truth().obstacles().size();
-		for (auto i = 0; i < ImageDataSrc.ground_truth().obstacles().size(); i++)
-		{
-			pImageDetections->objects[i].id = ImageDataSrc.ground_truth().obstacles(i).id();
-			pImageDetections->objects[i].type = (SimOne_Obstacle_Type)ImageDataSrc.ground_truth().obstacles(i).type();
-			pImageDetections->objects[i].posX = ImageDataSrc.ground_truth().obstacles(i).center().x();
-			pImageDetections->objects[i].posY = ImageDataSrc.ground_truth().obstacles(i).center().y();
-			pImageDetections->objects[i].posZ = ImageDataSrc.ground_truth().obstacles(i).center().z();
-			pImageDetections->objects[i].oriX = ImageDataSrc.ground_truth().obstacles(i).rotation().x();
-			pImageDetections->objects[i].oriY = ImageDataSrc.ground_truth().obstacles(i).rotation().y();
-			pImageDetections->objects[i].oriZ = ImageDataSrc.ground_truth().obstacles(i).rotation().z();
-			pImageDetections->objects[i].length = ImageDataSrc.ground_truth().obstacles(i).size().x();
-			pImageDetections->objects[i].width = ImageDataSrc.ground_truth().obstacles(i).size().y();
-			pImageDetections->objects[i].height = ImageDataSrc.ground_truth().obstacles(i).size().z();
-			pImageDetections->objects[i].range = ImageDataSrc.ground_truth().obstacles(i).range();
-			pImageDetections->objects[i].velX = ImageDataSrc.ground_truth().obstacles(i).velocity().x();
-			pImageDetections->objects[i].velY = ImageDataSrc.ground_truth().obstacles(i).velocity().y();
-			pImageDetections->objects[i].velZ = ImageDataSrc.ground_truth().obstacles(i).velocity().z();
-			pImageDetections->objects[i].probability = ImageDataSrc.ground_truth().obstacles(i).probability();
-			pImageDetections->objects[i].relativePosX = ImageDataSrc.ground_truth().obstacles(i).relativepos().x();
-			pImageDetections->objects[i].relativePosY = ImageDataSrc.ground_truth().obstacles(i).relativepos().y();
-			pImageDetections->objects[i].relativePosZ = ImageDataSrc.ground_truth().obstacles(i).relativepos().z();
-			pImageDetections->objects[i].relativeRotX = ImageDataSrc.ground_truth().obstacles(i).relativerot().x();
-			pImageDetections->objects[i].relativeRotY = ImageDataSrc.ground_truth().obstacles(i).relativerot().y();
-			pImageDetections->objects[i].relativeRotZ = ImageDataSrc.ground_truth().obstacles(i).relativerot().z();
-			pImageDetections->objects[i].relativeVelX = ImageDataSrc.ground_truth().obstacles(i).relativevel().x();
-			pImageDetections->objects[i].relativeVelY = ImageDataSrc.ground_truth().obstacles(i).relativevel().y();
-			pImageDetections->objects[i].relativeVelZ = ImageDataSrc.ground_truth().obstacles(i).relativevel().z();
+	pImageDetections->timestamp = pSensorContext->timestamp;
+	pImageDetections->frame = pSensorContext->frame;
+	pImageDetections->objectSize = ImageDataSrc.ground_truth().obstacles().size();
+	for (auto i = 0; i < ImageDataSrc.ground_truth().obstacles().size(); i++)
+	{
+		pImageDetections->objects[i].id = ImageDataSrc.ground_truth().obstacles(i).id();
+		pImageDetections->objects[i].type = (SimOne_Obstacle_Type)ImageDataSrc.ground_truth().obstacles(i).type();
+		pImageDetections->objects[i].posX = ImageDataSrc.ground_truth().obstacles(i).center().x();
+		pImageDetections->objects[i].posY = ImageDataSrc.ground_truth().obstacles(i).center().y();
+		pImageDetections->objects[i].posZ = ImageDataSrc.ground_truth().obstacles(i).center().z();
+		pImageDetections->objects[i].oriX = ImageDataSrc.ground_truth().obstacles(i).rotation().x();
+		pImageDetections->objects[i].oriY = ImageDataSrc.ground_truth().obstacles(i).rotation().y();
+		pImageDetections->objects[i].oriZ = ImageDataSrc.ground_truth().obstacles(i).rotation().z();
+		pImageDetections->objects[i].length = ImageDataSrc.ground_truth().obstacles(i).size().x();
+		pImageDetections->objects[i].width = ImageDataSrc.ground_truth().obstacles(i).size().y();
+		pImageDetections->objects[i].height = ImageDataSrc.ground_truth().obstacles(i).size().z();
+		pImageDetections->objects[i].range = ImageDataSrc.ground_truth().obstacles(i).range();
+		pImageDetections->objects[i].velX = ImageDataSrc.ground_truth().obstacles(i).velocity().x();
+		pImageDetections->objects[i].velY = ImageDataSrc.ground_truth().obstacles(i).velocity().y();
+		pImageDetections->objects[i].velZ = ImageDataSrc.ground_truth().obstacles(i).velocity().z();
+		pImageDetections->objects[i].probability = ImageDataSrc.ground_truth().obstacles(i).probability();
+		pImageDetections->objects[i].relativePosX = ImageDataSrc.ground_truth().obstacles(i).relativepos().x();
+		pImageDetections->objects[i].relativePosY = ImageDataSrc.ground_truth().obstacles(i).relativepos().y();
+		pImageDetections->objects[i].relativePosZ = ImageDataSrc.ground_truth().obstacles(i).relativepos().z();
+		pImageDetections->objects[i].relativeRotX = ImageDataSrc.ground_truth().obstacles(i).relativerot().x();
+		pImageDetections->objects[i].relativeRotY = ImageDataSrc.ground_truth().obstacles(i).relativerot().y();
+		pImageDetections->objects[i].relativeRotZ = ImageDataSrc.ground_truth().obstacles(i).relativerot().z();
+		pImageDetections->objects[i].relativeVelX = ImageDataSrc.ground_truth().obstacles(i).relativevel().x();
+		pImageDetections->objects[i].relativeVelY = ImageDataSrc.ground_truth().obstacles(i).relativevel().y();
+		pImageDetections->objects[i].relativeVelZ = ImageDataSrc.ground_truth().obstacles(i).relativevel().z();
 
-			if (ImageDataSrc.ground_truth().obstacles(i).bbox2d().size() >= 2)
-			{
-				pImageDetections->objects[i].bbox2dMinX = ImageDataSrc.ground_truth().obstacles(i).bbox2d(0).x();
-				pImageDetections->objects[i].bbox2dMinY = ImageDataSrc.ground_truth().obstacles(i).bbox2d(0).y();
-				pImageDetections->objects[i].bbox2dMaxX = ImageDataSrc.ground_truth().obstacles(i).bbox2d(1).x();
-				pImageDetections->objects[i].bbox2dMaxY = ImageDataSrc.ground_truth().obstacles(i).bbox2d(1).y();
-			}
-			if (pImageDetections->objectSize >= SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX)
-			{
-				break;
-			}
-		}
-		mLastSensorDetectionsMap[sensorKey] = pImageDetections;
-		if (TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB != NULL)
+		if (ImageDataSrc.ground_truth().obstacles(i).bbox2d().size() >= 2)
 		{
-			TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(pSensorContext->mainVehicleId, sensorId.c_str(), pImageDetections);
+			pImageDetections->objects[i].bbox2dMinX = ImageDataSrc.ground_truth().obstacles(i).bbox2d(0).x();
+			pImageDetections->objects[i].bbox2dMinY = ImageDataSrc.ground_truth().obstacles(i).bbox2d(0).y();
+			pImageDetections->objects[i].bbox2dMaxX = ImageDataSrc.ground_truth().obstacles(i).bbox2d(1).x();
+			pImageDetections->objects[i].bbox2dMaxY = ImageDataSrc.ground_truth().obstacles(i).bbox2d(1).y();
+		}
+		if (pImageDetections->objectSize >= SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX)
+		{
+			break;
 		}
 	}
+	mLastSensorDetectionsMap[sensorKey] = pImageDetections;
+	if (TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB != NULL)
+	{
+		TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(pSensorContext->mainVehicleId, sensorId.c_str(), pImageDetections);
+	}
 	
-	if (SimOneAPIService::GetInstance()->IsNeedSendObjectbasedData() && ImageDataSrc.lane().lanelines_size())
+	
+	if (ImageDataSrc.lane().lanelines_size())
 	{
 		SimOne_Data_LaneInfo *pLaneInfo = NULL;
 

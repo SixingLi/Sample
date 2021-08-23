@@ -86,57 +86,54 @@ bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, co
 	if (!groundTruthMsg.ParseFromString(*pBuffer)) {
 		return false;
 	}
-	
-	//Detections
-	if (SimOneAPIService::GetInstance()->IsNeedSendObjectbasedData())
-	{
-		SimOne_Data_Obstacle *pObstacle = NULL;
-		int mainVehicleId = pSensorContext->mainVehicleId;
-		SimOne_Data_ObstacleMap::iterator it = mLastObstacleMap.find(mainVehicleId);
 
-		if (it != mLastObstacleMap.end()) {
-			pObstacle = it->second;
-		}
-		else
-		{
-			pObstacle = new SimOne_Data_Obstacle;
+	SimOne_Data_Obstacle *pObstacle = NULL;
+	int mainVehicleId = pSensorContext->mainVehicleId;
+	SimOne_Data_ObstacleMap::iterator it = mLastObstacleMap.find(mainVehicleId);
 
-		}
-		pObstacle->obstacleSize = groundTruthMsg.obstacles().size();
-		pObstacle->frame = pSensorContext->frame;
-		pObstacle->timestamp = pSensorContext->timestamp;
-		for (int i = 0; i < groundTruthMsg.obstacles().size(); i++)
-		{
-			pObstacle->obstacle[i].id = groundTruthMsg.obstacles(i).id();
-			pObstacle->obstacle[i].type = (SimOne_Obstacle_Type)groundTruthMsg.obstacles(i).type();
-			pObstacle->obstacle[i].theta = groundTruthMsg.obstacles(i).rotation().z();
-			pObstacle->obstacle[i].viewId = std::stoi(groundTruthMsg.obstacles(i).subtype());
-			pObstacle->obstacle[i].posX = groundTruthMsg.obstacles(i).center().x();
-			pObstacle->obstacle[i].posY = groundTruthMsg.obstacles(i).center().y();
-			pObstacle->obstacle[i].posZ = groundTruthMsg.obstacles(i).center().z();
-			pObstacle->obstacle[i].oriX = groundTruthMsg.obstacles(i).rotation().x();
-			pObstacle->obstacle[i].oriY = groundTruthMsg.obstacles(i).rotation().y();
-			pObstacle->obstacle[i].oriZ = groundTruthMsg.obstacles(i).rotation().z();
-			pObstacle->obstacle[i].velX = groundTruthMsg.obstacles(i).velocity().x();
-			pObstacle->obstacle[i].velY = groundTruthMsg.obstacles(i).velocity().y();
-			pObstacle->obstacle[i].velZ = groundTruthMsg.obstacles(i).velocity().z();
-			pObstacle->obstacle[i].length = groundTruthMsg.obstacles(i).size().x();
-			pObstacle->obstacle[i].width = groundTruthMsg.obstacles(i).size().y();
-			pObstacle->obstacle[i].height = groundTruthMsg.obstacles(i).size().z();
-		}
-		{
-			std::unique_lock<std::recursive_mutex> lock(mLastObstacleMapLock);
-			mLastObstacleMap[mainVehicleId] = pObstacle;
-		}
-		if (TaskSensorManager::getInstance().mpObstacleUpdateCB != NULL)
-		{
-			TaskSensorManager::getInstance().mpObstacleUpdateCB(mainVehicleId, pObstacle);
-		}
-		if (TaskSensorManager::getInstance().mpSimOneGroundTruthCB != NULL)
-		{
-			TaskSensorManager::getInstance().mpSimOneGroundTruthCB(pObstacle);
-		}
+	if (it != mLastObstacleMap.end()) {
+		pObstacle = it->second;
 	}
+	else
+	{
+		pObstacle = new SimOne_Data_Obstacle;
+
+	}
+	pObstacle->obstacleSize = groundTruthMsg.obstacles().size();
+	pObstacle->frame = pSensorContext->frame;
+	pObstacle->timestamp = pSensorContext->timestamp;
+	for (int i = 0; i < groundTruthMsg.obstacles().size(); i++)
+	{
+		pObstacle->obstacle[i].id = groundTruthMsg.obstacles(i).id();
+		pObstacle->obstacle[i].type = (SimOne_Obstacle_Type)groundTruthMsg.obstacles(i).type();
+		pObstacle->obstacle[i].theta = groundTruthMsg.obstacles(i).rotation().z();
+		pObstacle->obstacle[i].viewId = std::stoi(groundTruthMsg.obstacles(i).subtype());
+		pObstacle->obstacle[i].posX = groundTruthMsg.obstacles(i).center().x();
+		pObstacle->obstacle[i].posY = groundTruthMsg.obstacles(i).center().y();
+		pObstacle->obstacle[i].posZ = groundTruthMsg.obstacles(i).center().z();
+		pObstacle->obstacle[i].oriX = groundTruthMsg.obstacles(i).rotation().x();
+		pObstacle->obstacle[i].oriY = groundTruthMsg.obstacles(i).rotation().y();
+		pObstacle->obstacle[i].oriZ = groundTruthMsg.obstacles(i).rotation().z();
+		pObstacle->obstacle[i].velX = groundTruthMsg.obstacles(i).velocity().x();
+		pObstacle->obstacle[i].velY = groundTruthMsg.obstacles(i).velocity().y();
+		pObstacle->obstacle[i].velZ = groundTruthMsg.obstacles(i).velocity().z();
+		pObstacle->obstacle[i].length = groundTruthMsg.obstacles(i).size().x();
+		pObstacle->obstacle[i].width = groundTruthMsg.obstacles(i).size().y();
+		pObstacle->obstacle[i].height = groundTruthMsg.obstacles(i).size().z();
+	}
+	{
+		std::unique_lock<std::recursive_mutex> lock(mLastObstacleMapLock);
+		mLastObstacleMap[mainVehicleId] = pObstacle;
+	}
+	if (TaskSensorManager::getInstance().mpObstacleUpdateCB != NULL)
+	{
+		TaskSensorManager::getInstance().mpObstacleUpdateCB(mainVehicleId, pObstacle);
+	}
+	if (TaskSensorManager::getInstance().mpSimOneGroundTruthCB != NULL)
+	{
+		TaskSensorManager::getInstance().mpSimOneGroundTruthCB(pObstacle);
+	}
+
 	return true;
 }
 uint16_t TaskPerfectPerception::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)

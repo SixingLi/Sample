@@ -47,8 +47,6 @@ void TaskFusion::SetLaneLineInfo(SimOne_Data_LaneLineInfo &lineInfo, const cyber
 		lineInfo.linecurveParameter.firstPoints.z = line.linecurveparameter().firstpoints().z();
 
 	}
-
-
 }
 
 uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
@@ -65,70 +63,69 @@ uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTask
 	const std::string sensorId = SimOneAPIService::GetInstance()->GetSensorIdFromId(pSensorContext->sensorId);
 	const string sensorKey = std::to_string(pSensorContext->mainVehicleId).append("_").append(sensorId);
 
-	if (SimOneAPIService::GetInstance()->IsNeedSendObjectbasedData())
+
+	//ESensorFusionDetections
+	SimOne_Data_SensorDetections *pFusionDetections = NULL;
+	SimOne_Data_SensorDetectionsMap::iterator it = mLastSensorDetectionsMap.find(sensorKey);
+	if (it != mLastSensorDetectionsMap.end()) {
+		pFusionDetections = it->second;
+	}
+	else
 	{
-		//ESensorFusionDetections
-		SimOne_Data_SensorDetections *pFusionDetections = NULL;
-		SimOne_Data_SensorDetectionsMap::iterator it = mLastSensorDetectionsMap.find(sensorKey);
-		if (it != mLastSensorDetectionsMap.end()) {
-			pFusionDetections = it->second;
-		}
-		else
-		{
-			pFusionDetections = new SimOne_Data_SensorDetections;
-			//std::unique_lock<std::recursive_mutex> lock(mLastSensorDetectionsMapLock);
+		pFusionDetections = new SimOne_Data_SensorDetections;
+		//std::unique_lock<std::recursive_mutex> lock(mLastSensorDetectionsMapLock);
 				
-		}
+	}
 
-		pFusionDetections->timestamp = pSensorContext->timestamp;
-		pFusionDetections->frame = pSensorContext->frame;
-		pFusionDetections->objectSize = FusionDataSrc.ground_truth().obstacles().size();
-		for (auto i = 0; i < FusionDataSrc.ground_truth().obstacles().size(); i++)
-		{
-			pFusionDetections->objects[i].id = FusionDataSrc.ground_truth().obstacles(i).id();
-			pFusionDetections->objects[i].type = (SimOne_Obstacle_Type)FusionDataSrc.ground_truth().obstacles(i).type();
-			pFusionDetections->objects[i].posX = FusionDataSrc.ground_truth().obstacles(i).center().x();
-			pFusionDetections->objects[i].posY = FusionDataSrc.ground_truth().obstacles(i).center().y();
-			pFusionDetections->objects[i].posZ = FusionDataSrc.ground_truth().obstacles(i).center().z();
-			pFusionDetections->objects[i].oriX = FusionDataSrc.ground_truth().obstacles(i).rotation().x();
-			pFusionDetections->objects[i].oriY = FusionDataSrc.ground_truth().obstacles(i).rotation().y();
-			pFusionDetections->objects[i].oriZ = FusionDataSrc.ground_truth().obstacles(i).rotation().z();
-			pFusionDetections->objects[i].length = FusionDataSrc.ground_truth().obstacles(i).size().x();
-			pFusionDetections->objects[i].width = FusionDataSrc.ground_truth().obstacles(i).size().y();
-			pFusionDetections->objects[i].height = FusionDataSrc.ground_truth().obstacles(i).size().z();
-			pFusionDetections->objects[i].range = FusionDataSrc.ground_truth().obstacles(i).range();
-			pFusionDetections->objects[i].velX = FusionDataSrc.ground_truth().obstacles(i).velocity().x();
-			pFusionDetections->objects[i].velY = FusionDataSrc.ground_truth().obstacles(i).velocity().y();
-			pFusionDetections->objects[i].velZ = FusionDataSrc.ground_truth().obstacles(i).velocity().z();
-			pFusionDetections->objects[i].probability = FusionDataSrc.ground_truth().obstacles(i).probability();
-			pFusionDetections->objects[i].relativePosX = FusionDataSrc.ground_truth().obstacles(i).relativepos().x();
-			pFusionDetections->objects[i].relativePosY = FusionDataSrc.ground_truth().obstacles(i).relativepos().y();
-			pFusionDetections->objects[i].relativePosZ = FusionDataSrc.ground_truth().obstacles(i).relativepos().z();
-			pFusionDetections->objects[i].relativeRotX = FusionDataSrc.ground_truth().obstacles(i).relativerot().x();
-			pFusionDetections->objects[i].relativeRotY = FusionDataSrc.ground_truth().obstacles(i).relativerot().y();
-			pFusionDetections->objects[i].relativeRotZ = FusionDataSrc.ground_truth().obstacles(i).relativerot().z();
-			pFusionDetections->objects[i].relativeVelX = FusionDataSrc.ground_truth().obstacles(i).relativevel().x();
-			pFusionDetections->objects[i].relativeVelY = FusionDataSrc.ground_truth().obstacles(i).relativevel().y();
-			pFusionDetections->objects[i].relativeVelZ = FusionDataSrc.ground_truth().obstacles(i).relativevel().z();
+	pFusionDetections->timestamp = pSensorContext->timestamp;
+	pFusionDetections->frame = pSensorContext->frame;
+	pFusionDetections->objectSize = FusionDataSrc.ground_truth().obstacles().size();
+	for (auto i = 0; i < FusionDataSrc.ground_truth().obstacles().size(); i++)
+	{
+		pFusionDetections->objects[i].id = FusionDataSrc.ground_truth().obstacles(i).id();
+		pFusionDetections->objects[i].type = (SimOne_Obstacle_Type)FusionDataSrc.ground_truth().obstacles(i).type();
+		pFusionDetections->objects[i].posX = FusionDataSrc.ground_truth().obstacles(i).center().x();
+		pFusionDetections->objects[i].posY = FusionDataSrc.ground_truth().obstacles(i).center().y();
+		pFusionDetections->objects[i].posZ = FusionDataSrc.ground_truth().obstacles(i).center().z();
+		pFusionDetections->objects[i].oriX = FusionDataSrc.ground_truth().obstacles(i).rotation().x();
+		pFusionDetections->objects[i].oriY = FusionDataSrc.ground_truth().obstacles(i).rotation().y();
+		pFusionDetections->objects[i].oriZ = FusionDataSrc.ground_truth().obstacles(i).rotation().z();
+		pFusionDetections->objects[i].length = FusionDataSrc.ground_truth().obstacles(i).size().x();
+		pFusionDetections->objects[i].width = FusionDataSrc.ground_truth().obstacles(i).size().y();
+		pFusionDetections->objects[i].height = FusionDataSrc.ground_truth().obstacles(i).size().z();
+		pFusionDetections->objects[i].range = FusionDataSrc.ground_truth().obstacles(i).range();
+		pFusionDetections->objects[i].velX = FusionDataSrc.ground_truth().obstacles(i).velocity().x();
+		pFusionDetections->objects[i].velY = FusionDataSrc.ground_truth().obstacles(i).velocity().y();
+		pFusionDetections->objects[i].velZ = FusionDataSrc.ground_truth().obstacles(i).velocity().z();
+		pFusionDetections->objects[i].probability = FusionDataSrc.ground_truth().obstacles(i).probability();
+		pFusionDetections->objects[i].relativePosX = FusionDataSrc.ground_truth().obstacles(i).relativepos().x();
+		pFusionDetections->objects[i].relativePosY = FusionDataSrc.ground_truth().obstacles(i).relativepos().y();
+		pFusionDetections->objects[i].relativePosZ = FusionDataSrc.ground_truth().obstacles(i).relativepos().z();
+		pFusionDetections->objects[i].relativeRotX = FusionDataSrc.ground_truth().obstacles(i).relativerot().x();
+		pFusionDetections->objects[i].relativeRotY = FusionDataSrc.ground_truth().obstacles(i).relativerot().y();
+		pFusionDetections->objects[i].relativeRotZ = FusionDataSrc.ground_truth().obstacles(i).relativerot().z();
+		pFusionDetections->objects[i].relativeVelX = FusionDataSrc.ground_truth().obstacles(i).relativevel().x();
+		pFusionDetections->objects[i].relativeVelY = FusionDataSrc.ground_truth().obstacles(i).relativevel().y();
+		pFusionDetections->objects[i].relativeVelZ = FusionDataSrc.ground_truth().obstacles(i).relativevel().z();
 
-			if (FusionDataSrc.ground_truth().obstacles(i).bbox2d().size() >= 2)
-			{
-				pFusionDetections->objects[i].bbox2dMinX = FusionDataSrc.ground_truth().obstacles(i).bbox2d(0).x();
-				pFusionDetections->objects[i].bbox2dMinY = FusionDataSrc.ground_truth().obstacles(i).bbox2d(0).y();
-				pFusionDetections->objects[i].bbox2dMaxX = FusionDataSrc.ground_truth().obstacles(i).bbox2d(1).x();
-				pFusionDetections->objects[i].bbox2dMaxY = FusionDataSrc.ground_truth().obstacles(i).bbox2d(1).y();
-			}
-			if (pFusionDetections->objectSize >= SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX)
-			{
-				break;
-			}
-		}
-		mLastSensorDetectionsMap[sensorKey] = pFusionDetections;
-		if (TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB != NULL)
+		if (FusionDataSrc.ground_truth().obstacles(i).bbox2d().size() >= 2)
 		{
-			TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(pSensorContext->mainVehicleId, sensorId.c_str(), pFusionDetections);
+			pFusionDetections->objects[i].bbox2dMinX = FusionDataSrc.ground_truth().obstacles(i).bbox2d(0).x();
+			pFusionDetections->objects[i].bbox2dMinY = FusionDataSrc.ground_truth().obstacles(i).bbox2d(0).y();
+			pFusionDetections->objects[i].bbox2dMaxX = FusionDataSrc.ground_truth().obstacles(i).bbox2d(1).x();
+			pFusionDetections->objects[i].bbox2dMaxY = FusionDataSrc.ground_truth().obstacles(i).bbox2d(1).y();
+		}
+		if (pFusionDetections->objectSize >= SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX)
+		{
+			break;
 		}
 	}
+	mLastSensorDetectionsMap[sensorKey] = pFusionDetections;
+	if (TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB != NULL)
+	{
+		TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(pSensorContext->mainVehicleId, sensorId.c_str(), pFusionDetections);
+	}
+	
 
 	if (FusionDataSrc.lane().lanelines_size())
 	{

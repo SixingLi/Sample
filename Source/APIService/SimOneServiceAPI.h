@@ -64,7 +64,33 @@ extern "C"
 		*	version number
 		*/
 		SIMONE_NET_API const char* GetVersion();
+
+		/*!
+		节点通信发送数据API
+		\li function:
+		*	SendRouteMessage
+		\li brief:
+		*	node send data to other node.
+		@param
+		*	length: send data length.
+		@param
+		*	pBuffer: send data
+		@return
+		*	Success or not
+		*/
 		SIMONE_NET_API bool SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, SimOne_ClientType toNodeType);
+	
+		/*!
+		节点通信接收数据API
+		\li function:
+		*	ReceiveRouteMessageCB
+		\li brief:
+		*	API Recvice data from other node.
+		@param
+		*	length: the data length recevied 
+		@return
+		*	Success or not
+		*/
 		SIMONE_NET_API bool ReceiveRouteMessageCB(void(*cb)(int fromId, SimOne_ClientType fromType, int length, const void* pBuffer, int commandId));
 
 		/*!
@@ -94,7 +120,7 @@ extern "C"
 		SIMONE_NET_API bool SetServerInfo(const char *serverIP = "127.0.0.1", int port = 23789);
 
 		/*!
-		SimOneAPIInitialized
+		SimOne API主入口
 		\li function:
 		*	SimOneAPIInitialized
 		\li brief:
@@ -118,19 +144,6 @@ extern "C"
 		*	Success or not
 		*/
 		SIMONE_NET_API bool StopSimOneNode();
-
-		/*!
-		通知simone内部系统已经准备好
-		\li function:
-		*	SimOneNodeReady
-		\li brief:
-		*	Inform Simone that the internal system is ready
-		@param
-		*	None
-		@return
-		*	Success or not
-		*/
-		SIMONE_NET_API bool SimOneNodeReady();
 
 		/*!
 		获取案例详情
@@ -172,19 +185,6 @@ extern "C"
 		SIMONE_NET_API bool GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo);
 
 		/*!
-		订阅主车
-		\li function:
-		*	SubMainVehicle
-		\li brief:
-		*	Subscribe to mainVehicle
-		@param
-		*	mainVehicleId:id,isJoinTimeLoop:true/false join frame synchronization
-		@return
-		*	Success or not
-		*/
-		SIMONE_NET_API bool SubMainVehicle(int mainVehicleId, bool isJoinTimeLoop);
-
-		/*!
 		获取当前帧值
 		\li function:
 		*	Wait
@@ -210,31 +210,19 @@ extern "C"
 		*/
 		SIMONE_NET_API void NextFrame(int frame);
 
-		/*!
-		设置是否允许收发目标级数据
-		\li function:
-		*	SetSensorObjectbasedDataEnable
-		\li brief:
-		*	Set the sensor data to receive data level
-		@param
-		*   enable: true:receive object data, false:do not receive object data
-		@return
-		*	Success or not
-		*/
-		SIMONE_NET_API bool SetSensorObjectbasedDataEnable(bool enable);
 
 		/*!
-		启动SimOneAPI，允许HDmap函数和所有回调
+		仿真场景中每帧的回调,每帧开始和结束时调用回调函数
 		\li function:
-		* Start
+		*	SetFrameCB
 		\li brief:
-		*	Start SimOneAPI, enable HDmap functions and all callbacks
+		*	The callback function is called at the beginning and end of each frame.
 		@param
-		*   None
+		*   FrameStart:Callback function at the beginning of the frame FrameEnd:Callback function at the end of the frame
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool Start();
+		SIMONE_NET_API bool SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame));
 
 		/*!
 		获取主车状态信息

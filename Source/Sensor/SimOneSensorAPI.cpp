@@ -15,16 +15,6 @@ extern "C"
 #endif
 #define MAX_DRIVER_NAME_LEN 10
 
-	SIMONE_NET_API bool SimOneAPI::SetSensorObjectbasedDataEnable(bool enable) {
-		return SimOneAPIService::GetInstance()->SetObjectbasedDataEnable(enable);
-	}
-
-	SIMONE_NET_API bool SimOneAPI::SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame)) {
-		SimOneAPIService::GetInstance()->SetFrameStartCB(FrameStart);
-		SimOneAPIService::GetInstance()->SetFrameStartCB(FrameEnd);
-		return true;
-	}
-
 	SIMONE_NET_API bool SimOneAPI::GetGps(int mainVehicleId, SimOne_Data_Gps *pGps) {
 		return SimOneAPIService::GetInstance()->GetGps(mainVehicleId, pGps);
 	}
