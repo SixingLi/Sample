@@ -11,7 +11,7 @@ ENDIF()
 add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
  
 # top project
-project(SimOneAPISample VERSION 3.0.0 LANGUAGES C CXX)
+project(SimOneIOAPISample VERSION 3.0.0 LANGUAGES C CXX)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
@@ -21,16 +21,19 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMakeTargets")
 SET(SIMONE_API_SAMPLE ${CMAKE_CURRENT_LIST_DIR}/..)
 SET(3RDPARTY ${CMAKE_CURRENT_LIST_DIR}/../../../../3rdparty)
-SET(BINARY_OUT_PATH ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE})
-
-add_custom_target(autoconfig ALL DEPENDS)
+SET(BINARY_OUT_PATH ${SIMONE_API_SAMPLE}/bin/Release)
+SET(SIMONE_PATH_ROOT ${CMAKE_CURRENT_LIST_DIR}/../../../..)
+SET(BRIDGE_SM_ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 
 function(SetDefaultTargetProperties target)
 	set_target_properties(${target} PROPERTIES
 		CXX_STANDARD 14
 	)
 	set_target_properties(${target} PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+		# ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../Output/lib
+		# LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../Output/lib
+		# RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../Output/bin
+		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../bin
 	)
 endfunction()
 
@@ -53,6 +56,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Workshop/AEB AEB)
 ELSE()
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Autopilot/CurveSample CurveSample)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Autopilot/LimitChangeLaneSample LimitChangeLaneSample)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Autopilot/PredefinedRouteSample PredefinedRouteSample)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Autopilot/TrafficLightSample TrafficLightSample)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Workshop/AEB AEB)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Workshop/AVP AVP)
@@ -62,6 +66,11 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../HDMap HDMap)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Traffic Traffic)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../V2X/V2XADAS V2XADAS)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Dynamics Dynamics)
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneServiceAPI SimOneServiceAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOnePNCAPI SimOnePNCAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneSensorAPI SimOneSensorAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneV2XAPI SimOneV2XAPI)
 ENDIF()
 
 
