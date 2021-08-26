@@ -1,32 +1,40 @@
 ﻿#include "SimOneSensorAPI.h"
+#include "SimOneV2XAPI.h"
 #include "SimOneServiceAPI.h"
-#include "Service/SimOneIOStruct.h"
 #include <thread> 
 #include <chrono>
 #include <iostream>
-
+using namespace std;
 int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
 	int MainVehicleId = 0;
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
-	//SimOneAPI::SetSensorObjectbasedDataEnable(false);
 	std::unique_ptr<SimOne_Data_Obstacle> pObstacle = std::make_unique<SimOne_Data_Obstacle>();
-
-#ifndef WITHOUT_HDMAP
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
-	SimOneAPI::SetSensorObjectbasedDataEnable(false);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	std::unique_ptr<SimOne_Data_V2XNFS> pDetections = std::make_unique<SimOne_Data_V2XNFS>();
-#endif
+	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
+
+	int mainVehicleId = 0;
+	//bool isJoinTimeLoop = false;
+
 	while (1)
 	{
-		//Sensor Only Test
-		SimOneAPI::GetGroundTruth(0, pObstacle.get());
-		if (pObstacle.get()!= NULL) {
-			std::cout << "obstacleSize: " <<pObstacle->obstacleSize <<" height:"<< pObstacle->obstacle[0].height<<std::endl;
+
+		//1 GetGps
+		if (SimOneAPI::GetGps(mainVehicleId, pGps.get())) {
+			cout << "MainVehicle Pos.X: " << pGps.get()->posX << ", MainVehicle Pos.Y: " << pGps.get()->posY << endl;
 		}
-		
-#ifndef WITHOUT_HDMAP
+		else {
+			cout << "GetGps fail " << endl;
+		}
+
+
+		////1 GetGroundTruth
+		//SimOneAPI::GetGroundTruth(0, pObstacle.get());
+		//if (pObstacle.get() != NULL) {
+		//	std::cout << "obstacleSize: " << pObstacle->obstacleSize << " height:" << pObstacle->obstacle[0].height << std::endl;
+		//}
+
 		auto function = [](int mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) {
 			std::cout << pDetections->MsgFrameData << std::endl;
 		};
@@ -36,11 +44,6 @@ int main(int argc, char* argv[])
 			std::cout << "strlen = " << strlen(pDetections->MsgFrameData) << "  " << pDetections->MsgFrameData << std::endl;
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
-		std::cout << "v2x depend on hdmap api" << std::endl;
-		break;
-#else
-
-#endif // !WITHOUT_HDMAP
 	}
 	return 0;
 }

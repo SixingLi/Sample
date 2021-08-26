@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
 	bool leaveAfterParked = true;
 	bool isJoinTimeLoop = true;
 	int MainVehicleId = 0;
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 
 	SimOneAPI::SetDriverName(0, "AVP");
 

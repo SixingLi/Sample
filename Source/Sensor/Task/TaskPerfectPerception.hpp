@@ -31,7 +31,6 @@ private:
 	bool flag = false;
 
 	typedef map<string, SimOne_Data_SensorDetections*> SimOne_Data_SensorDetectionsMap;
-	typedef map<string, SimOne_Data_OSI*> SimOne_Data_OSIMap;
 
 	// mainVehicleId sensorId
 	SimOne_Data_SensorDetectionsMap mLastSensorDetectionsMap;
@@ -45,7 +44,6 @@ private:
 	mutable std::recursive_mutex mLastObstacleMapLock;
 
 	void(*mpSensorDetectionsUpdateCB)(int mainVehicleId, int sensorId, SimOne_Data_SensorDetections *pGroundTruth);
-	void(*mpGroundTruthOSIUpdateCB)(int mainVehicleId, SimOne_Data_OSI *pGroundTruthOSI);
 };
 CYBERTRON_END
 #endif

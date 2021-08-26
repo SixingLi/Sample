@@ -17,8 +17,7 @@
 #include <string>
 
 #ifndef WITHOUT_HDMAP
-#include "Map/SimOneHDMapAPINonStd.h"
-#include "Map/SimOneNetAPI_Premium.h"
+#include "SimOneHDMapAPI.h"
 #include "public/common/MRoadMark.h"
 #include "public/common/MSignal.h"
 #include "public/common/MObject.h"
@@ -234,7 +233,7 @@ public:
 
 
 	////////////////////////////////
-	//Premium, defined by SimOneNetAPI_Premium.h
+	//Premium, defined by lx
 	//
 	static void GetLaneData(SSD::SimVector<HDMapStandalone::MLaneInfo>& data);
 	static SSD::SimVector<long> GetJunctionList();
@@ -252,19 +251,15 @@ public:
 	static bool GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, const double& forward,
 		SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList);
 	static void GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo);
-	static bool GenerateRoute(const SSD::SimPoint3DVector& sampleNodes, SSD::SimVector<int>& indexOfValidPoints,
-		HDMapStandalone::MRoutePath& path, SSD::SimVector<HDMapStandalone::MRoutePoint>& routePtList);
 	static void GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList);
 
 
 	////////////////////////////////
-	//Non-standard, used by GuangQi
+	//Non-standard gq
 	//
-	static SimOneAPI::LaneInfo_ GetLaneInfo(const SSD::SimPoint3D& pos, const SimOneAPI::TyrePosInfo_& tyrePosInfo, const double& forward);
 	static SSD::SimVector<int> GetLaneIndexList(const SSD::SimPoint3D& pos, int& currentLaneIndex, SSD::SimStringVector& laneIdList);
 	static SimOneAPI::EDirectionType_ GetIconType(const SSD::SimPoint3D& pos);
 	static bool GetLaneSampleByLocation(const SSD::SimPoint3D& pos, HDMapStandalone::MLaneInfo& info);
-
 
 #endif
 	map<std::string, int> mSensorDataTypeMap;

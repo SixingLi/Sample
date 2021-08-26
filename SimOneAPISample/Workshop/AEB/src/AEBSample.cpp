@@ -18,7 +18,7 @@ int main()
 	bool isSimOneInitialized = false;
 	int MainVehicleId = 0;
 	bool isJoinTimeLoop = 0;
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop); 
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop); 
 	SimOneAPI::SetDriverName(0, "AEB");
 
 	int timeout = 20;

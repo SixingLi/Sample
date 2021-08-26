@@ -22,9 +22,9 @@ extern "C"
 		return true;
 	}
 
-	SIMONE_NET_API bool SimOneAPI::SimOneAPIInitialized(int hostVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
+	SIMONE_NET_API bool SimOneAPI::InitSimOneAPI(int hostVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
 	{
-
+		SetServerInfo();
 		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneAPIService::GetInstance()->SimOneNodeReady()) {
 			while (true) {
 				if (GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Running) {

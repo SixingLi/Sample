@@ -28,7 +28,6 @@ private:
 
 	typedef map<string, SimOne_Data_Point_Cloud*> SimOne_Data_Point_CloudMap;
 	typedef map<string, SimOne_Data_SensorDetections*> SimOne_Data_SensorDetectionsMap;
-	typedef map<string, SimOne_Data_OSI*> SimOne_Data_OSIMap;
 
 	// mainVehicleId sensorId
 	SimOne_Data_Point_CloudMap mLastPointCloudMap;

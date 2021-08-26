@@ -152,7 +152,7 @@ int main()
 
 	bool isJoinTimeLoop = false;
 	int MainVehicleId = 0;
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	//Wait for the Sim-One case to run
 	while (1) {
 		int frame = SimOneAPI::Wait();

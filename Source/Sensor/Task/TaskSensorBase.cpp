@@ -18,8 +18,6 @@ TaskSensorManager::TaskSensorManager()
 	mpRadarDetectionsCB = nullptr;
 	mpSensorDetectionsUpdateCB = nullptr;
 	mpUltrasonicRadarsUpdateCB = nullptr;
-	mpOSISensorDataUpdateCB = nullptr;
-
 	mpObstacleUpdateCB = nullptr;
 	mpSimOneGroundTruthCB = nullptr;
 
@@ -41,7 +39,6 @@ void TaskSensorManager::ManagerClear() {
 	mpRadarDetectionsCB = nullptr;
 	mpSensorDetectionsUpdateCB = nullptr;
 	mpUltrasonicRadarsUpdateCB = nullptr;
-	mpOSISensorDataUpdateCB = nullptr;
 	mpObstacleUpdateCB = nullptr;
 	mpSimOneGroundTruthCB = nullptr;
 #ifndef WITHOUT_HDMAP

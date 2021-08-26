@@ -124,7 +124,6 @@ public:
 	void(*mpLaneDetectionsUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLane);
 	void(*mpUltrasonicRadarsUpdateCB)(int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics);
 	void(*mpUltrasonicRadarUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonics);
-	void(*mpOSISensorDataUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_OSI *pSensordata);
 	void(*mpObstacleUpdateCB)(int mainVehicleId, SimOne_Data_Obstacle *pObstacle);
 	void(*mpSimOneGroundTruthCB)(SimOne_Data_Obstacle *pObstacle);
 

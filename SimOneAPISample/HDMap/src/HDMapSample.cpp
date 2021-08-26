@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
 	int MainVehicleId = 0;
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	//SimOneAPI::StartSimOneNode(0,0,0);
 	//while (true)
 	//{

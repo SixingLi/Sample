@@ -253,7 +253,7 @@ int main()
     bool isSimOneInitialized = false;
 	int MainVehicleId = 0;
 	bool isJoinTimeLoop = false;
-    SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
+    SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
     SimOneAPI::SetDriverName(0, "TrajCtrl");
 
     static const int nnn = 40;

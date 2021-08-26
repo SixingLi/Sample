@@ -544,7 +544,6 @@ struct SimOne_Data_Obstacle : public SimOne_Data
 };
 
 
-
 struct SimOne_Data_CaseInfo
 {
 	char caseName[SOSM_CASENAME_LENGTH];
@@ -795,19 +794,6 @@ struct SimOne_Data_LaneInfo :public SimOne_Data
 	
 };
 
-
-// ----------------------------
-// OSI GroundTruth Data (SimOne Output) 
-// ----------------------------
-#define SOSM_GROUNDTRUTH_OSI_PREFIX "SOSM_GROUNDTRUTH_OSI_"
-#define SOSM_SENSORDATA_OSI_PREFIX "SOSM_SENSORDATA_OSI_"
-#define SOSM_OSI_DATA_SIZE_MAX 1024*1024*8
-
-struct SimOne_Data_OSI : public SimOne_Data
-{
-	int dataSize; // data size	
-	char data[SOSM_OSI_DATA_SIZE_MAX];
-};
 
 enum SimOne_ClientType {
 	ESimOneClientType_None = 0,

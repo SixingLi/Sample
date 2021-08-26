@@ -2985,18 +2985,7 @@ void SimOneAPIService::GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLine
 	laneLineInfo = HDMapStandalone::MHDMap::GetLaneLineInfo();
 }
 
-bool SimOneAPIService::GenerateRoute(const SSD::SimPoint3DVector& sampleNodes, SSD::SimVector<int>& indexOfValidPoints,
-	HDMapStandalone::MRoutePath& path, SSD::SimVector<HDMapStandalone::MRoutePoint>& routePtList)
-{
-#ifndef API_TEST_LOADXODR_OFFLINE
-	if (!mbHDMapInited)
-	{
-		bridgeLogOutput(ELogLevel_Type::ELogLevelError, "GenerateRoute failed, HDMap not initialized yet.");
-		return false;
-	}
-#endif
-	return HDMapStandalone::MRouting::GenerateRoute(sampleNodes, indexOfValidPoints, path, routePtList);
-}
+
 
 void SimOneAPIService::GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList)
 {
@@ -3008,94 +2997,6 @@ void SimOneAPIService::GetSectionList(const long& roadId, SSD::SimStringVector& 
 	}
 #endif
 	HDMapStandalone::MHDMap::GetSectionList(roadId, rightList, leftList);
-}
-
-SimOneAPI::LaneInfo_ SimOneAPIService::GetLaneInfo(const SSD::SimPoint3D& pos, const SimOneAPI::TyrePosInfo_& tyrePosInfo, const double& forward)
-{
-	SimOneAPI::LaneInfo_ laneInfo;
-#ifndef API_TEST_LOADXODR_OFFLINE
-	if (!mbHDMapInited)
-	{
-		bridgeLogOutput(ELogLevel_Type::ELogLevelError, "GetLaneInfo failed, HDMap not initialized yet.");
-		return std::move(laneInfo);
-	}
-#endif
-	SSD::SimString idStr;
-	double s, t, s_toCenterLine, t_toCenterLine;
-	bool insideLane = false;
-	bool drivingOnly = true;
-	//if (HDMapStandalone::MHDMap::GetNearMostLane_V2(pos, pIdStr, s, t, s_toCenterLine, t_toCenterLine))
-	if (HDMapStandalone::MLocation::GetNearMostLaneWithHeight_V2(pos, drivingOnly, idStr, s, t, s_toCenterLine, t_toCenterLine, insideLane))
-	{
-		long juncId = -1;
-		if (HDMapStandalone::MHDMap::IsInJunction(idStr, juncId))
-		{
-			//For lanes in junction, need to cover all of them.
-			//Only calculate laneSampleList.
-			//
-			SSD::SimStringVector laneList;
-			SSD::SimPoint2D p1(tyrePosInfo.rearLeft.x, tyrePosInfo.rearLeft.y);
-			SSD::SimPoint2D p2(tyrePosInfo.frontLeft.x, tyrePosInfo.frontLeft.y);
-			SSD::SimPoint2D dir(tyrePosInfo.frontLeft.x - tyrePosInfo.rearLeft.x, tyrePosInfo.frontLeft.y - tyrePosInfo.rearLeft.y);
-			dir.Normalize();
-			double angle = GetAngle_(SSD::SimPoint2D(1, 0), dir);
-			GetValidJunctionLanes_(pos, drivingOnly, angle, idStr, insideLane, juncId, laneList);
-			//dataList
-			//
-			for (auto& laneId : laneList)
-			{
-				SimOneAPI::LaneData_ data;
-				CalculateLaneIndexInfo_(laneId, data.laneIndexInfo);
-
-				//laneSampleList
-				data.laneSampleList = std::move(GetLaneSampleList_(pos, laneId, forward));
-
-				//laneLineTypeInfo
-				HDMapStandalone::MRoadMark left, right;
-				HDMapStandalone::MLocation::GetRoadMark(pos, laneId, left, right);
-				data.laneLineTypeInfo.leftLaneLineType = ToELaneLineType_(left);
-				data.laneLineTypeInfo.rightLaneLineType = ToELaneLineType_(right);
-
-				//If leftLaneLineType and rightLaneLineType are none, no need to calculate overLaneInfo
-				//overlapLaneInfo
-				if (data.laneLineTypeInfo.leftLaneLineType == SimOneAPI::ELaneLineType_::none
-					&& data.laneLineTypeInfo.rightLaneLineType == SimOneAPI::ELaneLineType_::none)
-				{
-					//do nothing
-				}
-				else
-				{
-					HDMapStandalone::MLocation::IsOverlapLaneLine(laneId, tyrePosInfo.frontLeft, tyrePosInfo.frontRight,
-						tyrePosInfo.rearLeft, tyrePosInfo.rearRight, data.overlapLaneInfo.isOverlapLeftBoundary, data.overlapLaneInfo.isOverlapRightBoundary);
-				}
-
-				laneInfo.dataList.push_back(data);
-			}
-			return std::move(laneInfo);
-		}
-
-		SimOneAPI::LaneData_ data;
-		//laneIndexList
-		CalculateLaneIndexInfo_(idStr, data.laneIndexInfo);
-
-		//laneType
-		data.laneType = GetIconType_(pos, idStr);
-
-		//laneSampleList
-		data.laneSampleList = std::move(GetLaneSampleList_(pos, idStr, forward));
-
-		//overlapLaneInfo
-		HDMapStandalone::MLocation::IsOverlapLaneLine(idStr, tyrePosInfo.frontLeft, tyrePosInfo.frontRight,
-			tyrePosInfo.rearLeft, tyrePosInfo.rearRight, data.overlapLaneInfo.isOverlapLeftBoundary, data.overlapLaneInfo.isOverlapRightBoundary);
-
-		//laneLineTypeInfo
-		HDMapStandalone::MRoadMark left, right;
-		HDMapStandalone::MLocation::GetRoadMark(pos, idStr, left, right);
-		data.laneLineTypeInfo.leftLaneLineType = ToELaneLineType_(left);
-		data.laneLineTypeInfo.rightLaneLineType = ToELaneLineType_(right);
-		laneInfo.dataList.push_back(data);
-	}
-	return std::move(laneInfo);
 }
 
 SSD::SimVector<int> SimOneAPIService::GetLaneIndexList(const SSD::SimPoint3D& pos, int& currentLaneIndex, SSD::SimStringVector& laneIdList)

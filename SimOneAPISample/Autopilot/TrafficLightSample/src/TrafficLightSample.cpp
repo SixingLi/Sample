@@ -193,7 +193,7 @@ int main()
 {
 	int MainVehicleId = 0;
 	bool isJoinTimeLoop = false;
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	while (1) {
 		int frame = SimOneAPI::Wait();
 		SimOneAPI::GetGps(MainVehicleId,&Gps);

@@ -122,7 +122,7 @@ extern "C"
 		/*!
 		SimOne API主入口
 		\li function:
-		*	SimOneAPIInitialized
+		*	InitSimOneAPI
 		\li brief:
 		*	Initialize SimOneAPI for autonomous driving algorithm
 		@param
@@ -130,7 +130,7 @@ extern "C"
 		@return
 		*	None
 		*/
-		SIMONE_NET_API bool SimOneAPIInitialized(int hostVehicleId, bool isFrameSync, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
+		SIMONE_NET_API bool InitSimOneAPI(int hostVehicleId, bool isFrameSync, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
 
 		/*!
 		停止API node

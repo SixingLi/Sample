@@ -23,7 +23,7 @@ int main()
 	//Wait for the Sim-One case to run
 	int MainVehicleId = 0;
 	bool isJoinTimeLoop = 0;
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	while (1) {
 		int frame = SimOneAPI::Wait();
 		SimOneAPI::GetGps(MainVehicleId,&Gps);

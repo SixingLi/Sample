@@ -10,12 +10,12 @@ int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
 	int MainVehicleId = 0;
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	//SimOneAPI::SetSensorObjectbasedDataEnable(false);
 	std::unique_ptr<SimOne_Data_Obstacle> pObstacle = std::make_unique<SimOne_Data_Obstacle>();
 
 #ifndef WITHOUT_HDMAP
-	SimOneAPI::SimOneAPIInitialized(MainVehicleId, isJoinTimeLoop);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	std::unique_ptr<SimOne_Data_V2XNFS> pDetections = std::make_unique<SimOne_Data_V2XNFS>();
 #endif
 	while (1)
