@@ -1853,9 +1853,6 @@ bool SimOneAPIService::onFromHotAreaDataMessage(Message& msg) {
 		return false;
 	}
 	Bridge::BridgeHotAreaHeader header = hotAreaMessage.header();
-	if (header.frame() <= 1) {
-		return false;
-	}
 	bool ret = false;
 	hotAreaMessage.buffer();
 	SimOneDataStat::DataContent timeData;
