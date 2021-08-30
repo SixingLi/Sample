@@ -306,30 +306,22 @@ bool SimOneAPIService::Init()
 	ReadLogConfigFile();
 	if (ReadLogServerConfigFromFile())
 	{
-		//bridgeLogOutput(ELogLevel_Type::ELogLevelInformation, "Load logServer config json sucess!");
-		printf("===file=======>logServerIP:%s logServerPort:%d<==========\n", mLogServerIp, mLogServerPort);
 		return true;
 	}
 	if(ReadLogServerConfigFromEnv())
 	{
-		//bridgeLogOutput(ELogLevel_Type::ELogLevelInformation, "Load logServer env value sucess!");
-		printf("===Env=======>logServerIP:%s logServerPort:%d<==========\n", mLogServerIp, mLogServerPort);
 		return true;
 	}
 	memcpy(mLogServerIp, "logcollector", strlen("logcollector"));
 	mLogServerPort = 9999;
-	printf("====default======>logServerIP:%s logServerPort:%d<==========\n", mLogServerIp, mLogServerPort);
 	return false;
 }
 void SimOneAPIService::ReadLogConfigFile() {
 	cybertron::json jsonSensor;
-	if (!JsonReader::loadFile(jsonSensor, "logOutputConfig.json"))
-	{
-		logError("Failed to load logOutput Config json file");
+	if (!JsonReader::loadFile(jsonSensor, "logOutputConfig.json")){
 		return;
 	}
-	else
-	{
+	else{
 		std::string isWriteLogFile = JsonReader::getString(jsonSensor, "API_CONTROL_LOG");
 		mbIsWriteLogFile = atoi(isWriteLogFile.c_str());
 	}
@@ -337,10 +329,7 @@ void SimOneAPIService::ReadLogConfigFile() {
 bool SimOneAPIService::ReadLogServerConfigFromFile()
 {
 	cybertron::json jsonSensor;
-	if (!JsonReader::loadFile(jsonSensor, "Config.json"))
-	{
-		printf("Failed to load config json file\n");
-		//bridgeLogOutput(ELogLevel_Type::ELogLevelWarning, "Failed to load config json file");
+	if (!JsonReader::loadFile(jsonSensor, "Config.json")){
 		return false;
 	}
 	else
@@ -374,12 +363,12 @@ bool SimOneAPIService::ReadLogServerConfigFromEnv()
 	mbDisplayHotAreaData = 0;
 	mbDisplaySensorData = 0;
 	mDisPlayFrequency = 1000;
-	printf("LOG_SERVER_IP:%s\n", mLogServerIp);
-	printf("LOG_SERVER_PORT:%d\n", mLogServerPort);
-	printf("LOG_SERVER_FILENAME:%s\n", mLogServerFileName);
-	printf("LOG_SERVER_HOTAREADATA:%d\n", mbDisplayHotAreaData);
-	printf("LOG_SERVER_SENSORDATA:%d\n", mbDisplaySensorData);
-	printf("LOG_SERVER_DISPLAYFREQUENCY:%d\n", mDisPlayFrequency);
+	//printf("LOG_SERVER_IP:%s\n", mLogServerIp);
+	//printf("LOG_SERVER_PORT:%d\n", mLogServerPort);
+	//printf("LOG_SERVER_FILENAME:%s\n", mLogServerFileName);
+	//printf("LOG_SERVER_HOTAREADATA:%d\n", mbDisplayHotAreaData);
+	//printf("LOG_SERVER_SENSORDATA:%d\n", mbDisplaySensorData);
+	//printf("LOG_SERVER_DISPLAYFREQUENCY:%d\n", mDisPlayFrequency);
 	return true;
 }
 bool SimOneAPIService::connectSyncBridgeNode() {
@@ -1998,7 +1987,6 @@ void SimOneAPIService::setCaseInfo(const std::string* msgDataBody) {
 	memcpy(&mCaseInfo, msgDataBody->c_str(), msgDataBody->size());
 	bridgeLogOutput(ELogLevel_Type::ELogLevelInformation, "CaseInfo caseId:%s", mCaseInfo.caseId);
 	bridgeLogOutput(ELogLevel_Type::ELogLevelInformation, "CaseInfo caseName:%s", mCaseInfo.caseName);
-	bridgeLogOutput(ELogLevel_Type::ELogLevelInformation, "CaseInfo sessionId:%s", mCaseInfo.sessionId);
 	bridgeLogOutput(ELogLevel_Type::ELogLevelInformation, "CaseInfo taskId:%s", mCaseInfo.taskId);
 }
 bool SimOneAPIService::onFromCaseStatusChange(Message& msg) {

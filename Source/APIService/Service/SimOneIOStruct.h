@@ -66,7 +66,6 @@ struct SimOneData_Vec3f
 #define SOSM_CASENAME_LENGTH 256
 #define SOSM_CASEID_LENGT 256
 #define SOSM_TASKID_LENGT 256
-#define SOSM_SESSIONID_LENGT 256
 struct SimOne_Data_Map
 {
 	char openDrive[SOSM_MAP_OD_LENGT];
@@ -549,7 +548,6 @@ struct SimOne_Data_CaseInfo
 	char caseName[SOSM_CASENAME_LENGTH];
 	char caseId[SOSM_CASEID_LENGT];
 	char taskId[SOSM_TASKID_LENGT];
-	char sessionId[SOSM_SESSIONID_LENGT];
 };
 enum SimOne_Case_Status
 {
