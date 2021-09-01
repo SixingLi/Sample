@@ -2,6 +2,7 @@ add_executable(OpenSimOneAPITest "")
 
 include_directories("${SIMONE_API_ROOT}/Source/APIService")
 include_directories("${SIMONE_API_ROOT}/Source/Sensor")
+include_directories("${SIMONE_API_ROOT}/Source/PNC")
 include_directories("${SIMONE_PATH_ROOT}/3rdparty")
 include_directories("${SIMONE_PATH_ROOT}/3rdparty/SSD/include")
 include_directories("${SIMONE_PATH_ROOT}/3rdparty/hdmap/include")
