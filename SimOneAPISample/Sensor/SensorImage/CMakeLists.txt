@@ -51,6 +51,12 @@ IF (WIN32)
 
 ELSEIF (UNIX)
 	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingIOAPI.so)
+	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58)
+	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58)
+	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56)
+	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswresample.so.3)
+	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswscale.so.5)
+	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libx264.so.148)
     target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/libopencv_highgui.so.3.4)
 	target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/libopencv_core.so.3.4)
 	target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/libopencv_imgcodecs.so.3.4)
@@ -60,6 +66,12 @@ ELSEIF (UNIX)
 	add_custom_command(TARGET SensorImageView
 		POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingIOAPI.so ${CMAKE_BINARY_DIR}/bin/libSimOneStreamingIOAPI.so
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58 ${CMAKE_BINARY_DIR}/bin/libavcodec.so.58
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58 ${CMAKE_BINARY_DIR}/bin/libavformat.so.58
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56 ${CMAKE_BINARY_DIR}/bin/libavutil.so.56
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswresample.so.3 ${CMAKE_BINARY_DIR}/bin/libswresample.so.3
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswscale.so.5 ${CMAKE_BINARY_DIR}/bin/libswscale.so.5
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libx264.so.148 ${CMAKE_BINARY_DIR}/bin/libx264.so.148
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/libopencv_highgui.so.3.4 ${CMAKE_BINARY_DIR}/bin/libopencv_highgui.so.3.4
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/libopencv_core.so.3.4 ${CMAKE_BINARY_DIR}/bin/libopencv_core.so.3.4
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/libopencv_imgcodecs.so.3.4 ${CMAKE_BINARY_DIR}/bin/libopencv_imgcodecs.so.3.4
