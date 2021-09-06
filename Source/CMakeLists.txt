@@ -137,6 +137,8 @@ IF (WIN32)
 			POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/debug/${CMAKE_BUILD_NAME}.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/${CMAKE_BUILD_NAME}.lib
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/bin/debug/${CMAKE_BUILD_NAME}.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/${CMAKE_BUILD_NAME}.dll
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/debug/${CMAKE_BUILD_NAME}.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/${CMAKE_BUILD_NAME}.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/bin/debug/${CMAKE_BUILD_NAME}.dll ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/${CMAKE_BUILD_NAME}.dll
 		)
 		
 	ELSEIF (${CMAKE_BUILD_TYPE} STREQUAL "Release")

@@ -34,12 +34,12 @@
 #ifndef WITHOUT_V2X
 #ifdef BUILD_SIMONE_API
 #if defined(WIN32) || defined(_WIN32)
-#define SIMONE_NET_API __declspec(dllexport)
+#define SIMONE_API __declspec(dllexport)
 #elif defined(__linux__) || defined(__linux)
-#define SIMONE_NET_API __attribute__((visibility("default")))
+#define SIMONE_API __attribute__((visibility("default")))
 #endif
 #else
-#define SIMONE_NET_API
+#define SIMONE_API
 #endif
 
 #include <string>
@@ -55,7 +55,7 @@
 extern "C"
 {
 #endif
-	//SimOneAPI命名空间是新的API,SimOneSM是老的命名空间为了兼容以前的接口
+
 	namespace SimOneAPI {
 
 		/*
@@ -71,7 +71,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool GetV2XInfo(int mainVehicleId, const char* sensorId, int infoType, SimOne_Data_V2XNFS *pDetections);
+		SIMONE_API bool GetV2XInfo(int mainVehicleId, const char* sensorId, int infoType, SimOne_Data_V2XNFS *pDetections);
 
 
 		/*
@@ -87,7 +87,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetV2XInfoUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
+		SIMONE_API bool SetV2XInfoUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
 	}
 #ifdef __cplusplus
 }

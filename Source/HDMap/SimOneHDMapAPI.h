@@ -36,12 +36,12 @@
 #ifndef WITHOUT_HDMAP
 #ifdef BUILD_SIMONE_API
 #if defined(WIN32) || defined(_WIN32)
-#define SIMONE_NET_API __declspec(dllexport)
+#define SIMONE_API __declspec(dllexport)
 #elif defined(__linux__) || defined(__linux)
-#define SIMONE_NET_API __attribute__((visibility("default")))
+#define SIMONE_API __attribute__((visibility("default")))
 #endif
 #else
-#define SIMONE_NET_API
+#define SIMONE_API
 #endif
 
 #include <string>
@@ -71,7 +71,7 @@ extern "C"
 {
 #endif
 
-	//SimOneAPI命名空间是新的API,SimOneSM是老的命名空间为了兼容以前的接口
+
 	namespace SimOneAPI {
 		struct LaneSample
 		{
@@ -183,7 +183,7 @@ extern "C"
 		@return
 		*	True when get HDMap data success, else returns false.
 		*/
-		SIMONE_NET_API bool GetHDMapData(SimOne_Data_Map& hdMap);
+		SIMONE_API bool GetHDMapData(SimOne_Data_Map& hdMap);
 
 		/*!
 		加载高精度地图
@@ -196,7 +196,7 @@ extern "C"
 		@return
 		*	True when hdmap is loaded with success, else returns false.
 		*/
-		SIMONE_NET_API bool LoadHDMap(const int& timeOutSeconds);
+		SIMONE_API bool LoadHDMap(int timeOutSeconds);
 
 		/*!
 		获取最接近输入点的车道，所属车道优先
@@ -216,7 +216,7 @@ extern "C"
 		@return
 		*	True when any lane is found, else returns false.
 		*/
-		SIMONE_NET_API bool GetNearMostLane(const SSD::SimPoint3D& pos, SSD::SimString& id, double& s, double& t, double& s_toCenterLine, double& t_toCenterLine);
+		SIMONE_API bool GetNearMostLane(const SSD::SimPoint3D& pos, SSD::SimString& id, double& s, double& t, double& s_toCenterLine, double& t_toCenterLine);
 
 		/*!
 		获取临近车道列表
@@ -233,7 +233,7 @@ extern "C"
 		@return
 		*	True when any lane(lanes) is(are) found, else returns false.
 		*/
-		SIMONE_NET_API bool GetNearLanes(const SSD::SimPoint3D& pos, const double& distance, SSD::SimStringVector& nearLanes);
+		SIMONE_API bool GetNearLanes(const SSD::SimPoint3D& pos, const double& distance, SSD::SimStringVector& nearLanes);
 
 		/*!
 		获取视野范围内所有车道
@@ -254,7 +254,7 @@ extern "C"
 		@return
 		*	True when any lane(lanes) is(are) found, else returns false.
 		*/
-		SIMONE_NET_API bool GetNearLanesWithAngle(const SSD::SimPoint3D& pos, const double& distance,
+		SIMONE_API bool GetNearLanesWithAngle(const SSD::SimPoint3D& pos, const double& distance,
 			const double& headingAngle, const double& angleShift, SSD::SimStringVector& nearLanes);
 
 		/*!
@@ -273,7 +273,7 @@ extern "C"
 		@return
 		*	True if near most lane is found, else returns false.
 		*/
-		SIMONE_NET_API bool GetDistanceToLaneBoundary(const SSD::SimPoint3D& pos, SSD::SimString& id, double& distToLeft, double& distToRight, double& distToLeft2D, double& distToRight2D);
+		SIMONE_API bool GetDistanceToLaneBoundary(const SSD::SimPoint3D& pos, SSD::SimString& id, double& distToLeft, double& distToRight, double& distToLeft2D, double& distToRight2D);
 
 		/*!
 		获取车道信息(包含车道ID，左右边缘线，虚拟中心线)
@@ -288,7 +288,7 @@ extern "C"
 		@return
 		*	True if specified lane exists in the map, else returns false.
 		*/
-		SIMONE_NET_API bool GetLaneSample(const SSD::SimString &id, HDMapStandalone::MLaneInfo& info);
+		SIMONE_API bool GetLaneSample(const SSD::SimString &id, HDMapStandalone::MLaneInfo& info);
 
 		/*!
 		获取车道连接信息
@@ -303,7 +303,7 @@ extern "C"
 		@return
 		*	True if specified lane exists in the map, else returns false.
 		*/
-		SIMONE_NET_API bool GetLaneLink(const SSD::SimString& id, HDMapStandalone::MLaneLink& laneLink);
+		SIMONE_API bool GetLaneLink(const SSD::SimString& id, HDMapStandalone::MLaneLink& laneLink);
 
 		/*!
 		获取车道类型
@@ -318,7 +318,7 @@ extern "C"
 		@return
 		*	True if specified lane exists in the map, else returns false.
 		*/
-		SIMONE_NET_API bool GetLaneType(const SSD::SimString& id, HDMapStandalone::MLaneType& laneType);
+		SIMONE_API bool GetLaneType(const SSD::SimString& id, HDMapStandalone::MLaneType& laneType);
 
 		/*!
 		获取车道宽度
@@ -335,7 +335,7 @@ extern "C"
 		@return
 		*	True if specified lane exists in the map, else returns false.
 		*/
-		SIMONE_NET_API bool GetLaneWidth(const SSD::SimString& id, const SSD::SimPoint3D& pos, double& width);
+		SIMONE_API bool GetLaneWidth(const SSD::SimString& id, const SSD::SimPoint3D& pos, double& width);
 
 		/*!
 		获取相对于车道虚拟中心线的ST坐标
@@ -352,7 +352,7 @@ extern "C"
 		@return
 		*	True if specified lane exists in the map, else returns false.
 		*/
-		SIMONE_NET_API bool GetLaneST(const SSD::SimString& id, const SSD::SimPoint3D& pos, double& s, double& t);
+		SIMONE_API bool GetLaneST(const SSD::SimString& id, const SSD::SimPoint3D& pos, double& s, double& t);
 
 		/*!
 		获取相对于道路参考线的ST坐标
@@ -369,7 +369,7 @@ extern "C"
 		@return
 		*	True if specified lane exists in the map, else returns false.
 		*/
-		SIMONE_NET_API bool GetRoadST(const SSD::SimString& id, const SSD::SimPoint3D& pos, double& s, double& t, double& z);
+		SIMONE_API bool GetRoadST(const SSD::SimString& id, const SSD::SimPoint3D& pos, double& s, double& t, double& z);
 
 		/*!
 		根据车道ST坐标获取局部坐标
@@ -387,7 +387,7 @@ extern "C"
 		@return
 		*	True if specified lane exists in the map, else returns false.
 		*/
-		SIMONE_NET_API bool GetInertialFromLaneST(const SSD::SimString& id, const double& s, const double& t, SSD::SimPoint3D& inertial, SSD::SimPoint3D& dir);
+		SIMONE_API bool GetInertialFromLaneST(const SSD::SimString& id, const double& s, const double& t, SSD::SimPoint3D& inertial, SSD::SimPoint3D& dir);
 
 		/*!
 		查询指定车道是否存在于地图之中
@@ -400,7 +400,7 @@ extern "C"
 		@return
 		*	True if exists, else returns false.
 		*/
-		SIMONE_NET_API bool ContainsLane(const SSD::SimString& id);
+		SIMONE_API bool ContainsLane(const SSD::SimString& id);
 
 		/*!
 		获取地图中停车位列表
@@ -411,7 +411,7 @@ extern "C"
 		@param[out]
 		*   ids: Parking space list.
 		*/
-		SIMONE_NET_API void GetParkingSpaceList(SSD::SimVector<HDMapStandalone::MParkingSpace>& parkingSpaceList);
+		SIMONE_API void GetParkingSpaceList(SSD::SimVector<HDMapStandalone::MParkingSpace>& parkingSpaceList);
 
 		/*!
 		获取路网路径规划
@@ -428,7 +428,7 @@ extern "C"
 		@return
 		*	True if any route has been generated, else returns false.
 		*/
-		SIMONE_NET_API bool GenerateRoute(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimPoint3DVector& route);
+		SIMONE_API bool GenerateRoute(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimPoint3DVector& route);
 
 		/*!
 		获取规划路径所途径道路的ID列表
@@ -445,7 +445,7 @@ extern "C"
 		@return
 		*	True if any route has been generated, else returns false.
 		*/
-		SIMONE_NET_API bool Navigate(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimVector<long>& roadIdList);
+		SIMONE_API bool Navigate(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimVector<long>& roadIdList);
 
 		/*!
 		根据指定车道id和局部坐标获取输入点左右两侧车道标线信息
@@ -464,7 +464,7 @@ extern "C"
 		@return
 		*	True if roadmark is found, else returns false.
 		*/
-		SIMONE_NET_API bool GetRoadMark(const SSD::SimPoint3D& pos, const SSD::SimString& id, HDMapStandalone::MRoadMark& left, HDMapStandalone::MRoadMark& right);
+		SIMONE_API bool GetRoadMark(const SSD::SimPoint3D& pos, const SSD::SimString& id, HDMapStandalone::MRoadMark& left, HDMapStandalone::MRoadMark& right);
 
 		/*!
 		获取地图中信号灯列表
@@ -475,7 +475,7 @@ extern "C"
 		@param[out]
 		*   list: Traffic light object list.
 		*/
-		SIMONE_NET_API void GetTrafficLightList(SSD::SimVector<HDMapStandalone::MSignal>& list);
+		SIMONE_API void GetTrafficLightList(SSD::SimVector<HDMapStandalone::MSignal>& list);
 
 		/*!
 		获取地图中交通标志列表
@@ -486,7 +486,7 @@ extern "C"
 		@param[out]
 		*   list: Traffic sign object list.
 		*/
-		SIMONE_NET_API void GetTrafficSignList(SSD::SimVector<HDMapStandalone::MSignal>& list);
+		SIMONE_API void GetTrafficSignList(SSD::SimVector<HDMapStandalone::MSignal>& list);
 
 		/*!
 		获取交通灯给定作用车道的关联停止线列表
@@ -501,7 +501,7 @@ extern "C"
 		@param[out]
 		*   stoplineList: Stoplines list that is associated.
 		*/
-		SIMONE_NET_API void GetStoplineList(const HDMapStandalone::MSignal& light, const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& stoplineList);
+		SIMONE_API void GetStoplineList(const HDMapStandalone::MSignal& light, const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& stoplineList);
 
 		/*!
 		获取交通灯给定作用车道的关联人行横道线列表
@@ -516,7 +516,7 @@ extern "C"
 		@param[out]
 		*   stoplineList: Crosswalks list that is associated.
 		*/
-		SIMONE_NET_API void GetCrosswalkList(const HDMapStandalone::MSignal& light, const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& crosswalkList);
+		SIMONE_API void GetCrosswalkList(const HDMapStandalone::MSignal& light, const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& crosswalkList);
 
 		/*!
 		获取指定车道所在道路上的网状线列表
@@ -529,7 +529,7 @@ extern "C"
 		@param[out]
 		*   stoplineList: Cross hatches list that is associated.
 		*/
-		SIMONE_NET_API void GetCrossHatchList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& crossHatchList);
+		SIMONE_API void GetCrossHatchList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& crossHatchList);
 
 		/*!
 		获取输入点投影到指定车道中心线上的点和切线方向
@@ -548,7 +548,7 @@ extern "C"
 		@return
 		*	True when any lane is found, else returns false.
 		*/
-		SIMONE_NET_API bool GetLaneMiddlePoint(const SSD::SimPoint3D& inputPt, const SSD::SimString& id, SSD::SimPoint3D& targetPoint, SSD::SimPoint3D& dir);
+		SIMONE_API bool GetLaneMiddlePoint(const SSD::SimPoint3D& inputPt, const SSD::SimString& id, SSD::SimPoint3D& targetPoint, SSD::SimPoint3D& dir);
 
 		/*!
 		获取路网指定坐标点的高程列表
@@ -570,7 +570,7 @@ extern "C"
 		@return
 		*	True if any height is found, else returns false.
 		*/
-		SIMONE_NET_API bool GetHeights(const SSD::SimPoint3D& inputPt, const double& radius, SSD::SimVector<double>& heights,
+		SIMONE_API bool GetHeights(const SSD::SimPoint3D& inputPt, const double& radius, SSD::SimVector<double>& heights,
 			SSD::SimVector<long>& roadIds, SSD::SimVector<bool>& insideRoadStates);
 
 
@@ -584,7 +584,7 @@ extern "C"
 		@param[out]
 		*   data: All lane's MLaneInfo object as a list.
 		*/
-		SIMONE_NET_API void GetLaneData(SSD::SimVector<HDMapStandalone::MLaneInfo>& data);
+		SIMONE_API void GetLaneData(SSD::SimVector<HDMapStandalone::MLaneInfo>& data);
 
 		/*!
 		获取所有Junction ID列表。
@@ -595,7 +595,7 @@ extern "C"
 		@return
 		*	Junction Id list.
 		*/
-		SIMONE_NET_API SSD::SimVector<long> GetJunctionList();
+		SIMONE_API SSD::SimVector<long> GetJunctionList();
 
 		/*!
 		获取道路长度
@@ -608,7 +608,7 @@ extern "C"
 		@return
 		*	Length of road.
 		*/
-		SIMONE_NET_API double GetRoadLength(const long& roadId);
+		SIMONE_API double GetRoadLength(const long& roadId);
 
 		/*!
 		获取指定车道线所在Section的所有车道线ID列表
@@ -624,7 +624,7 @@ extern "C"
 		@return
 		*	True when any lane(lanes) is(are) found, else returns false.
 		*/
-		SIMONE_NET_API bool GetSectionLaneList(const SSD::SimString& laneId, SSD::SimStringVector& sectionLaneList);
+		SIMONE_API bool GetSectionLaneList(const SSD::SimString& laneId, SSD::SimStringVector& sectionLaneList);
 
 		/*!
 		判断指定道路是否是双向道路
@@ -637,7 +637,7 @@ extern "C"
 		@return
 		*	True if is two-side road, else returns false.
 		*/
-		SIMONE_NET_API bool IsTwoSideRoad(const long& roadId);
+		SIMONE_API bool IsTwoSideRoad(const long& roadId);
 
 		/*!
 		获取输入点所在路段的车道和道路相关信息，包括车道编号，地面指示行车箭头，前方100米车道线采样点，是否压线，车道线类型
@@ -659,7 +659,7 @@ extern "C"
 		@return
 		*	Belong road section's all lanes' code list. Code as this format, 0, 1, 2, ... . Can be empty.
 		*/
-		SIMONE_NET_API LaneInfo GetForwardLaneInfo(const SSD::SimPoint3D& pos, const TyrePosInfo& tyrePosInfo, const double& forward);
+		SIMONE_API LaneInfo GetForwardLaneInfo(const SSD::SimPoint3D& pos, const TyrePosInfo& tyrePosInfo, const double& forward);
 
 		/*!
 		获取车道长度
@@ -672,7 +672,7 @@ extern "C"
 		@return
 		*	Length of lane.
 		*/
-		SIMONE_NET_API double GetLaneLength(const SSD::SimString& id);
+		SIMONE_API double GetLaneLength(const SSD::SimString& id);
 
 		/*!
 		判断车道是否为机动车道
@@ -685,7 +685,7 @@ extern "C"
 		@return
 		*	True if specified lane is driving type, else returns false.
 		*/
-		SIMONE_NET_API bool IsDriving(const SSD::SimString& id);
+		SIMONE_API bool IsDriving(const SSD::SimString& id);
 
 		/*!
 		判断车道是否在交叉路口内
@@ -700,7 +700,7 @@ extern "C"
 		@return
 		*	True if specified lane is in a junction, else returns false.
 		*/
-		SIMONE_NET_API bool IsInJunction(const SSD::SimString& id, long& juncId);
+		SIMONE_API bool IsInJunction(const SSD::SimString& id, long& juncId);
 
 		/*!
 		判断坐标点是否在车道内
@@ -717,7 +717,7 @@ extern "C"
 		@return
 		*	True if specified point is inside the specified lane, else returns false.
 		*/
-		SIMONE_NET_API bool IsInsideLane(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, HDMapStandalone::MSideState& sideState);
+		SIMONE_API bool IsInsideLane(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, HDMapStandalone::MSideState& sideState);
 
 		/*!
 		考虑高程下获取最接近输入点的车道
@@ -743,7 +743,7 @@ extern "C"
 		@return
 		*	True when any lane is found, else returns false.
 		*/
-		SIMONE_NET_API bool GetNearMostLaneWithHeight(const SSD::SimPoint3D& pos, bool drivingOnly, SSD::SimString& id, double& s, double& t,
+		SIMONE_API bool GetNearMostLaneWithHeight(const SSD::SimPoint3D& pos, bool drivingOnly, SSD::SimString& id, double& s, double& t,
 			double& s_toCenterLine, double& t_toCenterLine, bool& insideLane);
 
 		/*!
@@ -763,7 +763,7 @@ extern "C"
 		@return
 		*	True if data is found, else return false.
 		*/
-		SIMONE_NET_API bool GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, const double& forward, SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList);
+		SIMONE_API bool GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, const double& forward, SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList);
 
 		/*!
 		获取地图中所有车道线信息
@@ -776,7 +776,7 @@ extern "C"
 		@param[out]
 		*   laneInfoList: MLaneLineInfo list for all lanes.
 		*/
-		SIMONE_NET_API void GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo);
+		SIMONE_API void GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo);
 
 		/*!
 		获取指定道路的左右Section名字列表
@@ -791,7 +791,7 @@ extern "C"
 		@param[out]
 		*   leftList: Returns left side section name list.
 		*/
-		SIMONE_NET_API void GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList);
+		SIMONE_API void GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList);
 
 
 
@@ -812,7 +812,7 @@ extern "C"
 		@return
 		*	Belong road section's all lanes' code list. Code as this format, 0, 1, 2, ... . Can be empty.
 		*/
-		SIMONE_NET_API SSD::SimVector<int> GetLaneIndexList(const SSD::SimPoint3D& pos, int& currentLaneIndex, SSD::SimStringVector& laneIdList);
+		SIMONE_API SSD::SimVector<int> GetLaneIndexList(const SSD::SimPoint3D& pos, int& currentLaneIndex, SSD::SimStringVector& laneIdList);
 
 		/*!
 		获取行车指示信息
@@ -825,7 +825,7 @@ extern "C"
 		@return
 		*	Direction icon type EDirectionType_.
 		*/
-		SIMONE_NET_API EDirectionType_ GetIconType(const SSD::SimPoint3D& pos);
+		SIMONE_API EDirectionType_ GetIconType(const SSD::SimPoint3D& pos);
 
 		/*!
 		获取主车位置所在车道信息(包含车道ID，左右边缘线，虚拟中心线)
@@ -840,7 +840,7 @@ extern "C"
 		@return
 		*	True if specified lane exists in the map, else returns false.
 		*/
-		SIMONE_NET_API bool GetLaneSampleByLocation(const SSD::SimPoint3D& pos, HDMapStandalone::MLaneInfo& info);
+		SIMONE_API bool GetLaneSampleByLocation(const SSD::SimPoint3D& pos, HDMapStandalone::MLaneInfo& info);
 
 	}
 #ifdef __cplusplus

@@ -23,9 +23,9 @@ void SetLaneLineInfo(SimOne_Data_LaneLineInfo &lineInfo, const cybertron::proto:
 
 	if (line.linetype())
 	{
-		lineInfo.lineColor = (ESimOneData_BoundaryColor)line.linecolor();
+		lineInfo.lineColor = (ESimOne_Boundary_Color)line.linecolor();
 		lineInfo.lineID = line.id();
-		lineInfo.lineType = (ESimOneData_BoundaryType)line.linetype();
+		lineInfo.lineType = (ESimOne_Boundary_Type)line.linetype();
 		lineInfo.linewidth = line.linewidth();
 		for (int i = 0; i < line.linepoints().size(); i++)
 		{
@@ -80,7 +80,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 	for (auto i = 0; i < ImageDataSrc.ground_truth().obstacles().size(); i++)
 	{
 		pImageDetections->objects[i].id = ImageDataSrc.ground_truth().obstacles(i).id();
-		pImageDetections->objects[i].type = (SimOne_Obstacle_Type)ImageDataSrc.ground_truth().obstacles(i).type();
+		pImageDetections->objects[i].type = (ESimOne_Obstacle_Type)ImageDataSrc.ground_truth().obstacles(i).type();
 		pImageDetections->objects[i].posX = ImageDataSrc.ground_truth().obstacles(i).center().x();
 		pImageDetections->objects[i].posY = ImageDataSrc.ground_truth().obstacles(i).center().y();
 		pImageDetections->objects[i].posZ = ImageDataSrc.ground_truth().obstacles(i).center().z();
@@ -140,7 +140,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 		pLaneInfo->timestamp = pSensorContext->timestamp;
 		pLaneInfo->frame = pSensorContext->frame;
 		pLaneInfo->id = ImageDataSrc.lane().id();
-		pLaneInfo->laneType = (ESimOneLaneType)ImageDataSrc.lane().type();
+		pLaneInfo->laneType = (ESimOne_Lane_Type)ImageDataSrc.lane().type();
 		pLaneInfo->laneLeftID = ImageDataSrc.lane().laneleftid();
 		pLaneInfo->laneRightID = ImageDataSrc.lane().lanerightid();
 		int antecessorSize = ImageDataSrc.lane().laneantecessorid().size();

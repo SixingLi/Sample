@@ -13,25 +13,19 @@ extern "C"
 #endif
 #define MAX_DRIVER_NAME_LEN 10
 
-	SIMONE_NET_API bool SimOneAPI::GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
+	SIMONE_API bool SimOneAPI::GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
 		return SimOneAPIService::GetInstance()->GetMainVehicleStatus(pMainVehicleStatus);
 	}
 
-	SIMONE_NET_API bool SimOneAPI::SetMainVehicleStatusCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus)) {
+	SIMONE_API bool SimOneAPI::SetMainVehicleStatusCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus)) {
 		SimOneAPIService::GetInstance()->SetMainVehicleStatusCB(cb);
 		return true;
 	}
 
-	SIMONE_NET_API bool SimOneAPI::InitSimOneAPI(int hostVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
+	SIMONE_API bool SimOneAPI::InitSimOneAPI(int hostVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
 	{
 		SetServerInfo();
 		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneAPIService::GetInstance()->SimOneNodeReady()) {
-			while (true) {
-				if (GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Running) {
-					break;
-				}
-			}
-
 			while (true)
 			{
 				bool bRet = SimOneAPIService::GetInstance()->SubMainVehicle(hostVehicleId, isFrameSync);
@@ -57,6 +51,12 @@ extern "C"
 				}
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
+			SimOneAPIService::GetInstance()->SimOneNodeReady();
+			while (true) {
+				if (GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running) {
+					break;
+				}
+			}
 			return true;
 		}
 		else {
@@ -65,30 +65,30 @@ extern "C"
 		}
 	}
 
-	SIMONE_NET_API bool SimOneAPI::StopSimOneNode() {
+	SIMONE_API bool SimOneAPI::StopSimOneNode() {
 		return SimOneAPIService::GetInstance()->Stop();
 	}
 
-	SIMONE_NET_API  bool SimOneAPI::GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo) {
+	SIMONE_API  bool SimOneAPI::GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo) {
 		return SimOneAPIService::GetInstance()->GetMainVehicleList(pMainVehicleInfo);
 	}
-	SIMONE_NET_API  const char* SimOneAPI::GetVersion() {
+	SIMONE_API  const char* SimOneAPI::GetVersion() {
 		return SimOneAPIService::GetInstance()->GetVersion();
 	}
 
-	SIMONE_NET_API  bool SimOneAPI::SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, SimOne_ClientType toNodeType) {
+	SIMONE_API  bool SimOneAPI::SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, ESimOne_Client_Type toNodeType) {
 		return SimOneAPIService::GetInstance()->SendRouteMessage(length, pBuffer, msgId, toNodeId, toNodeType);
 	}
-	SIMONE_NET_API bool SimOneAPI::ReceiveRouteMessageCB(void(*cb)(int fromId, SimOne_ClientType fromType, int length, const void* pBuffer, int commandId)) {
+	SIMONE_API bool SimOneAPI::ReceiveRouteMessageCB(void(*cb)(int fromId, ESimOne_Client_Type fromType, int length, const void* pBuffer, int commandId)) {
 		return SimOneAPIService::GetInstance()->ReceiveRouteMessageCB(cb);
 	}
-	SIMONE_NET_API SimOne_Case_Status SimOneAPI::GetCaseRunStatus() {
-		return (SimOne_Case_Status)SimOneAPIService::GetInstance()->GetCaseStatus();
+	SIMONE_API ESimOne_Case_Status SimOneAPI::GetCaseRunStatus() {
+		return (ESimOne_Case_Status)SimOneAPIService::GetInstance()->GetCaseStatus();
 	}
-	SIMONE_NET_API bool SimOneAPI::GetCaseInfo(SimOne_Data_CaseInfo *pCaseInfo) {
+	SIMONE_API bool SimOneAPI::GetCaseInfo(SimOne_Data_CaseInfo *pCaseInfo) {
 		return SimOneAPIService::GetInstance()->GetCaseInfo(pCaseInfo);
 	}
-	SIMONE_NET_API bool SimOneAPI::bridgeLogOutput(ELogLevel_Type level, const char *format, ...) {
+	SIMONE_API bool SimOneAPI::SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...) {
 		va_list ap;
 		va_start(ap, format);
 		char buf[1024];
@@ -97,18 +97,18 @@ extern "C"
 		va_end(ap);
 		return true;
 	}
-	SIMONE_NET_API bool SimOneAPI::SetServerInfo(const char *serverIP, int port) {
+	SIMONE_API bool SimOneAPI::SetServerInfo(const char *serverIP, int port) {
 		SimOneAPIService::GetInstance()->setServerInfo(serverIP, port);
 		return true;
 	}
-	SIMONE_NET_API int SimOneAPI::Wait() {
+	SIMONE_API int SimOneAPI::Wait() {
 		return SimOneAPIService::GetInstance()->wait();
 	}
-	SIMONE_NET_API void SimOneAPI::NextFrame(int frame) {
+	SIMONE_API void SimOneAPI::NextFrame(int frame) {
 		SimOneAPIService::GetInstance()->nextFrame(frame);
 	}
 
-	SIMONE_NET_API bool SimOneAPI::SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame)) {
+	SIMONE_API bool SimOneAPI::SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame)) {
 		SimOneAPIService::GetInstance()->SetFrameStartCB(FrameStart);
 		SimOneAPIService::GetInstance()->SetFrameStartCB(FrameEnd);
 		return true;

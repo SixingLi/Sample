@@ -45,7 +45,7 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 		for (auto i = 0; i < mPerfectPerceptionDetections.obstacles().size(); i++)
 		{
 			pPerfectPerceptionGroundTruth->objects[i].id = mPerfectPerceptionDetections.obstacles(i).id();
-			pPerfectPerceptionGroundTruth->objects[i].type = (SimOne_Obstacle_Type)mPerfectPerceptionDetections.obstacles(i).type();
+			pPerfectPerceptionGroundTruth->objects[i].type = (ESimOne_Obstacle_Type)mPerfectPerceptionDetections.obstacles(i).type();
 			pPerfectPerceptionGroundTruth->objects[i].posX = mPerfectPerceptionDetections.obstacles(i).center().x();
 			pPerfectPerceptionGroundTruth->objects[i].posY = mPerfectPerceptionDetections.obstacles(i).center().y();
 			pPerfectPerceptionGroundTruth->objects[i].posZ = mPerfectPerceptionDetections.obstacles(i).center().z();
@@ -105,7 +105,7 @@ bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, co
 	for (int i = 0; i < groundTruthMsg.obstacles().size(); i++)
 	{
 		pObstacle->obstacle[i].id = groundTruthMsg.obstacles(i).id();
-		pObstacle->obstacle[i].type = (SimOne_Obstacle_Type)groundTruthMsg.obstacles(i).type();
+		pObstacle->obstacle[i].type = (ESimOne_Obstacle_Type)groundTruthMsg.obstacles(i).type();
 		pObstacle->obstacle[i].theta = groundTruthMsg.obstacles(i).rotation().z();
 		pObstacle->obstacle[i].viewId = std::stoi(groundTruthMsg.obstacles(i).subtype());
 		pObstacle->obstacle[i].posX = groundTruthMsg.obstacles(i).center().x();

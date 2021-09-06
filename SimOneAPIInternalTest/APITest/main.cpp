@@ -21,9 +21,68 @@ int main(int argc, char* argv[])
 	while (1)
 	{
 
-		SimOne_Data_Signal_Lights pSignalLights;
-		pSignalLights.signalLights = ESimOne_Signal_Light_RightBlinker;
-		SimOneAPI::SetSignalLights(0, &pSignalLights);
+
+		std::unique_ptr<SimOne_Data_RadarDetection> pRadarDetection = std::make_unique<SimOne_Data_RadarDetection>();
+		std::map<int, SimOne_Data_RadarDetection> RadarDetectionMap;
+		std::unique_ptr<SimOne_Data_SensorConfigurations> SensorConfigurations = std::make_unique<SimOne_Data_SensorConfigurations>();
+		//bool resultGetRadarDetections = SimOneAPI::GetRadarDetections(0, "1", pRadarDetection.get());
+		//EXPECT_TRUE(resultGetRadarDetections) << "GetRadarDetections Error" << std::endl;
+		//char *SensorID;
+		//bool resultSensorConfiguration = SimOneAPI::GetSensorConfigurations(SensorConfigurations.get());
+		//for (int n = 0; n < SensorConfigurations->dataSize; n++) {
+		//        if (SensorConfigurations->data[n].sensorType == "objectBasedRadar") {
+		//                SensorID = SensorConfigurations->data[n].sensorId;
+		//        }
+		//
+		//}
+		//std::cout << "SensorID---------------------" << SensorID;
+		//std::cout<<"sensorid:"
+		//char ChsensorID[1];
+		//strcpy(ChsensorID, (char *)&SensorID);
+		while (1) {
+			bool resultGetRadarDetections = SimOneAPI::GetRadarDetections(0, "objectBasedRadar1", pRadarDetection.get());
+			std::cout << "pRadarDetection->timestamp: " << pRadarDetection->timestamp << ",pRadarDetection.detectNum:" << pRadarDetection->detectNum << std::endl;
+			//if (pRadarDetection->frame <= 5) {
+			//	RadarDetectionMap.insert(map<int, SimOne_Data_RadarDetection>::value_type(pRadarDetection->frame, *pRadarDetection));
+			//}
+			//if (pRadarDetection->frame > 5) {
+			//	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+			//	RadarDetectionMap.insert(map<int, SimOne_Data_RadarDetection>::value_type(pRadarDetection->frame, *pRadarDetection));
+			//}
+			//if (SimOneAPI::GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Stop) {
+			//	break;
+			//}
+		}
+		std::cout << RadarDetectionMap.size() << std::endl;
+		map<int, SimOne_Data_RadarDetection>::iterator iter;
+		for (iter = RadarDetectionMap.begin(); iter != RadarDetectionMap.end(); iter++) {
+			std::cout << "frame: " << iter->first << std::endl;
+			std::cout << "detectNum: " << iter->second.detectNum << std::endl;
+			//EXPECT_GT(iter->second.detectNum, 0);
+			for (int i = 0; i < iter->second.detectNum; i++) {
+				std::cout << "GetRadarDetections id: " << iter->second.detections[i].id << std::endl;
+				std::cout << "GetRadarDetections subId: " << iter->second.detections[i].subId << std::endl;
+				std::cout << "GetRadarDetections type: " << iter->second.detections[i].type << std::endl;
+				std::cout << "GetRadarDetections posX: " << iter->second.detections[i].posX << std::endl;
+				std::cout << "GetRadarDetections posY: " << iter->second.detections[i].posY << std::endl;
+				std::cout << "GetRadarDetections posZ: " << iter->second.detections[i].posZ << std::endl;
+				std::cout << "GetRadarDetections velX: " << iter->second.detections[i].velX << std::endl;
+				std::cout << "GetRadarDetections velY: " << iter->second.detections[i].velY << std::endl;
+				std::cout << "GetRadarDetections velZ: " << iter->second.detections[i].velZ << std::endl;
+				std::cout << "GetRadarDetections range: " << iter->second.detections[i].range << std::endl;
+				std::cout << "GetRadarDetections rangeRate: " << iter->second.detections[i].rangeRate << std::endl;
+				std::cout << "GetRadarDetections azimuth: " << iter->second.detections[i].azimuth << std::endl;
+				std::cout << "GetRadarDetections vertical: " << iter->second.detections[i].vertical << std::endl;
+				std::cout << "GetRadarDetections snrdb: " << iter->second.detections[i].snrdb << std::endl;
+				std::cout << "GetRadarDetections rcsdb: " << iter->second.detections[i].rcsdb << std::endl;
+				std::cout << "GetRadarDetections probability: " << iter->second.detections[i].probability << std::endl;
+			}
+		}
+
+
+		//SimOne_Data_Signal_Lights pSignalLights;
+		//pSignalLights.signalLights = ESimOne_Signal_Light_RightBlinker;
+		//SimOneAPI::SetSignalLights(0, &pSignalLights);
 		////1 GetGps
 		//if (SimOneAPI::GetGps(mainVehicleId, pGps.get())) {
 		//	cout << "MainVehicle Pos.X: " << pGps.get()->posX << ", MainVehicle Pos.Y: " << pGps.get()->posY << endl;

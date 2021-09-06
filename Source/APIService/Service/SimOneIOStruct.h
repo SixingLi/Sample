@@ -46,7 +46,7 @@ struct SimOne_Data
 	int frame;
 	int version = 0; // API version
 };
-struct SimOneData_Vec3f
+struct SimOne_Data_Vec3f
 {
 	float x;
 	float y;
@@ -123,7 +123,7 @@ struct OSI_API_Control
 // ----------------------------
 #define SOSM_DRIVER_CONTROL_PREFIX "SOSM_DRIVER_CONTROL_"
 
-enum EGearMode
+enum ESimOne_Gear_Mode
 {
 	EGearMode_Neutral = 0,
 	EGearMode_Drive = 1,      // forward gear for automatic gear
@@ -140,7 +140,7 @@ enum EGearMode
 	EGearManualMode_8 = 11
 };
 
-enum EThrottleMode
+enum ESimOne_Throttle_Mode
 {                                     
     EThrottleMode_Percent = 0,         //[0, 1]                                                            
     EThrottleMode_Torque = 1,          //engine torque, N.m                                                
@@ -150,7 +150,7 @@ enum EThrottleMode
     EThrottleMode_WheelTorque = 5,     //torques applied to each wheel, array, size is the wheel number, N.m
 };
 
-enum EBrakeMode
+enum ESimOne_Brake_Mode
 {
     EBrakeMode_Percent = 0,                 // [0, 1], factor of max brake pressure
     EBrakeMode_MasterCylinderPressure = 1,  // MPa
@@ -158,7 +158,7 @@ enum EBrakeMode
     EBrakeMode_WheelCylinderPressure = 3,   // Mpa for each wheel
     EBrakeMode_WheelTorque = 4              // Nm for each wheel
 };
-enum ESteeringMode
+enum ESimOne_Steering_Mode
 {
     ESteeringMode_Percent = 0,            // [-1, 1], left turn is negative, right is positive
     ESteeringMode_SteeringWheelAngle = 1, // steering wheel angle, degree
@@ -167,7 +167,7 @@ enum ESteeringMode
     ESteeringMode_WheelAngle = 4,         // degree for each wheel
     ESteeringMode_WheelAnglarSpeed = 5,   // degree/s for each wheel
 };
-enum ELogLevel_Type
+enum ESimOne_LogLevel_Type
 {
 	ELogLevelDebug = 0,
 	ELogLevelInformation = 1,
@@ -179,16 +179,16 @@ enum ELogLevel_Type
 #define SO_MAX_WHEEL_NUM  20
 struct SimOne_Data_Control : public SimOne_Data
 {
-    EThrottleMode throttleMode = EThrottleMode_Percent;
+	ESimOne_Throttle_Mode throttleMode = EThrottleMode_Percent;
 	float throttle;
-    EBrakeMode brakeMode = EBrakeMode_Percent;
+	ESimOne_Brake_Mode brakeMode = EBrakeMode_Percent;
 	float brake;
-    ESteeringMode steeringMode = ESteeringMode_Percent;
+	ESimOne_Steering_Mode steeringMode = ESteeringMode_Percent;
 	float steering;
 	bool handbrake = false;
 	bool isManualGear = false;
 	// gear location
-	EGearMode  gear;
+	ESimOne_Gear_Mode  gear;
 
     float clutch;
 
@@ -332,7 +332,7 @@ struct SimOne_Data_Gps : public SimOne_Data
 	float extraStates[SOSM_EXTRA_STATES_SIZE_MAX];// vehicle states subscripted by MainVehicleExtraDataIndics message
 };
 
-enum SimOne_Data_Vehicle_State
+enum ESimOne_Data_Vehicle_State
 {
 	SO_M_SW,       // Steering wheel torque, unit: N.m
 	S0_Vx_SM,      // Sprung Mass CG Vx
@@ -490,9 +490,9 @@ struct SimOne_Data_MainVehicle : public SimOne_Data
 // Obstacle GroundTruth data (SimOne Output) 
 // ----------------------------
 #define SOSM_OBSTACLE_PREFIX "SOSM_OBSTACLE_"
-#define SOSM_OBSTACLE_SIZE_MAX 100
+#define SOSM_OBSTACLE_SIZE_MAX 255
 
-enum SimOne_Obstacle_Type
+enum ESimOne_Obstacle_Type
 {
 	ESimOne_Obstacle_Type_Unknown = 0,
 	ESimOne_Obstacle_Type_Pedestrian = 4,
@@ -520,7 +520,7 @@ struct SimOne_Data_Obstacle_Entry
 {
 	int id; // Obstacle global unique ID
 	int viewId; // Obstacle view ID in Sim-One observer.
-	SimOne_Obstacle_Type type; // Obstacle Type
+	ESimOne_Obstacle_Type type; // Obstacle Type
 	float theta; // [deprecated] Please use oriZ for obstacle heading angle instead
 	float posX; // Obstacle Position X on Opendrive (by meter), this point is the centroid of the obstacle.
 	float posY; // Obstacle Position Y on Opendrive (by meter), this point is the centroid of the obstacle.
@@ -539,7 +539,7 @@ struct SimOne_Data_Obstacle_Entry
 struct SimOne_Data_Obstacle : public SimOne_Data
 {
 	int obstacleSize; // Obstacle size
-	SimOne_Data_Obstacle_Entry obstacle[SOSM_OBSTACLE_SIZE_MAX]; // Obstacle, 100 max
+	SimOne_Data_Obstacle_Entry obstacle[SOSM_OBSTACLE_SIZE_MAX]; // Obstacle, 255 max
 };
 
 
@@ -549,7 +549,7 @@ struct SimOne_Data_CaseInfo
 	char caseId[SOSM_CASEID_LENGT];
 	char taskId[SOSM_TASKID_LENGT];
 };
-enum SimOne_Case_Status
+enum ESimOne_Case_Status
 {
 	SimOne_Case_Status_Unknow = 0,
 	SimOne_Case_Status_Stop = 1,
@@ -558,7 +558,7 @@ enum SimOne_Case_Status
 };
 
 #define SOSM_SIGNAL_LIGHTS_PREFIX "SOSM_SIGNAL_LIGHTS_"
-enum SimOne_Signal_Light
+enum ESimOne_Signal_Light
 {
 	ESimOne_Signal_Light_RightBlinker = 1,
 	ESimOne_Signal_Light_LeftBlinker = (1 << 1),
@@ -593,7 +593,7 @@ struct SimOne_Data_Environment
 // Sensor Configuration API.
 // ----------------------------
 
-enum ESimOneNodeType
+enum ESimOne_Node_Type
 {
 	ESimOneNode_Vehicle = 0,
 	ESimOneNode_Camera = 1,
@@ -607,7 +607,7 @@ enum ESimOneNodeType
 	ESimOneNode_SensorFusion = 9
 };
 
-enum ESensorDataType
+enum ESimOne_Sensor_Data_Type
 {
 	EDataType_ImageWithGroundTruth = 0,
 	EDataType_PointCloudWithGroundTruth = 1,
@@ -620,7 +620,7 @@ enum ESensorDataType
 
 };
 
-enum MessageFrame_PR {
+enum ESimOne_V2X_MessageFrame_PR {
 	MessageFrame_PR_NOTHING,	/* No components present */
 	MessageFrame_PR_bsmFrame,
 	MessageFrame_PR_mapFrame,
@@ -636,7 +636,7 @@ enum MessageFrame_PR {
 
 
 #define SENSOR_IDTYPE_MAX 64
-struct SimOneSensorConfiguration
+struct SimOne_Data_SensorConfiguration
 {
 	int id;
 	int mainVehicle;
@@ -656,7 +656,7 @@ struct SimOneSensorConfiguration
 struct SimOne_Data_SensorConfigurations
 {
 	int dataSize; // data size	
-	SimOneSensorConfiguration data[SOSM_SENSOR_CONFIGURATION_SIZE_MAX];
+	SimOne_Data_SensorConfiguration data[SOSM_SENSOR_CONFIGURATION_SIZE_MAX];
 };
 
 // ----------------------------
@@ -669,7 +669,7 @@ struct SimOne_Data_SensorConfigurations
 struct SimOne_Data_SensorDetections_Entry
 {
 	int id;					// Detection Object ID
-	SimOne_Obstacle_Type type;	// Detection Object Type
+	ESimOne_Obstacle_Type type;	// Detection Object Type
 	float posX;				// Detection Object Position X in meter
 	float posY;				// Detection Object Position Y in meter
 	float posZ;				// Detection Object Position Z in meter
@@ -711,7 +711,7 @@ struct SimOne_Data_SensorFusionObstacles : public SimOne_Data
 	SimOne_Data_SensorDetections_Entry obstacle[SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX];
 };
 
-enum ESimOneLaneType {
+enum ESimOne_Lane_Type {
 	LaneType_none = 0,
 	LaneType_driving = 1,
 	LaneType_stop = 2,
@@ -737,7 +737,7 @@ enum ESimOneLaneType {
 	LaneType_mwyExit = 22
 };
 
-enum ESimOneData_BoundaryType {
+enum ESimOne_Boundary_Type {
 	BoundaryType_none = 0,
 	BoundaryType_solid = 1,
 	BoundaryType_broken = 2,
@@ -749,7 +749,7 @@ enum ESimOneData_BoundaryType {
 	BoundaryType_grass = 8,
 	BoundaryType_curb = 9
 };
-enum ESimOneData_BoundaryColor {
+enum ESimOne_Boundary_Color {
 	BoundaryColor_standard = 0,
 	BoundaryColor_blue = 1,
 	BoundaryColor_green = 2,
@@ -757,29 +757,31 @@ enum ESimOneData_BoundaryColor {
 	BoundaryColor_white = 4,
 	BoundaryColor_yellow = 5
 };
-struct ESimOneData_LineCurveParameter{
+
+struct SimOne_LineCurve_Parameter{
 	float C0;
 	float C1;
 	float C2;
 	float C3;
-	SimOneData_Vec3f firstPoints;
-	SimOneData_Vec3f endPoints;
+	SimOne_Data_Vec3f firstPoints;
+	SimOne_Data_Vec3f endPoints;
 	float length = 7;
 };
+
 struct SimOne_Data_LaneLineInfo 
 {
 	int lineID;
-	ESimOneData_BoundaryType lineType;//laneline BoundaryType
-	ESimOneData_BoundaryColor lineColor;//laneline BoundaryColor
+	ESimOne_Boundary_Type lineType;//laneline BoundaryType
+	ESimOne_Boundary_Color lineColor;//laneline BoundaryColor
 	float linewidth;//laneline width
-	SimOneData_Vec3f linePoints[SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX];//total laneline Boundary points ,MaX 80
-	ESimOneData_LineCurveParameter linecurveParameter;//laneline boundary curveParameter
+	SimOne_Data_Vec3f linePoints[SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX];//total laneline Boundary points ,MaX 80
+	SimOne_LineCurve_Parameter linecurveParameter;//laneline boundary curveParameter
 
 };
 struct SimOne_Data_LaneInfo :public SimOne_Data
 {
 	int id = 0;//Lane ID 
-	ESimOneLaneType laneType;//Lane type
+	ESimOne_Lane_Type laneType;//Lane type
 	int laneLeftID = 0;//The Lane's leftLane ID  
 	int laneRightID = 0;//The Lane's rightLane ID 
 	int lanePredecessorID[SOSM_SENSOR_LANE_OBJECT_SIZE_MAX];//total of lane predecessor ID,max 256
@@ -793,7 +795,7 @@ struct SimOne_Data_LaneInfo :public SimOne_Data
 };
 
 
-enum SimOne_ClientType {
+enum ESimOne_Client_Type {
 	ESimOneClientType_None = 0,
 	ESimOneClientType_Web = 1,
 	ESimOneClientType_TrafficProvider = 2,
@@ -813,7 +815,7 @@ enum SimOne_ClientType {
 #define SOSM_IMAGE_WIDTH_MAX 3840
 #define SOSM_IMAGE_HEIGHT_MAX 2160
 #define SOSM_IMAGE_DATA_SIZE_MAX SOSM_IMAGE_WIDTH_MAX*SOSM_IMAGE_HEIGHT_MAX*3
-enum SimOne_Image_Format
+enum ESimOne_Image_Format
 {
 	ESimOne_Image_Format_RGB = 0
 };
@@ -822,7 +824,7 @@ struct SimOne_Data_Image : public SimOne_Data
 {
 	int width; // Image resolution width 1920 max
 	int height; // Image resolution height 1200 max
-	SimOne_Image_Format format; // Image format, RGB only for now
+	ESimOne_Image_Format format; // Image format, RGB only for now
 	int imageDataSize; // image data size	
 	char imageData[SOSM_IMAGE_DATA_SIZE_MAX]; // 1920 x 1200 x 3 max
 };
@@ -831,7 +833,7 @@ struct SimOne_Data_Image : public SimOne_Data
 // ----------------------------
 // Point cloud data (SimOne Output) 
 // ----------------------------
-struct SimOne_Point_XYZI
+struct SimOne_Data_Point_XYZI
 {
 	float x;
 	float y;
@@ -859,7 +861,7 @@ struct SimOne_Data_Point_Cloud : public SimOne_Data
 struct SimOne_Data_RadarDetection_Entry {
 	int id;					// Detection Object ID
 	int subId;				// Detection Object Sub ID
-	SimOne_Obstacle_Type type;	// Detection Object Type
+	ESimOne_Obstacle_Type type;	// Detection Object Type
 	float posX;				// Detection Object Position X in meter
 	float posY;				// Detection Object Position Y in meter
 	float posZ;				// Detection Object Position Z in meter
@@ -944,8 +946,8 @@ struct SimOne_Data_Position_Info : public SimOne_Data
 
 struct SimOne_Data_Prediction : public SimOne_Data
 {
-	std::map<int, std::vector<SimOne_Data_Position_Info>> ped_predictions;
-	std::map<int, std::vector<SimOne_Data_Position_Info>> veh_predictions;
+	std::map<int, SSD::SimVector<SimOne_Data_Position_Info>> ped_predictions;
+	std::map<int, SSD::SimVector<SimOne_Data_Position_Info>> veh_predictions;
 	float ped_delta_t;
 	float veh_delta_t;
 };
@@ -970,7 +972,7 @@ struct SimOne_Data_MainVehicle_Status
 #define SOSM_TRAFFICLIGHT_PREFIX "SOSM_TRAFFICLIGHT_"
 #define SOSM_TRAFFICLIGHT_SIZE_MAX 100
 
-enum SimOne_TrafficLight_Status
+enum ESimOne_TrafficLight_Status
 {
 	ESimOne_TrafficLight_Status_Invalid = 0,
 	ESimOne_TrafficLight_Status_Red = 1,
@@ -987,13 +989,13 @@ struct SimOne_Data_TrafficLight
 	int index;
 	int opendriveLightId;
 	int countDown;
-	SimOne_TrafficLight_Status status;
+	ESimOne_TrafficLight_Status status;
 };
 
 struct SimOne_Data_TrafficLights : public SimOne_Data
 {
 	int trafficlightNum;	// Obstacle number
-	SimOne_Data_TrafficLight trafficlights[SOSM_TRAFFICLIGHT_SIZE_MAX];	// Obstacle, 100 max
+	SimOne_Data_TrafficLight trafficlights[SOSM_TRAFFICLIGHT_SIZE_MAX];	// trafficlights, 100 max
 };
 
 // ----------------------------
@@ -1001,7 +1003,7 @@ struct SimOne_Data_TrafficLights : public SimOne_Data
 // ----------------------------
 #define SOSM_DRIVER_PREFIX "SOSM_DRIVER_"
 
-enum SimOne_Driver_Status
+enum ESimOne_Driver_Status
 {
 	ESimOne_Driver_Status_Unknown = 0,
 	ESimOne_Driver_Status_Controlling = 1,
@@ -1010,7 +1012,7 @@ enum SimOne_Driver_Status
 
 struct SimOne_Data_Driver_Status : public SimOne_Data
 {
-	SimOne_Driver_Status driverStatus;
+	ESimOne_Driver_Status driverStatus;
 };
 
 // ----------------------------
@@ -1019,17 +1021,17 @@ struct SimOne_Data_Driver_Status : public SimOne_Data
 #define ENABLE_SCENARIO_EVENT
 #define SCENARIO_EVENT_PREFIX "SCENARIO_EVENT_"
 
-struct SimOneScenarioEventReaderStatus
+struct SimOne_Data_ScenarioEvent_ReaderStatus
 {
 	int readerState = 0;
 };
 
-struct SimOneScenarioEventWriterStatus
+struct SimOne_Data_ScenarioEvent_WriterStatus
 {
 	int writeState = 0;
 };
 
-struct SimOneScenarioEvent : public SimOneScenarioEventWriterStatus
+struct SimOne_Data_ScenarioEvent : public SimOne_Data_ScenarioEvent_WriterStatus
 {
 	char event[64];
 	char data[64];

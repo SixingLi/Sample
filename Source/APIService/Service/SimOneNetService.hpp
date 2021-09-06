@@ -38,6 +38,7 @@
 using std::map;
 using std::string;
 using namespace cybertron;
+using namespace SimOneAPI;
 class SensorImage;
 class SensorLidar;
 
@@ -59,10 +60,10 @@ public:
 	bool GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo);
 	const char* GetVersion();
 
-	bool ReceiveRouteMessageCB(void(*cb)(int fromId, SimOne_ClientType fromType,int length, const void* pBuffer, int commandId));
-	void(*mpRouteMessageCB)(int fromId, SimOne_ClientType fromType,int length, const void* pBuffer, int commandId);
+	bool ReceiveRouteMessageCB(void(*cb)(int fromId, ESimOne_Client_Type fromType,int length, const void* pBuffer, int commandId));
+	void(*mpRouteMessageCB)(int fromId, ESimOne_Client_Type fromType,int length, const void* pBuffer, int commandId);
 
-	bool SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, SimOne_ClientType toNodeType);
+	bool SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, ESimOne_Client_Type toNodeType);
 
 	bool GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
 	//1
@@ -102,7 +103,7 @@ public:
 	void ReadLogConfigFile();
 	void SetStartInfo(bool isJoinTimeLoop);
 	void setServerInfo(const char* serverIP, int serverPort);
-	static void bridgeLogOutput(ELogLevel_Type level, const char *format, ...);
+	static void bridgeLogOutput(ESimOne_LogLevel_Type level, const char *format, ...);
 	bool connectSyncBridgeNode();
 	bool setDisconnected();
 	void onServerMessage(Message& msg);
@@ -161,7 +162,7 @@ protected:
 public:
 	bool ForwardStep();
 	bool GetGps(SimOne_Data_Gps *pGps);
-    bool RegisterSimOneVehicleState(SimOne_Data_Vehicle_State *pStateIndics, int size);
+    bool RegisterSimOneVehicleState(ESimOne_Data_Vehicle_State *pStateIndics, int size);
     bool GetSimOneVehicleState(SimOne_Data_Vehicle_Extra* pVehExtraState);
 	bool GetObstacle(SimOne_Data_Obstacle *pObstacle);
 	//bool GetTrafficLight(SimOne_Data_TrafficLights *pTrafficLights);
@@ -357,7 +358,7 @@ private:
 #endif
 		std::string mServerIP;
 		int mServerPort;
-		ELogLevel_Type mELevel;
+		ESimOne_LogLevel_Type mELevel;
 		bool mIsOpenLog;
 		mutable std::recursive_mutex mTimeStepForwardLock;
 		bool mbRecvSync;

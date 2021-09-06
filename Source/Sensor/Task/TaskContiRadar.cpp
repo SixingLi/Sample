@@ -51,7 +51,7 @@ uint16_t  TaskContiRadar::Do(std::uint32_t sensorType, std::uint32_t commanId, C
 		const cybertron::proto::sensor::RadarDetection &cybObj = RadarDetectionsIn.detections(i);
 		pContiRadarDetections->detections[i].id = cybObj.id();
 		pContiRadarDetections->detections[i].subId = cybObj.subid();
-		pContiRadarDetections->detections[i].type = (SimOne_Obstacle_Type)cybObj.type();
+		pContiRadarDetections->detections[i].type = (ESimOne_Obstacle_Type)cybObj.type();
 		pContiRadarDetections->detections[i].posX = cybObj.position().x();
 		pContiRadarDetections->detections[i].posY = cybObj.position().y();
 		pContiRadarDetections->detections[i].posZ = cybObj.position().z();

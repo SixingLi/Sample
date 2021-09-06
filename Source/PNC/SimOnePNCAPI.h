@@ -34,12 +34,12 @@
 #ifndef WITHOUT_PNC
 #ifdef BUILD_SIMONE_API
 #if defined(WIN32) || defined(_WIN32)
-#define SIMONE_NET_API __declspec(dllexport)
+#define SIMONE_API __declspec(dllexport)
 #elif defined(__linux__) || defined(__linux)
-#define SIMONE_NET_API __attribute__((visibility("default")))
+#define SIMONE_API __attribute__((visibility("default")))
 #endif
 #else
-#define SIMONE_NET_API
+#define SIMONE_API
 #endif
 
 #include <string>
@@ -49,7 +49,7 @@
 extern "C"
 {
 #endif
-	//SimOneAPI命名空间是新的API,SimOneSM是老的命名空间为了兼容以前的接口
+
 	namespace SimOneAPI {
 
 		/*!
@@ -65,7 +65,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool RegisterSimOneVehicleState(SimOne_Data_Vehicle_State *pStateIndics, int size);
+		SIMONE_API bool RegisterVehicleState(ESimOne_Data_Vehicle_State *pStateIndics, int size);
 
 		/*!
 		获取通过RegisterSimOneVehicleState注册的主车状态信息
@@ -78,7 +78,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool GetSimOneVehicleState(SimOne_Data_Vehicle_Extra* pVehExtraState);
+		SIMONE_API bool GetVehicleState(SimOne_Data_Vehicle_Extra* pVehExtraState);
 
 		/*!
 		设置主车位置
@@ -93,7 +93,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetPose(int mainVehicleId, SimOne_Data_Pose_Control *pPose);
+		SIMONE_API bool SetPose(int mainVehicleId, SimOne_Data_Pose_Control *pPose);
 
 
 		/*!
@@ -109,7 +109,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetDrive(int mainVehicleId, SimOne_Data_Control *pControl);
+		SIMONE_API bool SetDrive(int mainVehicleId, SimOne_Data_Control *pControl);
 
 		/*!
 		主车控制
@@ -124,7 +124,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetDriveTrajectory(int mainVehicleId, SimOne_Data_Control_Trajectory *pControlTrajectory);
+		SIMONE_API bool SetDriveTrajectory(int mainVehicleId, SimOne_Data_Control_Trajectory *pControlTrajectory);
 
 		/*!
 		设置主车控制器的名字
@@ -137,7 +137,7 @@ extern "C"
 		@param[in]
 		*   name: vehicle driver name, max length is 8
 		*/
-		SIMONE_NET_API void SetDriverName(int mainVehicleId, const char* name);
+		SIMONE_API void SetDriverName(int mainVehicleId, const char* name);
 
 
 		/*!
@@ -153,7 +153,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetVehicleEvent(int mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent);
+		SIMONE_API bool SetVehicleEvent(int mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent);
 
 		/*!
 		预测轨迹设置
@@ -168,7 +168,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetTrajectory(int mainVehicleId, SimOne_Data_Trajectory *Trajectory);
+		SIMONE_API bool SetTrajectory(int mainVehicleId, SimOne_Data_Trajectory *Trajectory);
 
 
 		/*!
@@ -184,7 +184,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetSignalLights(const int mainVehicleId, SimOne_Data_Signal_Lights *pSignalLights);
+		SIMONE_API bool SetSignalLights(const int mainVehicleId, SimOne_Data_Signal_Lights *pSignalLights);
 
 		/*!
 		获取SimOneDriver运行状态
@@ -199,7 +199,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool GetDriverStatus(const int mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus);
+		SIMONE_API bool GetDriverStatus(const int mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus);
 
 		/*!
 		获取SimOneDriver控制信号
@@ -214,7 +214,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool GetDriverControl(const int mainVehicleId, SimOne_Data_Control* pControl);
+		SIMONE_API bool GetDriverControl(const int mainVehicleId, SimOne_Data_Control* pControl);
 
 		/*!
 		获取案例主车路径点
@@ -229,7 +229,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool GetWayPoints(SimOne_Data_WayPoints* pWayPoints);
+		SIMONE_API bool GetWayPoints(SimOne_Data_WayPoints* pWayPoints);
 
 
 
@@ -248,7 +248,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetScenarioEventCB(void(*cb)(int mainVehicleId, const char* event, const char* data));
+		SIMONE_API bool SetScenarioEventCB(void(*cb)(int mainVehicleId, const char* event, const char* data));
 
 	}
 #ifdef __cplusplus

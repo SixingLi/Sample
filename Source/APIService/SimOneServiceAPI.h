@@ -34,12 +34,12 @@
 
 #ifdef BUILD_SIMONE_API
 #if defined(WIN32) || defined(_WIN32)
-#define SIMONE_NET_API __declspec(dllexport)
+#define SIMONE_API __declspec(dllexport)
 #elif defined(__linux__) || defined(__linux)
-#define SIMONE_NET_API __attribute__((visibility("default")))
+#define SIMONE_API __attribute__((visibility("default")))
 #endif
 #else
-#define SIMONE_NET_API
+#define SIMONE_API
 #endif
 
 #include <string>
@@ -49,7 +49,7 @@
 extern "C"
 {
 #endif
-	//SimOneAPI命名空间是新的API,SimOneSM是老的命名空间为了兼容以前的接口
+
 	namespace SimOneAPI{
 	
 		/*!
@@ -63,7 +63,7 @@ extern "C"
 		@return
 		*	version number
 		*/
-		SIMONE_NET_API const char* GetVersion();
+		SIMONE_API const char* GetVersion();
 
 		/*!
 		节点通信发送数据API
@@ -78,7 +78,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, SimOne_ClientType toNodeType);
+		SIMONE_API bool SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, ESimOne_Client_Type toNodeType);
 	
 		/*!
 		节点通信接收数据API
@@ -91,7 +91,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool ReceiveRouteMessageCB(void(*cb)(int fromId, SimOne_ClientType fromType, int length, const void* pBuffer, int commandId));
+		SIMONE_API bool ReceiveRouteMessageCB(void(*cb)(int fromId, ESimOne_Client_Type fromType, int length, const void* pBuffer, int commandId));
 
 		/*!
 		日志设置接口
@@ -104,7 +104,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool bridgeLogOutput(ELogLevel_Type level, const char *format, ...);
+		SIMONE_API bool  SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...);
 
 		/*!
 		设置服务的地址和端口号
@@ -117,7 +117,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetServerInfo(const char *serverIP = "127.0.0.1", int port = 23789);
+		SIMONE_API bool SetServerInfo(const char *serverIP = "127.0.0.1", int port = 23789);
 
 		/*!
 		SimOne API主入口
@@ -130,7 +130,7 @@ extern "C"
 		@return
 		*	None
 		*/
-		SIMONE_NET_API bool InitSimOneAPI(int hostVehicleId, bool isFrameSync, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
+		SIMONE_API bool InitSimOneAPI(int hostVehicleId = 0, bool isFrameSync =false, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
 
 		/*!
 		停止API node
@@ -143,7 +143,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool StopSimOneNode();
+		SIMONE_API bool StopSimOneNode();
 
 		/*!
 		获取案例详情
@@ -156,7 +156,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool GetCaseInfo(SimOne_Data_CaseInfo *pCaseInfo);
+		SIMONE_API bool GetCaseInfo(SimOne_Data_CaseInfo *pCaseInfo);
 
 		/*!
 		获取案例运行情况（运行中，停止）
@@ -169,7 +169,7 @@ extern "C"
 		@return
 		*	Stop,Running
 		*/
-		SIMONE_NET_API SimOne_Case_Status GetCaseRunStatus();
+		SIMONE_API ESimOne_Case_Status GetCaseRunStatus();
 
 		/*!
 		获取主车信息列表，只需要获取一次
@@ -182,7 +182,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo);
+		SIMONE_API bool GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo);
 
 		/*!
 		获取当前帧值
@@ -195,7 +195,7 @@ extern "C"
 		@return
 		*	frame value
 		*/
-		SIMONE_NET_API int Wait();
+		SIMONE_API int Wait();
 
 		/*!
 		进行下一帧
@@ -208,7 +208,7 @@ extern "C"
 		@return
 		*	None
 		*/
-		SIMONE_NET_API void NextFrame(int frame);
+		SIMONE_API void NextFrame(int frame);
 
 
 		/*!
@@ -222,7 +222,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame));
+		SIMONE_API bool SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame));
 
 		/*!
 		获取主车状态信息
@@ -235,7 +235,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
+		SIMONE_API bool GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
 
 		/*!
 		获取主车状态信息回调
@@ -248,7 +248,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool SetMainVehicleStatusCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
+		SIMONE_API bool SetMainVehicleStatusCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
 	}
 #ifdef __cplusplus
 }

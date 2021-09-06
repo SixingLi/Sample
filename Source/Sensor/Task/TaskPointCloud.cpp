@@ -48,7 +48,7 @@ uint16_t TaskPointCloud::Do(std::uint32_t sensorType, std::uint32_t commanId, CT
 	for (auto i = 0; i < PointCloudSrcIn.ground_truth().obstacles().size(); i++)
 	{
 		pPointCloudDetections->objects[i].id = PointCloudSrcIn.ground_truth().obstacles(i).id();
-		pPointCloudDetections->objects[i].type = (SimOne_Obstacle_Type)PointCloudSrcIn.ground_truth().obstacles(i).type();
+		pPointCloudDetections->objects[i].type = (ESimOne_Obstacle_Type)PointCloudSrcIn.ground_truth().obstacles(i).type();
 		pPointCloudDetections->objects[i].posX = PointCloudSrcIn.ground_truth().obstacles(i).center().x();
 		pPointCloudDetections->objects[i].posY = PointCloudSrcIn.ground_truth().obstacles(i).center().y();
 		pPointCloudDetections->objects[i].posZ = PointCloudSrcIn.ground_truth().obstacles(i).center().z();
