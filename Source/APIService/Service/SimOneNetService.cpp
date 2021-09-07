@@ -1671,8 +1671,8 @@ bool SimOneAPIService::onFromHotAreaObstacleData(Bridge::BridgeHotAreaHeader hea
 	if (!mbIsOpenDefaultPerfectSensor)
 	{
 		if (msgDataBody->size() != sizeof(SimOne_Data_Obstacle)) {
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "BridgeIO send Obstacle size:%d SimOneIOAPI receive Obstacle size:%d", msgDataBody->size(), sizeof(SimOne_Data_Gps));
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "SimOne_Data_Obstacle structure of receiver and transmitter is inconsistent");
+			//bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "BridgeIO send Obstacle size:%d SimOneIOAPI receive Obstacle size:%d", msgDataBody->size(), sizeof(SimOne_Data_Gps));
+			//bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "SimOne_Data_Obstacle structure of receiver and transmitter is inconsistent");
 			return false;
 		}
 		SimOne_Data_Obstacle obstacle;

@@ -62,8 +62,11 @@ endfunction()
 add_subdirectory(${SIMONE_API_ROOT}/Source Source)
 add_subdirectory(${SIMONE_API_ROOT}/SimOneAPIInternalTest/APITest APITest)
 
-include_directories("${SIMONE_PATH_ROOT}/3rdparty")
+IF (NOT WITHOUT_HDMAP)
+	#add_subdirectory(${SIMONE_API_ROOT}/PythonAPI/pySimOneIO HDMapPythonAPI)
+ENDIF()
 
+include_directories("${SIMONE_PATH_ROOT}/3rdparty")
 IF (UNIX)
 set(PythonLibs ${SIMONE_PATH_ROOT}/3rdparty/artifactory/python36/bin)
 ELSE (UNIX)
