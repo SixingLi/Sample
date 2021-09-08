@@ -1010,7 +1010,6 @@ bool SimOneAPIService::SetEnvironment(SimOne_Data_Environment *pEnvironment) {
 	if (setEnvironmentResult.issuccessful())
 	{
 		memcpy(&mEnvironmentData, pEnvironment, sizeof(SimOne_Data_Environment));
-		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Set Environment failed, server confirm not received.");
 		return true;
 	}
 	return false;
