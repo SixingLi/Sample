@@ -61,6 +61,7 @@ endfunction()
 
 add_subdirectory(${SIMONE_API_ROOT}/Source Source)
 add_subdirectory(${SIMONE_API_ROOT}/SimOneAPIInternalTest/APITest APITest)
+add_dependencies(OpenSimOneAPITest SimOneAPI)
 
 IF (NOT WITHOUT_HDMAP)
 	#add_subdirectory(${SIMONE_API_ROOT}/PythonAPI/pySimOneIO HDMapPythonAPI)
