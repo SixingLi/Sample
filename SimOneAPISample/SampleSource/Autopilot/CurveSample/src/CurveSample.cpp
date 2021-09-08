@@ -151,7 +151,7 @@ int main()
 {
 
 	bool isJoinTimeLoop = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId = "0";
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	//Wait for the Sim-One case to run
 	while (1) {

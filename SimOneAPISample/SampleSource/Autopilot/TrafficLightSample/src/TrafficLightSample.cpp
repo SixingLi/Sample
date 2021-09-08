@@ -191,7 +191,7 @@ bool IsInSafeDistance(const SSD::SimPoint3D& vehiclePos, const SSD::SimPoint3D& 
 //
 int main()
 {
-	int MainVehicleId = 0;
+	const char* MainVehicleId = "0";
 	bool isJoinTimeLoop = false;
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	while (1) {

@@ -51,6 +51,7 @@ void TaskFusion::SetLaneLineInfo(SimOne_Data_LaneLineInfo &lineInfo, const cyber
 
 uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
 {
+	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
 	if (commanId != cybertron::proto::sensor::EDataType_SensorFusion)
 	{
 		return -1;
@@ -123,7 +124,7 @@ uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTask
 	mLastSensorDetectionsMap[sensorKey] = pFusionDetections;
 	if (TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB != NULL)
 	{
-		TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(pSensorContext->mainVehicleId, sensorId.c_str(), pFusionDetections);
+		TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(mainVehId, sensorId.c_str(), pFusionDetections);
 	}
 	
 
@@ -168,7 +169,7 @@ uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTask
 		mLastObjectLaneMap[sensorKey] = pLaneInfo;
 		if (TaskSensorManager::getInstance().mpLaneDetectionsUpdateCB != NULL)
 		{
-			TaskSensorManager::getInstance().mpLaneDetectionsUpdateCB(pSensorContext->mainVehicleId, sensorId.c_str(), pLaneInfo);
+			TaskSensorManager::getInstance().mpLaneDetectionsUpdateCB(mainVehId, sensorId.c_str(), pLaneInfo);
 		}
 
 	}

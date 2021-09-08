@@ -18,7 +18,7 @@ int main()
 	bool inAEBState = false;
 	int timeout = 20;
 	bool isSimOneInitialized = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId ="0";
 	bool isJoinTimeLoop = false;
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	SimOneAPI::SetDriverName(0, "LKA");

@@ -130,7 +130,7 @@ extern "C"
 		@return
 		*	None
 		*/
-		SIMONE_API bool InitSimOneAPI(int hostVehicleId = 0, bool isFrameSync =false, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
+		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
 
 		/*!
 		停止API node

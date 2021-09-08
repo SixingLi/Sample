@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
 
 	bool leaveAfterParked = true;
 	bool isJoinTimeLoop = true;
-	int MainVehicleId = 0;
+	const char* MainVehicleId = "0";
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 
 	SimOneAPI::SetDriverName(0, "AVP");
@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
 
 
 	/* 3. Get obstacles */
-	SimOneAPI::GetGroundTruth(0, obstaclesPtr.get());
+	SimOneAPI::GetGroundTruth(MainVehicleId, obstaclesPtr.get());
 	for (size_t i = 0; i < obstaclesPtr->obstacleSize; ++i)
 	{
 		std::cout << "Obstacles[" << i << "]: " << std::endl;
@@ -252,7 +252,7 @@ int main(int argc, char* argv[])
 	{
 		int frame = SimOneAPI::Wait();
 
-		if (!SimOneAPI::GetGps(0, gpsPtr.get()))
+		if (!SimOneAPI::GetGps(MainVehicleId, gpsPtr.get()))
 		{
 			std::cout << "Fetch GPS failed" << std::endl;;
 		}

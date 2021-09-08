@@ -21,7 +21,7 @@ public:
 		mDynaLog.setTitle();
 	}
 	~TestSample() {}
-	bool DriveToSpeed(const int mainVehicleId, float targetSpeed, float throttle, std::string path)
+	bool DriveToSpeed(const char* mainVehicleId, float targetSpeed, float throttle, std::string path)
 	{
 		std::unique_ptr<SimOne_Data_Control> pControl = std::make_unique <SimOne_Data_Control>();
 		std::unique_ptr<SimOne_Data_Gps> gpsPtr = std::make_unique<SimOne_Data_Gps>();
@@ -56,7 +56,7 @@ public:
 		}
 	}
 
-	void FullBrakeTest(const int mainVehicleId, float brake, std::string path)
+	void FullBrakeTest(const char* mainVehicleId, float brake, std::string path)
 	{
 		std::unique_ptr<SimOne_Data_Control> pControl = std::make_unique <SimOne_Data_Control>();
 		std::unique_ptr<SimOne_Data_Gps> gpsPtr = std::make_unique<SimOne_Data_Gps>();
@@ -95,7 +95,7 @@ public:
 		rampSteer,
 		stepSteer
 	};
-	void SteerDynamicTest(const int mainVehicleId, float targetSpd, SteerType steerType, std::string path)
+	void SteerDynamicTest(const char* mainVehicleId, float targetSpd, SteerType steerType, std::string path)
 	{
 		float steer = 0.0f;
 		float maxSteerDeg = 540.f;

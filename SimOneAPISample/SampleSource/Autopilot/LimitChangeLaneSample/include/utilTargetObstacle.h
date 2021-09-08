@@ -20,7 +20,7 @@ public:
 	{
 		std::vector<utilTargetObstacle::ObstacleStruct> allObstacle;
 		std::unique_ptr<SimOne_Data_Obstacle> pSimOne_Data_Obstacle = std::make_unique<SimOne_Data_Obstacle>();
-		int MainVehicleID = 0;
+	    const char* MainVehicleID = "0";
 		if (SimOneAPI::GetGroundTruth(MainVehicleID,pSimOne_Data_Obstacle.get()))
 		{
 			for (int i = 0; i < pSimOne_Data_Obstacle->obstacleSize; i++)

@@ -93,7 +93,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetPose(int mainVehicleId, SimOne_Data_Pose_Control *pPose);
+		SIMONE_API bool SetPose(const char* mainVehicleId, SimOne_Data_Pose_Control *pPose);
 
 
 		/*!
@@ -109,7 +109,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetDrive(int mainVehicleId, SimOne_Data_Control *pControl);
+		SIMONE_API bool SetDrive(const char* mainVehicleId, SimOne_Data_Control *pControl);
 
 		/*!
 		主车控制
@@ -124,7 +124,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetDriveTrajectory(int mainVehicleId, SimOne_Data_Control_Trajectory *pControlTrajectory);
+		SIMONE_API bool SetDriveTrajectory(const char* mainVehicleId, SimOne_Data_Control_Trajectory *pControlTrajectory);
 
 		/*!
 		设置主车控制器的名字
@@ -137,7 +137,7 @@ extern "C"
 		@param[in]
 		*   name: vehicle driver name, max length is 8
 		*/
-		SIMONE_API void SetDriverName(int mainVehicleId, const char* name);
+		SIMONE_API void SetDriverName(const char* mainVehicleId, const char* name);
 
 
 		/*!
@@ -153,7 +153,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetVehicleEvent(int mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent);
+		SIMONE_API bool SetVehicleEvent(const char* mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent);
 
 		/*!
 		预测轨迹设置
@@ -168,7 +168,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetTrajectory(int mainVehicleId, SimOne_Data_Trajectory *Trajectory);
+		SIMONE_API bool SetTrajectory(const char* mainVehicleId, SimOne_Data_Trajectory *Trajectory);
 
 
 		/*!
@@ -184,7 +184,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetSignalLights(const int mainVehicleId, SimOne_Data_Signal_Lights *pSignalLights);
+		SIMONE_API bool SetSignalLights(const char* mainVehicleId, SimOne_Data_Signal_Lights *pSignalLights);
 
 		/*!
 		获取SimOneDriver运行状态
@@ -199,7 +199,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetDriverStatus(const int mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus);
+		SIMONE_API bool GetDriverStatus(const char* mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus);
 
 		/*!
 		获取SimOneDriver控制信号
@@ -214,7 +214,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetDriverControl(const int mainVehicleId, SimOne_Data_Control* pControl);
+		SIMONE_API bool GetDriverControl(const char* mainVehicleId, SimOne_Data_Control* pControl);
 
 		/*!
 		获取案例主车路径点
@@ -248,7 +248,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetScenarioEventCB(void(*cb)(int mainVehicleId, const char* event, const char* data));
+		SIMONE_API bool SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data));
 
 	}
 #ifdef __cplusplus

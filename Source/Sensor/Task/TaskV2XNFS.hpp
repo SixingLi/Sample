@@ -41,7 +41,7 @@ private:
 	mutable std::recursive_mutex mLastV2XDetectionRSIMapLock;
 	mutable std::recursive_mutex mLastV2XDetectionSPATMapLock;
 
-	void(*mpSimOneV2XRawCB)(int mainVehicleId, int sensorId, SimOne_Data_V2XNFS *pV2XDetections);
+	void(*mpSimOneV2XRawCB)(const char* mainVehicleId, int sensorId, SimOne_Data_V2XNFS *pV2XDetections);
 };
 CYBERTRON_END
 

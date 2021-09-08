@@ -15,6 +15,7 @@ TaskUltrasonicRadar::~TaskUltrasonicRadar()
 
 uint16_t TaskUltrasonicRadar::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
 {
+	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
 	if (commanId != cybertron::proto::sensor::EDataType_UltrasonicRadar)
 	{
 		return -1;
@@ -62,7 +63,7 @@ uint16_t TaskUltrasonicRadar::Do(std::uint32_t sensorType, std::uint32_t commanI
 	}
 	if (TaskSensorManager::getInstance().mpUltrasonicRadarsUpdateCB != NULL)
 	{
-		TaskSensorManager::getInstance().mpUltrasonicRadarsUpdateCB(mainVehicleId, pUltrasonicRadarsMuch);
+		TaskSensorManager::getInstance().mpUltrasonicRadarsUpdateCB(mainVehId, pUltrasonicRadarsMuch);
 	}
 
 	return true;

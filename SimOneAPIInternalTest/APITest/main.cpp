@@ -9,13 +9,13 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId = "0";
 	std::unique_ptr<SimOne_Data_Obstacle> pObstacle = std::make_unique<SimOne_Data_Obstacle>();
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	std::unique_ptr<SimOne_Data_V2XNFS> pDetections = std::make_unique<SimOne_Data_V2XNFS>();
 	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
 
-	int mainVehicleId = 0;
+	const char* mainVehicleId = "0";
 	//bool isJoinTimeLoop = false;
 
 	while (1)

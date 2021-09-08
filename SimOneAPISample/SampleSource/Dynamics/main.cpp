@@ -7,9 +7,9 @@
 
 int main(int argc, char* argv[])
 {
-	SimOneAPI::InitSimOneAPI(0, false);
+	SimOneAPI::InitSimOneAPI("0", false);
 
-	SimOneAPI::SetDriverName(0, "DynaTest");
+	SimOneAPI::SetDriverName("0", "DynaTest");
 
 	std::string csvPath = "";
 	for (int i = 1; i < argc; ++i) {
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 	}
 	/* 1. full brake */
 	TestSample test;
-	test.FullBrakeTest(0, 1.0f, csvPath);
+	test.FullBrakeTest("0", 1.0f, csvPath);
 
 	/////* 2. accelerate to a certain speed */
 	////test.DriveToSpeed(0, 100.f, 1.0f, csvPath);

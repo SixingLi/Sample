@@ -94,7 +94,7 @@ void SamplesHDMapByLocation(const SSD::SimPoint3D& pos)
 	SampleGenerateRoute();
 }
 
-void gpsCB(int mainVehicleID, SimOne_Data_Gps *gps)
+void gpsCB(const char* mainVehicleID, SimOne_Data_Gps *gps)
 {
 	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "gpsCB: V: %d, GPS: %lld, pos:(%f, %f, %f)", mainVehicleID,
 			gps->timestamp, gps->posX, gps->posY, gps->posZ);
@@ -111,7 +111,7 @@ void SamplesGenerateRoute()
 int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId ="0";
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	//SimOneAPI::StartSimOneNode(0,0,0);
 	//while (true)

@@ -21,7 +21,7 @@ SimOne_Data_CaseInfo pCaseInfoTest = SimOne_Data_CaseInfo();
 int main()
 {
 	//Wait for the Sim-One case to run
-	int MainVehicleId = 0;
+	const char* MainVehicleId ="0";
 	bool isJoinTimeLoop = 0;
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	while (1) {

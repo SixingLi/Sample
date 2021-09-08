@@ -1,7 +1,7 @@
 #include "SimOneSensorAPI.h"
 #include "SimOneV2XAPI.h"
 #include "SimOneServiceAPI.h"
-#include "SimOneServiceAPI.h"
+
 #include <thread> 
 #include <chrono>
 #include <iostream>
@@ -9,7 +9,7 @@
 int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId = "0";
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	//SimOneAPI::SetSensorObjectbasedDataEnable(false);
 	std::unique_ptr<SimOne_Data_Obstacle> pObstacle = std::make_unique<SimOne_Data_Obstacle>();
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 		//}
 
 #ifndef WITHOUT_HDMAP
-		auto function = [](int mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) {
+		auto function = [](const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) {
 			std::cout << pDetections->MsgFrameData << std::endl;
 		};
 		SimOneAPI::SetV2XInfoUpdateCB(function);

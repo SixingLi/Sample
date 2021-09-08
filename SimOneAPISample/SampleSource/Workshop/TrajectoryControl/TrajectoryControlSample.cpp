@@ -251,7 +251,7 @@ int main()
 
     int timeout = 20;
     bool isSimOneInitialized = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId = "0";
 	bool isJoinTimeLoop = false;
     SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
     SimOneAPI::SetDriverName(0, "TrajCtrl");
@@ -294,7 +294,7 @@ int main()
 
             if (reachTraj) {
                 // 每条轨迹只发送一次
-                SimOneAPI::SetDriveTrajectory(0, &trajArray[nextTraj]);
+                SimOneAPI::SetDriveTrajectory(MainVehicleId, &trajArray[nextTraj]);
                 nextTraj++;
                 reachTraj = false;
             }
