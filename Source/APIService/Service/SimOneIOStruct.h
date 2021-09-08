@@ -125,65 +125,65 @@ struct OSI_API_Control
 
 enum ESimOne_Gear_Mode
 {
-	EGearMode_Neutral = 0,
-	EGearMode_Drive = 1,      // forward gear for automatic gear
-	EGearMode_Reverse = 2,
-	EGearMode_Parking = 3,
+	ESimOne_Gear_Mode_Neutral = 0,
+	ESimOne_Gear_Mode_Drive = 1,      // forward gear for automatic gear
+	ESimOne_Gear_Mode_Reverse = 2,
+	ESimOne_Gear_Mode_Parking = 3,
 
-	EGearManualMode_1 = 4,    // forward gear 1 for manual gear
-	EGearManualMode_2 = 5,
-	EGearManualMode_3 = 6,
-	EGearManualMode_4 = 7,
-	EGearManualMode_5 = 8,
-	EGearManualMode_6 = 9,
-	EGearManualMode_7 = 10,
-	EGearManualMode_8 = 11
+	ESimOne_Gear_Mode_1 = 4,    // forward gear 1 for manual gear
+	ESimOne_Gear_Mode_2 = 5,
+	ESimOne_Gear_Mode_3 = 6,
+	ESimOne_Gear_Mode_4 = 7,
+	ESimOne_Gear_Mode_5 = 8,
+	ESimOne_Gear_Mode_6 = 9,
+	ESimOne_Gear_Mode_7 = 10,
+	ESimOne_Gear_Mode_8 = 11
 };
 
 enum ESimOne_Throttle_Mode
 {                                     
-    EThrottleMode_Percent = 0,         //[0, 1]                                                            
-    EThrottleMode_Torque = 1,          //engine torque, N.m                                                
-    EThrottleMode_Speed = 2,           //vehicle speed, m/s,   in this mode, brake input is ignored        
-    EThrottleMode_Accel = 3,           //vehicle acceleration, m/s^2, in this mode, brake input is ignored 
-    EThrottleMode_EngineAV = 4,        //engine, rpm                                                       
-    EThrottleMode_WheelTorque = 5,     //torques applied to each wheel, array, size is the wheel number, N.m
+	ESimOne_Throttle_Mode_Percent = 0,         //[0, 1]                                                            
+	ESimOne_Throttle_Mode_Torque = 1,          //engine torque, N.m                                                
+	ESimOne_Throttle_Mode_Speed = 2,           //vehicle speed, m/s,   in this mode, brake input is ignored        
+	ESimOne_Throttle_Mode_Accel = 3,           //vehicle acceleration, m/s^2, in this mode, brake input is ignored 
+	ESimOne_Throttle_Mode_EngineAV = 4,        //engine, rpm                                                       
+	ESimOne_Throttle_Mode_WheelTorque = 5     //torques applied to each wheel, array, size is the wheel number, N.m
 };
 
 enum ESimOne_Brake_Mode
 {
-    EBrakeMode_Percent = 0,                 // [0, 1], factor of max brake pressure
-    EBrakeMode_MasterCylinderPressure = 1,  // MPa
-    EBrakeMode_PedalForce = 2,              // N
-    EBrakeMode_WheelCylinderPressure = 3,   // Mpa for each wheel
-    EBrakeMode_WheelTorque = 4              // Nm for each wheel
+	ESimOne_Brake_Mode_Percent = 0,                 // [0, 1], factor of max brake pressure
+	ESimOne_Brake_Mode_MasterCylinderPressure = 1,  // MPa
+	ESimOne_Brake_Mode_PedalForce = 2,              // N
+	ESimOne_Brake_Mode_WheelCylinderPressure = 3,   // Mpa for each wheel
+	ESimOne_Brake_Mode_WheelTorque = 4              // Nm for each wheel
 };
 enum ESimOne_Steering_Mode
 {
-    ESteeringMode_Percent = 0,            // [-1, 1], left turn is negative, right is positive
-    ESteeringMode_SteeringWheelAngle = 1, // steering wheel angle, degree
-    ESteeringMode_Torque = 2,             // torque to steering wheel, N.m
-    ESteeringMode_AngularSpeed = 3,       // steering wheel angualr speed, degree/s
-    ESteeringMode_WheelAngle = 4,         // degree for each wheel
-    ESteeringMode_WheelAnglarSpeed = 5,   // degree/s for each wheel
+	ESimOne_Steering_Mode_Percent = 0,            // [-1, 1], left turn is negative, right is positive
+	ESimOne_Steering_Mode_SteeringWheelAngle = 1, // steering wheel angle, degree
+	ESimOne_Steering_Mode_Torque = 2,             // torque to steering wheel, N.m
+	ESimOne_Steering_Mode_AngularSpeed = 3,       // steering wheel angualr speed, degree/s
+	ESimOne_Steering_Mode_WheelAngle = 4,         // degree for each wheel
+	ESimOne_Steering_Mode_WheelAnglarSpeed = 5,   // degree/s for each wheel
 };
 enum ESimOne_LogLevel_Type
 {
-	ELogLevelDebug = 0,
-	ELogLevelInformation = 1,
-	ELogLevelWarning = 2,
-	ELogLevelError = 3,
-	ELogLevelFatal = 4
+	ESimOne_LogLevel_Type_Debug = 0,
+	ESimOne_LogLevel_Type_Information = 1,
+	ESimOne_LogLevel_Type_Warning = 2,
+	ESimOne_LogLevel_Type_Error = 3,
+	ESimOne_LogLevel_Type_Fatal = 4
 };
 
 #define SO_MAX_WHEEL_NUM  20
 struct SimOne_Data_Control : public SimOne_Data
 {
-	ESimOne_Throttle_Mode throttleMode = EThrottleMode_Percent;
+	ESimOne_Throttle_Mode throttleMode = ESimOne_Throttle_Mode_Percent;
 	float throttle;
-	ESimOne_Brake_Mode brakeMode = EBrakeMode_Percent;
+	ESimOne_Brake_Mode brakeMode = ESimOne_Brake_Mode_Percent;
 	float brake;
-	ESimOne_Steering_Mode steeringMode = ESteeringMode_Percent;
+	ESimOne_Steering_Mode steeringMode = ESimOne_Steering_Mode_Percent;
 	float steering;
 	bool handbrake = false;
 	bool isManualGear = false;
@@ -249,26 +249,20 @@ struct SimOne_Data_ESP_Control : public SimOne_Data
 
 enum ESimone_Vehicle_EventInfo_Type
 {
-	//ESimOne_VehicleEventInfo_Forward_Collision = 0,
-	//ESimOne_VehicleEventInfo_Backward_Collision = 1,
-	//ESimOne_VehicleEventInfo_Left_Turn = 2,
-	//ESimOne_VehicleEventInfo_Right_Turn = 3,
-	//ESimOne_VehicleEventInfo_Forward_Straight =4,
-	//ESimOne_VehicleEventInfo_Over_Speed = 5
-	ESimOne_VehicleEventInfo_Forward_Collision_Warning = 0,		// 	front_crash_warning
-	ESimOne_VehicleEventInfo_Backward_Collision_Warning = 1,	// 	back_crash_warning
-	ESimOne_VehicleEventInfo_Left_Turn_Decision = 2,			// 	turn_left
-	ESimOne_VehicleEventInfo_Left_Turn_Warning = 3,				// 	left_warning
-	ESimOne_VehicleEventInfo_Right_Turn_Decision = 4,			// 	turn_right
-	ESimOne_VehicleEventInfo_Right_Turn_Warning = 5,			// 	right_warning
-	ESimOne_VehicleEventInfo_Forward_Straight_Decision = 6,		// 	straight_through
-	ESimOne_VehicleEventInfo_Forward_Straight_Warning = 7,		// 	straight_warning
-	ESimOne_VehicleEventInfo_Over_Speed_Warning = 8,			// 	overspeeding_warning
-	ESimOne_VehicleEventInfo_Lane_Change_Decision = 9,			//  lane_change
-	ESimOne_VehicleEventInfo_Lane_Change_Warning = 10,			// 	lane_change_warning
-	ESimOne_VehicleEventInfo_Overtake_Decision = 11,			// 	overtake
-	ESimOne_VehicleEventInfo_Emergency_Braking_Decision = 12,	// 	emergency_braking
-	ESimOne_VehicleEventInfo_Accelerate_Decision = 13			// 	accelerate
+	ESimone_Vehicle_EventInfo_Type_Forward_Collision_Warning = 0,		// 	front_crash_warning
+	ESimone_Vehicle_EventInfo_Type_Backward_Collision_Warning = 1,	// 	back_crash_warning
+	ESimone_Vehicle_EventInfo_Type_Left_Turn_Decision = 2,			// 	turn_left
+	ESimone_Vehicle_EventInfo_Type_Left_Turn_Warning = 3,				// 	left_warning
+	ESimone_Vehicle_EventInfo_Type_Right_Turn_Decision = 4,			// 	turn_right
+	ESimone_Vehicle_EventInfo_Type_Right_Turn_Warning = 5,			// 	right_warning
+	ESimone_Vehicle_EventInfo_Type_Forward_Straight_Decision = 6,		// 	straight_through
+	ESimone_Vehicle_EventInfo_Type_Forward_Straight_Warning = 7,		// 	straight_warning
+	ESimone_Vehicle_EventInfo_Type_Over_Speed_Warning = 8,			// 	overspeeding_warning
+	ESimone_Vehicle_EventInfo_Type_Lane_Change_Decision = 9,			//  lane_change
+	ESimone_Vehicle_EventInfo_Type_Lane_Change_Warning = 10,			// 	lane_change_warning
+	ESimone_Vehicle_EventInfo_Type_Overtake_Decision = 11,			// 	overtake
+	ESimone_Vehicle_EventInfo_Type_Emergency_Braking_Decision = 12,	// 	emergency_braking
+	ESimone_Vehicle_EventInfo_Type_Accelerate_Decision = 13			// 	accelerate
 
 };
 
@@ -334,128 +328,128 @@ struct SimOne_Data_Gps : public SimOne_Data
 
 enum ESimOne_Data_Vehicle_State
 {
-	SO_M_SW,       // Steering wheel torque, unit: N.m
-	S0_Vx_SM,      // Sprung Mass CG Vx
-	S0_Vy_SM,      // Sprung Mass CG Vy
-	S0_Vz_SM,      // Sprung Mass CG Vz
-	SO_M_ENGOUT,   // Engine Output Torque
-	SO_My_DR_L1,      // Wheels Driving Torque
-	SO_My_DR_R1,
-	SO_My_DR_L2,
-	SO_My_DR_R2,
-	SO_My_DR_L3,
-	SO_My_DR_R3,
+	ESimOne_Data_Vehicle_State_SO_M_SW,       // Steering wheel torque, unit: N.m
+	ESimOne_Data_Vehicle_State_S0_Vx_SM,      // Sprung Mass CG Vx
+	ESimOne_Data_Vehicle_State_S0_Vy_SM,      // Sprung Mass CG Vy
+	ESimOne_Data_Vehicle_State_S0_Vz_SM,      // Sprung Mass CG Vz
+	ESimOne_Data_Vehicle_State_SO_M_ENGOUT,   // Engine Output Torque
+	ESimOne_Data_Vehicle_State_SO_My_DR_L1,      // Wheels Driving Torque
+	ESimOne_Data_Vehicle_State_SO_My_DR_R1,
+	ESimOne_Data_Vehicle_State_SO_My_DR_L2,
+	ESimOne_Data_Vehicle_State_SO_My_DR_R2,
+	ESimOne_Data_Vehicle_State_SO_My_DR_L3,
+	ESimOne_Data_Vehicle_State_SO_My_DR_R3,
 
-	SO_F_Pedal,    // Brake Pedal Force
-	SO_Pbk_Con,    // BrakeMasterCylinder Pressure
-	SO_My_Bk_L3,   // Brake Torque at Left Rear Wheel
-	SO_My_Bk_R3,   // Brake Torque at Right Rear Wheel
+	ESimOne_Data_Vehicle_State_SO_F_Pedal,    // Brake Pedal Force
+	ESimOne_Data_Vehicle_State_SO_Pbk_Con,    // BrakeMasterCylinder Pressure
+	ESimOne_Data_Vehicle_State_SO_My_Bk_L3,   // Brake Torque at Left Rear Wheel
+	ESimOne_Data_Vehicle_State_SO_My_Bk_R3,   // Brake Torque at Right Rear Wheel
 
-	SO_ClutchTr,   // Transmission clutch control
+	ESimOne_Data_Vehicle_State_SO_ClutchTr,   // Transmission clutch control
 
-    SO_X_L1,       // x coordinate, wheel center L1
-    SO_Y_L1,
-    SO_Z_L1,
-    SO_X_L2,
-    SO_Y_L2,
-    SO_Z_L2,
-    SO_X_R1,
-    SO_Y_R1,
-    SO_Z_R1,
-    SO_X_R2,
-    SO_Y_R2,
-    SO_Z_R2,
-	SO_X_L3,       // x coordinate, wheel center L3
-	SO_Y_L3,
-	SO_Z_L3,
-	SO_X_R3,
-	SO_Y_R3,
-	SO_Z_R3,
+	ESimOne_Data_Vehicle_State_SO_X_L1,       // x coordinate, wheel center L1
+	ESimOne_Data_Vehicle_State_SO_Y_L1,
+	ESimOne_Data_Vehicle_State_SO_Z_L1,
+	ESimOne_Data_Vehicle_State_SO_X_L2,
+	ESimOne_Data_Vehicle_State_SO_Y_L2,
+	ESimOne_Data_Vehicle_State_SO_Z_L2,
+	ESimOne_Data_Vehicle_State_SO_X_R1,
+	ESimOne_Data_Vehicle_State_SO_Y_R1,
+	ESimOne_Data_Vehicle_State_SO_Z_R1,
+	ESimOne_Data_Vehicle_State_SO_X_R2,
+	ESimOne_Data_Vehicle_State_SO_Y_R2,
+	ESimOne_Data_Vehicle_State_SO_Z_R2,
+	ESimOne_Data_Vehicle_State_SO_X_L3,       // x coordinate, wheel center L3
+	ESimOne_Data_Vehicle_State_SO_Y_L3,
+	ESimOne_Data_Vehicle_State_SO_Z_L3,
+	ESimOne_Data_Vehicle_State_SO_X_R3,
+	ESimOne_Data_Vehicle_State_SO_Y_R3,
+	ESimOne_Data_Vehicle_State_SO_Z_R3,
 
-    SO_Xctc_L1,      // x coordinate, center of tire contact L1
-    SO_Yctc_L1,      // y coordinate, center of tire contact L1
-    SO_Zctc_L1,      // z coordinate, center of tire contact L1
-    SO_Xctc_L2,
-    SO_Yctc_L2,
-    SO_Zctc_L2,
-    SO_Xctc_R1,
-    SO_Yctc_R1,
-    SO_Zctc_R1,
-    SO_Xctc_R2,
-    SO_Yctc_R2,
-    SO_Zctc_R2,
+	ESimOne_Data_Vehicle_State_SO_Xctc_L1,      // x coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Yctc_L1,      // y coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Zctc_L1,      // z coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Xctc_L2,
+	ESimOne_Data_Vehicle_State_SO_Yctc_L2,
+	ESimOne_Data_Vehicle_State_SO_Zctc_L2,
+	ESimOne_Data_Vehicle_State_SO_Xctc_R1,
+	ESimOne_Data_Vehicle_State_SO_Yctc_R1,
+	ESimOne_Data_Vehicle_State_SO_Zctc_R1,
+	ESimOne_Data_Vehicle_State_SO_Xctc_R2,
+	ESimOne_Data_Vehicle_State_SO_Yctc_R2,
+	ESimOne_Data_Vehicle_State_SO_Zctc_R2,
 
-    SO_AVy_L1,     // Wheel L1 spin    unit: rpm
-    SO_Kappa_L1,   // Longitudinal slip, tire L1   ratio, no unit
-    SO_Alpha_L1,   // Lateral slip angle, tire L1  unit: degree
-    SO_Fz_L1,      // Vertical force, tire L1   unit: N
-    SO_My_WC_L1,   // Tire My at wheel center L1   unit: N.m
-    SO_Fx_L1,      // Longitudinal force, tire L1   unit: N
-    SO_Fy_L1,      // lateral force, tire L1  unit: N
-    SO_Jnc_L1,     // Wheel L1 jounce (compression)   unit: mm
-    SO_JncR_L1,    // Wheel L1 jounce rate         unit: mm/s
-    SO_Mz_L1,      // Aligning moment, tire L1   unit: Nm
+	ESimOne_Data_Vehicle_State_SO_AVy_L1,     // Wheel L1 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L1,   // Longitudinal slip, tire L1   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L1,   // Lateral slip angle, tire L1  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_L1,      // Vertical force, tire L1   unit: N
+	ESimOne_Data_Vehicle_State_SO_My_WC_L1,   // Tire My at wheel center L1   unit: N.m
+	ESimOne_Data_Vehicle_State_SO_Fx_L1,      // Longitudinal force, tire L1   unit: N
+	ESimOne_Data_Vehicle_State_SO_Fy_L1,      // lateral force, tire L1  unit: N
+	ESimOne_Data_Vehicle_State_SO_Jnc_L1,     // Wheel L1 jounce (compression)   unit: mm
+	ESimOne_Data_Vehicle_State_SO_JncR_L1,    // Wheel L1 jounce rate         unit: mm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L1,      // Aligning moment, tire L1   unit: Nm
 
-    SO_AVy_L2,     //  Wheel L2 spin    unit: rpm
-    SO_Kappa_L2,   // Longitudinal slip, tire L2   ratio, no unit
-    SO_Alpha_L2,   // Lateral slip angle, tire L2  unit: rad
-    SO_Fz_L2,
-    SO_My_WC_L2,
-    SO_Fx_L2,       // Longitudinal force, tire L2
-    SO_Fy_L2,       // lateral force, tire L2
-    SO_Jnc_L2,      // Wheel L2 jounce (compression)  unit: cm
-    SO_JncR_L2,     // Wheel L2 jounce rate   unit: cm/s
-    SO_Mz_L2,       // Aligning moment, tire L2  unit: Nm
+	ESimOne_Data_Vehicle_State_SO_AVy_L2,     //  Wheel L2 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L2,   // Longitudinal slip, tire L2   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L2,   // Lateral slip angle, tire L2  unit: rad
+	ESimOne_Data_Vehicle_State_SO_Fz_L2,
+	ESimOne_Data_Vehicle_State_SO_My_WC_L2,
+	ESimOne_Data_Vehicle_State_SO_Fx_L2,       // Longitudinal force, tire L2
+	ESimOne_Data_Vehicle_State_SO_Fy_L2,       // lateral force, tire L2
+	ESimOne_Data_Vehicle_State_SO_Jnc_L2,      // Wheel L2 jounce (compression)  unit: cm
+	ESimOne_Data_Vehicle_State_SO_JncR_L2,     // Wheel L2 jounce rate   unit: cm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L2,       // Aligning moment, tire L2  unit: Nm
 
-    SO_AVy_R1,
-    SO_Kappa_R1,
-    SO_Alpha_R1,    // Lateral slip angle, tire R1  unit: degree
-    SO_Fz_R1,
-    SO_My_WC_R1,
-    SO_Fx_R1,       // Longitudinal force, tire R1
-    SO_Fy_R1,       // lateral force, tire R1
-    SO_Jnc_R1,      // Wheel R1 jounce (compression)
-    SO_JncR_R1,     // Wheel R1 jounce rate
-    SO_Mz_R1,       // Aligning moment, tire R1
+	ESimOne_Data_Vehicle_State_SO_AVy_R1,
+	ESimOne_Data_Vehicle_State_SO_Kappa_R1,
+	ESimOne_Data_Vehicle_State_SO_Alpha_R1,    // Lateral slip angle, tire R1  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R1,
+	ESimOne_Data_Vehicle_State_SO_My_WC_R1,
+	ESimOne_Data_Vehicle_State_SO_Fx_R1,       // Longitudinal force, tire R1
+	ESimOne_Data_Vehicle_State_SO_Fy_R1,       // lateral force, tire R1
+	ESimOne_Data_Vehicle_State_SO_Jnc_R1,      // Wheel R1 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R1,     // Wheel R1 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R1,       // Aligning moment, tire R1
 
-    SO_AVy_R2,
-    SO_Kappa_R2,
-    SO_Alpha_R2,    // Lateral slip angle, tire R2  unit: degree
-    SO_Fz_R2,
-    SO_My_WC_R2,
-    SO_Fx_R2,       // Longitudinal force, tire R2
-    SO_Fy_R2,       // lateral force, tire R2
-    SO_Jnc_R2,      // Wheel R2 jounce (compression)
-    SO_JncR_R2,     // Wheel R2 jounce rate
-    SO_Mz_R2,       // Aligning moment, tire R2
+	ESimOne_Data_Vehicle_State_SO_AVy_R2,
+	ESimOne_Data_Vehicle_State_SO_Kappa_R2,
+	ESimOne_Data_Vehicle_State_SO_Alpha_R2,    // Lateral slip angle, tire R2  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R2,
+	ESimOne_Data_Vehicle_State_SO_My_WC_R2,
+	ESimOne_Data_Vehicle_State_SO_Fx_R2,       // Longitudinal force, tire R2
+	ESimOne_Data_Vehicle_State_SO_Fy_R2,       // lateral force, tire R2
+	ESimOne_Data_Vehicle_State_SO_Jnc_R2,      // Wheel R2 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R2,     // Wheel R2 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R2,       // Aligning moment, tire R2
 
-	SO_AVy_L3,     // Wheel L3 spin    unit: rpm
-	SO_Kappa_L3,   // Longitudinal slip, tire L3   ratio, no unit
-	SO_Alpha_L3,   // Lateral slip angle, tire L3  unit: degree
-	SO_Fz_L3,      // Vertical force, tire L3   unit: N
-	SO_My_WC_L3,   // Tire My at wheel center L3   unit: N.m
-	SO_Fx_L3,      // Longitudinal force, tire L3   unit: N
-	SO_Fy_L3,      // lateral force, tire L3  unit: N
-	SO_Jnc_L3,     // Wheel L3 jounce (compression)   unit: mm
-	SO_JncR_L3,    // Wheel L3 jounce rate         unit: mm/s
-	SO_Mz_L3,      // Aligning moment, tire L3   unit: Nm
+	ESimOne_Data_Vehicle_State_SO_AVy_L3,     // Wheel L3 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L3,   // Longitudinal slip, tire L3   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L3,   // Lateral slip angle, tire L3  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_L3,      // Vertical force, tire L3   unit: N
+	ESimOne_Data_Vehicle_State_SO_My_WC_L3,   // Tire My at wheel center L3   unit: N.m
+	ESimOne_Data_Vehicle_State_SO_Fx_L3,      // Longitudinal force, tire L3   unit: N
+	ESimOne_Data_Vehicle_State_SO_Fy_L3,      // lateral force, tire L3  unit: N
+	ESimOne_Data_Vehicle_State_SO_Jnc_L3,     // Wheel L3 jounce (compression)   unit: mm
+	ESimOne_Data_Vehicle_State_SO_JncR_L3,    // Wheel L3 jounce rate         unit: mm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L3,      // Aligning moment, tire L3   unit: Nm
 
-	SO_AVy_R3,
-	SO_Kappa_R3,
-	SO_Alpha_R3,    // Lateral slip angle, tire R3  unit: degree
-	SO_Fz_R3,
-	SO_My_WC_R3,
-	SO_Fx_R3,       // Longitudinal force, tire R3
-	SO_Fy_R3,       // lateral force, tire R3
-	SO_Jnc_R3,      // Wheel R3 jounce (compression)
-	SO_JncR_R3,     // Wheel R3 jounce rate
-	SO_Mz_R3,       // Aligning moment, tire R3
+	ESimOne_Data_Vehicle_State_SO_AVy_R3,
+	ESimOne_Data_Vehicle_State_SO_Kappa_R3,
+	ESimOne_Data_Vehicle_State_SO_Alpha_R3,    // Lateral slip angle, tire R3  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R3,
+	ESimOne_Data_Vehicle_State_SO_My_WC_R3,
+	ESimOne_Data_Vehicle_State_SO_Fx_R3,       // Longitudinal force, tire R3
+	ESimOne_Data_Vehicle_State_SO_Fy_R3,       // lateral force, tire R3
+	ESimOne_Data_Vehicle_State_SO_Jnc_R3,      // Wheel R3 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R3,     // Wheel R3 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R3,       // Aligning moment, tire R3
 
-	SO_Steer_L3,
-	SO_Steer_R3,
+	ESimOne_Data_Vehicle_State_SO_Steer_L3,
+	ESimOne_Data_Vehicle_State_SO_Steer_R3,
 
-    SO_Steer_SW,   // Steering wheel angle  unit: deg
-	SO_TimePassed,
+	ESimOne_Data_Vehicle_State_SO_Steer_SW,   // Steering wheel angle  unit: deg
+	ESimOne_Data_Vehicle_State_SO_TimePassed
 };
 
 #define SOSM_VEHICLE_EXTRA_STATE_MAX_SIZE 600
@@ -551,10 +545,10 @@ struct SimOne_Data_CaseInfo
 };
 enum ESimOne_Case_Status
 {
-	SimOne_Case_Status_Unknow = 0,
-	SimOne_Case_Status_Stop = 1,
-	SimOne_Case_Status_Running = 2,
-	SimOne_Case_Status_Pause = 3
+	ESimOne_Case_Status_Unknown = 0,
+	ESimOne_Case_Status_Stop = 1,
+	ESimOne_Case_Status_Running = 2,
+	ESimOne_Case_Status_Pause = 3
 };
 
 #define SOSM_SIGNAL_LIGHTS_PREFIX "SOSM_SIGNAL_LIGHTS_"
@@ -595,41 +589,41 @@ struct SimOne_Data_Environment
 
 enum ESimOne_Node_Type
 {
-	ESimOneNode_Vehicle = 0,
-	ESimOneNode_Camera = 1,
-	ESimOneNode_LiDAR = 2,
-	ESimOneNode_MMWRadar = 3,
-	ESimOneNode_UltrasonicRadar = 4,
-	ESimOneNode_AllUltrasonicRadar = 5,
-	ESimOneNode_GNSSINS = 6,
-	ESimOneNode_PerfectPerception = 7,
-	ESimOneNode_V2X = 8,
-	ESimOneNode_SensorFusion = 9
+	ESimOne_Node_Type_Vehicle = 0,
+	ESimOne_Node_Type_Camera = 1,
+	ESimOne_Node_Type_LiDAR = 2,
+	ESimOne_Node_Type_MMWRadar = 3,
+	ESimOne_Node_Type_UltrasonicRadar = 4,
+	ESimOne_Node_Type_AllUltrasonicRadar = 5,
+	ESimOne_Node_Type_GNSSINS = 6,
+	ESimOne_Node_Type_PerfectPerception = 7,
+	ESimOne_Node_Type_V2X = 8,
+	ESimOne_Node_Type_SensorFusion = 9
 };
 
 enum ESimOne_Sensor_Data_Type
 {
-	EDataType_ImageWithGroundTruth = 0,
-	EDataType_PointCloudWithGroundTruth = 1,
-	EDataType_RadarDetections = 2,
-	EDataType_UltrasonicRadar = 3,
-	EDataType_ObstacleDetection = 4,
-	EDataType_GroundTruth = 5,
-	EDataType_V2X = 6,
-	EDataType_V2XNFS = 7
+	ESimOne_Sensor_Data_Type_ImageWithGroundTruth = 0,
+	ESimOne_Sensor_Data_Type_PointCloudWithGroundTruth = 1,
+	ESimOne_Sensor_Data_Type_RadarDetections = 2,
+	ESimOne_Sensor_Data_Type_UltrasonicRadar = 3,
+	ESimOne_Sensor_Data_Type_ObstacleDetection = 4,
+	ESimOne_Sensor_Data_Type_GroundTruth = 5,
+	ESimOne_Sensor_Data_Type_V2X = 6,
+	ESimOne_Sensor_Data_Type_V2XNFS = 7
 
 };
 
 enum ESimOne_V2X_MessageFrame_PR {
-	MessageFrame_PR_NOTHING,	/* No components present */
-	MessageFrame_PR_bsmFrame,
-	MessageFrame_PR_mapFrame,
-	MessageFrame_PR_rsmFrame,
-	MessageFrame_PR_spatFrame,
-	MessageFrame_PR_rsiFrame,
-	MessageFrame_PR_ipprFrame,
-	MessageFrame_PR_rsvFrame,
-	MessageFrame_PR_bsiFrame
+	ESimOne_V2X_MessageFrame_PR_NOTHING,	/* No components present */
+	ESimOne_V2X_MessageFrame_PR_bsmFrame,
+	ESimOne_V2X_MessageFrame_PR_mapFrame,
+	ESimOne_V2X_MessageFrame_PR_rsmFrame,
+	ESimOne_V2X_MessageFrame_PR_spatFrame,
+	ESimOne_V2X_MessageFrame_PR_rsiFrame,
+	ESimOne_V2X_MessageFrame_PR_ipprFrame,
+	ESimOne_V2X_MessageFrame_PR_rsvFrame,
+	ESimOne_V2X_MessageFrame_PR_bsiFrame
 	/* Extensions may appear below */
 
 };
@@ -712,50 +706,51 @@ struct SimOne_Data_SensorFusionObstacles : public SimOne_Data
 };
 
 enum ESimOne_Lane_Type {
-	LaneType_none = 0,
-	LaneType_driving = 1,
-	LaneType_stop = 2,
-	LaneType_shoulder = 3,
-	LaneType_biking = 4,
-	LaneType_sidewalk = 5,
-	LaneType_border = 6,
-	LaneType_restricted = 7,
-	LaneType_parking = 8,
-	LaneType_bidirectional = 9,
-	LaneType_median = 10,
-	LaneType_special1 = 11,
-	LaneType_special2 = 12,
-	LaneType_special3 = 13,
-	LaneType_roadWorks = 14,
-	LaneType_tram = 15,
-	LaneType_rail = 16,
-	LaneType_entry = 17,
-	LaneType_exit = 18,
-	LaneType_offRamp = 19,
-	LaneType_onRamp = 20,
-	LaneType_mwyEntry = 21,
-	LaneType_mwyExit = 22
+	ESimOne_Lane_Type_none = 0,
+	ESimOne_Lane_Type_driving = 1,
+	ESimOne_Lane_Type_stop = 2,
+	ESimOne_Lane_Type_shoulder = 3,
+	ESimOne_Lane_Type_biking = 4,
+	ESimOne_Lane_Type_sidewalk = 5,
+	ESimOne_Lane_Type_border = 6,
+	ESimOne_Lane_Type_restricted = 7,
+	ESimOne_Lane_Type_parking = 8,
+	ESimOne_Lane_Type_bidirectional = 9,
+	ESimOne_Lane_Type_median = 10,
+	ESimOne_Lane_Type_special1 = 11,
+	ESimOne_Lane_Type_special2 = 12,
+	ESimOne_Lane_Type_special3 = 13,
+	ESimOne_Lane_Type_roadWorks = 14,
+	ESimOne_Lane_Type_tram = 15,
+	ESimOne_Lane_Type_rail = 16,
+	ESimOne_Lane_Type_entry = 17,
+	ESimOne_Lane_Type_exit = 18,
+	ESimOne_Lane_Type_offRamp = 19,
+	ESimOne_Lane_Type_onRamp = 20,
+	ESimOne_Lane_Type_mwyEntry = 21,
+	ESimOne_Lane_Type_mwyExit = 22
 };
 
 enum ESimOne_Boundary_Type {
-	BoundaryType_none = 0,
-	BoundaryType_solid = 1,
-	BoundaryType_broken = 2,
-	BoundaryType_solid_solid = 3,
-	BoundaryType_solid_broken = 4,
-	BoundaryType_broken_solid = 5,
-	BoundaryType_broken_broken = 6,
-	BoundaryType_botts_dots = 7,
-	BoundaryType_grass = 8,
-	BoundaryType_curb = 9
+	ESimOne_Boundary_Type_none = 0,
+	ESimOne_Boundary_Type_solid = 1,
+	ESimOne_Boundary_Type_broken = 2,
+	ESimOne_Boundary_Type_solid_solid = 3,
+	ESimOne_Boundary_Type_solid_broken = 4,
+	ESimOne_Boundary_Type_broken_solid = 5,
+	ESimOne_Boundary_Type_broken_broken = 6,
+	ESimOne_Boundary_Type_botts_dots = 7,
+	ESimOne_Boundary_Type_grass = 8,
+	ESimOne_Boundary_Type_curb = 9
 };
+
 enum ESimOne_Boundary_Color {
-	BoundaryColor_standard = 0,
-	BoundaryColor_blue = 1,
-	BoundaryColor_green = 2,
-	BoundaryColor_red = 3,
-	BoundaryColor_white = 4,
-	BoundaryColor_yellow = 5
+	ESimOne_Boundary_Color_standard = 0,
+	ESimOne_Boundary_Color_blue = 1,
+	ESimOne_Boundary_Color_green = 2,
+	ESimOne_Boundary_Color_red = 3,
+	ESimOne_Boundary_Color_white = 4,
+	ESimOne_Boundary_Color_yellow = 5
 };
 
 struct SimOne_LineCurve_Parameter{
@@ -796,15 +791,15 @@ struct SimOne_Data_LaneInfo :public SimOne_Data
 
 
 enum ESimOne_Client_Type {
-	ESimOneClientType_None = 0,
-	ESimOneClientType_Web = 1,
-	ESimOneClientType_TrafficProvider = 2,
-	ESimOneClientType_VehicleDynamic = 3,
-	ESimOneClientType_BridgeIO = 4,
-	ESimOneClientType_SimOneDLL = 5,
-	ESimOneClientType_Observer = 6,
-	ESimOneClientType_Sensor = 7,
-	ESimOneClientType_Traffic = 8,
+	ESimOne_Client_Type_None = 0,
+	ESimOne_Client_Type_Web = 1,
+	ESimOne_Client_Type_TrafficProvider = 2,
+	ESimOne_Client_Type_VehicleDynamic = 3,
+	ESimOne_Client_Type_BridgeIO = 4,
+	ESimOne_Client_Type_SimOneDLL = 5,
+	ESimOne_Client_Type_Observer = 6,
+	ESimOne_Client_Type_Sensor = 7,
+	ESimOne_Client_Type_Traffic = 8
 };
 // ----------------------------
 // Image data (SimOne Output) 

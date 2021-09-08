@@ -11,8 +11,8 @@ void SampleGetLaneWidth(const SimString& laneId, const SimPoint3D& pos)
 	double width;
 	if (!SimOneAPI::GetLaneWidth(laneId, pos, width))
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Error: lane does not eixst in the map.");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Error: lane does not eixst in the map.");
 		return;
 	}
-	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "lane width at this location: (%f, %f, %f)", pos.x, pos.y, pos.z);
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "lane width at this location: (%f, %f, %f)", pos.x, pos.y, pos.z);
 }

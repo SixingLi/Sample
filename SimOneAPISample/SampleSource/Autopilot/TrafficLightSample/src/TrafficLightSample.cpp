@@ -197,7 +197,7 @@ int main()
 	while (1) {
 		int frame = SimOneAPI::Wait();
 		SimOneAPI::GetGps(MainVehicleId,&Gps);
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running && (Gps.timestamp > 0)) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running && (Gps.timestamp > 0)) {
 			printf("SimOne Initialized\n");
 			SimOneAPI::NextFrame(frame);
 			break;
@@ -251,7 +251,7 @@ int main()
 	SSD::SimString targetSuccessorLaneId = GetTargetSuccessorLane(successorLaneNameList, light.validities);
 	
 	while (1) {
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Stop) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Stop) {
 			break;
 		}
 

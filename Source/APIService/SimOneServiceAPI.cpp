@@ -53,7 +53,7 @@ extern "C"
 			}
 			SimOneAPIService::GetInstance()->SimOneNodeReady();
 			while (true) {
-				if (GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running) {
+				if (GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running) {
 					break;
 				}
 			}

@@ -10,7 +10,7 @@ void SampleGetLaneType(const SimString& laneId)
 	HDMapStandalone::MLaneType type;
 	if (!SimOneAPI::GetLaneType(laneId, type))
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Error: lane does not eixst in the map");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Error: lane does not eixst in the map");
 		return;
 	}
 	std::string typeStr;
@@ -134,5 +134,5 @@ void SampleGetLaneType(const SimString& laneId)
 		default:
 			typeStr = "MLaneType::none";
 	}
-	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "lane type: %s", typeStr.c_str());
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "lane type: %s", typeStr.c_str());
 }

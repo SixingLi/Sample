@@ -20,8 +20,8 @@ int main(int argc, char* argv[])
 
 	while (1)
 	{
-
 		std::unique_ptr<SimOne_Data_RadarDetection> pRadarDetection = std::make_unique<SimOne_Data_RadarDetection>();
+		std::unique_ptr<SimOne_Data_UltrasonicRadars> pUltrasonics = std::make_unique<SimOne_Data_UltrasonicRadars>();
 		std::map<int, SimOne_Data_RadarDetection> RadarDetectionMap;
 		std::unique_ptr<SimOne_Data_SensorConfigurations> SensorConfigurations = std::make_unique<SimOne_Data_SensorConfigurations>();
 		//bool resultGetRadarDetections = SimOneAPI::GetRadarDetections(0, "1", pRadarDetection.get());
@@ -39,10 +39,13 @@ int main(int argc, char* argv[])
 		//char ChsensorID[1];
 		//strcpy(ChsensorID, (char *)&SensorID);
 		while (1) {
-			auto function = [](int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics) {
-				std::cout << pUltrasonics->frame << "," << pUltrasonics->ultrasonicRadarNum << pUltrasonics << "," << pUltrasonics->timestamp << ","<<pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].obstacleRanges << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].x<< "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].y<<endl;
-			};
-			SimOneAPI::SetUltrasonicRadarsCB(function);
+			//auto function = [](int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics) {
+			//	std::cout << pUltrasonics->frame << "," << pUltrasonics->ultrasonicRadarNum << "," << pUltrasonics->timestamp << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].obstacleRanges << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].x << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].y << endl;
+			//};
+			//SimOneAPI::SetUltrasonicRadarsCB(function);
+			SimOneAPI::GetUltrasonicRadars(0, pUltrasonics.get());
+			std::cout << pUltrasonics->frame << "," << pUltrasonics->ultrasonicRadarNum  << "," << pUltrasonics->timestamp << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].obstacleRanges << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].x << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].y << endl;
+
 		/*	bool resultGetRadarDetections = SimOneAPI::GetRadarDetections(0, "objectBasedRadar1", pRadarDetection.get());
 			std::cout << "pRadarDetection->timestamp: " << pRadarDetection->timestamp << ",pRadarDetection.detectNum:" << pRadarDetection->detectNum << std::endl;
 			std::cout << "GetRadarDetections posX: " << pRadarDetection->detections[0].posX << std::endl;

@@ -52,7 +52,7 @@ void TaskV2XNFS::DoSendMsgFrame(SensorContext* pSensorContext, const std::string
 	const std::string sensorId = SimOneAPIService::GetInstance()->GetSensorIdFromId(pSensorContext->sensorId);
 	const string sensorKey = std::to_string(pSensorContext->mainVehicleId).append("_").append(sensorId).append("_").append(v2xInfoType);
 	
-	if(v2xInfoType==std::to_string(MessageFrame_PR_bsmFrame)){
+	if(v2xInfoType==std::to_string(ESimOne_V2X_MessageFrame_PR_bsmFrame)){
 		std::unique_lock<std::recursive_mutex> lock(mLastV2XDetectionBSMMapLock);
 		SimOne_Data_V2XDetectionMap::iterator it = mLastV2XDetectionBSMMap.find(sensorKey);
 		if (it != mLastV2XDetectionBSMMap.end()) {
@@ -74,7 +74,7 @@ void TaskV2XNFS::DoSendMsgFrame(SensorContext* pSensorContext, const std::string
 			TaskSensorManager::getInstance().mpSimOneV2XRawCB(pSensorContext->mainVehicleId, sensorId.c_str(), pV2xMsgBSMFrame);
 		}
 	}
-	else if (v2xInfoType == std::to_string(MessageFrame_PR_mapFrame)) {
+	else if (v2xInfoType == std::to_string(ESimOne_V2X_MessageFrame_PR_mapFrame)) {
 		std::unique_lock<std::recursive_mutex> lock(mLastV2XDetectionMAPMapLock);
 		SimOne_Data_V2XDetectionMap::iterator it = mLastV2XDetectionMAPMap.find(sensorKey);
 		if (it != mLastV2XDetectionMAPMap.end()) {
@@ -95,7 +95,7 @@ void TaskV2XNFS::DoSendMsgFrame(SensorContext* pSensorContext, const std::string
 		{
 			TaskSensorManager::getInstance().mpSimOneV2XRawCB(pSensorContext->mainVehicleId, sensorId.c_str(), pV2xMsgMAPFrame);
 		}
-	}else if (v2xInfoType == std::to_string(MessageFrame_PR_rsmFrame)) {
+	}else if (v2xInfoType == std::to_string(ESimOne_V2X_MessageFrame_PR_rsmFrame)) {
 		std::unique_lock<std::recursive_mutex> lock(mLastV2XDetectionRSMMapLock);
 		SimOne_Data_V2XDetectionMap::iterator it = mLastV2XDetectionRSMMap.find(sensorKey);
 		if (it != mLastV2XDetectionRSMMap.end()) {
@@ -116,7 +116,7 @@ void TaskV2XNFS::DoSendMsgFrame(SensorContext* pSensorContext, const std::string
 		{
 			TaskSensorManager::getInstance().mpSimOneV2XRawCB(pSensorContext->mainVehicleId, sensorId.c_str(), pV2xMsgRSMFrame);
 		}
-	}else if (v2xInfoType == std::to_string(MessageFrame_PR_spatFrame)) {
+	}else if (v2xInfoType == std::to_string(ESimOne_V2X_MessageFrame_PR_spatFrame)) {
 		std::unique_lock<std::recursive_mutex> lock(mLastV2XDetectionSPATMapLock);
 		SimOne_Data_V2XDetectionMap::iterator it = mLastV2XDetectionSPATMap.find(sensorKey);
 		if (it != mLastV2XDetectionSPATMap.end()) {
@@ -137,7 +137,7 @@ void TaskV2XNFS::DoSendMsgFrame(SensorContext* pSensorContext, const std::string
 		{
 			TaskSensorManager::getInstance().mpSimOneV2XRawCB(pSensorContext->mainVehicleId, sensorId.c_str(), pV2xMsgSPATFrame);
 		}
-	}else if (v2xInfoType == std::to_string(MessageFrame_PR_rsiFrame)) {
+	}else if (v2xInfoType == std::to_string(ESimOne_V2X_MessageFrame_PR_rsiFrame)) {
 		std::unique_lock<std::recursive_mutex> lock(mLastV2XDetectionRSIMapLock);
 		SimOne_Data_V2XDetectionMap::iterator it = mLastV2XDetectionRSIMap.find(sensorKey);
 		if (it != mLastV2XDetectionRSIMap.end()) {

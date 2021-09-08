@@ -2,7 +2,7 @@ from ctypes import *
 import os
 import platform
 
-global HDMapModule, SimoneAPI, SimoneAPI_dll,SimoneStreamingAPI
+global HDMapModule, SimoneAPI, SimoneAPI_dll,SimoneStreamingAPI_dll
 
 sys = platform.system()
 if sys == "Windows":
@@ -85,11 +85,11 @@ SOSM_CASEID_LENGT = 256
 SOSM_TASKID_LENGT = 256
 SOSM_SESSIONID_LENGT = 256
 SOSM_EXTRA_STATES_SIZE_MAX = 256
-
-SimOne_Case_Status_Unknow = 0,
-SimOne_Case_Status_Stop = 1,
-SimOne_Case_Status_Running = 2
-SimOne_Case_Status_Pause = 3
+class ESimOne_Case_Status(c_int):
+	ESimOne_Case_Status_Unknown = 0
+	ESimOne_Case_Status_Stop = 1
+	ESimOne_Case_Status_Running = 2
+	ESimOne_Case_Status_Pause = 3
 
 class SimOne_Data_CaseInfo(Structure):
 	_pack_ = 1
@@ -108,28 +108,138 @@ class SimOne_Data(Structure):
 	
 
 class ESimOne_TrafficLight_Status(c_int):
-	ESimOne_TrafficLight_Status_Invalid = 0,
-	ESimOne_TrafficLight_Status_Red = 1,
-	ESimOne_TrafficLight_Status_Green = 2,
-	ESimOne_TrafficLight_Status_Yellow = 3,
-	ESimOne_TrafficLight_Status_RedBlink = 4,
-	ESimOne_TrafficLight_Status_GreenBlink = 5,
-	ESimOne_TrafficLight_Status_YellowBlink = 6,
+	ESimOne_TrafficLight_Status_Invalid = 0
+	ESimOne_TrafficLight_Status_Red = 1
+	ESimOne_TrafficLight_Status_Green = 2
+	ESimOne_TrafficLight_Status_Yellow = 3
+	ESimOne_TrafficLight_Status_RedBlink = 4
+	ESimOne_TrafficLight_Status_GreenBlink = 5
+	ESimOne_TrafficLight_Status_YellowBlink = 6
 	ESimOne_TrafficLight_Status_Black = 7
 
 class ESimOne_Data_Vehicle_State(c_int):
-    ESimOne_X_L1 = 0,
-    ESimOne_Y_L1 = 1,
-    ESimOne_Z_L1 = 2,
-    ESimOne_X_L2 = 3,
-    ESimOne_Y_L2 = 4,
-    ESimOne_Z_L2 = 5,
-    ESimOne_X_R1 = 6,
-    ESimOne_Y_R1 = 7,
-    ESimOne_Z_R1 = 8,
-    ESimOne_X_R2 = 9,
-    ESimOne_Y_R2 = 10,
-    ESimOne_Z_R2 = 11
+	ESimOne_Data_Vehicle_State_SO_M_SW=0
+	ESimOne_Data_Vehicle_State_S0_Vx_SM=1
+	ESimOne_Data_Vehicle_State_S0_Vy_SM=2
+	ESimOne_Data_Vehicle_State_S0_Vz_SM=3
+	ESimOne_Data_Vehicle_State_SO_M_ENGOUT=4
+	ESimOne_Data_Vehicle_State_SO_My_DR_L1=5
+	ESimOne_Data_Vehicle_State_SO_My_DR_R1=6
+	ESimOne_Data_Vehicle_State_SO_My_DR_L2=7
+	ESimOne_Data_Vehicle_State_SO_My_DR_R2=8
+	ESimOne_Data_Vehicle_State_SO_My_DR_L3=9
+	ESimOne_Data_Vehicle_State_SO_My_DR_R3=10
+
+	ESimOne_Data_Vehicle_State_SO_F_Pedal=11    # Brake Pedal Force
+	ESimOne_Data_Vehicle_State_SO_Pbk_Con=12    # BrakeMasterCylinder Pressure
+	ESimOne_Data_Vehicle_State_SO_My_Bk_L3=13   # Brake Torque at Left Rear Wheel
+	ESimOne_Data_Vehicle_State_SO_My_Bk_R3=14   # Brake Torque at Right Rear Wheel
+
+	ESimOne_Data_Vehicle_State_SO_ClutchTr=15   # Transmission clutch control
+
+	ESimOne_Data_Vehicle_State_SO_X_L1=16       # x coordinate, wheel center L1
+	ESimOne_Data_Vehicle_State_SO_Y_L1=17
+	ESimOne_Data_Vehicle_State_SO_Z_L1=18
+	ESimOne_Data_Vehicle_State_SO_X_L2=19
+	ESimOne_Data_Vehicle_State_SO_Y_L2=20
+	ESimOne_Data_Vehicle_State_SO_Z_L2=21
+	ESimOne_Data_Vehicle_State_SO_X_R1=22
+	ESimOne_Data_Vehicle_State_SO_Y_R1=23
+	ESimOne_Data_Vehicle_State_SO_Z_R1=24
+	ESimOne_Data_Vehicle_State_SO_X_R2=25
+	ESimOne_Data_Vehicle_State_SO_Y_R2=26
+	ESimOne_Data_Vehicle_State_SO_Z_R2=27
+	ESimOne_Data_Vehicle_State_SO_X_L3=28       # x coordinate, wheel center L3
+	ESimOne_Data_Vehicle_State_SO_Y_L3=29
+	ESimOne_Data_Vehicle_State_SO_Z_L3=30
+	ESimOne_Data_Vehicle_State_SO_X_R3=31
+	ESimOne_Data_Vehicle_State_SO_Y_R3=32
+	ESimOne_Data_Vehicle_State_SO_Z_R3=33
+
+	ESimOne_Data_Vehicle_State_SO_Xctc_L1=34      # x coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Yctc_L1=35      # y coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Zctc_L1=36      # z coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Xctc_L2=37
+	ESimOne_Data_Vehicle_State_SO_Yctc_L2=38
+	ESimOne_Data_Vehicle_State_SO_Zctc_L2=39
+	ESimOne_Data_Vehicle_State_SO_Xctc_R1=40
+	ESimOne_Data_Vehicle_State_SO_Yctc_R1=41
+	ESimOne_Data_Vehicle_State_SO_Zctc_R1=42
+	ESimOne_Data_Vehicle_State_SO_Xctc_R2=43
+	ESimOne_Data_Vehicle_State_SO_Yctc_R2=44
+	ESimOne_Data_Vehicle_State_SO_Zctc_R2=45
+
+	ESimOne_Data_Vehicle_State_SO_AVy_L1=46     # Wheel L1 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L1=47   # Longitudinal slip, tire L1   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L1=48   # Lateral slip angle, tire L1  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_L1=49      # Vertical force, tire L1   unit: N
+	ESimOne_Data_Vehicle_State_SO_My_WC_L1=50   # Tire My at wheel center L1   unit: N.m
+	ESimOne_Data_Vehicle_State_SO_Fx_L1=51      # Longitudinal force, tire L1   unit: N
+	ESimOne_Data_Vehicle_State_SO_Fy_L1=52      # lateral force, tire L1  unit: N
+	ESimOne_Data_Vehicle_State_SO_Jnc_L1=53     # Wheel L1 jounce (compression)   unit: mm
+	ESimOne_Data_Vehicle_State_SO_JncR_L1=54    # Wheel L1 jounce rate         unit: mm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L1=55      # Aligning moment, tire L1   unit: Nm
+
+	ESimOne_Data_Vehicle_State_SO_AVy_L2=56     #  Wheel L2 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L2=57   # Longitudinal slip, tire L2   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L2=58   # Lateral slip angle, tire L2  unit: rad
+	ESimOne_Data_Vehicle_State_SO_Fz_L2=59
+	ESimOne_Data_Vehicle_State_SO_My_WC_L2=60
+	ESimOne_Data_Vehicle_State_SO_Fx_L2=61       # Longitudinal force, tire L2
+	ESimOne_Data_Vehicle_State_SO_Fy_L2=62       # lateral force, tire L2
+	ESimOne_Data_Vehicle_State_SO_Jnc_L2=63      # Wheel L2 jounce (compression)  unit: cm
+	ESimOne_Data_Vehicle_State_SO_JncR_L2=64     # Wheel L2 jounce rate   unit: cm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L2=65       # Aligning moment, tire L2  unit: Nm
+
+	ESimOne_Data_Vehicle_State_SO_AVy_R1=66
+	ESimOne_Data_Vehicle_State_SO_Kappa_R1=67
+	ESimOne_Data_Vehicle_State_SO_Alpha_R1=68    # Lateral slip angle, tire R1  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R1=69
+	ESimOne_Data_Vehicle_State_SO_My_WC_R1=70
+	ESimOne_Data_Vehicle_State_SO_Fx_R1=71       # Longitudinal force, tire R1
+	ESimOne_Data_Vehicle_State_SO_Fy_R1=72       # lateral force, tire R1
+	ESimOne_Data_Vehicle_State_SO_Jnc_R1=73      # Wheel R1 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R1=74     # Wheel R1 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R1=75       # Aligning moment, tire R1
+
+	ESimOne_Data_Vehicle_State_SO_AVy_R2=76
+	ESimOne_Data_Vehicle_State_SO_Kappa_R2=77
+	ESimOne_Data_Vehicle_State_SO_Alpha_R2=78    # Lateral slip angle, tire R2  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R2=79
+	ESimOne_Data_Vehicle_State_SO_My_WC_R2=80
+	ESimOne_Data_Vehicle_State_SO_Fx_R2=81       # Longitudinal force, tire R2
+	ESimOne_Data_Vehicle_State_SO_Fy_R2=82       # lateral force, tire R2
+	ESimOne_Data_Vehicle_State_SO_Jnc_R2=83      # Wheel R2 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R2=84     # Wheel R2 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R2=85       # Aligning moment, tire R2
+
+	ESimOne_Data_Vehicle_State_SO_AVy_L3=86     # Wheel L3 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L3=87   # Longitudinal slip, tire L3   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L3=88   # Lateral slip angle, tire L3  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_L3=89      # Vertical force, tire L3   unit: N
+	ESimOne_Data_Vehicle_State_SO_My_WC_L3=90   # Tire My at wheel center L3   unit: N.m
+	ESimOne_Data_Vehicle_State_SO_Fx_L3=91      # Longitudinal force, tire L3   unit: N
+	ESimOne_Data_Vehicle_State_SO_Fy_L3=92      # lateral force, tire L3  unit: N
+	ESimOne_Data_Vehicle_State_SO_Jnc_L3=93     # Wheel L3 jounce (compression)   unit: mm
+	ESimOne_Data_Vehicle_State_SO_JncR_L3=94    # Wheel L3 jounce rate         unit: mm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L3=95      # Aligning moment, tire L3   unit: Nm
+
+	ESimOne_Data_Vehicle_State_SO_AVy_R3=96
+	ESimOne_Data_Vehicle_State_SO_Kappa_R3=97
+	ESimOne_Data_Vehicle_State_SO_Alpha_R3=98    # Lateral slip angle, tire R3  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R3=99
+	ESimOne_Data_Vehicle_State_SO_My_WC_R3=100
+	ESimOne_Data_Vehicle_State_SO_Fx_R3=101       # Longitudinal force, tire R3
+	ESimOne_Data_Vehicle_State_SO_Fy_R3=102       # lateral force, tire R3
+	ESimOne_Data_Vehicle_State_SO_Jnc_R3=103      # Wheel R3 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R3=104     # Wheel R3 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R3=105       # Aligning moment, tire R3
+
+	ESimOne_Data_Vehicle_State_SO_Steer_L3=106
+	ESimOne_Data_Vehicle_State_SO_Steer_R3=107
+
+	ESimOne_Data_Vehicle_State_SO_Steer_SW=108   # Steering wheel angle  unit: deg
+	ESimOne_Data_Vehicle_State_SO_TimePassed=109
 
 SOSM_TRAFFICLIGHT_SIZE_MAX = 100
 
@@ -180,49 +290,49 @@ class SimOne_Data_Pose_Control(SimOne_Data):
 
 
 class ESimOne_Gear_Mode(c_int):
-	EGearMode_Neutral = 0
-	EGearMode_Drive = 1      # forward gear for automatic gear
-	EGearMode_Reverse = 2
-	EGearMode_Parking = 3
+	ESimOne_Gear_Mode_Neutral = 0
+	ESimOne_Gear_Mode_Drive = 1      # forward gear for automatic gear
+	ESimOne_Gear_Mode_Reverse = 2
+	ESimOne_Gear_Mode_Parking = 3
 
-	EGearManualMode_1 = 4    # forward gear 1 for manual gear
-	EGearManualMode_2 = 5
-	EGearManualMode_3 = 6
-	EGearManualMode_4 = 7
-	EGearManualMode_5 = 8
-	EGearManualMode_6 = 9
-	EGearManualMode_7 = 10
-	EGearManualMode_8 = 11
+	ESimOne_Gear_Mode_1 = 4    # forward gear 1 for manual gear
+	ESimOne_Gear_Mode_2 = 5
+	ESimOne_Gear_Mode_3 = 6
+	ESimOne_Gear_Mode_4 = 7
+	ESimOne_Gear_Mode_5 = 8
+	ESimOne_Gear_Mode_6 = 9
+	ESimOne_Gear_Mode_7 = 10
+	ESimOne_Gear_Mode_8 = 11
 
 class ESimOne_Throttle_Mode(c_int):
-    EThrottleMode_Percent = 0         # [0, 1]
-    EThrottleMode_Torque = 1          # engine torque, N.m
-    EThrottleMode_Speed = 2           # vehicle speed, m/s,   in this mode, brake input is ignored
-    EThrottleMode_Accel = 3           # vehicle acceleration, m/s^2, in this mode, brake input is ignored
-    EThrottleMode_EngineAV = 4        # engine, rpm
-    EThrottleMode_WheelTorque = 5      # torques applied to each wheel, array, size is the wheel number, N.m
+    ESimOne_Throttle_Mode_Percent = 0         # [0, 1]
+    ESimOne_Throttle_Mode_Torque = 1          # engine torque, N.m
+    ESimOne_Throttle_Mode_Speed = 2           # vehicle speed, m/s,   in this mode, brake input is ignored
+    ESimOne_Throttle_Mode_Accel = 3           # vehicle acceleration, m/s^2, in this mode, brake input is ignored
+    ESimOne_Throttle_Mode_EngineAV = 4        # engine, rpm
+    ESimOne_Throttle_Mode_WheelTorque = 5      # torques applied to each wheel, array, size is the wheel number, N.m
 
 class ESimOne_Brake_Mode(c_int):
-    EBrakeMode_Percent = 0
-    EBrakeMode_MasterCylinderPressure = 1 # degree
-    EBrakeMode_PedalForce = 2
-    EBrakeMode_WheelCylinderPressure = 3   # Mpa for each wheel
-    EBrakeMode_WheelTorque = 4             # Nm for each wheel
+    ESimOne_Brake_Mode_Percent = 0
+    ESimOne_Brake_Mode_MasterCylinderPressure = 1 # degree
+    ESimOne_Brake_Mode_PedalForce = 2
+    ESimOne_Brake_Mode_WheelCylinderPressure = 3   # Mpa for each wheel
+    ESimOne_Brake_Mode_WheelTorque = 4             # Nm for each wheel
 #
 class ESimOne_Steering_Mode(c_int):
-    ESteeringMode_Percent = 0
-    ESteeringMode_SteeringWheelAngle = 1
-    ESteeringMode_Torque = 2
-    ESteeringAngularSpeed = 3            # steering wheel angualr speed, degree/s
-    ESteeringWheelAngle = 4              # degree for each wheel
-    ESteeringWheelAnglarSpeed = 5        # degree/s for each wheel
+    ESimOne_Steering_Mode_Percent = 0
+    ESimOne_Steering_Mode_SteeringWheelAngle = 1
+    ESimOne_Steering_Mode_Torque = 2
+    ESimOne_Steering_Mode_AngularSpeed = 3            # steering wheel angualr speed, degree/s
+    ESimOne_Steering_Mode_WheelAngle = 4              # degree for each wheel
+    ESimOne_Steering_Mode_WheelAnglarSpeed = 5        # degree/s for each wheel
 
 class ESimOne_LogLevel_Type(c_int):
-	ELogLevel_Debug = 0
-	ELogLevel_Information = 1
-	ELogLevel_Warning = 2
-	ELogLevel_Error = 3
-	ELogLevel_Fatal = 4
+	ESimOne_LogLevel_Type_Debug = 0
+	ESimOne_LogLevel_Type_Information = 1
+	ESimOne_LogLevel_Type_Warning = 2
+	ESimOne_LogLevel_Type_Error = 3
+	ESimOne_LogLevel_Type_Fatal = 4
 
 SOSM_MAX_WHEEL_NUM = 20
 class SimOne_Data_Control(SimOne_Data):
@@ -261,13 +371,20 @@ class SimOne_Data_ESP_Control(SimOne_Data):
 	('gearMode', c_int)]
 
 class ESimone_Vehicle_EventInfo_Type(c_int):
-	ESimOne_VehicleEventInfo_Forward_Collision = 0
-	ESimOne_VehicleEventInfo_Backward_Collision = 1
-	ESimOne_VehicleEventInfo_Left_Turn = 2
-	ESimOne_VehicleEventInfo_Right_Turn = 3
-	ESimOne_VehicleEventInfo_Forward_Straight = 4
-	ESimOne_VehicleEventInfo_Over_Speed = 5
-
+	ESimone_Vehicle_EventInfo_Type_Forward_Collision_Warning = 0		# 	front_crash_warning
+	ESimone_Vehicle_EventInfo_Type_Backward_Collision_Warning = 1	# 	back_crash_warning
+	ESimone_Vehicle_EventInfo_Type_Left_Turn_Decision = 2			# 	turn_left
+	ESimone_Vehicle_EventInfo_Type_Left_Turn_Warning = 3				# 	left_warning
+	ESimone_Vehicle_EventInfo_Type_Right_Turn_Decision = 4			# 	turn_right
+	ESimone_Vehicle_EventInfo_Type_Right_Turn_Warning = 5			# 	right_warning
+	ESimone_Vehicle_EventInfo_Type_Forward_Straight_Decision = 6		# 	straight_through
+	ESimone_Vehicle_EventInfo_Type_Forward_Straight_Warning = 7		# 	straight_warning
+	ESimone_Vehicle_EventInfo_Type_Over_Speed_Warning = 8			# 	overspeeding_warning
+	ESimone_Vehicle_EventInfo_Type_Lane_Change_Decision = 9			#  lane_change
+	ESimone_Vehicle_EventInfo_Type_Lane_Change_Warning = 10			# 	lane_change_warning
+	ESimone_Vehicle_EventInfo_Type_Overtake_Decision = 11			# 	overtake
+	ESimone_Vehicle_EventInfo_Type_Emergency_Braking_Decision = 12	# 	emergency_braking
+	ESimone_Vehicle_EventInfo_Type_Accelerate_Decision = 13			# 	accelerate
 
 class SimOne_Data_Vehicle_EventInfo(SimOne_Data):
 	_pack_ = 1
@@ -382,15 +499,16 @@ SOSM_IMAGE_DATA_SIZE_MAX = SOSM_IMAGE_WIDTH_MAX*SOSM_IMAGE_HEIGHT_MAX*3
 
 
 class ESimOne_Node_Type(c_int):
-	ESimOneNode_Vehicle = 0
-	ESimOneNode_Camera = 1
-	ESimOneNode_LiDAR = 2
-	ESimOneNode_MMWRadar = 3
-	ESimOneNode_UltrasonicRadar = 4
-	ESimOneNode_AllUltrasonicRadar = 5
-	ESimOneNode_GNSSINS = 6
-	ESimOneNode_PerfectPerception = 7
-	ESimOneNode_V2X = 8
+	ESimOne_Node_Type_Vehicle = 0
+	ESimOne_Node_Type_Camera = 1
+	ESimOne_Node_Type_LiDAR = 2
+	ESimOne_Node_Type_MMWRadar = 3
+	ESimOne_Node_Type_UltrasonicRadar = 4
+	ESimOne_Node_Type_AllUltrasonicRadar = 5
+	ESimOne_Node_Type_GNSSINS = 6
+	ESimOne_Node_Type_PerfectPerception = 7
+	ESimOne_Node_Type_V2X = 8
+	ESimOne_Node_Type_SensorFusion = 9
 
 SENSOR_IDTYPE_MAX = 64
 class SimOne_Data_SensorConfiguration(Structure):
@@ -504,34 +622,11 @@ class SimOne_Data_UltrasonicRadars(SimOne_Data):
 
 SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX = 256
 
-
-class SimOne_Obstacle_Type(c_int):
-	ESimOne_Obstacle_Type_Unknown = 0
-	ESimOne_Obstacle_Type_Pedestrian = 4
-	ESimOne_Obstacle_Type_Pole = 5
-	ESimOne_Obstacle_Type_Car = 6
-	ESimOne_Obstacle_Type_Static = 7
-	ESimOne_Obstacle_Type_Bicycle = 8
-	ESimOne_Obstacle_Type_Fence = 9
-	ESimOne_Obstacle_Type_RoadMark = 12
-	ESimOne_Obstacle_Type_TrafficSign = 13
-	ESimOne_Obstacle_Type_TrafficLight = 15
-	ESimOne_Obstacle_Type_Rider = 17
-	ESimOne_Obstacle_Type_Truck = 18
-	ESimOne_Obstacle_Type_Bus = 19
-	ESimOne_Obstacle_Type_Train = 20
-	ESimOne_Obstacle_Type_Motorcycle = 21
-	ESimOne_Obstacle_Type_Dynamic = 22
-	ESimOne_Obstacle_Type_GuardRail = 23
-	ESimOne_Obstacle_Type_SpeedLimitSign = 26
-	ESimOne_Obstacle_Type_BicycleStatic = 27
-	ESimOne_Obstacle_Type_RoadObstacle = 29
-
 class SimOne_Data_SensorDetections_Entry(Structure):
 	_pack_ = 1
 	_fields_ = [
 	('id', c_int),			# Detection Object ID
-	('type', SimOne_Obstacle_Type),		# Detection Object Type
+	('type', ESimOne_Obstacle_Type),		# Detection Object Type
 	('posX', c_float),		# Detection Object Position X in meter
 	('posY', c_float),		# Detection Object Position Y in meter
 	('posZ', c_float),		# Detection Object Position Z in meter
@@ -595,49 +690,49 @@ SOSM_PARKING_SPACE_KNOTS_MAX = 4
 
 
 class ESimOne_Lane_Type(c_int):
-	ESimOneLaneType_none = 0
-	ESimOneLaneType_driving = 1
-	ESimOneLaneType_stop = 2
-	ESimOneLaneType_shoulder = 3
-	ESimOneLaneType_biking = 4
-	ESimOneLaneType_sidewalk = 5
-	ESimOneLaneType_border = 6
-	ESimOneLaneType_restricted = 7
-	ESimOneLaneType_parking = 8
-	ESimOneLaneType_bidirectional = 9
-	ESimOneLaneType_median = 10
-	ESimOneLaneType_special1 = 11
-	ESimOneLaneType_special2 = 12
-	ESimOneLaneType_special3 = 13
-	ESimOneLaneType_roadWorks = 14
-	ESimOneLaneType_tram = 15
-	ESimOneLaneType_rail = 16
-	ESimOneLaneType_entry = 17
-	ESimOneLaneType_exit = 18
-	ESimOneLaneType_offRamp = 19
-	ESimOneLaneType_onRamp = 20
-	ESimOneLaneType_mwyEntry = 21
-	ESimOneLaneType_mwyExit = 22
+	ESimOne_Lane_Type_none = 0
+	ESimOne_Lane_Type_driving = 1
+	ESimOne_Lane_Type_stop = 2
+	ESimOne_Lane_Type_shoulder = 3
+	ESimOne_Lane_Type_biking = 4
+	ESimOne_Lane_Type_sidewalk = 5
+	ESimOne_Lane_Type_border = 6
+	ESimOne_Lane_Type_restricted = 7
+	ESimOne_Lane_Type_parking = 8
+	ESimOne_Lane_Type_bidirectional = 9
+	ESimOne_Lane_Type_median = 10
+	ESimOne_Lane_Type_special1 = 11
+	ESimOne_Lane_Type_special2 = 12
+	ESimOne_Lane_Type_special3 = 13
+	ESimOne_Lane_Type_roadWorks = 14
+	ESimOne_Lane_Type_tram = 15
+	ESimOne_Lane_Type_rail = 16
+	ESimOne_Lane_Type_entry = 17
+	ESimOne_Lane_Type_exit = 18
+	ESimOne_Lane_Type_offRamp = 19
+	ESimOne_Lane_Type_onRamp = 20
+	ESimOne_Lane_Type_mwyEntry = 21
+	ESimOne_Lane_Type_mwyExit = 22
 
 class ESimOne_Boundary_Type(c_int):
-	BoundaryType_none = 0
-	BoundaryType_solid = 1
-	BoundaryType_broken = 2
-	BoundaryType_solid_solid = 3
-	BoundaryType_solid_broken = 4
-	BoundaryType_broken_solid = 5
-	BoundaryType_broken_broken = 6
-	BoundaryType_botts_dots = 7
-	BoundaryType_grass = 8
-	BoundaryType_curb = 9
+	ESimOne_Boundary_Type_none = 0
+	ESimOne_Boundary_Type_solid = 1
+	ESimOne_Boundary_Type_broken = 2
+	ESimOne_Boundary_Type_solid_solid = 3
+	ESimOne_Boundary_Type_solid_broken = 4
+	ESimOne_Boundary_Type_broken_solid = 5
+	ESimOne_Boundary_Type_broken_broken = 6
+	ESimOne_Boundary_Type_botts_dots = 7
+	ESimOne_Boundary_Type_grass = 8
+	ESimOne_Boundary_Type_curb = 9
 
 class ESimOne_Boundary_Color(c_int):
-	BoundaryColor_standard = 0
-	BoundaryColor_blue = 1
-	BoundaryColor_green = 2
-	BoundaryColor_red = 3
-	BoundaryColor_white = 4
-	BoundaryColor_yellow = 5
+	ESimOne_Boundary_Color_standard = 0
+	ESimOne_Boundary_Color_blue = 1
+	ESimOne_Boundary_Color_green = 2
+	ESimOne_Boundary_Color_red = 3
+	ESimOne_Boundary_Color_white = 4
+	ESimOne_Boundary_Color_yellow = 5
 
 class SimOneData_Vec3f(Structure):
 	_pack_ = 1

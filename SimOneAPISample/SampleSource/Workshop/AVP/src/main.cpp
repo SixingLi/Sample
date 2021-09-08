@@ -266,7 +266,7 @@ int main(int argc, char* argv[])
 		{
 			if (UtilMath::PlanarDistance({ gpsPtr->posX, gpsPtr->posY, gpsPtr->posZ }, planner.ForwardTrajectory().back()) < 0.05)
 			{
-				UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., EGearMode_Neutral);
+				UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., ESimOne_Gear_Mode_Neutral);
 				status = AVPStatus::eBrakingPrep;
 				std::cout << "Reached reverse point!" << std::endl;
 			}
@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
 					status = AVPStatus::eReversing;
 				}
 			}
-			UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., EGearMode_Neutral);
+			UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., ESimOne_Gear_Mode_Neutral);
 		}
 		else if (status == AVPStatus::eReversing) // reversing towards the parking space
 		{
@@ -317,7 +317,7 @@ int main(int argc, char* argv[])
 					brake = 0.02f;
 				}
 				double steering = UtilDriver::CalculateSteering(planner.ReverseTrajectory(), gpsPtr.get());
-				UtilDriver::SetControl(gpsPtr->timestamp, throttle, brake, steering, EGearMode_Reverse);
+				UtilDriver::SetControl(gpsPtr->timestamp, throttle, brake, steering, ESimOne_Gear_Mode_Reverse);
 			}
 		}
 		else if (status == AVPStatus::eFinishing) // finishing
@@ -326,7 +326,7 @@ int main(int argc, char* argv[])
 			if (endDistance < parkingEndDistanceThreshold)
 			{
 				std::cout << "Finished parking!" << std::endl;
-				UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., EGearMode_Neutral);
+				UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., ESimOne_Gear_Mode_Neutral);
 				if (leaveAfterParked)
 				{
 					status = AVPStatus::eWaiting;
@@ -338,7 +338,7 @@ int main(int argc, char* argv[])
 				}
 			}
 			// let the vehicle slide
-			UtilDriver::SetControl(gpsPtr->timestamp, 0., 0., 0., EGearMode_Reverse);
+			UtilDriver::SetControl(gpsPtr->timestamp, 0., 0., 0., ESimOne_Gear_Mode_Reverse);
 		}
 		else if (status == AVPStatus::eWaiting)
 		{
@@ -357,7 +357,7 @@ int main(int argc, char* argv[])
 					std::cout << "Finished waiting for " << waitingTimeSecond << " second!" << std::endl;
 				}
 			}
-			UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., EGearMode_Neutral);
+			UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., ESimOne_Gear_Mode_Neutral);
 		}
 		else if (status == AVPStatus::eLeaving)
 		{
@@ -366,7 +366,7 @@ int main(int argc, char* argv[])
 			{
 				status = AVPStatus::eEnded;
 				std::cout << "Finished leaving!" << std::endl;
-				UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., EGearMode_Neutral);
+				UtilDriver::SetControl(gpsPtr->timestamp, 0., 1., 0., ESimOne_Gear_Mode_Neutral);
 			}
 			else
 			{

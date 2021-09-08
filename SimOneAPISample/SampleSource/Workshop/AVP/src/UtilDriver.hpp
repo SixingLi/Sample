@@ -35,7 +35,7 @@ public:
 	*   mainVehicleId: Id of the controlled main vehicle
 	*/
 	static void SetControl(const long long timestamp, const double throttle, const double brake,
-						const double steering, const ESimOne_Gear_Mode gear = ESimOne_Gear_Mode::EGearMode_Drive,
+						const double steering, const ESimOne_Gear_Mode gear = ESimOne_Gear_Mode::ESimOne_Gear_Mode_Drive,
 						const int mainVehicleId = 0)
 	{
 		std::unique_ptr<SimOne_Data_Control> pControl = std::make_unique <SimOne_Data_Control>();

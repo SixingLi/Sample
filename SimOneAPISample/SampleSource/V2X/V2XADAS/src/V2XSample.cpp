@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 		};
 		SimOneAPI::SetV2XInfoUpdateCB(function);
 
-		if (SimOneAPI::GetV2XInfo(0, "v2x", MessageFrame_PR_bsmFrame, pDetections.get())) {
+		if (SimOneAPI::GetV2XInfo(0, "v2x", ESimOne_V2X_MessageFrame_PR_bsmFrame, pDetections.get())) {
 			std::cout << "strlen = " << strlen(pDetections->MsgFrameData) << "  " << pDetections->MsgFrameData << std::endl;
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}

@@ -11,11 +11,11 @@ void SampleGetPredefinedRoute()
 	bool resule = SimOneAPI::GetPredefinedRoute(routeInfo);
 	if (!resule)
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Not exists!");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Not exists!");
 	} 
 	for (size_t i = 0; i < routeInfo.size(); i++)
 	{
 		auto &item = routeInfo[i];
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "[item.x: %f, item.y: %f, item.y: %f]", item.x, item.y, item.z);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "[item.x: %f, item.y: %f, item.y: %f]", item.x, item.y, item.z);
 	}
 }

@@ -24,32 +24,32 @@ int main()
 	int timeout = 20;
 	while (true) {
 		if (SimOneAPI::LoadHDMap(timeout)) {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap Information Loaded");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap Information Loaded");
 			break;
 		}
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap Information Loading...");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap Information Loading...");
 	}
 
 	while (true) {
 		int frame = SimOneAPI::Wait();
 
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Stop) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Stop) {
 			break;
 		}
 
 		std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
 		if (!SimOneAPI::GetGps(0,pGps.get())) {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Fetch GPS failed");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Fetch GPS failed");
 		}
        
 		std::unique_ptr<SimOne_Data_Obstacle> pObstacle = std::make_unique<SimOne_Data_Obstacle>();
 		if (!SimOneAPI::GetGroundTruth(MainVehicleId,pObstacle.get())) {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Fetch obstacle failed");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Fetch obstacle failed");
 		}
 		
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running && pObstacle->timestamp > 0 && pGps->timestamp > 0) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running && pObstacle->timestamp > 0 && pGps->timestamp > 0) {
 			if (!isSimOneInitialized) {
-				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "SimOne Initialized!");
+				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOne Initialized!");
 				isSimOneInitialized = true;
 			}
 
@@ -123,7 +123,7 @@ int main()
 			SimOneAPI::SetDrive(0, pControl.get());
 		}
 		else {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "SimOne Initializing...");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOne Initializing...");
 		}
 
 		SimOneAPI::NextFrame(frame);

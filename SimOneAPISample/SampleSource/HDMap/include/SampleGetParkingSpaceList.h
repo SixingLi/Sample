@@ -72,14 +72,14 @@ SSD::SimVector<HDMapStandalone::MParkingSpace> SampleGetParkingSpaceList()
 	SSD::SimVector<HDMapStandalone::MParkingSpace> parkingSpaceList;
 	SimOneAPI::GetParkingSpaceList(parkingSpaceList);
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "GetParkingSpaceIds returns count: %d", parkingSpaceList.size());
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "GetParkingSpaceIds returns count: %d", parkingSpaceList.size());
 		if ((int)parkingSpaceList.size() > 0)
 		{
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "parking space info:");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "parking space info:");
 			for (unsigned int i = 0; i < parkingSpaceList.size(); i++)
 			{
-				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "id: %ld", parkingSpaceList[i].id);
-				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "front type: %s", typeToStr_(parkingSpaceList[i].front.type).c_str());
+				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "id: %ld", parkingSpaceList[i].id);
+				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "front type: %s", typeToStr_(parkingSpaceList[i].front.type).c_str());
 			}
 		}
 	}

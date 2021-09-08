@@ -8,7 +8,7 @@
 CYBERTRON_BEGIN
 TaskPointCloud::TaskPointCloud()
 {
-	mSensorDataType = EDataType_PointCloudWithGroundTruth;
+	mSensorDataType = ESimOne_Sensor_Data_Type_PointCloudWithGroundTruth;
 }
 
 TaskPointCloud::~TaskPointCloud()

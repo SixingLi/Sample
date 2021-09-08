@@ -26,7 +26,7 @@ public:
 		std::unique_ptr<SimOne_Data_Control> pControl = std::make_unique <SimOne_Data_Control>();
 		std::unique_ptr<SimOne_Data_Gps> gpsPtr = std::make_unique<SimOne_Data_Gps>();
 		bool speedReached = false;
-		ESimOne_Data_Vehicle_State simOneState = SO_TimePassed;
+		ESimOne_Data_Vehicle_State simOneState = ESimOne_Data_Vehicle_State_SO_TimePassed;
 		std::unique_ptr<SimOne_Data_Vehicle_Extra> pVehExtraState = std::make_unique<SimOne_Data_Vehicle_Extra>();
 		while (1) {
 			SimOneAPI::GetGps(mainVehicleId, gpsPtr.get());
@@ -35,7 +35,7 @@ public:
 			pControl->steering = 0.0f;
 			pControl->handbrake = false;
 			pControl->isManualGear = false;
-			pControl->gear = EGearMode_Drive;
+			pControl->gear = ESimOne_Gear_Mode_Drive;
 			pControl->timestamp = gpsPtr->timestamp;
 			bool testre = SimOneAPI::SetDrive(mainVehicleId, pControl.get());
 			SimOneAPI::RegisterVehicleState(&simOneState, 1);
@@ -62,7 +62,7 @@ public:
 		std::unique_ptr<SimOne_Data_Gps> gpsPtr = std::make_unique<SimOne_Data_Gps>();
 
 		DriveToSpeed(mainVehicleId, 100.f, 1.0f, path);
-		ESimOne_Data_Vehicle_State simOneState = SO_TimePassed;
+		ESimOne_Data_Vehicle_State simOneState = ESimOne_Data_Vehicle_State_SO_TimePassed;
 		std::unique_ptr<SimOne_Data_Vehicle_Extra> pVehExtraState = std::make_unique<SimOne_Data_Vehicle_Extra>();
 		bool stopped = false;
 		pControl->throttle = 0.0f;
@@ -70,7 +70,7 @@ public:
 		pControl->steering = 0.0f;
 		pControl->handbrake = false;
 		pControl->isManualGear = false;
-		pControl->gear = EGearMode_Drive;
+		pControl->gear = ESimOne_Gear_Mode_Drive;
 		while (1) {
 			SimOneAPI::SetDrive(mainVehicleId, pControl.get());
 			if (SimOneAPI::GetGps(mainVehicleId, gpsPtr.get())) {
@@ -135,7 +135,7 @@ public:
 		DriveToSpeed(mainVehicleId, targetSpd, 0.3f, path);
 		std::unique_ptr<SimOne_Data_Control> pControl = std::make_unique <SimOne_Data_Control>();
 		std::unique_ptr<SimOne_Data_Gps> gpsPtr = std::make_unique<SimOne_Data_Gps>();
-		ESimOne_Data_Vehicle_State simOneState = SO_TimePassed;
+		ESimOne_Data_Vehicle_State simOneState = ESimOne_Data_Vehicle_State_SO_TimePassed;
 		std::unique_ptr<SimOne_Data_Vehicle_Extra> pVehExtraState = std::make_unique<SimOne_Data_Vehicle_Extra>();
 		SimOneAPI::RegisterVehicleState(&simOneState, 1);
 		SimOneAPI::GetVehicleState(pVehExtraState.get());
@@ -145,7 +145,7 @@ public:
 		pControl->brake = 0.0;
 		pControl->handbrake = false;
 		pControl->isManualGear = false;
-		pControl->gear = EGearMode_Drive;
+		pControl->gear = ESimOne_Gear_Mode_Drive;
 		while (1)
 		{
 			SimOneAPI::GetGps(mainVehicleId, gpsPtr.get());

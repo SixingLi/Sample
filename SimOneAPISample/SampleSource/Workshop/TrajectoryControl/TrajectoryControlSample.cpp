@@ -269,7 +269,7 @@ int main()
     while (true) {
         int frame = SimOneAPI::Wait();
 
-        if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Stop) {
+        if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Stop) {
             break;
         }
 
@@ -286,7 +286,7 @@ int main()
             }
         }
 
-        if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running && pGps->timestamp > 0) {
+        if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running && pGps->timestamp > 0) {
             if (!isSimOneInitialized) {
                 std::cout << "SimOne Initialized!" << std::endl;
                 isSimOneInitialized = true;

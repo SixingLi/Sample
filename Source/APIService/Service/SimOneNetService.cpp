@@ -147,19 +147,19 @@ void SimOneAPIService::bridgeLogOutput(ESimOne_LogLevel_Type level, const char *
 	//char *taskId = "";
 	switch (level)
 	{
-	case ESimOne_LogLevel_Type::ELogLevelDebug:
+	case ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug:
 		log_debug(taskId, "SimOneAPI", buf);
 		break;
-	case ESimOne_LogLevel_Type::ELogLevelInformation:
+	case ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information:
 		log_info(taskId, "SimOneAPI", buf);
 		break;
-	case ESimOne_LogLevel_Type::ELogLevelWarning:
+	case ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning:
 		log_warn(taskId, "SimOneAPI", buf);
 		break;
-	case ESimOne_LogLevel_Type::ELogLevelError:
+	case ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error:
 		log_error(taskId, "SimOneAPI", buf);
 		break;
-	case ESimOne_LogLevel_Type::ELogLevelFatal:
+	case ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Fatal:
 		log_fatal(taskId, "SimOneAPI", buf);
 		break;
 	}
@@ -203,7 +203,7 @@ bool SimOneAPIService::SubMainVehicle(int mainVehicleId, bool isJoinTimeLoop) {
 	uint16_t messageId = Bridge::EBridgeResultSubMainVehicle;
 	if (!processMessagesUntil(&messageId, &result_msg))
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "SubMainVehicle Error.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "SubMainVehicle Error.");
 		return false;
 	}
 
@@ -213,7 +213,7 @@ bool SimOneAPIService::SubMainVehicle(int mainVehicleId, bool isJoinTimeLoop) {
 	}
 	if (result.mainvehicleid() == mainVehicleId && result.issuccessful() > 0) {
 		mMainVehicleId = mainVehicleId;
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "SubMainVehicle successful.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SubMainVehicle successful.");
 		//mPendingState = ENetServiceState_Work;
 		return true;
 	}
@@ -375,8 +375,8 @@ bool SimOneAPIService::connectSyncBridgeNode() {
 	mbStarted = false;
 	try
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "SimOneAPI Version:%s", GetVersion());
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "========connectSyncBridgeNode=========");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPI Version:%s", GetVersion());
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "========connectSyncBridgeNode=========");
 
 		for (;;)
 		{
@@ -384,13 +384,13 @@ bool SimOneAPIService::connectSyncBridgeNode() {
 			if (!mpClientSync->connect(mServerIP.c_str(), mServerPort))
 			{
 				mpClientSync->close();
-				bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Initializing node failed, connect time server(%s:%d) failed.==========", mServerIP.c_str(), mServerPort);
+				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Initializing node failed, connect time server(%s:%d) failed.==========", mServerIP.c_str(), mServerPort);
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 				delete mpClientSync;
 				mpClientSync = nullptr;
 				continue;
 			}
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "Initializing node succeed, connect time server(%s:%d) succeed.", mServerIP.c_str(), mServerPort);
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "Initializing node succeed, connect time server(%s:%d) succeed.", mServerIP.c_str(), mServerPort);
 
 			if (!this->sendNodeRegisterReq(Bridge::EBridgeClientRole_SimOneOut, mRegisterNodeId)) {
 				delete mpClientSync;
@@ -485,13 +485,13 @@ bool SimOneAPIService::connectSyncBridgeNode() {
 	{
 		//setMainVehicleDisconnected();
 		mbStarted = false;
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Exception: %s", e.what());
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Exception: %s", e.what());
 	}
 	catch (...)
 	{
 		mbStarted = false;
 		//setMainVehicleDisconnected();
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Exception Unknown!");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Exception Unknown!");
 	}
 	//SimOneDataStat::GetInstance()->Init(mCaseInfo.caseName);
 	return mbStarted;
@@ -584,7 +584,7 @@ int SimOneAPIService::wait() {
 	else {
 		if (!processMessagesUntil(&messageId, &msg))
 		{
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "wait failed, server confirm not received.");
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "wait failed, server confirm not received.");
 			return -1;
 		}
 	}
@@ -592,7 +592,7 @@ int SimOneAPIService::wait() {
 	Bridge::BridgeTimeStepForward result;
 	if (!msg.toProtobuf(result))
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "BridgeTimeStepForward wrong format.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "BridgeTimeStepForward wrong format.");
 		return -1;
 	}
 	int frame = result.framestamp();
@@ -627,7 +627,7 @@ void SimOneAPIService::run() {
 			mState == ENetServiceState_Stop)
 		{
 			mState = ENetServiceState_Work;
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "SimOne API started");
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOne API started");
 		}
 		else if (mPendingState == ENetServiceState_Stop &&
 			mState == ENetServiceState_Work)
@@ -645,11 +645,11 @@ void SimOneAPIService::run() {
 				Message msg;
 				int b = mpClientSync->receiveEnhance(msg, 5000);
 				if (b == -1) {
-					bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "Close Recv Connecting");
+					bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "Close Recv Connecting");
 					break;
 				}
 				if (b == 0) {
-					//bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "Waiting to accept a complete packet");
+					//bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "Waiting to accept a complete packet");
 					continue;
 				}
 				uint16_t message_id = msg.parseMsgId();
@@ -660,7 +660,7 @@ void SimOneAPIService::run() {
 			}
 		}
 	}
-	mCaseStatus = SimOne_Case_Status_Stop;
+	mCaseStatus = ESimOne_Case_Status::ESimOne_Case_Status_Stop;
 	mbRecvThreadExit = true;
 	return;
 }
@@ -774,7 +774,7 @@ bool SimOneAPIService::GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMai
 	uint16_t messageId = Bridge::EBridgeResultMainVehicleStatus;
 	if (!processMessagesUntil(&messageId, &result))
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Get MainVehicle Status failed, server confirm not received.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Get MainVehicle Status failed, server confirm not received.");
 		return false;
 	}
 	Bridge::BridgeResultMainVehicleStatus mainVehicleStatus;
@@ -855,7 +855,7 @@ bool SimOneAPIService::SetObjectbasedDataEnable(bool enable) {
 
 	mpClientSync->send(msg);
 	SimOneAPIService::GetInstance()->mbNeedSendObjectbasedData = enable;
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "Set Objectbased Data:%d", enable);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "Set Objectbased Data:%d", enable);
 	return true;
 }
 
@@ -997,7 +997,7 @@ bool SimOneAPIService::SetEnvironment(SimOne_Data_Environment *pEnvironment) {
 	uint16_t messageId = Bridge::EBridgeMessageFromOut2SimOneWriteResult;
 	if (!processMessagesUntil(&messageId, &result))
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Set Environment failed, server confirm not received.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Set Environment failed, server confirm not received.");
 		return false;
 	}
 	Bridge::BridgeMessageFromOut2SimOneWriteResult setEnvironmentResult;
@@ -1009,7 +1009,7 @@ bool SimOneAPIService::SetEnvironment(SimOne_Data_Environment *pEnvironment) {
 	if (setEnvironmentResult.issuccessful())
 	{
 		memcpy(&mEnvironmentData, pEnvironment, sizeof(SimOne_Data_Environment));
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Set Environment failed, server confirm not received.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Set Environment failed, server confirm not received.");
 		return true;
 	}
 	return false;
@@ -1112,7 +1112,7 @@ bool SimOneAPIService::onFromBridgeScenarioEvent(Message& msg)
 			if (mpScenarioEventCB != nullptr)
 			{
 				mpScenarioEventCB(mMainVehicleId, triggerEvt.event().c_str(), triggerEvt.data().c_str());
-				bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "trigger event:%s trigger data:%s", triggerEvt.event().c_str(), triggerEvt.data().c_str());
+				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "trigger event:%s trigger data:%s", triggerEvt.event().c_str(), triggerEvt.data().c_str());
 			}
 		}
 	}
@@ -1142,25 +1142,25 @@ bool SimOneAPIService::onMainVehicleDriverControl(int mainVehicleId, proto::sens
 	driverControlData.brake = status.brake();
 	switch (status.brakemode()) {
 	case proto::sensor::EBrakeMode::EBrake_PERCENT:
-		driverControlData.brakeMode = EBrakeMode_Percent;
+		driverControlData.brakeMode = ESimOne_Brake_Mode_Percent;
 		break;
 	case proto::sensor::EBrakeMode::EBrake_MASTERCYLINDERPRESSURE:
-		driverControlData.brakeMode = EBrakeMode_MasterCylinderPressure;
+		driverControlData.brakeMode = ESimOne_Brake_Mode_MasterCylinderPressure;
 		break;
 	case proto::sensor::EBrakeMode::EBrake_PEDALFORCE:
-		driverControlData.brakeMode = EBrakeMode_PedalForce;
+		driverControlData.brakeMode = ESimOne_Brake_Mode_PedalForce;
 		break;
 	}
 	driverControlData.steering = status.steering();
 	switch (status.steeringmode()) {
 	case proto::sensor::ESteeringMode::ESteering_PERCENT:
-		driverControlData.steeringMode = ESteeringMode_Percent;
+		driverControlData.steeringMode = ESimOne_Steering_Mode::ESimOne_Steering_Mode_Percent;
 		break;
 	case proto::sensor::ESteeringMode::ESteering_STEERWHEELANGLE:
-		driverControlData.steeringMode = ESteeringMode_SteeringWheelAngle;
+		driverControlData.steeringMode = ESimOne_Steering_Mode::ESimOne_Steering_Mode_SteeringWheelAngle;
 		break;
 	case proto::sensor::ESteeringMode::ESteering_TORQUE:
-		driverControlData.steeringMode = ESteeringMode_Torque;
+		driverControlData.steeringMode = ESimOne_Steering_Mode::ESimOne_Steering_Mode_Torque;
 		break;
 	}
 	driverControlData.handbrake = status.handbrake();
@@ -1314,47 +1314,47 @@ bool SimOneAPIService::sendVehicleEventInfoReq(int mainVehicleId, SimOne_Data_Ve
 	std::string vehicleEventInfo;
 
 	switch (pEvent->type) {
-	case ESimOne_VehicleEventInfo_Forward_Collision_Warning:
+	case ESimone_Vehicle_EventInfo_Type_Forward_Collision_Warning:
 		vehicleEventInfoType = cybertron::proto::sensor::EForward_Collision_Warning;
 		vehicleEventInfo = "ForwardCollisionWarning";
 		break;
-	case ESimOne_VehicleEventInfo_Backward_Collision_Warning:
+	case ESimone_Vehicle_EventInfo_Type_Backward_Collision_Warning:
 		vehicleEventInfoType = cybertron::proto::sensor::EBackward_Collision_Warning;
 		vehicleEventInfo = "BackwardCollisionWarning";
 		break;
-	case ESimOne_VehicleEventInfo_Left_Turn_Decision:
+	case ESimone_Vehicle_EventInfo_Type_Left_Turn_Decision:
 		vehicleEventInfoType = cybertron::proto::sensor::ELeft_Turn_Decision;
 		vehicleEventInfo = "LeftTurnDecision";
 		break;
-	case ESimOne_VehicleEventInfo_Right_Turn_Warning:
+	case ESimone_Vehicle_EventInfo_Type_Right_Turn_Warning:
 		vehicleEventInfoType = cybertron::proto::sensor::ERight_Turn_Warning;
 		vehicleEventInfo = "RightTurnWarning";
 		break;
-	case ESimOne_VehicleEventInfo_Forward_Straight_Decision:
+	case ESimone_Vehicle_EventInfo_Type_Forward_Straight_Decision:
 		vehicleEventInfoType = cybertron::proto::sensor::EForward_Straight_Warning;
 		vehicleEventInfo = "ForwardStraightWarning";
 		break;
-	case ESimOne_VehicleEventInfo_Over_Speed_Warning:
+	case ESimone_Vehicle_EventInfo_Type_Over_Speed_Warning:
 		vehicleEventInfoType = cybertron::proto::sensor::EOver_Speed_Warning;
 		vehicleEventInfo = "OverSpeedWarning";
 		break;
-	case ESimOne_VehicleEventInfo_Lane_Change_Decision:
+	case ESimone_Vehicle_EventInfo_Type_Lane_Change_Decision:
 		vehicleEventInfoType = cybertron::proto::sensor::ELane_Change_Decision;
 		vehicleEventInfo = "LaneChangeDecision";
 		break;
-	case ESimOne_VehicleEventInfo_Lane_Change_Warning:
+	case ESimone_Vehicle_EventInfo_Type_Lane_Change_Warning:
 		vehicleEventInfoType = cybertron::proto::sensor::ELane_Change_Warning;
 		vehicleEventInfo = "LaneChangeWarning";
 		break;
-	case ESimOne_VehicleEventInfo_Overtake_Decision:
+	case ESimone_Vehicle_EventInfo_Type_Overtake_Decision:
 		vehicleEventInfoType = cybertron::proto::sensor::EOvertake_Decision;
 		vehicleEventInfo = "OvertakeDecision";
 		break;
-	case ESimOne_VehicleEventInfo_Emergency_Braking_Decision:
+	case ESimone_Vehicle_EventInfo_Type_Emergency_Braking_Decision:
 		vehicleEventInfoType = cybertron::proto::sensor::EEmergency_Braking_Decision;
 		vehicleEventInfo = "EmergencyBrakingDecision";
 		break;
-	case ESimOne_VehicleEventInfo_Accelerate_Decision:
+	case ESimone_Vehicle_EventInfo_Type_Accelerate_Decision:
 		vehicleEventInfoType = cybertron::proto::sensor::EAccelerate_Decision;
 		vehicleEventInfo = "AccelerateDecision";
 		break;
@@ -1376,26 +1376,26 @@ bool SimOneAPIService::sendVehicleControlReq(int mainVehicleId, SimOne_Data_Cont
 	cybertron::proto::sensor::DataVehicleControlState state;
 
 	switch (pControl->throttleMode) {
-	case EThrottleMode_Percent:
+	case ESimOne_Throttle_Mode_Percent:
 		state.set_throttlemode(cybertron::proto::sensor::EThrottleMode::EThrottle_PERCENT);
 		break;
-	case EThrottleMode_Torque:
+	case ESimOne_Throttle_Mode_Torque:
 		state.set_throttlemode(cybertron::proto::sensor::EThrottleMode::EThrottle_TORQUE);
 		break;
-	case EThrottleMode_Speed:
+	case ESimOne_Throttle_Mode_Speed:
 		state.set_throttlemode(cybertron::proto::sensor::EThrottleMode::EThrottle_SPEED);
 		break;
-	case EThrottleMode_Accel:
+	case ESimOne_Throttle_Mode_Accel:
 		state.set_throttlemode(cybertron::proto::sensor::EThrottleMode::EThrottle_ACCEL);
 		break;
-	case EThrottleMode_EngineAV:
+	case ESimOne_Throttle_Mode_EngineAV:
 		state.set_throttlemode(cybertron::proto::sensor::EThrottleMode::EThrottle_ENGINEAV);
 		break;
-	case EThrottleMode_WheelTorque:
+	case ESimOne_Throttle_Mode_WheelTorque:
 		state.set_throttlemode(cybertron::proto::sensor::EThrottleMode::EThrottle_WHEELTORQUE);
 		break;
 	}
-	if (pControl->throttleMode != EThrottleMode_WheelTorque) {
+	if (pControl->throttleMode != ESimOne_Throttle_Mode_WheelTorque) {
 		state.set_throttlepercentage(pControl->throttle);
 	}
 	else {
@@ -1404,24 +1404,24 @@ bool SimOneAPIService::sendVehicleControlReq(int mainVehicleId, SimOne_Data_Cont
 		}
 	}
 	switch (pControl->brakeMode) {
-	case EBrakeMode_Percent:
+	case ESimOne_Brake_Mode_Percent:
 		state.set_brakemode(cybertron::proto::sensor::EBrakeMode::EBrake_PERCENT);
 		break;
-	case EBrakeMode_MasterCylinderPressure:
+	case ESimOne_Brake_Mode_MasterCylinderPressure:
 		state.set_brakemode(cybertron::proto::sensor::EBrakeMode::EBrake_MASTERCYLINDERPRESSURE);
 		break;
-	case EBrakeMode_PedalForce:
+	case ESimOne_Brake_Mode_PedalForce:
 		state.set_brakemode(cybertron::proto::sensor::EBrakeMode::EBrake_PEDALFORCE);
 		break;
-	case EBrakeMode_WheelCylinderPressure:
+	case ESimOne_Brake_Mode_WheelCylinderPressure:
 		state.set_brakemode(cybertron::proto::sensor::EBrakeMode::EBrake_WHEELCYLINDERPRESSURE);
 		break;
-	case EBrakeMode_WheelTorque:
+	case ESimOne_Brake_Mode_WheelTorque:
 		state.set_brakemode(cybertron::proto::sensor::EBrakeMode::EBrake_WHEELTORQUE);
 		break;
 	}
-	if (pControl->brakeMode != EBrakeMode_WheelCylinderPressure &&
-		pControl->brakeMode != EBrakeMode_WheelTorque) {
+	if (pControl->brakeMode != ESimOne_Brake_Mode_WheelCylinderPressure &&
+		pControl->brakeMode != ESimOne_Brake_Mode_WheelTorque) {
 		state.set_brake(pControl->brake);
 	}
 	else {
@@ -1430,27 +1430,27 @@ bool SimOneAPIService::sendVehicleControlReq(int mainVehicleId, SimOne_Data_Cont
 		}
 	}
 	switch (pControl->steeringMode) {
-	case ESteeringMode_Percent:
+	case ESimOne_Steering_Mode_Percent:
 		state.set_steeringmode(cybertron::proto::sensor::ESteeringMode::ESteering_PERCENT);
 		break;
-	case ESteeringMode_SteeringWheelAngle:
+	case ESimOne_Steering_Mode_SteeringWheelAngle:
 		state.set_steeringmode(cybertron::proto::sensor::ESteeringMode::ESteering_STEERWHEELANGLE);
 		break;
-	case ESteeringMode_Torque:
+	case ESimOne_Steering_Mode_Torque:
 		state.set_steeringmode(cybertron::proto::sensor::ESteeringMode::ESteering_TORQUE);
 		break;
-	case ESteeringMode_AngularSpeed:
+	case ESimOne_Steering_Mode_AngularSpeed:
 		state.set_steeringmode(cybertron::proto::sensor::ESteeringMode::ESteering_ANGULARSPEED);
 		break;
-	case ESteeringMode_WheelAngle:
+	case ESimOne_Steering_Mode_WheelAngle:
 		state.set_steeringmode(cybertron::proto::sensor::ESteeringMode::ESteering_WHEELANGLE);
 		break;
-	case ESteeringMode_WheelAnglarSpeed:
+	case ESimOne_Steering_Mode_WheelAnglarSpeed:
 		state.set_steeringmode(cybertron::proto::sensor::ESteeringMode::ESteering_WHEELANGLARSPEED);
 		break;
 	}
-	if (pControl->steeringMode != ESteeringMode_WheelAngle &&
-		pControl->steeringMode != ESteeringMode_WheelAnglarSpeed) {
+	if (pControl->steeringMode != ESimOne_Steering_Mode_WheelAngle &&
+		pControl->steeringMode != ESimOne_Steering_Mode_WheelAnglarSpeed) {
 		state.set_steering(pControl->steering);
 	}
 	else {
@@ -1464,40 +1464,40 @@ bool SimOneAPIService::sendVehicleControlReq(int mainVehicleId, SimOne_Data_Cont
 	cybertron::proto::sensor::EGearMode gear;
 
 	switch (pControl->gear) {
-	case EGearMode_Neutral:
+	case ESimOne_Gear_Mode_Neutral:
 		gear = cybertron::proto::sensor::EGearMode_Neutral;
 		break;
-	case EGearMode_Drive:
+	case ESimOne_Gear_Mode_Drive:
 		gear = cybertron::proto::sensor::EGearMode_Drive;
 		break;
-	case EGearMode_Reverse:
+	case ESimOne_Gear_Mode_Reverse:
 		gear = cybertron::proto::sensor::EGearMode_Reverse;
 		break;
-	case EGearMode_Parking:
+	case ESimOne_Gear_Mode_Parking:
 		gear = cybertron::proto::sensor::EGearMode_Parking;
 		break;
-	case EGearManualMode_1:
+	case ESimOne_Gear_Mode_1:
 		gear = cybertron::proto::sensor::EGearManualMode_1;
 		break;
-	case EGearManualMode_2:
+	case ESimOne_Gear_Mode_2:
 		gear = cybertron::proto::sensor::EGearManualMode_2;
 		break;
-	case EGearManualMode_3:
+	case ESimOne_Gear_Mode_3:
 		gear = cybertron::proto::sensor::EGearManualMode_3;
 		break;
-	case EGearManualMode_4:
+	case ESimOne_Gear_Mode_4:
 		gear = cybertron::proto::sensor::EGearManualMode_4;
 		break;
-	case EGearManualMode_5:
+	case ESimOne_Gear_Mode_5:
 		gear = cybertron::proto::sensor::EGearManualMode_5;
 		break;
-	case EGearManualMode_6:
+	case ESimOne_Gear_Mode_6:
 		gear = cybertron::proto::sensor::EGearManualMode_6;
 		break;
-	case EGearManualMode_7:
+	case ESimOne_Gear_Mode_7:
 		gear = cybertron::proto::sensor::EGearManualMode_7;
 		break;
-	case EGearManualMode_8:
+	case ESimOne_Gear_Mode_8:
 		gear = cybertron::proto::sensor::EGearManualMode_8;
 		break;
 	default:
@@ -1516,7 +1516,7 @@ bool SimOneAPIService::sendVehicleControlReq(int mainVehicleId, SimOne_Data_Cont
 	sendMainVehicleMessage(mainVehicleId, proto::sensor::EDataType_VehicleControlState, state);
 	if (mbIsWriteLogFile)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "SimOneAPI setDriverControl:frame:%lld throttle:%f brake:%f steering:%f handbrake:%d isManualGear:%d gear:%d", mFrame, state.throttlepercentage(), state.brake(), state.steering(), state.handbrake(), state.ismanualgear(), state.gearmode());
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPI setDriverControl:frame:%lld throttle:%f brake:%f steering:%f handbrake:%d isManualGear:%d gear:%d", mFrame, state.throttlepercentage(), state.brake(), state.steering(), state.handbrake(), state.ismanualgear(), state.gearmode());
 	}
 	return true;
 }
@@ -1540,13 +1540,13 @@ bool SimOneAPIService::processMessagesUntil(
 
 	if (mpClientSync == nullptr)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Process messages failed, socket invalid.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Process messages failed, socket invalid.");
 		setDisconnected();
 		return false;
 	}
 	if (mpClientSync->getStatus() != ESocketStatus_Connected)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Process messages failed, socket still connecting.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Process messages failed, socket still connecting.");
 		setDisconnected();
 		return false;
 	}
@@ -1567,7 +1567,7 @@ bool SimOneAPIService::processMessagesUntil(
 		if (mpClientSync->getStatus() != ESocketStatus_Connected)
 		{
 			setDisconnected();
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Process messages failed, socket not connected.");
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Process messages failed, socket not connected.");
 			return false;
 		}
 		// break if we got the required messages.
@@ -1585,12 +1585,12 @@ bool SimOneAPIService::processMessagesUntil(
 			std::chrono::nanoseconds span = (t1 - t0);
 			if (span.count() / 1000000 > timeoutMilliseconds)
 			{
-				bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelWarning, "Process messages failed, timeout. Not received message:");
+				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Process messages failed, timeout. Not received message:");
 				for (int i = 0; i < mNumDesiredMessages; i++)
 				{
 					if (mpDesiredMessages[i].parseMsgId() == mpDesiredMessageIds[i])
 						continue;
-					bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelWarning, "%d", mpDesiredMessageIds[i]);
+					bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "%d", mpDesiredMessageIds[i]);
 				}
 				mNumDesiredMessages = 0;
 				mpDesiredMessageIds = nullptr;
@@ -1609,8 +1609,8 @@ bool SimOneAPIService::processMessagesUntil(
 }
 bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, const std::string* msgDataBody) {
 	if (msgDataBody->size() != sizeof(SimOne_Data_Gps)) {
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "BridgeIO send GPS size:%d SimOneIOAPI receive GPS size:%d",msgDataBody->size(), sizeof(SimOne_Data_Gps));
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "SimOne_Data_Gps structure of receiver and transmitter is inconsistent");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "BridgeIO send GPS size:%d SimOneIOAPI receive GPS size:%d",msgDataBody->size(), sizeof(SimOne_Data_Gps));
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "SimOne_Data_Gps structure of receiver and transmitter is inconsistent");
 		return false;
 	}
 	SimOne_Data_Gps GPS;
@@ -1618,13 +1618,13 @@ bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, 
 	GPS.timestamp = header.timestamp();
 	GPS.frame = header.frame();
 	GPS.version = header.version();
-	//bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "==1==HotAreaGPSData frame:%d posX:%f posY:%f posZ:%f throttle:%f brake:%f steering:%f gear:%d", GPS.frame, GPS.posX, GPS.posY, GPS.posZ, GPS.throttle, GPS.brake, GPS.steering, GPS.gear);
+	//bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "==1==HotAreaGPSData frame:%d posX:%f posY:%f posZ:%f throttle:%f brake:%f steering:%f gear:%d", GPS.frame, GPS.posX, GPS.posY, GPS.posZ, GPS.throttle, GPS.brake, GPS.steering, GPS.gear);
 	if (mbDisplayHotAreaData)
 	{
 		static int receiveGpsTotalCount = 0;
 		if (receiveGpsTotalCount % mDisPlayFrequency == 0)
 		{
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "==1==HotAreaGPSData frame:%d posX:%f posY:%f posZ:%f throttle:%f brake:%f steering:%f gear:%d", GPS.frame, GPS.posX, GPS.posY, GPS.posZ, GPS.throttle, GPS.brake, GPS.steering, GPS.gear);
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "==1==HotAreaGPSData frame:%d posX:%f posY:%f posZ:%f throttle:%f brake:%f steering:%f gear:%d", GPS.frame, GPS.posX, GPS.posY, GPS.posZ, GPS.throttle, GPS.brake, GPS.steering, GPS.gear);
 		}
 		receiveGpsTotalCount++;
 	}
@@ -1671,8 +1671,8 @@ bool SimOneAPIService::onFromHotAreaObstacleData(Bridge::BridgeHotAreaHeader hea
 	if (!mbIsOpenDefaultPerfectSensor)
 	{
 		if (msgDataBody->size() != sizeof(SimOne_Data_Obstacle)) {
-			//bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "BridgeIO send Obstacle size:%d SimOneIOAPI receive Obstacle size:%d", msgDataBody->size(), sizeof(SimOne_Data_Gps));
-			//bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "SimOne_Data_Obstacle structure of receiver and transmitter is inconsistent");
+			//bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "BridgeIO send Obstacle size:%d SimOneIOAPI receive Obstacle size:%d", msgDataBody->size(), sizeof(SimOne_Data_Gps));
+			//bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "SimOne_Data_Obstacle structure of receiver and transmitter is inconsistent");
 			return false;
 		}
 		SimOne_Data_Obstacle obstacle;
@@ -1684,7 +1684,7 @@ bool SimOneAPIService::onFromHotAreaObstacleData(Bridge::BridgeHotAreaHeader hea
 			static int receiveObstacleTotalCount = 0;
 			if (receiveObstacleTotalCount % mDisPlayFrequency == 0)
 			{
-				bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "==2==HotAreaObstacleData frame:%d obstaclesize:%d", obstacle.frame, obstacle.obstacleSize);
+				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "==2==HotAreaObstacleData frame:%d obstaclesize:%d", obstacle.frame, obstacle.obstacleSize);
 			}
 			receiveObstacleTotalCount++;
 		}
@@ -1714,8 +1714,8 @@ bool SimOneAPIService::onFromHotAreaObstacleData(Bridge::BridgeHotAreaHeader hea
 }
 bool SimOneAPIService::onFromHotAreaTrafficLightData(Bridge::BridgeHotAreaHeader header, const std::string* msgDataBody) {
 	if (msgDataBody->size() != sizeof(SimOne_Data_TrafficLights)) {
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "BridgeIO send TrafficLights size:%d SimOneIOAPI receive TrafficLights size:%d", msgDataBody->size(), sizeof(SimOne_Data_Gps));
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "SimOne_Data_TrafficLights structure of receiver and transmitter is inconsistent");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "BridgeIO send TrafficLights size:%d SimOneIOAPI receive TrafficLights size:%d", msgDataBody->size(), sizeof(SimOne_Data_Gps));
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "SimOne_Data_TrafficLights structure of receiver and transmitter is inconsistent");
 		return false;
 	}
 	SimOne_Data_TrafficLights trafficLight;
@@ -1729,7 +1729,7 @@ bool SimOneAPIService::onFromHotAreaTrafficLightData(Bridge::BridgeHotAreaHeader
 		static int receiveTrafficLightTotalCount = 0;
 		if (receiveTrafficLightTotalCount % mDisPlayFrequency == 0)
 		{
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "==3==HotAreaTrafficLightData frame:%d trafficlightNum:%d", trafficLight.frame, trafficLight.trafficlightNum);
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "==3==HotAreaTrafficLightData frame:%d trafficlightNum:%d", trafficLight.frame, trafficLight.trafficlightNum);
 		}
 		receiveTrafficLightTotalCount++;
 	}
@@ -1757,7 +1757,7 @@ bool SimOneAPIService::onFromHotAreaTrafficLightData(Bridge::BridgeHotAreaHeader
 	return true;
 }
 bool SimOneAPIService::onFromCaseStart(Message& msg) {
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "case start");
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "case start");
 	if (mpStartCase) {
 		Bridge::BridgeCaseStart start;
 		if (!msg.toProtobuf(start))
@@ -1769,7 +1769,7 @@ bool SimOneAPIService::onFromCaseStart(Message& msg) {
 	return true;
 }
 bool SimOneAPIService::onFromCaseEnd(Message& msg) {
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "cases end");
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "cases end");
 	if (mpEndCase) {
 		mpEndCase();
 	}
@@ -1838,7 +1838,7 @@ bool SimOneAPIService::onFromBridgeTimeStepForward(Message& msg) {
 		Bridge::BridgeTimeStepForward result;
 		if (!msg.toProtobuf(result))
 		{
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "BridgeTimeStepForward wrong format.");
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "BridgeTimeStepForward wrong format.");
 			return false;
 		}
 		int frame = result.framestamp();
@@ -1919,7 +1919,7 @@ bool SimOneAPIService::onFromSensorDataMessage(Message& msg)
 	{
 		if (mMessageTotalCount % mDisPlayFrequency == 0)
 		{
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "receive sensor message:frame:%d commandId:%d sensorType:%d sensord:%d mainVehicleId:%d", header->frame(), commanId, sensorType, sensorId, header->mainvehicleid());
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "receive sensor message:frame:%d commandId:%d sensorType:%d sensord:%d mainVehicleId:%d", header->frame(), commanId, sensorType, sensorId, header->mainvehicleid());
 		}
 		mMessageTotalCount++;
 	}
@@ -1937,7 +1937,7 @@ void SimOneAPIService::setEnvironmentInfo(std::uint16_t type, const std::string*
 		return;
 	}
 	memcpy(&mEnvironmentData, msgDataBody->c_str(), msgDataBody->size());
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "SetEnvironmentInfo ambientLight:%f artificialLight:%f cloudDensity:%f directionalLight:%f fogDensity:%f groundDirtyLevel:%f groundHumidityLevel:%f heightAngle:%f snowDensity:%f timeOfDay:%f rainDensity:%f",
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SetEnvironmentInfo ambientLight:%f artificialLight:%f cloudDensity:%f directionalLight:%f fogDensity:%f groundDirtyLevel:%f groundHumidityLevel:%f heightAngle:%f snowDensity:%f timeOfDay:%f rainDensity:%f",
 		mEnvironmentData.ambientLight, mEnvironmentData.artificialLight, mEnvironmentData.cloudDensity, mEnvironmentData.directionalLight, mEnvironmentData.fogDensity, mEnvironmentData.groundDirtyLevel, mEnvironmentData.groundHumidityLevel, mEnvironmentData.heightAngle, mEnvironmentData.snowDensity, mEnvironmentData.timeOfDay, mEnvironmentData.rainDensity);
 }
 
@@ -1947,16 +1947,16 @@ void SimOneAPIService::setSensorConfigurationsInfo(std::uint16_t type, const std
 	mSensorConfigurations.data[mSensorConfigurations.dataSize] = *pConf;
 	mSensorConfigurations.dataSize++;
 	mSensorIdMap[pConf->id] = std::string(pConf->sensorId);
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "SensorConfigurations size:%d", mSensorConfigurations.dataSize);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SensorConfigurations size:%d", mSensorConfigurations.dataSize);
 	for (int i = 0; i < mSensorConfigurations.dataSize; i++)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "SensorConfigurations Id:%d seneorType:%s", mSensorConfigurations.data[i].sensorId, mSensorConfigurations.data[i].sensorType);
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SensorConfigurations Id:%d seneorType:%s", mSensorConfigurations.data[i].sensorId, mSensorConfigurations.data[i].sensorType);
 	}
 }
 #endif //Sensor
 bool SimOneAPIService::onFromBridgeDataRouteMessage(Message& msg)
 {
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "receive test message");
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "receive test message");
 	Bridge::BridgeDataRoute data;
 	if (!msg.toProtobuf(data))
 	{
@@ -1973,7 +1973,7 @@ bool SimOneAPIService::onFromBridgeDataRouteMessage(Message& msg)
 	{
 		mpRouteMessageCB(FromId, (ESimOne_Client_Type)FromType,data.buffer().size(),data.mutable_buffer()->c_str(), commandId);
 	}
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "formeId:%d frometype:%d fromdesc:%s toId:%d totype:%d todesc:%s", FromId, FromType, fromDesc.c_str(), toId, toType, fromDesc.c_str());
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "formeId:%d frometype:%d fromdesc:%s toId:%d totype:%d todesc:%s", FromId, FromType, fromDesc.c_str(), toId, toType, fromDesc.c_str());
 	return true;
 }
 void SimOneAPIService::setCaseInfo(const std::string* msgDataBody) {
@@ -1982,9 +1982,9 @@ void SimOneAPIService::setCaseInfo(const std::string* msgDataBody) {
 		return;
 	}
 	memcpy(&mCaseInfo, msgDataBody->c_str(), msgDataBody->size());
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "CaseInfo caseId:%s", mCaseInfo.caseId);
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "CaseInfo caseName:%s", mCaseInfo.caseName);
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "CaseInfo taskId:%s", mCaseInfo.taskId);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "CaseInfo caseId:%s", mCaseInfo.caseId);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "CaseInfo caseName:%s", mCaseInfo.caseName);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "CaseInfo taskId:%s", mCaseInfo.taskId);
 }
 bool SimOneAPIService::onFromCaseStatusChange(Message& msg) {
 	Bridge::BridgeCaseStatusChange data;
@@ -2000,7 +2000,7 @@ void SimOneAPIService::setCaseStatus(const std::string* msgDataBody) {
 		return;
 	}
 	memcpy(&mCaseStatus, msgDataBody->c_str(), msgDataBody->size());
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "case status:%d", mCaseStatus);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "case status:%d", mCaseStatus);
 	return;
 }
 bool SimOneAPIService::SetStartCaseCB(void(*cb)()) {
@@ -2118,7 +2118,7 @@ bool SimOneAPIService::GetNearMostLane(const SSD::SimPoint3D& pos, SSD::SimStrin
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetNearMostLane failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetNearMostLane failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2130,7 +2130,7 @@ bool SimOneAPIService::GetNearLanes(const SSD::SimPoint3D& pos, const double& di
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetNearLanes failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetNearLanes failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2143,7 +2143,7 @@ bool SimOneAPIService::GetNearLanesWithAngle(const SSD::SimPoint3D& pos, const d
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetNearLanesWithAngle failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetNearLanesWithAngle failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2155,7 +2155,7 @@ bool SimOneAPIService::GetDistanceToLaneBoundary(const SSD::SimPoint3D& pos, SSD
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetDistanceToLaneBoundary failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetDistanceToLaneBoundary failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2167,7 +2167,7 @@ bool SimOneAPIService::GetLaneSample(const SSD::SimString& id, HDMapStandalone::
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneSample failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneSample failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2184,7 +2184,7 @@ bool SimOneAPIService::GetLaneLink(const SSD::SimString& id, HDMapStandalone::ML
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneLink failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneLink failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2201,7 +2201,7 @@ bool SimOneAPIService::GetLaneType(const SSD::SimString& id, HDMapStandalone::ML
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneType failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneType failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2218,7 +2218,7 @@ bool SimOneAPIService::GetLaneWidth(const SSD::SimString& id, const SSD::SimPoin
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneWidth failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneWidth failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2235,7 +2235,7 @@ bool SimOneAPIService::GetLaneST(const SSD::SimString& id, const SSD::SimPoint3D
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneST failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneST failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2251,7 +2251,7 @@ bool SimOneAPIService::GetRoadST(const SSD::SimString& id, const SSD::SimPoint3D
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetRoadST failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetRoadST failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2267,7 +2267,7 @@ bool SimOneAPIService::GetInertialFromLaneST(const SSD::SimString& id, const dou
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetInertialFromLaneST failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetInertialFromLaneST failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2283,7 +2283,7 @@ bool SimOneAPIService::ContainsLane(const SSD::SimString& id)
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "ContainsLane failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "ContainsLane failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2295,7 +2295,7 @@ void SimOneAPIService::GetParkingSpaceList(SSD::SimVector<HDMapStandalone::MPark
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetParkingSpaceIds failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetParkingSpaceIds failed, HDMap not initialized yet.");
 	}
 #endif
 	//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
@@ -2307,7 +2307,7 @@ bool SimOneAPIService::GenerateRoute(const SSD::SimPoint3DVector& inputPoints, S
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GenerateRoute failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GenerateRoute failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2325,7 +2325,7 @@ bool SimOneAPIService::Navigate(const SSD::SimPoint3DVector& inputPoints, SSD::S
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Navigate failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Navigate failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2352,7 +2352,7 @@ bool SimOneAPIService::IsOverlapLaneLine(const SSD::SimPoint3D& pos, const doubl
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "IsOverlapLaneLine failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "IsOverlapLaneLine failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2364,7 +2364,7 @@ bool SimOneAPIService::GetRoadMark(const SSD::SimPoint3D& pos, const SSD::SimStr
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetRoadMark failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetRoadMark failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2376,7 +2376,7 @@ SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetTrafficLightList()
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetTrafficLightList failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetTrafficLightList failed, HDMap not initialized yet.");
 		return SSD::SimVector<HDMapStandalone::MSignal>();
 	}
 #endif
@@ -2388,7 +2388,7 @@ SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetTrafficSignList()
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetTrafficSignList failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetTrafficSignList failed, HDMap not initialized yet.");
 		return SSD::SimVector<HDMapStandalone::MSignal>();
 	}
 #endif
@@ -2400,7 +2400,7 @@ SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetStoplineList(const
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetStoplineList failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetStoplineList failed, HDMap not initialized yet.");
 		return SSD::SimVector<HDMapStandalone::MObject>();
 	}
 #endif
@@ -2412,7 +2412,7 @@ SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetCrosswalkList(cons
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetCrosswalkList failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetCrosswalkList failed, HDMap not initialized yet.");
 		return SSD::SimVector<HDMapStandalone::MObject>();
 	}
 #endif
@@ -2424,7 +2424,7 @@ SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetCrossHatchList(con
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetCrossHatchList failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetCrossHatchList failed, HDMap not initialized yet.");
 		return SSD::SimVector<HDMapStandalone::MObject>();
 	}
 #endif
@@ -2436,7 +2436,7 @@ bool SimOneAPIService::GetLaneMiddlePoint(const SSD::SimPoint3D& inputPt, const 
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneMiddlePoint failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneMiddlePoint failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2449,7 +2449,7 @@ bool SimOneAPIService::GetHeights(const SSD::SimPoint3D& inputPt, const double& 
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetHeights failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetHeights failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2807,7 +2807,7 @@ LaneInfo SimOneAPIService::GetForwardLaneInfo(const SSD::SimPoint3D& pos, const 
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneInfo failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneInfo failed, HDMap not initialized yet.");
 		return std::move(laneInfo);
 	}
 #endif
@@ -2875,7 +2875,7 @@ bool SimOneAPIService::GetTopoGraph(HDMapStandalone::MTopoGraph& topoGraph)
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetTopoGraph failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetTopoGraph failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2887,7 +2887,7 @@ double SimOneAPIService::GetLaneLength(const SSD::SimString& id)
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneLength failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneLength failed, HDMap not initialized yet.");
 		return 0.0;
 	}
 #endif
@@ -2899,7 +2899,7 @@ bool SimOneAPIService::IsDriving(const SSD::SimString& id)
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "IsDriving failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "IsDriving failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2911,7 +2911,7 @@ bool SimOneAPIService::IsInJunction(const SSD::SimString& id, long& juncId)
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "IsInJunction failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "IsInJunction failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2923,7 +2923,7 @@ bool SimOneAPIService::IsInsideLane(const SSD::SimPoint3D& inputPt, const SSD::S
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "IsInsideLane failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "IsInsideLane failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2936,7 +2936,7 @@ bool SimOneAPIService::GetNearMostLaneWithHeight(const SSD::SimPoint3D& pos, boo
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetNearMostLaneWithHeight failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetNearMostLaneWithHeight failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2950,7 +2950,7 @@ bool SimOneAPIService::GetForwardLaneSample(const SSD::SimPoint3D& inputPt, cons
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetForwardLaneSample failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetForwardLaneSample failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
@@ -2963,7 +2963,7 @@ void SimOneAPIService::GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLine
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneLineInfo failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneLineInfo failed, HDMap not initialized yet.");
 		return;
 	}
 #endif
@@ -2977,7 +2977,7 @@ void SimOneAPIService::GetSectionList(const long& roadId, SSD::SimStringVector& 
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetSectionList failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetSectionList failed, HDMap not initialized yet.");
 		return;
 	}
 #endif
@@ -2990,7 +2990,7 @@ SSD::SimVector<int> SimOneAPIService::GetLaneIndexList(const SSD::SimPoint3D& po
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneIndexList failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneIndexList failed, HDMap not initialized yet.");
 		return ret;
 	}
 #endif
@@ -3032,7 +3032,7 @@ SimOneAPI::EDirectionType_ SimOneAPIService::GetIconType(const SSD::SimPoint3D& 
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetIconType failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetIconType failed, HDMap not initialized yet.");
 		return SimOneAPI::EDirectionType_::Forward;
 	}
 #endif
@@ -3050,7 +3050,7 @@ bool SimOneAPIService::GetLaneSampleByLocation(const SSD::SimPoint3D& pos, HDMap
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "GetLaneSampleByLocation failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneSampleByLocation failed, HDMap not initialized yet.");
 		return SimOneAPI::EDirectionType_::Forward;
 	}
 #endif
@@ -3071,9 +3071,9 @@ void SimOneAPIService::setMapInfo(std::uint16_t type, const std::string* msgData
 		return;
 	}
 	memcpy(&mHDMapInfo, msgDataBody->c_str(), msgDataBody->size());
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMapInfo openDrive:%s", mHDMapInfo.openDrive);
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMapInfo opendriveMd5:%s", mHDMapInfo.opendriveMd5);
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMapInfo openDriveUrl:%s", mHDMapInfo.openDriveUrl);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMapInfo openDrive:%s", mHDMapInfo.openDrive);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMapInfo opendriveMd5:%s", mHDMapInfo.opendriveMd5);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMapInfo openDriveUrl:%s", mHDMapInfo.openDriveUrl);
 	return;
 }
 
@@ -3118,10 +3118,10 @@ bool SimOneAPIService::checkHDMapSM()
 
 bool SimOneAPIService::startHDMap()
 {
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap initializing...");
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap opendrive: %s", mLastHDMap.openDrive);
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap opendrive URL: %s", mLastHDMap.openDriveUrl);
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap opendrive Md5: %s", mLastHDMap.opendriveMd5);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap initializing...");
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap opendrive: %s", mLastHDMap.openDrive);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap opendrive URL: %s", mLastHDMap.openDriveUrl);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap opendrive Md5: %s", mLastHDMap.opendriveMd5);
 	std::string OD(mLastHDMap.openDrive);
 	std::string Url(mLastHDMap.openDriveUrl);
 	//string_replace(Url, " ", "%20"); //handle space in file name case
@@ -3132,7 +3132,7 @@ bool SimOneAPIService::startHDMap()
 			fileContent = UtilUrlRequest::GetUrl(Url);
 		}
 		catch (const UtilUrlRequest::TException& e) {
-			bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Fetching xodr failed: %s", e.what());
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Fetching xodr failed: %s", e.what());
 		}
 	}
 
@@ -3159,10 +3159,10 @@ bool SimOneAPIService::startHDMap()
 	bool ret = HDMapStandalone::MHDMap::LoadDataFromContent(content, code);
 	if (!ret)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelError, "Failed to load xodr file!");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Failed to load xodr file!");
 	}
 	mbHDMapInited = true;
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap Initialize success");
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap Initialize success");
 	return ret;
 }
 
@@ -3170,6 +3170,6 @@ void SimOneAPIService::stopHDMap()
 {
 	memset(&mLastHDMap, 0, sizeof(mLastHDMap));
 	mbHDMapInited = false;
-	bridgeLogOutput(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap stopped");
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap stopped");
 }
 #endif  //WITHOUT_HDMAP
