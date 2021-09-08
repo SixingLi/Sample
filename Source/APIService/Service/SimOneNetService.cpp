@@ -1,4 +1,5 @@
 #include "SimOneNetService.hpp"
+#include "Version.h"
 #include "UtilUrlRequest.hpp"
 #include "UtilString.h"
 #include "cybertron/core/JsonReader.hpp"
@@ -799,7 +800,7 @@ int SimOneAPIService::GetCaseStatus() {
 	return mCaseStatus;
 }
 const char* SimOneAPIService::GetVersion() {
-	return "2021_4_20_21:56:00";
+	return SIMONE_API_VERSION;
 }
 bool SimOneAPIService::SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, ESimOne_Client_Type toNodeType) {
 	return sendMessage(0, Bridge::EBridgeClientType_SimOneDLL, toNodeId, (Bridge::EBridgeClientType)toNodeType, msgId, length, (void*)pBuffer);
