@@ -789,10 +789,10 @@ class SimOne_Data_WayPoints_Entry(Structure):
 	('index', c_int),
 	('posX', c_float), # MainVehicle WayPoints X on Opendrive (by meter)
 	('posY', c_float),  # MainVehicle WayPoints Y on Opendrive (by meter)
-	('heading_x', c_float),
-	('heading_y', c_float),
-	('heading_z', c_float),
-	('heading_w', c_float),]
+	('heading_x', c_float), # MainVehicle WayPoints heading orientation x in quaternion
+	('heading_y', c_float), # MainVehicle WayPoints heading orientation y in quaternion
+	('heading_z', c_float), # MainVehicle WayPoints heading orientation z in quaternion
+	('heading_w', c_float),] # MainVehicle WayPoints heading orientation w in quaternion
 
 
 class SimOne_Data_WayPoints(SimOne_Data):
