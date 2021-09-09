@@ -34,14 +34,11 @@ enum ETaskCommandId
 	ETaskCommandId_UltrasonicRadarObj = 50,
 	ETaskCommandId_UltrasonicRadarOSI = 51,
 
-	ETaskCommandId_V2XBSMData = 60,
-	ETaskCommandId_V2XRSIData = 61,
-	ETaskCommandId_V2XSPAData = 62,
-	ETaskCommandId_V2XNFSRawBSM = 63,
-	ETaskCommandId_V2XNFSRawMAP = 64,
-	ETaskCommandId_V2XNFSRawRSM = 65,
-	ETaskCommandId_V2XNFSRawSPAT = 66,
-	ETaskCommandId_V2XNFSRawRSI = 67,
+	ETaskCommandId_V2XNFSRawBSM = 60,
+	ETaskCommandId_V2XNFSRawMAP = 61,
+	ETaskCommandId_V2XNFSRawRSM = 62,
+	ETaskCommandId_V2XNFSRawSPAT = 63,
+	ETaskCommandId_V2XNFSRawRSI = 64,
 
 
 	ETaskCommandId_FusionObj = 70,
