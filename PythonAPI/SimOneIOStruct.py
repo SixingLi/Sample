@@ -262,6 +262,7 @@ class SimOne_Data_TrafficLights(SimOne_Data):
 
 
 class ESimOne_Signal_Light(c_int):
+	ESimOne_Signal_Light_None = 0
 	ESimOne_Signal_Light_RightBlinker = 1
 	ESimOne_Signal_Light_LeftBlinker = (1 << 1)
 	ESimOne_Signal_Light_DoubleFlash = (1 << 2)
