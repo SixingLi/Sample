@@ -640,28 +640,6 @@ extern "C"
 		SIMONE_API bool IsTwoSideRoad(const long& roadId);
 
 		/*!
-		获取输入点所在路段的车道和道路相关信息，包括车道编号，地面指示行车箭头，前方100米车道线采样点，是否压线，车道线类型
-		\li function:
-		*	GetLaneIndexList
-		\li brief:
-		*	Get current location belonging road section by returning all lanes' code, like 0, 1, 2, ... .
-		The reported lanes are on the same side of road section regarding current location. The reversed side lanes should be omitted.
-		@param
-		*   pos: Input 3d location.
-		@param
-		*   tyrePosInfo_: Input tyre postion info.
-		@param
-		*   forward: Input forward distance to detect lane lines.
-		@param[out]
-		*   currentLaneIndex: Lane code that current location belongs to. Code as this format, 0, 1, 2, ... .
-		@param[out]
-		*   laneIdList: Belong road section's all lanes' ID list. Each ID is global unique in this map.
-		@return
-		*	Belong road section's all lanes' code list. Code as this format, 0, 1, 2, ... . Can be empty.
-		*/
-		SIMONE_API LaneInfo GetForwardLaneInfo(const SSD::SimPoint3D& pos, const TyrePosInfo& tyrePosInfo, const double& forward);
-
-		/*!
 		获取车道长度
 		\li function:
 		*	GetLaneLength
@@ -719,113 +697,8 @@ extern "C"
 		*/
 		SIMONE_API bool IsInsideLane(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, HDMapStandalone::MSideState& sideState);
 
-		/*!
-		考虑高程下获取最接近输入点的车道
-		\li function:
-		*	GetNearMostLaneWithHeight
-		\li brief:
-		*	Respecting height of input point, get the lane which is near most to or geometry overlapping the input point.
-			When there are more than one lane's geometry overlaps the input point, will pick the distance near most one.
-			If input point's height is 2 meters gap with lane's height, such lane will be ignored.
-		@param
-		*   pos: Input 3d location.
-		@param
-		*   drivingOnly: A flag whether to find dirving only lanes or not.
-		@param[out]
-		*   id: Lane ID of founded lane. ID with this format roadId_sectionIndex_laneId.
-		@param[out]
-		*   s, t: The input point's value pair in s-t coordinate system, relative to the found lane.
-		@param[out]
-		*   s_toCenterLine, t_toCenterLine: is the input point's value pair in s-t coordinate system, relative to the found lane's owner road's center line.
-		*   Values are fuzzy accurate, please use API GetRoadST for highly accurate values for [s_toCenterLine, t_toCenterLine].
-		@param[out]
-		*   insideLane: Returns whether input point is inside the near most lane or not.
-		@return
-		*	True when any lane is found, else returns false.
-		*/
-		SIMONE_API bool GetNearMostLaneWithHeight(const SSD::SimPoint3D& pos, bool drivingOnly, SSD::SimString& id, double& s, double& t,
-			double& s_toCenterLine, double& t_toCenterLine, bool& insideLane);
-
-		/*!
-		获取前方指定距离所途径的所有车道信息(包含车道ID，左右边缘线，虚拟中心线)
-		\li function:
-		*	GetForwardLaneSample
-		\li brief:
-		*	 Get all lane data by specified distance in forward direction of current position.
-		@param
-		*   inputPt: Input 3d location.
-		@param
-		*   laneName: Input lane ID. ID with this format roadId_sectionIndex_laneId.
-		@param
-		*   forward: The distance in forward direction. Its maximum limit is 2000 meters, and it minimum limit is greater than 0 meter.
-		@param[out]
-		*   laneInfoList: MLaneInfo object list.
-		@return
-		*	True if data is found, else return false.
-		*/
-		SIMONE_API bool GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, const double& forward, SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList);
-
-		/*!
-		获取地图中所有车道线信息
-		\li function:
-		*	GetLaneLineInfo
-		\li brief:
-		*	 Get all lanes' lane line info in the loaded map.
-		@param
-		*   forward: The distance in forward direction. Its maximum limit is 2000 meters, and it minimum limit is greater than 0 meter.
-		@param[out]
-		*   laneInfoList: MLaneLineInfo list for all lanes.
-		*/
-		SIMONE_API void GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo);
-
-		/*!
-		获取指定道路的左右Section名字列表
-		\li function:
-		*	GetSectionList
-		\li brief:
-		*	Get right and left section name list for specified road id.
-		@param
-		*   roadId: Specified road id.
-		@param[out]
-		*   rightList: Returns right side section name list.
-		@param[out]
-		*   leftList: Returns left side section name list.
-		*/
-		SIMONE_API void GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList);
-
-
 
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%V3 Add%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%//
-		/*!
-		获取输入点所在路段的所有车道编号
-		\li function:
-		*	GetLaneIndexList
-		\li brief:
-		*	Get current location belonging road section by returning all lanes' code, like 0, 1, 2, ... .
-		The reported lanes are on the same side of road section regarding current location. The reversed side lanes should be omitted.
-		@param
-		*   pos: Input 3d location.
-		@param[out]
-		*   currentLaneIndex: Lane code that current location belongs to. Code as this format, 0, 1, 2, ... .
-		@param[out]
-		*   laneIdList: Belong road section's all lanes' ID list. Each ID is global unique in this map.
-		@return
-		*	Belong road section's all lanes' code list. Code as this format, 0, 1, 2, ... . Can be empty.
-		*/
-		SIMONE_API SSD::SimVector<int> GetLaneIndexList(const SSD::SimPoint3D& pos, int& currentLaneIndex, SSD::SimStringVector& laneIdList);
-
-		/*!
-		获取行车指示信息
-		\li function:
-		*	GetIconType
-		\li brief:
-		*	Get direction icon type of current lane.
-		@param
-		*   pos: Input 3d location.
-		@return
-		*	Direction icon type EDirectionType_.
-		*/
-		SIMONE_API EDirectionType_ GetIconType(const SSD::SimPoint3D& pos);
 
 		/*!
 		获取主车位置所在车道信息(包含车道ID，左右边缘线，虚拟中心线)
