@@ -9,7 +9,7 @@ void SampleGetCrosswalkList(const SimPoint3D& pos, const SimString& laneId, SSD:
 {
 	if (TrafficLightList.size() < 1) 
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "No traffic light exists!");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "No traffic light exists!");
 		return;
 	}
 	SSD::SimVector<HDMapStandalone::MObject> crosswalkList;
@@ -19,10 +19,10 @@ void SampleGetCrosswalkList(const SimPoint3D& pos, const SimString& laneId, SSD:
 		for (size_t i = 0; i < crosswalkList.size(); i++)
 		{
 			auto& objectItem = crosswalkList[i];
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "objectItem.id: %ld", objectItem.id);
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "objectItem.type: %s", objectItem.type.GetString());
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "objectItem.pt.x: %f, objectItem.pt.y: %f, objectItem.pt.z: %f", objectItem.pt.x, objectItem.pt.y, objectItem.pt.z);
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "objectItem.boundaryKnots: %d", objectItem.boundaryKnots.size());
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "objectItem.id: %ld", objectItem.id);
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "objectItem.type: %s", objectItem.type.GetString());
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "objectItem.pt.x: %f, objectItem.pt.y: %f, objectItem.pt.z: %f", objectItem.pt.x, objectItem.pt.y, objectItem.pt.z);
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "objectItem.boundaryKnots: %d", objectItem.boundaryKnots.size());
 		}
 	}
 }

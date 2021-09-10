@@ -61,9 +61,13 @@ endfunction()
 
 add_subdirectory(${SIMONE_API_ROOT}/Source Source)
 add_subdirectory(${SIMONE_API_ROOT}/SimOneAPIInternalTest/APITest APITest)
+add_dependencies(OpenSimOneAPITest SimOneAPI)
+
+IF (NOT WITHOUT_HDMAP)
+	#add_subdirectory(${SIMONE_API_ROOT}/PythonAPI/pySimOneIO HDMapPythonAPI)
+ENDIF()
 
 include_directories("${SIMONE_PATH_ROOT}/3rdparty")
-
 IF (UNIX)
 set(PythonLibs ${SIMONE_PATH_ROOT}/3rdparty/artifactory/python36/bin)
 ELSE (UNIX)
@@ -86,25 +90,6 @@ IF (WIN32)
 	)
 
 	IF (NOT WITHOUT_SENSOR)
-		add_custom_command(TARGET autoconfig
-		POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/Source/Sensor/SimOneSensorAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneSensorAPI.h 
-		)
-		IF (NOT WITHOUT_V2X)
-			add_custom_command(TARGET autoconfig
-			POST_BUILD
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/include/tsf.h ${SIMONE_API_ROOT}/${OutPutDir}/include/tsf.h
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/lib/win64/release/tsf.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/tsf.dll
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/lib/win64/release/tsf.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/tsf.lib
-
-				COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/v2x_asn/v2x_I_New4Span/include ${SIMONE_API_ROOT}/${OutPutDir}/include/v2xinclude/
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/v2x_asn/v2x_I_New4Span/lib/win64/release/V2X_ASN_New4Span.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/V2X_ASN_New4Span.dll
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/v2x_asn/v2x_I_New4Span/lib/win64/release/V2X_ASN_New4Span.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/V2X_ASN_New4Span.lib
-			)
-		ENDIF()	
-	ENDIF()	
-
-		IF (NOT WITHOUT_SENSOR)
 		add_custom_command(TARGET autoconfig
 		POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/Source/Sensor/SimOneSensorAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneSensorAPI.h 

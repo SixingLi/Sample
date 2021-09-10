@@ -96,7 +96,7 @@ extern "C"
 		/*!
 		日志设置接口
 		\li function:
-		*	SetupLogLevel
+		*	SetLogOut
 		\li brief:
 		*	Set log interface
 		@param
@@ -104,7 +104,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool  SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...);
+		SIMONE_API bool SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...);
 
 		/*!
 		设置服务的地址和端口号
@@ -130,7 +130,7 @@ extern "C"
 		@return
 		*	None
 		*/
-		SIMONE_API bool InitSimOneAPI(int hostVehicleId = 0, bool isFrameSync =false, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
+		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
 
 		/*!
 		停止API node

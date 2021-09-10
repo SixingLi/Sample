@@ -8,7 +8,7 @@
 CYBERTRON_BEGIN
 TaskPointCloud::TaskPointCloud()
 {
-	mSensorDataType = EDataType_PointCloudWithGroundTruth;
+	mSensorDataType = ESimOne_Sensor_Data_Type_PointCloudWithGroundTruth;
 }
 
 TaskPointCloud::~TaskPointCloud()
@@ -17,6 +17,7 @@ TaskPointCloud::~TaskPointCloud()
 
 uint16_t TaskPointCloud::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
 {
+	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
 	if (commanId != cybertron::proto::sensor::EDataType_PointCloudWithGroundTruth)
 	{
 		return -1;
@@ -79,7 +80,7 @@ uint16_t TaskPointCloud::Do(std::uint32_t sensorType, std::uint32_t commanId, CT
 	}
 	if (TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB != NULL)
 	{
-		TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(pSensorContext->mainVehicleId, sensorId.c_str(), pPointCloudDetections);
+		TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(mainVehId, sensorId.c_str(), pPointCloudDetections);
 	}
 	
 	return 0;

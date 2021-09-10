@@ -15,39 +15,44 @@ extern "C"
 #endif
 #define MAX_DRIVER_NAME_LEN 10
 
-	SIMONE_API bool SimOneAPI::GetGps(int mainVehicleId, SimOne_Data_Gps *pGps) {
-		return SimOneAPIService::GetInstance()->GetGps(mainVehicleId, pGps);
+	SIMONE_API bool SimOneAPI::GetGps(const char* mainVehicleId, SimOne_Data_Gps *pGps) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetGps(mainVehId, pGps);
 	}
-	SIMONE_API bool SimOneAPI::SetGpsUpdateCB(void(*cb)(int mainVehicleId, SimOne_Data_Gps *pGps)) {
+	SIMONE_API bool SimOneAPI::SetGpsUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Gps *pGps)) {
 		return SimOneAPIService::GetInstance()->SetGpsUpdateCB(cb);
 	}
 
-	SIMONE_API bool SimOneAPI::GetTrafficLight(int mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight *pTrafficLight) {
-		return SimOneAPIService::GetInstance()->GetTrafficLight(mainVehicleId, opendriveLightId, pTrafficLight);
+	SIMONE_API bool SimOneAPI::GetTrafficLight(const char* mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight *pTrafficLight) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetTrafficLight(mainVehId, opendriveLightId, pTrafficLight);
 	}
 
-	SIMONE_API bool SimOneAPI::GetGroundTruth(int mainVehicleId, SimOne_Data_Obstacle *pObstacle) {
-		return SimOneAPIService::GetInstance()->GetObstacle(mainVehicleId, pObstacle);
+	SIMONE_API bool SimOneAPI::GetGroundTruth(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetObstacle(mainVehId, pObstacle);
 	}
-	SIMONE_API bool SimOneAPI::SetGroundTruthUpdateCB(void(*cb)(int mainVehicleId, SimOne_Data_Obstacle *pObstacle)) {
+	SIMONE_API bool SimOneAPI::SetGroundTruthUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle)) {
 		return SimOneAPIService::GetInstance()->SetObstacleUpdateCB(cb);
 	}
 
-	SIMONE_API bool SimOneAPI::GetRadarDetections(const int mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections) {
+	SIMONE_API bool SimOneAPI::GetRadarDetections(const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections) {
 
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
 		ETaskCommandId commandId = ETaskCommandId_ContiRadarObj;
 		int sensorType = Bridge::ESensorType_MMWRadar;
-		string key = std::to_string(mainVehicleId).append("_").append(sensorId);
+		string key = std::to_string(mainVehId).append("_").append(sensorId);
 
 		return SimOneAPIService::GetInstance()->GetTaskData(key, sensorType, (int)commandId, (void*)pDetections);
 	}
-	SIMONE_API bool SimOneAPI::SetRadarDetectionsUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections)) {
+	SIMONE_API bool SimOneAPI::SetRadarDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections)) {
 		return SimOneAPIService::GetInstance()->SetRadarDetectionsUpdateCB(cb);
 	}
-	SIMONE_API bool SimOneAPI::GetUltrasonicRadar(int mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonic) {
+	SIMONE_API bool SimOneAPI::GetUltrasonicRadar(const char* mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonic) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
 		ETaskCommandId commandId = ETaskCommandId_UltrasonicRadarObj;
 		int sensorType = Bridge::ESensorType_AllUltrasonicRadar;
-		string key = std::to_string(mainVehicleId);
+		string key = std::to_string(mainVehId);
 		SimOne_Data_UltrasonicRadars* pTemp = new SimOne_Data_UltrasonicRadars();
 		if (!SimOneAPIService::GetInstance()->GetTaskData(key, sensorType, commandId, (void*)pTemp)) {
 			delete pTemp;
@@ -65,24 +70,25 @@ extern "C"
 		delete pTemp;
 		return true;
 	}
-	SIMONE_API bool SimOneAPI::GetUltrasonicRadars(int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics) {
+	SIMONE_API bool SimOneAPI::GetUltrasonicRadars(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics) {
 
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
 		ETaskCommandId commandId = ETaskCommandId_UltrasonicRadarObj;
 		int sensorType = Bridge::ESensorType_AllUltrasonicRadar;
-		string key = std::to_string(mainVehicleId);
+		string key = std::to_string(mainVehId);
 
 		return SimOneAPIService::GetInstance()->GetTaskData(key, sensorType, commandId, (void*)pUltrasonics);
 	}
-	SIMONE_API bool SimOneAPI::SetUltrasonicRadarsCB(void(*cb)(int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics)) {
+	SIMONE_API bool SimOneAPI::SetUltrasonicRadarsCB(void(*cb)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics)) {
 		return SimOneAPIService::GetInstance()->SetUltrasonicRadarsCB(cb);
 	}
 
 
 
-	SIMONE_API bool SimOneAPI::GetSensorDetections(int mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
+	SIMONE_API bool SimOneAPI::GetSensorDetections(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
 
-
-		string key = std::to_string(mainVehicleId).append("_").append(sensorId);
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		string key = std::to_string(mainVehId).append("_").append(sensorId);
 		map<std::string, int>::iterator it =SimOneAPIService::GetInstance()->mSensorDataTypeMap.find(key);
 		if (it == SimOneAPIService::GetInstance()->mSensorDataTypeMap.end())
 		{
@@ -108,7 +114,7 @@ extern "C"
 
 		return true;
 	}
-	SIMONE_API bool SimOneAPI::SetSensorDetectionsUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth)) {
+	SIMONE_API bool SimOneAPI::SetSensorDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth)) {
 		return SimOneAPIService::GetInstance()->SetSensorDetectionsUpdateCB(cb);
 	}
 
@@ -127,9 +133,10 @@ extern "C"
 		return SimOneAPIService::GetInstance()->SetEnvironment(pEnvironment);
 	}
 
-	SIMONE_API bool SimOneAPI::GetSensorLaneInfo(int mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo) {
+	SIMONE_API bool SimOneAPI::GetSensorLaneInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo) {
 
-		string key = std::to_string(mainVehicleId).append("_").append(sensorId);
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		string key = std::to_string(mainVehId).append("_").append(sensorId);
 		map<std::string, int>::iterator it = SimOneAPIService::GetInstance()->mSensorDataTypeMap.find(key);
 		if (it == SimOneAPIService::GetInstance()->mSensorDataTypeMap.end())
 		{
@@ -155,7 +162,7 @@ extern "C"
 		return true;
 	}
 
-	SIMONE_API bool SimOneAPI::SetSensorLaneInfoCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo)) {
+	SIMONE_API bool SimOneAPI::SetSensorLaneInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo)) {
 		return SimOneAPIService::GetInstance()->SetSensorLaneInfoCB(cb);
 	}
 

@@ -18,16 +18,16 @@ int main()
 	bool inAEBState = false;
 	int timeout = 20;
 	bool isSimOneInitialized = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId ="0";
 	bool isJoinTimeLoop = false;
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	SimOneAPI::SetDriverName(0, "LKA");
 	while (true) {
 		if (SimOneAPI::LoadHDMap(timeout)) {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap Information Loaded");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap Information Loaded");
 			break;
 		}
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "HDMap Information Loading...");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap Information Loading...");
 	}
 
 	SSD::SimPoint3DVector inputPoints;
@@ -40,7 +40,7 @@ int main()
 		}
 	}
 	else {
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelError, "Get mainVehicle wayPoints failed");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Get mainVehicle wayPoints failed");
 		return -1;
 	}
 
@@ -48,7 +48,7 @@ int main()
 	if (pWayPoints->wayPointsSize >= 2) {
 		SSD::SimVector<int> indexOfValidPoints;
 		if (!SimOneAPI::GenerateRoute(inputPoints, indexOfValidPoints, targetPath)) {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelError, "Generate mainVehicle route failed");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Generate mainVehicle route failed");
 			return -1;
 		}
 	}
@@ -56,7 +56,7 @@ int main()
 		SSD::SimString laneIdInit = SampleGetNearMostLane(inputPoints[0]);
 		HDMapStandalone::MLaneInfo laneInfoInit;
 		if (!SimOneAPI::GetLaneSample(laneIdInit, laneInfoInit)) {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelError, "Generate mainVehicle initial route failed");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Generate mainVehicle initial route failed");
 			return -1;
 		}
 		else {
@@ -64,30 +64,30 @@ int main()
 		}
 	}
 	else {			
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelError, "Number of wayPoints is zero");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Number of wayPoints is zero");
 		return -1;
 	}
 	
 	while (true) {
 		int frame = SimOneAPI::Wait();
 
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Stop) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Stop) {
 			break;
 		}
 
 		std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
 		if (!SimOneAPI::GetGps(MainVehicleId,pGps.get())) {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Fetch GPS failed");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Fetch GPS failed");
 		}
 
 		std::unique_ptr<SimOne_Data_Obstacle> pObstacle = std::make_unique<SimOne_Data_Obstacle>();
 		if (!SimOneAPI::GetGroundTruth(MainVehicleId,pObstacle.get())) {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Fetch obstacle failed");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Fetch obstacle failed");
 		}
 
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running && pGps->timestamp > 0 && pObstacle->timestamp > 0) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running && pGps->timestamp > 0 && pObstacle->timestamp > 0) {
 			if (!isSimOneInitialized) {
-				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "SimOne Initialized!");
+				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOne Initialized!");
 				isSimOneInitialized = true;
 			}
 
@@ -163,7 +163,7 @@ int main()
 			SimOneAPI::SetDrive(0, pControl.get());
 		}
 		else {
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "SimOne Initializing...");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOne Initializing...");
 		}
 
 		SimOneAPI::NextFrame(frame);

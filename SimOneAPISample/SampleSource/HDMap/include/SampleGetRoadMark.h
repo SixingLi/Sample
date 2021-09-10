@@ -12,18 +12,18 @@ void SampleGetRoadMark(const SimString& laneId, const SimPoint3D& pos)
 	bool result = SimOneAPI::GetRoadMark(pos, laneId, left, right);
 	if (result)
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "left.sOffset: %f", left.sOffset);
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "left.width: %f", left.width);
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "left.type: %d", (int)left.type);
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "left.color: %d", (int)left.color);
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "right.sOffset: %f", right.sOffset);
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "right.width: %f", right.width);
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "left.type: %d", (int)left.type);
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "left.color: %d", (int)left.color);	
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "left.sOffset: %f", left.sOffset);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "left.width: %f", left.width);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "left.type: %d", (int)left.type);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "left.color: %d", (int)left.color);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "right.sOffset: %f", right.sOffset);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "right.width: %f", right.width);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "left.type: %d", (int)left.type);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "left.color: %d", (int)left.color);	
 	}
 	else
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Not exists!");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Not exists!");
 		return;
 	}
 

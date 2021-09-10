@@ -71,7 +71,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetGps(int mainVehicleId, SimOne_Data_Gps *pGps);
+		SIMONE_API bool GetGps(const char* mainVehicleId, SimOne_Data_Gps *pGps);
 
 		/*!
 		主车GPS更新回调
@@ -86,7 +86,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetGpsUpdateCB(void(*cb)(int mainVehicleId, SimOne_Data_Gps *pGps));
+		SIMONE_API bool SetGpsUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Gps *pGps));
 
 		/*!
 		得到仿真场景中的物体的真值
@@ -101,7 +101,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetGroundTruth(int mainVehicleId, SimOne_Data_Obstacle *pObstacle);
+		SIMONE_API bool GetGroundTruth(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle);
 
 		/*!
 		得到仿真场景中的物体的真值的更新回调
@@ -116,7 +116,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetGroundTruthUpdateCB(void(*cb)(int mainVehicleId, SimOne_Data_Obstacle *pObstacle));
+		SIMONE_API bool SetGroundTruthUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle));
 
 
 		/*!
@@ -134,7 +134,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetRadarDetections(const int mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections);
+		SIMONE_API bool GetRadarDetections(const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections);
 
 		/*!
 		毫米波雷达目标信息回调
@@ -149,7 +149,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetRadarDetectionsUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections));
+		SIMONE_API bool SetRadarDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections));
 
 		/*
 		获得一个超声波雷达信息
@@ -164,7 +164,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetUltrasonicRadar(int mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonic);
+		SIMONE_API bool GetUltrasonicRadar(const char* mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonic);
 
 		/*
 		获得所有超声波雷达信息
@@ -179,7 +179,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetUltrasonicRadars(int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics);
+		SIMONE_API bool GetUltrasonicRadars(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics);
 
 		/*!
 		超生波雷达真值信息更新回调
@@ -194,7 +194,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetUltrasonicRadarsCB(void(*cb)(int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
+		SIMONE_API bool SetUltrasonicRadarsCB(void(*cb)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
 
 
 		/*!
@@ -211,7 +211,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetSensorDetections(int mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth);
+		SIMONE_API bool GetSensorDetections(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth);
 
 		/*!
 			传感器真值信息更新回调
@@ -226,7 +226,7 @@ extern "C"
 			@return
 			*	Success or not
 			*/
-		SIMONE_API bool SetSensorDetectionsUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
+		SIMONE_API bool SetSensorDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
 
 		/*!
 		得到所有传感器的配置信息（Id、类型、频率、位置和朝向等）
@@ -280,7 +280,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetTrafficLight(int mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight* pTrafficLight);
+		SIMONE_API bool GetTrafficLight(const char* mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight* pTrafficLight);
 
 
 		/*!
@@ -297,7 +297,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetSensorLaneInfo(int mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo);
+		SIMONE_API bool GetSensorLaneInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo);
 
 		/*!
 		获取传感器检测到车道与车道线数据回调
@@ -313,7 +313,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetSensorLaneInfoCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo));
+		SIMONE_API bool SetSensorLaneInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo));
 
 	}
 #ifdef __cplusplus

@@ -34,14 +34,11 @@ enum ETaskCommandId
 	ETaskCommandId_UltrasonicRadarObj = 50,
 	ETaskCommandId_UltrasonicRadarOSI = 51,
 
-	ETaskCommandId_V2XBSMData = 60,
-	ETaskCommandId_V2XRSIData = 61,
-	ETaskCommandId_V2XSPAData = 62,
-	ETaskCommandId_V2XNFSRawBSM = 63,
-	ETaskCommandId_V2XNFSRawMAP = 64,
-	ETaskCommandId_V2XNFSRawRSM = 65,
-	ETaskCommandId_V2XNFSRawSPAT = 66,
-	ETaskCommandId_V2XNFSRawRSI = 67,
+	ETaskCommandId_V2XNFSRawBSM = 60,
+	ETaskCommandId_V2XNFSRawMAP = 61,
+	ETaskCommandId_V2XNFSRawRSM = 62,
+	ETaskCommandId_V2XNFSRawSPAT = 63,
+	ETaskCommandId_V2XNFSRawRSI = 64,
 
 
 	ETaskCommandId_FusionObj = 70,
@@ -75,6 +72,9 @@ public:
 		//mbEnable = false;
 	}
 	virtual ~CTaskSensorBase() {}
+	static const char* int2string(int id) {
+		return std::to_string(id).c_str();
+	}
 	void makeSensorHeader(SensorContext* pContext, Bridge::BridgeSensorHeader* pHeader) {
 		pHeader->set_timestamp(pContext->timestamp);
 		pHeader->set_time_of_simulation(pContext->time_of_simulation);
@@ -116,19 +116,19 @@ public:
 	static TaskSensorManager& getInstance();
 	void Do(std::uint32_t type, std::uint32_t commanId,CTaskSensorBase::SensorContext* pSensorContext,const std::string* pBuffer);
 
-	void(*mpImageUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_Image *pImage);
-	void(*mpPointCloudUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_Point_Cloud *pPointCloud);
-	void(*mpRadarDetectionsCB)(int mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections);
-	void(*mpSensorFusionUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_SensorFusionObstacles *pDetections);
-	void(*mpSensorDetectionsUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth);
-	void(*mpLaneDetectionsUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLane);
-	void(*mpUltrasonicRadarsUpdateCB)(int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics);
-	void(*mpUltrasonicRadarUpdateCB)(int mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonics);
-	void(*mpObstacleUpdateCB)(int mainVehicleId, SimOne_Data_Obstacle *pObstacle);
+	void(*mpImageUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_Image *pImage);
+	void(*mpPointCloudUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_Point_Cloud *pPointCloud);
+	void(*mpRadarDetectionsCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections);
+	void(*mpSensorFusionUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorFusionObstacles *pDetections);
+	void(*mpSensorDetectionsUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth);
+	void(*mpLaneDetectionsUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLane);
+	void(*mpUltrasonicRadarsUpdateCB)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics);
+	void(*mpUltrasonicRadarUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonics);
+	void(*mpObstacleUpdateCB)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle);
 	void(*mpSimOneGroundTruthCB)(SimOne_Data_Obstacle *pObstacle);
 
 #ifndef WITHOUT_HDMAP
-	void(*mpSimOneV2XRawCB)(int mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pV2XDetections);
+	void(*mpSimOneV2XRawCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pV2XDetections);
 #endif
 
 protected:

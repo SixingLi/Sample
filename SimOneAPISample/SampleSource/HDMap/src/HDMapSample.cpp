@@ -40,67 +40,64 @@ void SamplesHDMapByLocation(const SSD::SimPoint3D& pos)
 	//1. GetNearMostLane
 	SSD::SimString laneId = SampleGetNearMostLane(pos);
 	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "laneId: %s", laneId.GetString());
-	////2. GetNearLanes
-	//SampleGetNearLanes(pos, 5);
-	////3. GetNearLanesWithAngle
-	//double headingAngle = M_PI / 180 * 30;
-	//double shiftAngle = M_PI / 180 * 90;
-	//SampleGetNearLanesWithAngle(pos, 5, headingAngle, shiftAngle);
-	////4. GetDistanceToLaneBoundary
-	//SampleGetDistanceToLaneBoundary(pos);
-	////5. GetLaneSample
-	//SampleGetLaneSample(laneId);
-	////6. GetLaneLink
-	//SampleGetLaneLink(laneId);
-	////7. GetLaneType
-	//SampleGetLaneType(laneId);
-	////8. GetLaneWidth
-	//SampleGetLaneWidth(laneId, pos);
-	////9. GetLaneST
-	//double s = 0;
-	//double t = 0;
-	//SampleGetLaneST(laneId, pos, s, t);
-	////10. GetRoadST
-	//SampleGetRoadST(laneId, pos);
-	////11. ContainsLane
-	//SampleContainsLane(laneId);
-	////12. GetCrossHatchList
+	//2. GetNearLanes
+	SampleGetNearLanes(pos, 5);
+	//3. GetNearLanesWithAngle
+	double headingAngle = M_PI / 180 * 30;
+	double shiftAngle = M_PI / 180 * 90;
+	SampleGetNearLanesWithAngle(pos, 5, headingAngle, shiftAngle);
+	//4. GetDistanceToLaneBoundary
+	SampleGetDistanceToLaneBoundary(pos);
+	//5. GetLaneSample
+	SampleGetLaneSample(laneId);
+	//6. GetLaneLink
+	SampleGetLaneLink(laneId);
+	//7. GetLaneType
+	SampleGetLaneType(laneId);
+	//8. GetLaneWidth
+	SampleGetLaneWidth(laneId, pos);
+	//9. GetLaneST
+	double s = 0;
+	double t = 0;
+	SampleGetLaneST(laneId, pos, s, t);
+	//10. GetRoadST
+	SampleGetRoadST(laneId, pos);
+	//11. ContainsLane
+	SampleContainsLane(laneId);
+	//12. GetCrossHatchList
 	SampleGetCrossHatchList(laneId);
-	////13. GetTrafficLightList
-	//SSD::SimVector<HDMapStandalone::MSignal> trafficLight = SampleGetTrafficLightList();
-	////14. GetCrosswalkList
-	////SampleGetCrosswalkList(pos, laneId, trafficLight);
-	////15. GetHeights
-	//SampleGetHeights(pos, 10.0);
-	////16. GetInertialFromLaneST
-	//SampleGetInertialFromLaneST(laneId, s, t);
-	////17. GetLaneMiddlePoint
-	/*SimOne_Data_Map hdMap;
-	bool result = SimOneAPI::GetHDMapData(hdMap);
-	std::cout << "GetHDMapData result-------------------" << result << std::endl;
-	SampleGetLaneMiddlePoint(pos, laneId);*/
+	//13. GetTrafficLightList
+	SSD::SimVector<HDMapStandalone::MSignal> trafficLight = SampleGetTrafficLightList();
+	//14. GetCrosswalkList
+	SampleGetCrosswalkList(pos, laneId, trafficLight);
+	//15. GetHeights
+	SampleGetHeights(pos, 10.0);
+	//16. GetInertialFromLaneST
+	SampleGetInertialFromLaneST(laneId, s, t);
+	//17. GetLaneMiddlePoint
+	SampleGetLaneMiddlePoint(pos, laneId);
 	//18. GetParkingSpaceList
-	/*SSD::SimVector<HDMapStandalone::MParkingSpace> parkSpace = SampleGetParkingSpaceList();
-	std::cout << "parkSpace =" << parkSpace.size() << std::endl;*/
+	SSD::SimVector<HDMapStandalone::MParkingSpace> parkSpace = SampleGetParkingSpaceList();
+	std::cout << "parkSpace =" << parkSpace.size() << std::endl;
 	//20. GetRoadMark
-	//SampleGetRoadMark(laneId, pos);
-	////21. GetStoplineList
-	//SampleGetStoplineList(laneId, trafficLight);
-	////22. GetTrafficSignList
-	//SampleGetTrafficSignList();
-	////23. Navigate
-	/*SSD::SimPoint3DVector inputPoints;
-	inputPoints.push_back(SSD::SimPoint3D(-114.5, -6.5, 0));
-	inputPoints.push_back(SSD::SimPoint3D(-6.59, -182.01, 0));
-	SampleNavigate(inputPoints);*/
-	////24 .GenerateRoute
-	//SampleGenerateRoute();
+	SampleGetRoadMark(laneId, pos);
+	//21. GetStoplineList
+	SampleGetStoplineList(laneId, trafficLight);
+	//22. GetTrafficSignList
+	SampleGetTrafficSignList();
+	//23. Navigate
+	SSD::SimPoint3DVector inputPoints;
+	inputPoints.push_back(SSD::SimPoint3D(-63.999936, 1.955949, 0));
+	inputPoints.push_back(SSD::SimPoint3D(123.502658, 1.482458, 0));
+	SampleNavigate(inputPoints);
+	//24 .GenerateRoute
+	SampleGenerateRoute();
 }
 
 void gpsCB(int mainVehicleID, SimOne_Data_Gps *gps)
 {
 	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "gpsCB: V: %d, GPS: %lld, pos:(%f, %f, %f)", mainVehicleID,
-			gps->timestamp, gps->posX, gps->posY, gps->posZ);
+		gps->timestamp, gps->posX, gps->posY, gps->posZ);
 	//HDMap samples based on gps location
 	SSD::SimPoint3D pos(gps->posX, gps->posY, gps->posZ);
 	SamplesHDMapByLocation(pos);
@@ -114,8 +111,8 @@ void SamplesGenerateRoute()
 int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
-	int MainVehicleId = 0;
-	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
+	//const char* MainVehicleId = "0";
+	SimOneAPI::InitSimOneAPI();
 	//SimOneAPI::StartSimOneNode(0,0,0);
 	//while (true)
 	//{
@@ -125,7 +122,7 @@ int main(int argc, char* argv[])
 	int timeout = 20;
 	if (!SimOneAPI::LoadHDMap(timeout))
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Failed to load hdmap!");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "Failed to load hdmap!");
 		return 0;
 	}
 
@@ -140,11 +137,11 @@ int main(int argc, char* argv[])
 	{
 		if (!SimOneAPI::GetGps(0/*vehicleId*/, pGPS.get()))
 		{
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Fetch GPS failed!");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "Fetch GPS failed!");
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
-    return 0;
+	return 0;
 }
 

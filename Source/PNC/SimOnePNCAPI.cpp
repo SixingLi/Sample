@@ -24,44 +24,53 @@ extern "C"
 		return SimOneAPIService::GetInstance()->GetSimOneVehicleState(pVehExtraState);
 	}
 
-	SIMONE_API bool SimOneAPI::SetPose(int mainVehicleId, SimOne_Data_Pose_Control *pPose) {
-		return SimOneAPIService::GetInstance()->sendVehicleControlPosReq(mainVehicleId, pPose);
+	SIMONE_API bool SimOneAPI::SetPose(const char* mainVehicleId, SimOne_Data_Pose_Control *pPose) {
+		int mainVehId=SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->sendVehicleControlPosReq(mainVehId, pPose);
 	}
 
-	SIMONE_API bool SimOneAPI::SetDrive(int mainVehicleId, SimOne_Data_Control *pControl) {
-		return SimOneAPIService::GetInstance()->sendVehicleControlReq(mainVehicleId, pControl, gDriverNameArray[mainVehicleId]);
+	SIMONE_API bool SimOneAPI::SetDrive(const char* mainVehicleId, SimOne_Data_Control *pControl) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->sendVehicleControlReq(mainVehId, pControl, gDriverNameArray[mainVehId]);
 	}
 
-	SIMONE_API bool SimOneAPI::SetDriveTrajectory(int mainVehicleId, SimOne_Data_Control_Trajectory *pControlTrajectory) {
-		return SimOneAPIService::GetInstance()->sendVehicleTrajectoryControlReq(mainVehicleId, pControlTrajectory, gDriverNameArray[mainVehicleId]);
+	SIMONE_API bool SimOneAPI::SetDriveTrajectory(const char* mainVehicleId, SimOne_Data_Control_Trajectory *pControlTrajectory) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->sendVehicleTrajectoryControlReq(mainVehId, pControlTrajectory, gDriverNameArray[mainVehId]);
 	}
 
-	SIMONE_API void SimOneAPI::SetDriverName(int mainVehicleId, const char* name) {
-		if (mainVehicleId < MAX_MAINVEHICLE_NUM) {
-			memcpy(gDriverNameArray[mainVehicleId], name, MAX_DRIVER_NAME_LEN);
+	SIMONE_API void SimOneAPI::SetDriverName(const char* mainVehicleId, const char* name) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		if (mainVehId < MAX_MAINVEHICLE_NUM) {
+			memcpy(gDriverNameArray[mainVehId], name, MAX_DRIVER_NAME_LEN);
 		}
 	}
 
-	SIMONE_API bool SimOneAPI::SetVehicleEvent(int mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent) {
-		return SimOneAPIService::GetInstance()->sendVehicleEventInfoReq(mainVehicleId, pEvent);
+	SIMONE_API bool SimOneAPI::SetVehicleEvent(const char* mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->sendVehicleEventInfoReq(mainVehId, pEvent);
 	}
 
-	SIMONE_API bool SimOneAPI::SetTrajectory(int mainVehicleId, SimOne_Data_Trajectory *Trajectory) {
-		return SimOneAPIService::GetInstance()->sendVehicleTrajectory(mainVehicleId, Trajectory, gDriverNameArray[mainVehicleId]);
+	SIMONE_API bool SimOneAPI::SetTrajectory(const char* mainVehicleId, SimOne_Data_Trajectory *Trajectory) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->sendVehicleTrajectory(mainVehId, Trajectory, gDriverNameArray[mainVehId]);
 	}
 
-	SIMONE_API bool SimOneAPI::GetDriverStatus(const int mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus) {
-		return SimOneAPIService::GetInstance()->GetDriverStatus(mainVehicleId, pDriverStatus);
+	SIMONE_API bool SimOneAPI::GetDriverStatus(const char* mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetDriverStatus(mainVehId, pDriverStatus);
 	}
 
-	SIMONE_API bool SimOneAPI::GetDriverControl(const int mainVehicleId, SimOne_Data_Control* pControl)
+	SIMONE_API bool SimOneAPI::GetDriverControl(const char* mainVehicleId, SimOne_Data_Control* pControl)
 	{
-		return SimOneAPIService::GetInstance()->GetDriverControl(mainVehicleId, pControl);
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetDriverControl(mainVehId, pControl);
 	}
 
-	SIMONE_API bool SimOneAPI::SetSignalLights(const int mainVehicleId, SimOne_Data_Signal_Lights *pSignalLights)
+	SIMONE_API bool SimOneAPI::SetSignalLights(const char* mainVehicleId, SimOne_Data_Signal_Lights *pSignalLights)
 	{
-		return SimOneAPIService::GetInstance()->sendVehicleSignalLights(mainVehicleId, pSignalLights);
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->sendVehicleSignalLights(mainVehId, pSignalLights);
 	}
 
 	SIMONE_API bool SimOneAPI::GetWayPoints(SimOne_Data_WayPoints* pWayPoints)
@@ -69,7 +78,7 @@ extern "C"
 		return SimOneAPIService::GetInstance()->GetWayPoints(pWayPoints);
 	}
 
-	SIMONE_API bool SimOneAPI::SetScenarioEventCB(void(*cb)(int mainVehicleId, const char* event, const char* data))
+	SIMONE_API bool SimOneAPI::SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data))
 	{
 		return SimOneAPIService::GetInstance()->SetScenarioEventCB(cb);
 	}

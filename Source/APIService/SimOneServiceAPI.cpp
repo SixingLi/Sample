@@ -22,13 +22,13 @@ extern "C"
 		return true;
 	}
 
-	SIMONE_API bool SimOneAPI::InitSimOneAPI(int hostVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
+	SIMONE_API bool SimOneAPI::InitSimOneAPI(const char* mainVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
 	{
 		SetServerInfo();
 		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneAPIService::GetInstance()->SimOneNodeReady()) {
 			while (true)
 			{
-				bool bRet = SimOneAPIService::GetInstance()->SubMainVehicle(hostVehicleId, isFrameSync);
+				bool bRet = SimOneAPIService::GetInstance()->SubMainVehicle(mainVehicleId, isFrameSync);
 				if (!bRet) {
 					std::cout << "failed to subscribe main vehicle" << std::endl;
 					std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -45,7 +45,7 @@ extern "C"
 				if (!bRet) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(100));
 				}
-				if (mainVehicleStatus.mainVehicleId == hostVehicleId && mainVehicleStatus.mainVehicleStatus > 0) {
+				if (mainVehicleStatus.mainVehicleId == atoi(mainVehicleId) && mainVehicleStatus.mainVehicleStatus > 0) {
 					std::cout << "mainVehicle is ready" << std::endl;
 					break;
 				}
@@ -53,7 +53,7 @@ extern "C"
 			}
 			SimOneAPIService::GetInstance()->SimOneNodeReady();
 			while (true) {
-				if (GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running) {
+				if (GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running) {
 					break;
 				}
 			}

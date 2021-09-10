@@ -15,17 +15,17 @@ void SampleGetNearLanesWithAngle(const SimPoint3D& pos,
 	SimStringVector nearLanes;
 	if (!SimOneAPI::GetNearLanesWithAngle(pos, distance, headingAngle, shiftAngle, nearLanes))
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "No lanes(lane) are(is) found.");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "No lanes(lane) are(is) found.");
 		return;
 	}
 
-	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "nearLanes size: %d", nearLanes.size());
-	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "lane id list:");
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "nearLanes size: %d", nearLanes.size());
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "lane id list:");
 
 	for (unsigned int i = 0; i < nearLanes.size(); i++)
 	{
 		const SimString& laneId = nearLanes[i];
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "%s,", laneId.GetString());
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "%s,", laneId.GetString());
 	}
 }
 

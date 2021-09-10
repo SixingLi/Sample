@@ -19,6 +19,7 @@ TaskPerfectPerception::~TaskPerfectPerception()
 }
 
 bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorContext, const std::string* pBuffer) {
+	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
 	if (!mPerfectPerceptionDetections.ParseFromString(*pBuffer)) {
 		return false;
 	}
@@ -76,12 +77,13 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 		}
 		if (TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB != NULL)
 		{
-			TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(pSensorContext->mainVehicleId, sensorId.c_str(), pPerfectPerceptionGroundTruth);
+			TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(mainVehId, sensorId.c_str(), pPerfectPerceptionGroundTruth);
 		}
 	}
 	return true;
 }
 bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, const std::string* pBuffer) {
+	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
 	cybertron::proto::sensor::GroundTruth groundTruthMsg;
 	if (!groundTruthMsg.ParseFromString(*pBuffer)) {
 		return false;
@@ -127,7 +129,7 @@ bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, co
 	}
 	if (TaskSensorManager::getInstance().mpObstacleUpdateCB != NULL)
 	{
-		TaskSensorManager::getInstance().mpObstacleUpdateCB(mainVehicleId, pObstacle);
+		TaskSensorManager::getInstance().mpObstacleUpdateCB(mainVehId, pObstacle);
 	}
 	if (TaskSensorManager::getInstance().mpSimOneGroundTruthCB != NULL)
 	{

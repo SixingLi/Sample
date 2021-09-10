@@ -50,11 +50,18 @@ public:
 		static SimOneAPIService instance;
 		return &instance;
 	}
+	static int string2Int(const char* str) {
+		if (str==nullptr)
+			return 0;
+		else {
+			return atoi(str);
+		}
+	}
 	SimOne_Data_Map getHdmap() { return mHDMapInfo; };
 	bool Start( void(*startCase)(), void(*endCase)(), int registerNodeId);
 	bool Stop();
 	void zeroMemory();
-	bool SubMainVehicle(int mainVehicleId, bool isJoinTimeLoop);
+	bool SubMainVehicle(const char* mainVehicleId, bool isJoinTimeLoop);
 	bool SimOneNodeReady();
 
 	bool GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo);
@@ -184,23 +191,23 @@ public:
 	bool SetFrameStartCB(void(*cb)(int frame));
 	bool SetFrameEndCB(void(*cb)(int frame));
 
-	bool SetGpsUpdateCB(void(*cb)(int mainVehicleId, SimOne_Data_Gps *pGps));
-	bool SetObstacleUpdateCB(void(*cb)(int mainVehicleId, SimOne_Data_Obstacle *pObstacle));
-	bool SetTrafficLightUpdateCB(void(*cb)(int mainVehicleId, SimOne_Data_TrafficLights *pTrafficLights));
+	bool SetGpsUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Gps *pGps));
+	bool SetObstacleUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle));
+	bool SetTrafficLightUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_TrafficLights *pTrafficLights));
 
-	bool SetImageUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_Image *pImage));
-	bool SetPointCloudUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_Point_Cloud *pPointCloud));
-	bool SetRadarDetectionsUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections));
-	bool SetSensorLaneInfoCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLane));
+	bool SetImageUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_Image *pImage));
+	bool SetPointCloudUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_Point_Cloud *pPointCloud));
+	bool SetRadarDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections));
+	bool SetSensorLaneInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLane));
 
 #ifndef WITHOUT_HDMAP
 	static bool GetHDMapData(SimOne_Data_Map& hdMap);
-	bool SetV2XInfoUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
+	bool SetV2XInfoUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
 #endif
 
-	bool SetSensorDetectionsUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
-	bool SetUltrasonicRadarsCB(void(*cb)(int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
-    bool SetScenarioEventCB(void(*cb)(int mainVehicleId, const char* event, const char* data));
+	bool SetSensorDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
+	bool SetUltrasonicRadarsCB(void(*cb)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
+    bool SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data));
 
 
 #ifndef WITHOUT_HDMAP
@@ -269,9 +276,9 @@ private:
 	void(*mpCaseStart)();
 	void(*mpCaseStop)();
 	void(*mpMainVehicleChangeStatus)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
-	void(*mpGpsUpdateCB)(int mainVehicleId, SimOne_Data_Gps *pGps);
-	void(*mpObstacleUpdateCB)(int mainVehicleId, SimOne_Data_Obstacle *pObstacle);
-	void(*mpTrafficLightUpdateCB)(int mainVehicleId, SimOne_Data_TrafficLights *pTrafficLights);
+	void(*mpGpsUpdateCB)(const char* mainVehicleId, SimOne_Data_Gps *pGps);
+	void(*mpObstacleUpdateCB)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle);
+	void(*mpTrafficLightUpdateCB)(const char* mainVehicleId, SimOne_Data_TrafficLights *pTrafficLights);
 
 	void(*mpSimOneGpsCB)(SimOne_Data_Gps *pGps);
 	void(*mpSimOneGroundTruthCB)(SimOne_Data_Obstacle *pObstacle);
@@ -284,7 +291,7 @@ private:
 	void(*mpFrameStart)(int frame);
 	//
 	void(*mpFrameEnd)(int frame);
-	void(*mpScenarioEventCB)(int mainVehicleId, const char* event, const char* data);
+	void(*mpScenarioEventCB)(const char* mainVehicleId, const char* event, const char* data);
 	bool mbCaseStartEventAlreadyCallback;
 	bool mbCaseStopEventAlreadyCallback;
 private:
@@ -333,7 +340,7 @@ private:
 	SimOne_Data_TrafficLightsMap mTrafficLightsMap;
 	mutable std::recursive_mutex mTrafficLightsLock;
 
-	int mMainVehicleId;
+	const char* mMainVehicleId;
 	bool mIsJoinTimeLoop;
 	//SimOneDataStat mBridgePerformanceTest;
 	bool mbStarted;

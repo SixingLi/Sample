@@ -70,7 +70,8 @@ uint16_t  TaskContiRadar::Do(std::uint32_t sensorType, std::uint32_t commanId, C
 	mLastRadarDetectionMap[sensorKey] = pContiRadarDetections;
 	if (TaskSensorManager::getInstance().mpRadarDetectionsCB != NULL)
 	{
-		TaskSensorManager::getInstance().mpRadarDetectionsCB(pSensorContext->mainVehicleId, sensorId.c_str(), pContiRadarDetections);
+		const char* mainVehId=int2string(pSensorContext->mainVehicleId);
+		TaskSensorManager::getInstance().mpRadarDetectionsCB(mainVehId, sensorId.c_str(), pContiRadarDetections);
 	}
 	
 	return true;

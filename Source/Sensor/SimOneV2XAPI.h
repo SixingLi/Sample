@@ -71,7 +71,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetV2XInfo(int mainVehicleId, const char* sensorId, int infoType, SimOne_Data_V2XNFS *pDetections);
+		SIMONE_API bool GetV2XInfo(const char* mainVehicleId, const char* sensorId, int infoType, SimOne_Data_V2XNFS *pDetections);
 
 
 		/*
@@ -87,7 +87,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetV2XInfoUpdateCB(void(*cb)(int mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
+		SIMONE_API bool SetV2XInfoUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
 	}
 #ifdef __cplusplus
 }

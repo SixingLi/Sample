@@ -2,31 +2,25 @@ from ctypes import *
 import os
 import platform
 
-global HDMapModule, SimoneIOAPI, SimoneIOAPI_dll,SimoneStreamingIOAPI,SimOneStreamingIOAPI_dll
+global HDMapModule, SimoneAPI, SimoneAPI_dll,SimoneStreamingAPI_dll
 
 sys = platform.system()
 if sys == "Windows":
 	HDMapModule = "HDMapModule.dll"
-	SimoneIOAPI_dll = "SimOneAPI.dll"
-	SimoneStreamingIOAPI_dll = "SimOneStreamingIOAPI.dll"
+	SimoneAPI_dll = "SimOneAPI.dll"
+	SimoneStreamingAPI_dll = "SimOneStreamingAPI.dll"
 
 elif sys == "Linux":
 	HDMapModule = "libHDMapModule.so"
-	SimoneIOAPI_dll = "libSimOneAPI.so"
-	SimoneStreamingIOAPI_dll = "libSimOneStreamingIOAPI.so"
-
+	SimoneAPI_dll = "libSimOneAPI.so"
+	SimoneStreamingAPI_dll = "libSimOneStreamingAPI.so"
 
 SimOneLibPaths = [
 "",
-"../SimOneAPISample/lib/Win64/",
+"../Build/build/bin/debug/",
 "Win64/",
-"../SimOneAPISample/lib/Linux64/"
+"../Build/build_debug/bin/debug/"
 ]
-try:
-	CDLL("HDMapModule.dll")
-except Exception as e:
-	print(e)
-	pass
 
 # Append full paths
 SimOneLibFullPaths = []
@@ -41,13 +35,12 @@ for path in SimOneLibPaths:
 		break
 	try:# python v3.8+
 		CDLL(path+HDMapModule, winmode=DEFAULT_MODE)
-		SimoneIOAPI = CDLL(path + SimoneIOAPI_dll, winmode=DEFAULT_MODE)
-		SimoneStreamingIOAPI = CDLL(path + SimoneStreamingIOAPI_dll, winmode=DEFAULT_MODE)
+		SimoneAPI = CDLL(path + SimoneAPI_dll, winmode=DEFAULT_MODE)
+		SimoneStreamingAPI = CDLL(path + SimoneStreamingAPI_dll, winmode=DEFAULT_MODE)
 		LoadDllSuccess = True
 	except Exception as e:
-		print(e)
 		pass
-
+		print(e)
 
 	if LoadDllSuccess:
 		print("load libary sucessful")
@@ -55,19 +48,20 @@ for path in SimOneLibPaths:
 	try:
 		# python 2.7 - 3.7
 		CDLL(path+HDMapModule)
-		SimoneIOAPI = CDLL(path + SimoneIOAPI_dll)
-		SimoneStreamingIOAPI = CDLL(path + SimoneStreamingIOAPI_dll)
+		SimoneAPI = CDLL(path + SimoneAPI_dll)
+		SimoneStreamingAPI = CDLL(path + SimoneStreamingAPI_dll)
 		LoadDllSuccess = True
 	except Exception as e:
-		print(e)
 		pass
+		print(e)
 
 
 if LoadDllSuccess == False:
-	print("[SimOne API ERROR] Load SimOneAPI.dll/ or.so failed. unable to start!")
+	print("[SimOne API ERROR] Load SimOneAPI.dll/ or.so failed. unable to start")
 else:
-	print("[SimOne API Success] Load DLL Success!")
+	print("[SimOne API Load Success] Ready to start")
 
+#print(SimoneStreamingAPI)
 MAX_MAINVEHICLE_NUM = 10
 MAX_MAINVEHICLE_NAME_LEN = 64
 TOTAL_LEN = 640
@@ -91,19 +85,18 @@ SOSM_CASEID_LENGT = 256
 SOSM_TASKID_LENGT = 256
 SOSM_SESSIONID_LENGT = 256
 SOSM_EXTRA_STATES_SIZE_MAX = 256
-
-SimOne_Case_Status_Unknow = 0,
-SimOne_Case_Status_Stop = 1,
-SimOne_Case_Status_Running = 2
-SimOne_Case_Status_Pause = 3
+class ESimOne_Case_Status(c_int):
+	ESimOne_Case_Status_Unknown = 0
+	ESimOne_Case_Status_Stop = 1
+	ESimOne_Case_Status_Running = 2
+	ESimOne_Case_Status_Pause = 3
 
 class SimOne_Data_CaseInfo(Structure):
 	_pack_ = 1
 	_fields_ = [
 		('caseName', c_char*SOSM_CASENAME_LENGT),
 		('caseId', c_char*SOSM_CASEID_LENGT),
-		('taskId', c_char*SOSM_TASKID_LENGT),
-		('sessionId', c_char*SOSM_SESSIONID_LENGT)]
+		('taskId', c_char*SOSM_TASKID_LENGT)]
 
 
 class SimOne_Data(Structure):
@@ -114,29 +107,139 @@ class SimOne_Data(Structure):
 	('version', c_int)]
 	
 
-class SimOne_TrafficLight_Status(c_int):
-	ESimOne_TrafficLight_Status_Invalid = 0,
-	ESimOne_TrafficLight_Status_Red = 1,
-	ESimOne_TrafficLight_Status_Green = 2,
-	ESimOne_TrafficLight_Status_Yellow = 3,
-	ESimOne_TrafficLight_Status_RedBlink = 4,
-	ESimOne_TrafficLight_Status_GreenBlink = 5,
-	ESimOne_TrafficLight_Status_YellowBlink = 6,
+class ESimOne_TrafficLight_Status(c_int):
+	ESimOne_TrafficLight_Status_Invalid = 0
+	ESimOne_TrafficLight_Status_Red = 1
+	ESimOne_TrafficLight_Status_Green = 2
+	ESimOne_TrafficLight_Status_Yellow = 3
+	ESimOne_TrafficLight_Status_RedBlink = 4
+	ESimOne_TrafficLight_Status_GreenBlink = 5
+	ESimOne_TrafficLight_Status_YellowBlink = 6
 	ESimOne_TrafficLight_Status_Black = 7
 
-class SimOne_Data_Vehicle_State(c_int):
-    ESimOne_X_L1 = 0,
-    ESimOne_Y_L1 = 1,
-    ESimOne_Z_L1 = 2,
-    ESimOne_X_L2 = 3,
-    ESimOne_Y_L2 = 4,
-    ESimOne_Z_L2 = 5,
-    ESimOne_X_R1 = 6,
-    ESimOne_Y_R1 = 7,
-    ESimOne_Z_R1 = 8,
-    ESimOne_X_R2 = 9,
-    ESimOne_Y_R2 = 10,
-    ESimOne_Z_R2 = 11
+class ESimOne_Data_Vehicle_State(c_int):
+	ESimOne_Data_Vehicle_State_SO_M_SW=0
+	ESimOne_Data_Vehicle_State_S0_Vx_SM=1
+	ESimOne_Data_Vehicle_State_S0_Vy_SM=2
+	ESimOne_Data_Vehicle_State_S0_Vz_SM=3
+	ESimOne_Data_Vehicle_State_SO_M_ENGOUT=4
+	ESimOne_Data_Vehicle_State_SO_My_DR_L1=5
+	ESimOne_Data_Vehicle_State_SO_My_DR_R1=6
+	ESimOne_Data_Vehicle_State_SO_My_DR_L2=7
+	ESimOne_Data_Vehicle_State_SO_My_DR_R2=8
+	ESimOne_Data_Vehicle_State_SO_My_DR_L3=9
+	ESimOne_Data_Vehicle_State_SO_My_DR_R3=10
+
+	ESimOne_Data_Vehicle_State_SO_F_Pedal=11    # Brake Pedal Force
+	ESimOne_Data_Vehicle_State_SO_Pbk_Con=12    # BrakeMasterCylinder Pressure
+	ESimOne_Data_Vehicle_State_SO_My_Bk_L3=13   # Brake Torque at Left Rear Wheel
+	ESimOne_Data_Vehicle_State_SO_My_Bk_R3=14   # Brake Torque at Right Rear Wheel
+
+	ESimOne_Data_Vehicle_State_SO_ClutchTr=15   # Transmission clutch control
+
+	ESimOne_Data_Vehicle_State_SO_X_L1=16       # x coordinate, wheel center L1
+	ESimOne_Data_Vehicle_State_SO_Y_L1=17
+	ESimOne_Data_Vehicle_State_SO_Z_L1=18
+	ESimOne_Data_Vehicle_State_SO_X_L2=19
+	ESimOne_Data_Vehicle_State_SO_Y_L2=20
+	ESimOne_Data_Vehicle_State_SO_Z_L2=21
+	ESimOne_Data_Vehicle_State_SO_X_R1=22
+	ESimOne_Data_Vehicle_State_SO_Y_R1=23
+	ESimOne_Data_Vehicle_State_SO_Z_R1=24
+	ESimOne_Data_Vehicle_State_SO_X_R2=25
+	ESimOne_Data_Vehicle_State_SO_Y_R2=26
+	ESimOne_Data_Vehicle_State_SO_Z_R2=27
+	ESimOne_Data_Vehicle_State_SO_X_L3=28       # x coordinate, wheel center L3
+	ESimOne_Data_Vehicle_State_SO_Y_L3=29
+	ESimOne_Data_Vehicle_State_SO_Z_L3=30
+	ESimOne_Data_Vehicle_State_SO_X_R3=31
+	ESimOne_Data_Vehicle_State_SO_Y_R3=32
+	ESimOne_Data_Vehicle_State_SO_Z_R3=33
+
+	ESimOne_Data_Vehicle_State_SO_Xctc_L1=34      # x coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Yctc_L1=35      # y coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Zctc_L1=36      # z coordinate, center of tire contact L1
+	ESimOne_Data_Vehicle_State_SO_Xctc_L2=37
+	ESimOne_Data_Vehicle_State_SO_Yctc_L2=38
+	ESimOne_Data_Vehicle_State_SO_Zctc_L2=39
+	ESimOne_Data_Vehicle_State_SO_Xctc_R1=40
+	ESimOne_Data_Vehicle_State_SO_Yctc_R1=41
+	ESimOne_Data_Vehicle_State_SO_Zctc_R1=42
+	ESimOne_Data_Vehicle_State_SO_Xctc_R2=43
+	ESimOne_Data_Vehicle_State_SO_Yctc_R2=44
+	ESimOne_Data_Vehicle_State_SO_Zctc_R2=45
+
+	ESimOne_Data_Vehicle_State_SO_AVy_L1=46     # Wheel L1 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L1=47   # Longitudinal slip, tire L1   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L1=48   # Lateral slip angle, tire L1  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_L1=49      # Vertical force, tire L1   unit: N
+	ESimOne_Data_Vehicle_State_SO_My_WC_L1=50   # Tire My at wheel center L1   unit: N.m
+	ESimOne_Data_Vehicle_State_SO_Fx_L1=51      # Longitudinal force, tire L1   unit: N
+	ESimOne_Data_Vehicle_State_SO_Fy_L1=52      # lateral force, tire L1  unit: N
+	ESimOne_Data_Vehicle_State_SO_Jnc_L1=53     # Wheel L1 jounce (compression)   unit: mm
+	ESimOne_Data_Vehicle_State_SO_JncR_L1=54    # Wheel L1 jounce rate         unit: mm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L1=55      # Aligning moment, tire L1   unit: Nm
+
+	ESimOne_Data_Vehicle_State_SO_AVy_L2=56     #  Wheel L2 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L2=57   # Longitudinal slip, tire L2   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L2=58   # Lateral slip angle, tire L2  unit: rad
+	ESimOne_Data_Vehicle_State_SO_Fz_L2=59
+	ESimOne_Data_Vehicle_State_SO_My_WC_L2=60
+	ESimOne_Data_Vehicle_State_SO_Fx_L2=61       # Longitudinal force, tire L2
+	ESimOne_Data_Vehicle_State_SO_Fy_L2=62       # lateral force, tire L2
+	ESimOne_Data_Vehicle_State_SO_Jnc_L2=63      # Wheel L2 jounce (compression)  unit: cm
+	ESimOne_Data_Vehicle_State_SO_JncR_L2=64     # Wheel L2 jounce rate   unit: cm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L2=65       # Aligning moment, tire L2  unit: Nm
+
+	ESimOne_Data_Vehicle_State_SO_AVy_R1=66
+	ESimOne_Data_Vehicle_State_SO_Kappa_R1=67
+	ESimOne_Data_Vehicle_State_SO_Alpha_R1=68    # Lateral slip angle, tire R1  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R1=69
+	ESimOne_Data_Vehicle_State_SO_My_WC_R1=70
+	ESimOne_Data_Vehicle_State_SO_Fx_R1=71       # Longitudinal force, tire R1
+	ESimOne_Data_Vehicle_State_SO_Fy_R1=72       # lateral force, tire R1
+	ESimOne_Data_Vehicle_State_SO_Jnc_R1=73      # Wheel R1 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R1=74     # Wheel R1 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R1=75       # Aligning moment, tire R1
+
+	ESimOne_Data_Vehicle_State_SO_AVy_R2=76
+	ESimOne_Data_Vehicle_State_SO_Kappa_R2=77
+	ESimOne_Data_Vehicle_State_SO_Alpha_R2=78    # Lateral slip angle, tire R2  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R2=79
+	ESimOne_Data_Vehicle_State_SO_My_WC_R2=80
+	ESimOne_Data_Vehicle_State_SO_Fx_R2=81       # Longitudinal force, tire R2
+	ESimOne_Data_Vehicle_State_SO_Fy_R2=82       # lateral force, tire R2
+	ESimOne_Data_Vehicle_State_SO_Jnc_R2=83      # Wheel R2 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R2=84     # Wheel R2 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R2=85       # Aligning moment, tire R2
+
+	ESimOne_Data_Vehicle_State_SO_AVy_L3=86     # Wheel L3 spin    unit: rpm
+	ESimOne_Data_Vehicle_State_SO_Kappa_L3=87   # Longitudinal slip, tire L3   ratio, no unit
+	ESimOne_Data_Vehicle_State_SO_Alpha_L3=88   # Lateral slip angle, tire L3  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_L3=89      # Vertical force, tire L3   unit: N
+	ESimOne_Data_Vehicle_State_SO_My_WC_L3=90   # Tire My at wheel center L3   unit: N.m
+	ESimOne_Data_Vehicle_State_SO_Fx_L3=91      # Longitudinal force, tire L3   unit: N
+	ESimOne_Data_Vehicle_State_SO_Fy_L3=92      # lateral force, tire L3  unit: N
+	ESimOne_Data_Vehicle_State_SO_Jnc_L3=93     # Wheel L3 jounce (compression)   unit: mm
+	ESimOne_Data_Vehicle_State_SO_JncR_L3=94    # Wheel L3 jounce rate         unit: mm/s
+	ESimOne_Data_Vehicle_State_SO_Mz_L3=95      # Aligning moment, tire L3   unit: Nm
+
+	ESimOne_Data_Vehicle_State_SO_AVy_R3=96
+	ESimOne_Data_Vehicle_State_SO_Kappa_R3=97
+	ESimOne_Data_Vehicle_State_SO_Alpha_R3=98    # Lateral slip angle, tire R3  unit: degree
+	ESimOne_Data_Vehicle_State_SO_Fz_R3=99
+	ESimOne_Data_Vehicle_State_SO_My_WC_R3=100
+	ESimOne_Data_Vehicle_State_SO_Fx_R3=101       # Longitudinal force, tire R3
+	ESimOne_Data_Vehicle_State_SO_Fy_R3=102       # lateral force, tire R3
+	ESimOne_Data_Vehicle_State_SO_Jnc_R3=103      # Wheel R3 jounce (compression)
+	ESimOne_Data_Vehicle_State_SO_JncR_R3=104     # Wheel R3 jounce rate
+	ESimOne_Data_Vehicle_State_SO_Mz_R3=105       # Aligning moment, tire R3
+
+	ESimOne_Data_Vehicle_State_SO_Steer_L3=106
+	ESimOne_Data_Vehicle_State_SO_Steer_R3=107
+
+	ESimOne_Data_Vehicle_State_SO_Steer_SW=108   # Steering wheel angle  unit: deg
+	ESimOne_Data_Vehicle_State_SO_TimePassed=109
 
 SOSM_TRAFFICLIGHT_SIZE_MAX = 100
 
@@ -147,7 +250,7 @@ class SimOne_Data_TrafficLight(Structure):
 	('index', c_int),
 	('opendriveLightId', c_int),
 	('countDown', c_int),
-	('status', SimOne_TrafficLight_Status)
+	('status', ESimOne_TrafficLight_Status)
 	]
 
 
@@ -158,7 +261,8 @@ class SimOne_Data_TrafficLights(SimOne_Data):
 		('trafficlights', SimOne_Data_TrafficLight*SOSM_TRAFFICLIGHT_SIZE_MAX)]
 
 
-class SimOne_Signal_Light(c_int):
+class ESimOne_Signal_Light(c_int):
+	ESimOne_Signal_Light_None = 0
 	ESimOne_Signal_Light_RightBlinker = 1
 	ESimOne_Signal_Light_LeftBlinker = (1 << 1)
 	ESimOne_Signal_Light_DoubleFlash = (1 << 2)
@@ -186,64 +290,64 @@ class SimOne_Data_Pose_Control(SimOne_Data):
 	('autoZ', c_bool)]
 
 
-class EGearMode(c_int):
-	EGearMode_Neutral = 0
-	EGearMode_Drive = 1      # forward gear for automatic gear
-	EGearMode_Reverse = 2
-	EGearMode_Parking = 3
+class ESimOne_Gear_Mode(c_int):
+	ESimOne_Gear_Mode_Neutral = 0
+	ESimOne_Gear_Mode_Drive = 1      # forward gear for automatic gear
+	ESimOne_Gear_Mode_Reverse = 2
+	ESimOne_Gear_Mode_Parking = 3
 
-	EGearManualMode_1 = 4    # forward gear 1 for manual gear
-	EGearManualMode_2 = 5
-	EGearManualMode_3 = 6
-	EGearManualMode_4 = 7
-	EGearManualMode_5 = 8
-	EGearManualMode_6 = 9
-	EGearManualMode_7 = 10
-	EGearManualMode_8 = 11
+	ESimOne_Gear_Mode_1 = 4    # forward gear 1 for manual gear
+	ESimOne_Gear_Mode_2 = 5
+	ESimOne_Gear_Mode_3 = 6
+	ESimOne_Gear_Mode_4 = 7
+	ESimOne_Gear_Mode_5 = 8
+	ESimOne_Gear_Mode_6 = 9
+	ESimOne_Gear_Mode_7 = 10
+	ESimOne_Gear_Mode_8 = 11
 
-class EThrottleMode(c_int):
-    EThrottleMode_Percent = 0         # [0, 1]
-    EThrottleMode_Torque = 1          # engine torque, N.m
-    EThrottleMode_Speed = 2           # vehicle speed, m/s,   in this mode, brake input is ignored
-    EThrottleMode_Accel = 3           # vehicle acceleration, m/s^2, in this mode, brake input is ignored
-    EThrottleMode_EngineAV = 4        # engine, rpm
-    EThrottleMode_WheelTorque = 5      # torques applied to each wheel, array, size is the wheel number, N.m
+class ESimOne_Throttle_Mode(c_int):
+    ESimOne_Throttle_Mode_Percent = 0         # [0, 1]
+    ESimOne_Throttle_Mode_Torque = 1          # engine torque, N.m
+    ESimOne_Throttle_Mode_Speed = 2           # vehicle speed, m/s,   in this mode, brake input is ignored
+    ESimOne_Throttle_Mode_Accel = 3           # vehicle acceleration, m/s^2, in this mode, brake input is ignored
+    ESimOne_Throttle_Mode_EngineAV = 4        # engine, rpm
+    ESimOne_Throttle_Mode_WheelTorque = 5      # torques applied to each wheel, array, size is the wheel number, N.m
 
-class EBrakeMode(c_int):
-    EBrakeMode_Percent = 0
-    EBrakeMode_MasterCylinderPressure = 1 # degree
-    EBrakeMode_PedalForce = 2
-    EBrakeMode_WheelCylinderPressure = 3   # Mpa for each wheel
-    EBrakeMode_WheelTorque = 4             # Nm for each wheel
+class ESimOne_Brake_Mode(c_int):
+    ESimOne_Brake_Mode_Percent = 0
+    ESimOne_Brake_Mode_MasterCylinderPressure = 1 # degree
+    ESimOne_Brake_Mode_PedalForce = 2
+    ESimOne_Brake_Mode_WheelCylinderPressure = 3   # Mpa for each wheel
+    ESimOne_Brake_Mode_WheelTorque = 4             # Nm for each wheel
 #
-class ESteeringMode(c_int):
-    ESteeringMode_Percent = 0
-    ESteeringMode_SteeringWheelAngle = 1
-    ESteeringMode_Torque = 2
-    ESteeringAngularSpeed = 3            # steering wheel angualr speed, degree/s
-    ESteeringWheelAngle = 4              # degree for each wheel
-    ESteeringWheelAnglarSpeed = 5        # degree/s for each wheel
+class ESimOne_Steering_Mode(c_int):
+    ESimOne_Steering_Mode_Percent = 0
+    ESimOne_Steering_Mode_SteeringWheelAngle = 1
+    ESimOne_Steering_Mode_Torque = 2
+    ESimOne_Steering_Mode_AngularSpeed = 3            # steering wheel angualr speed, degree/s
+    ESimOne_Steering_Mode_WheelAngle = 4              # degree for each wheel
+    ESimOne_Steering_Mode_WheelAnglarSpeed = 5        # degree/s for each wheel
 
-class ELogLevel_Type(c_int):
-	ELogLevel_Debug = 0
-	ELogLevel_Information = 1
-	ELogLevel_Warning = 2
-	ELogLevel_Error = 3
-	ELogLevel_Fatal = 4
+class ESimOne_LogLevel_Type(c_int):
+	ESimOne_LogLevel_Type_Debug = 0
+	ESimOne_LogLevel_Type_Information = 1
+	ESimOne_LogLevel_Type_Warning = 2
+	ESimOne_LogLevel_Type_Error = 3
+	ESimOne_LogLevel_Type_Fatal = 4
 
 SOSM_MAX_WHEEL_NUM = 20
 class SimOne_Data_Control(SimOne_Data):
 	_pack_ = 1
 	_fields_ = [
-    ('EThrottleMode', EThrottleMode),
+    ('EThrottleMode', ESimOne_Throttle_Mode),
 	('throttle', c_float),
-	('EBrakeMode', EBrakeMode),
+	('EBrakeMode', ESimOne_Brake_Mode),
 	('brake', c_float),
-	('ESteeringMode', ESteeringMode),
+	('ESteeringMode', ESimOne_Steering_Mode),
 	('steering', c_float),
 	('handbrake', c_bool),
 	('isManualGear', c_bool),
-	('gear', EGearMode), # 0: Neutral; 1: Drive; 2: Reverse; 3: Parking
+	('gear', ESimOne_Gear_Mode), # 0: Neutral; 1: Drive; 2: Reverse; 3: Parking
     ('clutch', c_float),
     ('throttle_input_data', c_float * SOSM_MAX_WHEEL_NUM),
     ('brake_input_data', c_float * SOSM_MAX_WHEEL_NUM),
@@ -268,13 +372,20 @@ class SimOne_Data_ESP_Control(SimOne_Data):
 	('gearMode', c_int)]
 
 class ESimone_Vehicle_EventInfo_Type(c_int):
-	ESimOne_VehicleEventInfo_Forward_Collision = 0
-	ESimOne_VehicleEventInfo_Backward_Collision = 1
-	ESimOne_VehicleEventInfo_Left_Turn = 2
-	ESimOne_VehicleEventInfo_Right_Turn = 3
-	ESimOne_VehicleEventInfo_Forward_Straight = 4
-	ESimOne_VehicleEventInfo_Over_Speed = 5
-
+	ESimone_Vehicle_EventInfo_Type_Forward_Collision_Warning = 0		# 	front_crash_warning
+	ESimone_Vehicle_EventInfo_Type_Backward_Collision_Warning = 1	# 	back_crash_warning
+	ESimone_Vehicle_EventInfo_Type_Left_Turn_Decision = 2			# 	turn_left
+	ESimone_Vehicle_EventInfo_Type_Left_Turn_Warning = 3				# 	left_warning
+	ESimone_Vehicle_EventInfo_Type_Right_Turn_Decision = 4			# 	turn_right
+	ESimone_Vehicle_EventInfo_Type_Right_Turn_Warning = 5			# 	right_warning
+	ESimone_Vehicle_EventInfo_Type_Forward_Straight_Decision = 6		# 	straight_through
+	ESimone_Vehicle_EventInfo_Type_Forward_Straight_Warning = 7		# 	straight_warning
+	ESimone_Vehicle_EventInfo_Type_Over_Speed_Warning = 8			# 	overspeeding_warning
+	ESimone_Vehicle_EventInfo_Type_Lane_Change_Decision = 9			#  lane_change
+	ESimone_Vehicle_EventInfo_Type_Lane_Change_Warning = 10			# 	lane_change_warning
+	ESimone_Vehicle_EventInfo_Type_Overtake_Decision = 11			# 	overtake
+	ESimone_Vehicle_EventInfo_Type_Emergency_Braking_Decision = 12	# 	emergency_braking
+	ESimone_Vehicle_EventInfo_Type_Accelerate_Decision = 13			# 	accelerate
 
 class SimOne_Data_Vehicle_EventInfo(SimOne_Data):
 	_pack_ = 1
@@ -333,8 +444,7 @@ class SimOne_Data_Gps(SimOne_Data):
 
 SOSM_OBSTACLE_SIZE_MAX = 100
 
-
-class SimOne_Obstacle_Type(c_int):
+class ESimOne_Obstacle_Type(c_int):
 	ESimOne_Obstacle_Type_Unknown = 0
 	ESimOne_Obstacle_Type_Pedestrian = 4
 	ESimOne_Obstacle_Type_Pole = 5
@@ -362,7 +472,7 @@ class SimOne_Data_Obstacle_Entry(Structure):
 	_fields_ = [
 	('id', c_int), # Obstacle ID
 	('viewId', c_int),  # Obstacle ID
-	('type', SimOne_Obstacle_Type), # Obstacle Type
+	('type', ESimOne_Obstacle_Type), # Obstacle Type
 	('theta', c_float), # Obstacle vertical rotation (by radian)
 	('posX', c_float), # Obstacle Position X no Opendrive (by meter)
 	('posY', c_float), # Obstacle Position Y no Opendrive (by meter)
@@ -389,25 +499,26 @@ SOSM_IMAGE_HEIGHT_MAX = 2160
 SOSM_IMAGE_DATA_SIZE_MAX = SOSM_IMAGE_WIDTH_MAX*SOSM_IMAGE_HEIGHT_MAX*3
 
 
-class ESimOneNodeType(c_int):
-	ESimOneNode_Vehicle = 0
-	ESimOneNode_Camera = 1
-	ESimOneNode_LiDAR = 2
-	ESimOneNode_MMWRadar = 3
-	ESimOneNode_UltrasonicRadar = 4
-	ESimOneNode_AllUltrasonicRadar = 5
-	ESimOneNode_GNSSINS = 6
-	ESimOneNode_PerfectPerception = 7
-	ESimOneNode_V2X = 8
+class ESimOne_Node_Type(c_int):
+	ESimOne_Node_Type_Vehicle = 0
+	ESimOne_Node_Type_Camera = 1
+	ESimOne_Node_Type_LiDAR = 2
+	ESimOne_Node_Type_MMWRadar = 3
+	ESimOne_Node_Type_UltrasonicRadar = 4
+	ESimOne_Node_Type_AllUltrasonicRadar = 5
+	ESimOne_Node_Type_GNSSINS = 6
+	ESimOne_Node_Type_PerfectPerception = 7
+	ESimOne_Node_Type_V2X = 8
+	ESimOne_Node_Type_SensorFusion = 9
 
-SENSOR_TYPE_MAX_LENGHT = 64
-class SimOneSensorConfiguration(Structure):
+SENSOR_IDTYPE_MAX = 64
+class SimOne_Data_SensorConfiguration(Structure):
 	_pack_ = 1
 	_fields_ = [
-	('index', c_int),
+	('id', c_int),
 	('mainVehicle', c_int), # 
-	('sensorId', c_int), # Sensor's ID
-	('sensorType', c_char * SENSOR_TYPE_MAX_LENGHT),# Sensor's ESimOneNodeType
+	('sensorId', c_char * SENSOR_IDTYPE_MAX), # Sensor's ID
+	('sensorType', c_char * SENSOR_IDTYPE_MAX),# Sensor's ESimOneNodeType
 	('x', c_float),# Obstacle Position X no Opendrive (by meter)
 	('y', c_float),# Obstacle Position Y no Opendrive (by meter)
 	('z', c_float),# Obstacle Position Z no Opendrive (by meter)
@@ -420,15 +531,15 @@ class SimOneSensorConfiguration(Structure):
 SOSM_SENSOR_CONFIGURATION_SIZE_MAX = 100
 
 
-class SimOneSensorConfigurations(Structure):
+class SimOne_Data_SensorConfigurations(Structure):
 	_pack_ = 1
 	_fields_ =[
 		('dataSize', c_int),  # num of Sensors
-		('data', SimOneSensorConfiguration*SOSM_SENSOR_CONFIGURATION_SIZE_MAX)
+		('data', SimOne_Data_SensorConfiguration*SOSM_SENSOR_CONFIGURATION_SIZE_MAX)
 	]
 
 
-class SimOne_Image_Format(c_int):
+class ESimOne_Image_Format(c_int):
 	ESimOne_Image_Format_RGB = 0
 
 
@@ -437,7 +548,7 @@ class SimOne_Data_Image(SimOne_Data):
 	_fields_ = [
 	('width', c_int), # Image resolution width 1920 max
 	('height', c_int), # Image resolution height 1080 max
-	('format', SimOne_Image_Format), # Image format. 0: RGB
+	('format', ESimOne_Image_Format), # Image format. 0: RGB
 	('imagedataSize', c_int), # Image data size
 	('imagedata', c_char * SOSM_IMAGE_DATA_SIZE_MAX)] #1920 x 1080 x 3 max
 
@@ -463,7 +574,7 @@ class SimOne_Data_RadarDetection_Entry(Structure):
 	_fields_ = [
 	('id', c_int),				# Obstacle ID
 	('subId', c_int),			# Obstacle Sub ID
-	('type', c_int),			# Obstacle Type
+	('type', ESimOne_Obstacle_Type),			# Obstacle Type
 	('posX', c_float),			# Obstacle Position X no Opendrive (by meter)
 	('posY', c_float),			# Obstacle Position Y no Opendrive (by meter)
 	('posZ', c_float),			# Obstacle Position Z no Opendrive (by meter)
@@ -484,10 +595,6 @@ class SimOne_Data_RadarDetection(SimOne_Data):
 	_fields_ = [
 	('detectNum', c_int), # Obstacle Size
 	('detections', SimOne_Data_RadarDetection_Entry*SOSM_RADAR_SIZE_MAX)] # Obstacles
-	
-
-SOSM_OBSTACL_SIZE_MAX = 100
-
 
 class SimOne_Data_UltrasonicRadarDetection_Entry(Structure):
 	_pack_ = 1
@@ -500,52 +607,35 @@ class SimOne_Data_UltrasonicRadarDetection_Entry(Structure):
 class SimOne_Data_UltrasonicRadar(SimOne_Data):
 	_pack_ = 1
 	_fields_ = [
-		('id', c_int),  # Ultrasonic ID
+		('sensorId', c_char * SENSOR_IDTYPE_MAX),  # Ultrasonic ID
 		('obstacleNum', c_int),  # Ultrasonic detect object nums
-		('obstacledetections', SimOne_Data_UltrasonicRadarDetection_Entry * SOSM_OBSTACL_SIZE_MAX) # object information
+		('obstacleDetections', SimOne_Data_UltrasonicRadarDetection_Entry * SOSM_OBSTACLE_SIZE_MAX) # object information
 		]
 
 
 SOSM_ULTRASONICRADAR_SIZE_MAX = 100
-
-
 class SimOne_Data_UltrasonicRadars(SimOne_Data):
 	_pack_ = 1
 	_fields_ = [
-		('UltrasonicRadarsNum', c_int), # Ultrasonic nums
-		('detections', SimOne_Data_UltrasonicRadar * SOSM_ULTRASONICRADAR_SIZE_MAX)]# Ultrasonics information
+		('ultrasonicRadarNum', c_int), # ultrasonic radar count
+		('ultrasonicRadars', SimOne_Data_UltrasonicRadar * SOSM_ULTRASONICRADAR_SIZE_MAX)]# ultrasonic radars
+
+
+SOSM_V2X_MSGFRAME_SIZE_MAX = 20000
+class SimOne_Data_V2XNFS(SimOne_Data):
+	_pack_ = 1
+	_fields_ = [
+		('V2XMsgFrameSize', c_int),
+		('MsgFrameData', c_char*SOSM_V2X_MSGFRAME_SIZE_MAX)]
 
 
 SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX = 256
-
-
-class SimOne_Obstacle_Type(c_int):
-	ESimOne_Obstacle_Type_Unknown = 0
-	ESimOne_Obstacle_Type_Pedestrian = 4
-	ESimOne_Obstacle_Type_Pole = 5
-	ESimOne_Obstacle_Type_Car = 6
-	ESimOne_Obstacle_Type_Static = 7
-	ESimOne_Obstacle_Type_Bicycle = 8
-	ESimOne_Obstacle_Type_Fence = 9
-	ESimOne_Obstacle_Type_RoadMark = 12
-	ESimOne_Obstacle_Type_TrafficSign = 13
-	ESimOne_Obstacle_Type_TrafficLight = 15
-	ESimOne_Obstacle_Type_Rider = 17
-	ESimOne_Obstacle_Type_Truck = 18
-	ESimOne_Obstacle_Type_Bus = 19
-	ESimOne_Obstacle_Type_Train = 20
-	ESimOne_Obstacle_Type_Motorcycle = 21
-	ESimOne_Obstacle_Type_Dynamic = 22
-	ESimOne_Obstacle_Type_GuardRail = 23
-	ESimOne_Obstacle_Type_SpeedLimitSign = 26
-	ESimOne_Obstacle_Type_BicycleStatic = 27
-	ESimOne_Obstacle_Type_RoadObstacle = 29
 
 class SimOne_Data_SensorDetections_Entry(Structure):
 	_pack_ = 1
 	_fields_ = [
 	('id', c_int),			# Detection Object ID
-	('type', SimOne_Obstacle_Type),		# Detection Object Type
+	('type', ESimOne_Obstacle_Type),		# Detection Object Type
 	('posX', c_float),		# Detection Object Position X in meter
 	('posY', c_float),		# Detection Object Position Y in meter
 	('posZ', c_float),		# Detection Object Position Z in meter
@@ -600,14 +690,6 @@ class SimOne_Data_SensorDetections(SimOne_Data):
 
 SOSM_OSI_DATA_SIZE_MAX = 1024*1024*8
 
-
-class SimOne_Data_OSI(SimOne_Data):
-	_pack_ = 1
-	_fields_ = [
-	('dataSize', c_int),
-	('data', c_char * SOSM_OSI_DATA_SIZE_MAX)]
-
-
 SOSM_LANE_NAME_MAX = 128
 SOSM_LANE_POINT_MAX = 65535
 SOSM_NEAR_LANE_MAX = 128
@@ -616,72 +698,50 @@ SOSM_PARKING_SPACE_MAX = 65535
 SOSM_PARKING_SPACE_KNOTS_MAX = 4
 
 
-class SimOneLaneName(Structure):
-	_pack_ = 1
-	_fields_ = [
-	('nameSize', c_int),
-	('name', c_char * SOSM_LANE_NAME_MAX)]
+class ESimOne_Lane_Type(c_int):
+	ESimOne_Lane_Type_none = 0
+	ESimOne_Lane_Type_driving = 1
+	ESimOne_Lane_Type_stop = 2
+	ESimOne_Lane_Type_shoulder = 3
+	ESimOne_Lane_Type_biking = 4
+	ESimOne_Lane_Type_sidewalk = 5
+	ESimOne_Lane_Type_border = 6
+	ESimOne_Lane_Type_restricted = 7
+	ESimOne_Lane_Type_parking = 8
+	ESimOne_Lane_Type_bidirectional = 9
+	ESimOne_Lane_Type_median = 10
+	ESimOne_Lane_Type_special1 = 11
+	ESimOne_Lane_Type_special2 = 12
+	ESimOne_Lane_Type_special3 = 13
+	ESimOne_Lane_Type_roadWorks = 14
+	ESimOne_Lane_Type_tram = 15
+	ESimOne_Lane_Type_rail = 16
+	ESimOne_Lane_Type_entry = 17
+	ESimOne_Lane_Type_exit = 18
+	ESimOne_Lane_Type_offRamp = 19
+	ESimOne_Lane_Type_onRamp = 20
+	ESimOne_Lane_Type_mwyEntry = 21
+	ESimOne_Lane_Type_mwyExit = 22
 
+class ESimOne_Boundary_Type(c_int):
+	ESimOne_Boundary_Type_none = 0
+	ESimOne_Boundary_Type_solid = 1
+	ESimOne_Boundary_Type_broken = 2
+	ESimOne_Boundary_Type_solid_solid = 3
+	ESimOne_Boundary_Type_solid_broken = 4
+	ESimOne_Boundary_Type_broken_solid = 5
+	ESimOne_Boundary_Type_broken_broken = 6
+	ESimOne_Boundary_Type_botts_dots = 7
+	ESimOne_Boundary_Type_grass = 8
+	ESimOne_Boundary_Type_curb = 9
 
-class ESimOneLaneType(c_int):
-	ESimOneLaneType_none = 0
-	ESimOneLaneType_driving = 1
-	ESimOneLaneType_stop = 2
-	ESimOneLaneType_shoulder = 3
-	ESimOneLaneType_biking = 4
-	ESimOneLaneType_sidewalk = 5
-	ESimOneLaneType_border = 6
-	ESimOneLaneType_restricted = 7
-	ESimOneLaneType_parking = 8
-	ESimOneLaneType_bidirectional = 9
-	ESimOneLaneType_median = 10
-	ESimOneLaneType_special1 = 11
-	ESimOneLaneType_special2 = 12
-	ESimOneLaneType_special3 = 13
-	ESimOneLaneType_roadWorks = 14
-	ESimOneLaneType_tram = 15
-	ESimOneLaneType_rail = 16
-	ESimOneLaneType_entry = 17
-	ESimOneLaneType_exit = 18
-	ESimOneLaneType_offRamp = 19
-	ESimOneLaneType_onRamp = 20
-	ESimOneLaneType_mwyEntry = 21
-	ESimOneLaneType_mwyExit = 22
-
-class ESimOneData_BoundaryType(c_int):
-	BoundaryType_none = 0
-	BoundaryType_solid = 1
-	BoundaryType_broken = 2
-	BoundaryType_solid_solid = 3
-	BoundaryType_solid_broken = 4
-	BoundaryType_broken_solid = 5
-	BoundaryType_broken_broken = 6
-	BoundaryType_botts_dots = 7
-	BoundaryType_grass = 8
-	BoundaryType_curb = 9
-
-class ESimOneData_BoundaryColor(c_int):
-	BoundaryColor_standard = 0
-	BoundaryColor_blue = 1
-	BoundaryColor_green = 2
-	BoundaryColor_red = 3
-	BoundaryColor_white = 4
-	BoundaryColor_yellow = 5
-
-
-class SimOneNearLanes(Structure):
-	_pack_ = 1
-	_fields_ = [
-	('laneNameSize', c_int),
-	('laneName', SimOneLaneName *SOSM_NEAR_LANE_MAX )]
-
-
-class SimOnePoint(Structure):
-	_pack_ = 1
-	_fields_ = [
-	('x', c_double),
-	('y', c_double),
-	('z', c_double)]
+class ESimOne_Boundary_Color(c_int):
+	ESimOne_Boundary_Color_standard = 0
+	ESimOne_Boundary_Color_blue = 1
+	ESimOne_Boundary_Color_green = 2
+	ESimOne_Boundary_Color_red = 3
+	ESimOne_Boundary_Color_white = 4
+	ESimOne_Boundary_Color_yellow = 5
 
 class SimOneData_Vec3f(Structure):
 	_pack_ = 1
@@ -690,7 +750,7 @@ class SimOneData_Vec3f(Structure):
 	('y', c_float),
 	('z', c_float)]
 
-class ESimOneData_LineCurveParameter(Structure):
+class SimOne_LineCurve_Parameter(Structure):
 	_pack_ = 1
 	_fields_ = [
 	('C0', c_float),
@@ -707,19 +767,18 @@ class SimOne_Data_LaneLineInfo(Structure):
 	_pack_ = 1
 	_fields_ = [
 	('lineID', c_int),
-	('lineType', ESimOneData_BoundaryType),
-	('lineColor', ESimOneData_BoundaryColor),
+	('lineType', ESimOne_Boundary_Type),
+	('lineColor', ESimOne_Boundary_Color),
 	('linewidth', c_float),
 	('C3', c_float),
 	('linePoints', SimOneData_Vec3f * SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX),
-	('linecurveParameter', ESimOneData_LineCurveParameter)]
-
+	('linecurveParameter', SimOne_LineCurve_Parameter)]
 
 class SimOne_Data_LaneInfo(SimOne_Data):
 	_pack_ = 1
 	_fields_ = [
 		('id', c_int),
-		('laneType', ESimOneLaneType),
+		('laneType', ESimOne_Lane_Type),
 		('laneLeftID', c_int),
 		('laneRightID', c_int),
 		('lanePredecessorID', c_int * SOSM_SENSOR_LANE_OBJECT_SIZE_MAX),
@@ -731,59 +790,17 @@ class SimOne_Data_LaneInfo(SimOne_Data):
 		('rr_Line', SimOne_Data_LaneLineInfo)]
 
 
-
-
-class SimOneLaneInfo(Structure):
-	_pack_ = 1
-	_fields_ = [
-	('laneName', SimOneLaneName),
-	('leftBoundarySize', c_int),
-	('leftBoundary', SimOnePoint *SOSM_LANE_POINT_MAX ),
-	('rightBoundarySize', c_int),
-	('rightBoundary', SimOnePoint *SOSM_LANE_POINT_MAX ),
-	('centerLineSize', c_int),
-	('centerLine', SimOnePoint *SOSM_LANE_POINT_MAX )]
-
-
-class SimOneLaneLink(Structure):
-	_pack_ = 1
-	_fields_ = [
-	('predecessorLaneNameSize', c_int),
-	('predecessorLaneName', SimOneLaneName * SOSM_LANE_LINK_MAX),
-	('successorLaneNameSize', c_int),
-	('successorLaneName', SimOneLaneName * SOSM_LANE_LINK_MAX),
-	('leftNeighborLaneName', SimOneLaneName),
-	('rightNeighborLaneName', SimOneLaneName)]
-
-
-class SimOneParkingSpaceIds(Structure):
-	_pack_ = 1
-	_fields_ = [
-	('idSize', c_int),
-	('id', SimOneLaneName *SOSM_PARKING_SPACE_MAX )]
-
-
-class SimOneParkingSpaceKnots(Structure):
-	_pack_ = 1
-	_fields_ = [
-	('knotSize', c_int),
-	('knot', SimOnePoint *SOSM_PARKING_SPACE_KNOTS_MAX )]
-
-
 SOSM_WAYPOINTS_SIZE_MAX = 100
-
-
 class SimOne_Data_WayPoints_Entry(Structure):
 	_pack_ = 1
 	_fields_ = [
 	('index', c_int),
 	('posX', c_float), # MainVehicle WayPoints X on Opendrive (by meter)
 	('posY', c_float),  # MainVehicle WayPoints Y on Opendrive (by meter)
-	('heading_x', c_float),
-	('heading_y', c_float),
-	('heading_z', c_float),
-	('heading_w', c_float),]
-
+	('heading_x', c_float), # MainVehicle WayPoints heading orientation x in quaternion
+	('heading_y', c_float), # MainVehicle WayPoints heading orientation y in quaternion
+	('heading_z', c_float), # MainVehicle WayPoints heading orientation z in quaternion
+	('heading_w', c_float),] # MainVehicle WayPoints heading orientation w in quaternion
 
 class SimOne_Data_WayPoints(SimOne_Data):
 	_pack_ = 1
@@ -791,17 +808,13 @@ class SimOne_Data_WayPoints(SimOne_Data):
 	('wayPointsSize', c_int),	# MainVehicle WayPoints size
 	('wayPoints', SimOne_Data_WayPoints_Entry*SOSM_WAYPOINTS_SIZE_MAX)]  # WayPoints, 300 max
 
-
-class SimOne_Driver_Status(c_int):
+class ESimOne_Driver_Status(c_int):
 	ESimOne_Driver_Status_Unknown = 0,
 	ESimOne_Driver_Status_Running = 1,
 	ESimOne_Driver_Status_Finished = 2
 
-
 class SimOne_Data_Driver_Status(SimOne_Data):
 	_pack_ = 1
 	_fields_ = [
-		('driverStatus', SimOne_Driver_Status)
+		('driverStatus', ESimOne_Driver_Status)
 	]
-
-

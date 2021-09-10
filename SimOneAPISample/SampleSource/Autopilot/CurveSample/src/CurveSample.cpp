@@ -151,13 +151,13 @@ int main()
 {
 
 	bool isJoinTimeLoop = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId = "0";
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
 	//Wait for the Sim-One case to run
 	while (1) {
 		int frame = SimOneAPI::Wait();
 		SimOneAPI::GetGps(MainVehicleId,&Gps);
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running && (Gps.timestamp > 0)) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running && (Gps.timestamp > 0)) {
 			printf("SimOne Initialized\n");
 			SimOneAPI::NextFrame(frame);
 			break;
@@ -208,7 +208,7 @@ int main()
 	{
 		int frame = SimOneAPI::Wait();
 		//exit
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Stop) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Stop) {
 			break;
 		}
 

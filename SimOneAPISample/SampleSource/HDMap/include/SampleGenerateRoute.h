@@ -13,21 +13,21 @@ void SampleGenerateRoute()
 	if (!SimOneAPI::GenerateRoute(inputPoints, indexOfValidPoints, route))
 	{
 		
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Error: route is not generated in the map.");
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "indexOfValidPoints:");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Error: route is not generated in the map.");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "indexOfValidPoints:");
 	
 		for (auto& index : indexOfValidPoints)
 		{
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, " %d,", index);
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, " %d,", index);
 		}
 		return;
 	}
 
-	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "route size: %d", route.size());
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "route size: %d", route.size());
 
 	for (unsigned int i = 0; i < route.size(); i++)
 	{
 		auto& knot = route[i];
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "( %f, %f, %f),", knot.x, knot.y, knot.z);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "( %f, %f, %f),", knot.x, knot.y, knot.z);
 	}
 }

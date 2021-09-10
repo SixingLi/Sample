@@ -251,7 +251,7 @@ int main()
 
     int timeout = 20;
     bool isSimOneInitialized = false;
-	int MainVehicleId = 0;
+	const char* MainVehicleId = "0";
 	bool isJoinTimeLoop = false;
     SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
     SimOneAPI::SetDriverName(0, "TrajCtrl");
@@ -269,7 +269,7 @@ int main()
     while (true) {
         int frame = SimOneAPI::Wait();
 
-        if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Stop) {
+        if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Stop) {
             break;
         }
 
@@ -286,7 +286,7 @@ int main()
             }
         }
 
-        if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::SimOne_Case_Status_Running && pGps->timestamp > 0) {
+        if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running && pGps->timestamp > 0) {
             if (!isSimOneInitialized) {
                 std::cout << "SimOne Initialized!" << std::endl;
                 isSimOneInitialized = true;
@@ -294,7 +294,7 @@ int main()
 
             if (reachTraj) {
                 // 每条轨迹只发送一次
-                SimOneAPI::SetDriveTrajectory(0, &trajArray[nextTraj]);
+                SimOneAPI::SetDriveTrajectory(MainVehicleId, &trajArray[nextTraj]);
                 nextTraj++;
                 reachTraj = false;
             }

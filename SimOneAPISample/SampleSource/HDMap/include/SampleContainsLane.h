@@ -11,8 +11,8 @@ void SampleContainsLane(const SimString& laneId)
 {
 	if (!SimOneAPI::ContainsLane(laneId))
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelWarning, "Error: lane does not eixst in the map.");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Error: lane does not eixst in the map.");
 		return;
 	}		
-	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelInformation, "lane exists in the map.");
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "lane exists in the map.");
 }
