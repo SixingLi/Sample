@@ -14,8 +14,10 @@ simoneapi_v2xInfo_cb_func = SimOne_V2XInfoUpdateCbFuncType(_api_v2xInfo_cb)
 
 
 def SoGetV2XInfo(mainVehicleId, sensorId, infoType, detectionData):
-	print(sensorId)
-	return SimoneAPI.GetV2XInfo(mainVehicleId, sensorId, infoType, pointer(detectionData))
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	_sensorId = create_string_buffer(sensorId.encode(), 256)
+	SimoneAPI.GetV2XInfo.restype = c_bool
+	return SimoneAPI.GetV2XInfo(_mainVehicleId, _sensorId, infoType, pointer(detectionData))
 
 def SoApiSetV2XInfoUpdateCB(cb):
 	global SIMONEAPI_V2XInfo_CB

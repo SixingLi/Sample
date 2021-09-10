@@ -130,7 +130,7 @@ extern "C"
 		@return
 		*	None
 		*/
-		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
+		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, const char *serverIP = "127.0.0.1", int port = 23789,void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
 
 		/*!
 		停止API node
@@ -248,7 +248,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetMainVehicleStatusCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
+		SIMONE_API bool SetMainVehicleStatusUpdateCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
 	}
 #ifdef __cplusplus
 }

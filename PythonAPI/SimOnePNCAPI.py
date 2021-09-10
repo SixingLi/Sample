@@ -1,6 +1,6 @@
 from SimOneIOStruct import *
 
-SimOne_ScenarioEventCBType = CFUNCTYPE(c_void_p, c_int, c_char_p, c_char_p)
+SimOne_ScenarioEventCBType = CFUNCTYPE(c_void_p, c_char_p, c_char_p, c_char_p)
 
 G_API_ScenarioEvent_CB = None
 
@@ -21,29 +21,43 @@ def SoGetVehicleState(data):
 	return SimoneAPI.GetSimOneVehicleState(pointer(data))
 
 def SoSetPose(mainVehicleId, poseControl):
-	return SimoneAPI.SetPose(mainVehicleId, pointer(poseControl))
+	SimoneAPI.SetPose.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.SetPose(_mainVehicleId, pointer(poseControl))
 
 def SoSetDrive(mainVehicleId, driveControl):
-	return SimoneAPI.SetDrive(mainVehicleId, pointer(driveControl))
+	SimoneAPI.SetDrive.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.SetDrive(_mainVehicleId, pointer(driveControl))
 
 def SoSetDriverName(mainVehicleId, driverName):
-	_input = create_string_buffer(driverName.encode(), 256)
 	SimoneAPI.SetDriverName.restype = c_bool
-	return SimoneAPI.SetDriverName(mainVehicleId, _input)
+	_driverName = create_string_buffer(driverName.encode(), 256)
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.SetDriverName(_mainVehicleId, _driverName)
 
 def SoSetVehicleEvent(mainVehicleId, vehicleEventInfo):
-	return SimoneAPI.SetVehicleEvent(mainVehicleId, pointer(vehicleEventInfo))
+	SimoneAPI.SetVehicleEvent.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.SetVehicleEvent(_mainVehicleId, pointer(vehicleEventInfo))
 
 def SoSetSignalLights(mainVehicleId, pSignalLight):
-	return SimoneAPI.SetSignalLights(mainVehicleId, pointer(pSignalLight))
+	SimoneAPI.SetSignalLights.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.SetSignalLights(_mainVehicleId, pointer(pSignalLight))
 
 def SoGetDriverStatus(mainVehicleId, driverStatusData):
-	return SimoneAPI.GetDriverStatus(mainVehicleId, pointer(driverStatusData))
+	SimoneAPI.GetDriverStatus.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.GetDriverStatus(_mainVehicleId, pointer(driverStatusData))
 
 def SoGetDriverControl(mainVehicleId, driverControlData):
-	return SimoneAPI.GetDriverControl(mainVehicleId, pointer(driverControlData))
+	SimoneAPI.GetDriverControl.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.GetDriverControl(_mainVehicleId, pointer(driverControlData))
 
 def SoGetWayPoints(wayPointsData):
+	SimoneAPI.GetWayPoints.restype = c_bool
 	return SimoneAPI.GetWayPoints(pointer(wayPointsData))
 
 def SoAPISetScenarioEventCB(cb):

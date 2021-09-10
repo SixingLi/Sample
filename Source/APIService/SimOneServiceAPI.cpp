@@ -17,14 +17,16 @@ extern "C"
 		return SimOneAPIService::GetInstance()->GetMainVehicleStatus(pMainVehicleStatus);
 	}
 
-	SIMONE_API bool SimOneAPI::SetMainVehicleStatusCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus)) {
+	SIMONE_API bool SimOneAPI::SetMainVehicleStatusUpdateCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus)) {
 		SimOneAPIService::GetInstance()->SetMainVehicleStatusCB(cb);
 		return true;
 	}
 
-	SIMONE_API bool SimOneAPI::InitSimOneAPI(const char* mainVehicleId, bool isFrameSync, void(*startCase)(), void(*endCase)(), int registerNodeId)
+	SIMONE_API bool SimOneAPI::InitSimOneAPI(const char* mainVehicleId, bool isFrameSync, const char *serverIP, int port, void(*startCase)(), void(*endCase)(), int registerNodeId)
 	{
-		SetServerInfo();
+		cout << "mainVehicleId:" << mainVehicleId << "isFrameSync:" << isFrameSync<<"serverIP:"<<serverIP<<",port:"<< port<< endl;
+		SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information,"mainVehicleId:%s,isFrameSync:%d", mainVehicleId, isFrameSync);
+		SetServerInfo(serverIP, port);
 		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneAPIService::GetInstance()->SimOneNodeReady()) {
 			while (true)
 			{

@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
 	{
 		std::unique_ptr<SimOne_Data_RadarDetection> pRadarDetection = std::make_unique<SimOne_Data_RadarDetection>();
 		std::unique_ptr<SimOne_Data_UltrasonicRadars> pUltrasonics = std::make_unique<SimOne_Data_UltrasonicRadars>();
+		std::unique_ptr<SimOne_Data_Obstacle>  pObstacle = std::make_unique<SimOne_Data_Obstacle>();
 		std::map<int, SimOne_Data_RadarDetection> RadarDetectionMap;
 		std::unique_ptr<SimOne_Data_SensorConfigurations> SensorConfigurations = std::make_unique<SimOne_Data_SensorConfigurations>();
 		//bool resultGetRadarDetections = SimOneAPI::GetRadarDetections(0, "1", pRadarDetection.get());
@@ -41,11 +42,13 @@ int main(int argc, char* argv[])
 		SimOne_Data_SensorConfigurations *testConf = new SimOne_Data_SensorConfigurations();
 		SimOneAPI::GetSensorConfigurations(testConf);
 		while (1) {
-			
-			if (SimOneAPI::GetV2XInfo(mainVehicleId, "v2x", ESimOne_V2X_MessageFrame_PR::ESimOne_V2X_MessageFrame_PR_bsmFrame, pDetections.get())) {
+			if (SimOneAPI::GetGroundTruth(mainVehicleId, pObstacle.get())) {
+				cout << "pObstacle->obstacleSize: "<<pObstacle->obstacleSize << endl;
+			}
+			/*if (SimOneAPI::GetV2XInfo(mainVehicleId, "v2x", ESimOne_V2X_MessageFrame_PR::ESimOne_V2X_MessageFrame_PR_bsmFrame, pDetections.get())) {
 				std::cout << "strlen = " << strlen(pDetections->MsgFrameData) << "  " << pDetections->MsgFrameData << std::endl;
 				std::this_thread::sleep_for(std::chrono::milliseconds(50));
-			}
+			}*/
 			//auto function = [](int mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics) {
 			//	std::cout << pUltrasonics->frame << "," << pUltrasonics->ultrasonicRadarNum << "," << pUltrasonics->timestamp << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].obstacleRanges << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].x << "," << pUltrasonics->ultrasonicRadars[0].obstacleDetections[0].y << endl;
 			//};

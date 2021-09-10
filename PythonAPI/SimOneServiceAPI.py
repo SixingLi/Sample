@@ -66,7 +66,9 @@ def SoSetServerInfo(server='127.0.0.1', port=23789):
 	SimoneAPI.SetServerInfo.restype = c_bool
 	return SimoneAPI.SetServerInfo(_input, port)
 
-def SoInitSimOneAPI(startcase, stopcase):
+def SoInitSimOneAPI(mainVehicleId='0',isFrameSync = 0,serverIP = '127.0.0.1',port=23789,startcase = 0, stopcase= 0,registerNodeId=0):
+	_input = create_string_buffer(serverIP.encode(), 256)
+	SimoneAPI.SetServerInfo.restype = c_bool
 	global G_API_StartCase_CB
 	global G_API_StopCase_CB
 	if startcase == 0:
@@ -75,7 +77,7 @@ def SoInitSimOneAPI(startcase, stopcase):
 		stopcase = None
 	G_API_StartCase_CB = startcase
 	G_API_StopCase_CB = stopcase
-	ret = SimoneAPI.InitSimOneAPI(api_startcase_cb,api_stopcase_cb)
+	ret = SimoneAPI.InitSimOneAPI(mainVehicleId,isFrameSync,_input,port,startcase,stopcase,registerNodeId)
 	return ret
 
 def SoStopSimOneNode():
