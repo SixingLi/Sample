@@ -8,21 +8,40 @@
 
 //for SimOneServiceAPI.h test
 
-TEST_F(GlobalTestNoSync, GetCaseInfo)
-{
-	if (SimOneAPI::GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Running) {
-		std::unique_ptr<SimOne_Data_CaseInfo> caseInfoTest = std::make_unique<SimOne_Data_CaseInfo>();
-		bool caseInfoTestResult = SimOneAPI::GetCaseInfo(caseInfoTest.get());
-		EXPECT_TRUE(caseInfoTestResult) << "GetCaseInfo return false";
-		std::cout << "caseInfoTest caseName" << caseInfoTest->caseName << std::endl;
-		std::cout << "caseInfoTest caseId" << caseInfoTest->caseId << std::endl;
-		std::cout << "caseInfoTest taskId" << caseInfoTest->taskId << std::endl;
-		std::cout << "caseInfoTest sessionId" << caseInfoTest->sessionId << std::endl;
+//TEST_F(GlobalTestNoSync, GetCaseInfo)
+//{
+//	if (SimOneAPI::GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Running) {
+//		std::unique_ptr<SimOne_Data_CaseInfo> caseInfoTest = std::make_unique<SimOne_Data_CaseInfo>();
+//		bool caseInfoTestResult = SimOneAPI::GetCaseInfo(caseInfoTest.get());
+//		EXPECT_TRUE(caseInfoTestResult) << "GetCaseInfo return false";
+//		std::cout << "caseInfoTest caseName" << caseInfoTest->caseName << std::endl;
+//		std::cout << "caseInfoTest caseId" << caseInfoTest->caseId << std::endl;
+//		std::cout << "caseInfoTest taskId" << caseInfoTest->taskId << std::endl;
+//		std::cout << "caseInfoTest sessionId" << caseInfoTest->sessionId << std::endl;
+//	}
+//	else {
+//		std::cout << "SimOneAPI::GetCaseRunStatus() wating......." << SimOneAPI::GetCaseRunStatus() << std::endl;
+//		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+//	}
+//}
+
+
+TEST_F(GlobalTestNoSync, GetVersion) {
+	std::cout << "GetVersion:------------" << SimOneAPI::GetVersion() << std::endl;;
+}
+
+TEST_F(GlobalTestNoSync, GetMainVehicleList) {
+	std::unique_ptr<SimOne_Data_MainVehicle_Info> MainVehicleListTest = std::make_unique<SimOne_Data_MainVehicle_Info>();
+	bool result = SimOneAPI::GetMainVehicleList(MainVehicleListTest.get());
+	std::cout << "size:" << MainVehicleListTest->size << std::endl;
+	for (int i = 0; i < MainVehicleListTest->size; i++) {
+		std::cout << "id:" << MainVehicleListTest->id_list[i] << std::endl;
+		std::cout << "type:" << MainVehicleListTest->type_list[i] << std::endl;
 	}
-	else {
-		std::cout << "SimOneAPI::GetCaseRunStatus() wating......." << SimOneAPI::GetCaseRunStatus() << std::endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	}
+	
+
+	std::cout << "GetMainVehicleList result" << result << std::endl;
+
 }
 
 TEST_F(GlobalTestNoSync, GetMainVehicleStatus) {
@@ -130,6 +149,7 @@ TEST_F(GlobalTestNoSync, SetMainVehicleStatusCB) {
 
 int main(int argc, char* argv[]) {
 	//testing::GTEST_FLAG(output) = "xml:";
+	testing::GTEST_FLAG(filter) = "GlobalTestNoSync.GetMainVehicleList";
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 
