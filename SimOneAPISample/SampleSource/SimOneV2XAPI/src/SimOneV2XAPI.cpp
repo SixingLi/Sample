@@ -4,23 +4,6 @@
 #include <fstream>
 #include "utilTest.h"
 
-//#include "osi_groundtruth.pb.h"
-//#include "osi_object.pb.h"
-//#include "osi_sensorview.pb.h"
-//#include "osi_sensorview.pb.h"
-//#include "osi_featuredata.pb.h"
-//#include "osi_sensordata.pb.h"
-//#include "decode.h"
-//#include <sstream>
-
-//int CameraSensorId = 10;
-//int MMWRadarSensorId = 10;
-//int LiDARSensorId = 10;
-//int UltrasonicRadarSensorId = 10;
-//int AllUltrasonicRadarSensorId = 10;
-//int PerfectPerceptionSensorId = 10;
-//int V2XSensorId = 10;
-
 const char* ip = "127.0.0.1";
 unsigned short portLidar = 6699;
 unsigned short infoPort = 7788;
