@@ -188,7 +188,7 @@ bool SimOneAPIService::Stop() {
 	return true;
 }
 bool SimOneAPIService::SubMainVehicle(const char* mainVehicleId, bool isJoinTimeLoop) {
-	int mainVehId = atoi(mainVehicleId);
+	int mainVehId =string2Int(mainVehicleId);
 	if (!mpClientSync) {
 		return false;
 	}
