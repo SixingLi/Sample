@@ -39,7 +39,7 @@ void SamplesHDMapByLocation(const SSD::SimPoint3D& pos)
 	std::cout.precision(8);
 	//1. GetNearMostLane
 	SSD::SimString laneId = SampleGetNearMostLane(pos);
-	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "laneId: %s", laneId.GetString());
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "laneId: %s", laneId.GetString());
 	//2. GetNearLanes
 	SampleGetNearLanes(pos, 5);
 	//3. GetNearLanesWithAngle
@@ -94,10 +94,10 @@ void SamplesHDMapByLocation(const SSD::SimPoint3D& pos)
 	SampleGenerateRoute();
 }
 
-void gpsCB(const char* mainVehicleID, SimOne_Data_Gps *gps)
+void gpsCB(int mainVehicleID, SimOne_Data_Gps *gps)
 {
-	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "gpsCB: V: %d, GPS: %lld, pos:(%f, %f, %f)", mainVehicleID,
-			gps->timestamp, gps->posX, gps->posY, gps->posZ);
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "gpsCB: V: %d, GPS: %lld, pos:(%f, %f, %f)", mainVehicleID,
+		gps->timestamp, gps->posX, gps->posY, gps->posZ);
 	//HDMap samples based on gps location
 	SSD::SimPoint3D pos(gps->posX, gps->posY, gps->posZ);
 	SamplesHDMapByLocation(pos);
@@ -111,8 +111,8 @@ void SamplesGenerateRoute()
 int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
-	const char* MainVehicleId ="0";
-	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
+	//const char* MainVehicleId = "0";
+	SimOneAPI::InitSimOneAPI();
 	//SimOneAPI::StartSimOneNode(0,0,0);
 	//while (true)
 	//{
@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
 	int timeout = 20;
 	if (!SimOneAPI::LoadHDMap(timeout))
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Failed to load hdmap!");
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "Failed to load hdmap!");
 		return 0;
 	}
 
@@ -137,11 +137,11 @@ int main(int argc, char* argv[])
 	{
 		if (!SimOneAPI::GetGps(0/*vehicleId*/, pGPS.get()))
 		{
-			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Fetch GPS failed!");
+			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ELogLevelDebug, "Fetch GPS failed!");
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
-    return 0;
+	return 0;
 }
 

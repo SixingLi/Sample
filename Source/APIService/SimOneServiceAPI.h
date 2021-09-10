@@ -96,7 +96,7 @@ extern "C"
 		/*!
 		日志设置接口
 		\li function:
-		*	SetupLogLevel
+		*	SetLogOut
 		\li brief:
 		*	Set log interface
 		@param
@@ -104,7 +104,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool  SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...);
+		SIMONE_API bool SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...);
 
 		/*!
 		设置服务的地址和端口号

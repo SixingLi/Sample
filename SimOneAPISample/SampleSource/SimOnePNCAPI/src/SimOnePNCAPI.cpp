@@ -19,7 +19,7 @@
 TEST_F(GlobalTestNoSync, GetSimOneVehicleState)
 {
 	std::unique_ptr<SimOne_Data_Vehicle_Extra> VehicleExtraTest = std::make_unique<SimOne_Data_Vehicle_Extra>();
-	bool VehicleExtraResult = SimOneAPI::GetSimOneVehicleState(VehicleExtraTest.get());
+	bool VehicleExtraResult = SimOneAPI::GetVehicleState(VehicleExtraTest.get());
 	EXPECT_TRUE(VehicleExtraResult);
 	std::cout << "VehicleExtraTest dataSize:" << VehicleExtraTest->dataSize << std::endl;
 	std::cout << "VehicleExtraTest extra_states:" << VehicleExtraTest->extra_states << std::endl;
@@ -39,7 +39,7 @@ TEST_F(GlobalTestNoSync, SetNetPose) {
 TEST_F(GlobalTestNoSync, SetDrive) {
 	std::unique_ptr<SimOne_Data_Control> ControlTest = std::make_unique<SimOne_Data_Control>();
 	ControlTest->throttle = 0.1;
-	ControlTest->gear = EGearMode::EGearMode_Drive;
+	ControlTest->gear = ESimOne_Gear_Mode::EGearMode_Drive;
 	ControlTest->brake = 0;
 	ControlTest->steering = 0;
 	bool SetDriveResult = SimOneAPI::SetDrive(0, ControlTest.get());
@@ -57,7 +57,17 @@ TEST_F(GlobalTestNoSync, SetDriveTrajectory) {
 
 
 TEST_F(GlobalTestNoSync, SetDriverName) {
-	SimOneAPI::SetDriverName(0, "testDriverName");
+	std::unique_ptr<SimOne_Data_Control> ControlTest = std::make_unique<SimOne_Data_Control>();
+	while (1) {
+		SimOneAPI::SetDriverName(0, "testDriverName");
+		ControlTest->throttle = 0.1;
+		ControlTest->gear = ESimOne_Gear_Mode::EGearMode_Drive;
+		ControlTest->brake = 0;
+		ControlTest->steering = 0;
+		bool SetDriveResult = SimOneAPI::SetDrive(0, ControlTest.get());
+		EXPECT_TRUE(SetDriveResult) << "SetDrive set Error" << std::endl;
+	}
+
 }
 
 TEST_F(GlobalTestNoSync, SetVehicleEvent) {
@@ -69,7 +79,7 @@ TEST_F(GlobalTestNoSync, SetVehicleEvent) {
 
 TEST_F(GlobalTestNoSync, SetSignalLights) {
 	std::unique_ptr<SimOne_Data_Signal_Lights> SignalLights = std::make_unique<SimOne_Data_Signal_Lights>();
-	SignalLights->signalLights = SimOne_Signal_Light::ESimOne_Signal_Light_DoubleFlash;
+	SignalLights->signalLights = ESimOne_Signal_Light::ESimOne_Signal_Light_DoubleFlash;
 	bool resultSignalLights = SimOneAPI::SetSignalLights(0, SignalLights.get());
 	EXPECT_TRUE(resultSignalLights) << "SetSignalLights Error" << std::endl;
 }
@@ -90,8 +100,11 @@ TEST_F(GlobalTestNoSync, GetDriverControl) {
 }
 
 
-TEST_F(GlobalTestNoSync, GetWayPoints) {
+TEST_F(GlobalTestSync, GetWayPoints) {
 	std::unique_ptr<SimOne_Data_WayPoints> WayPointsTest = std::make_unique<SimOne_Data_WayPoints>();
+	int frame = SimOneAPI::Wait();
+	std::cout << "wait result:---" << frame << std::endl;
+
 	bool WayPointsTestResult = SimOneAPI::GetWayPoints(WayPointsTest.get());
 	EXPECT_TRUE(WayPointsTestResult) << "GetWayPoints Error" << std::endl;
 	std::cout << "wayPointsSize:" << WayPointsTest->wayPointsSize << std::endl;
@@ -104,18 +117,25 @@ TEST_F(GlobalTestNoSync, GetWayPoints) {
 		std::cout << "wayPoints heading_z:" << WayPointsTest->wayPoints[i].heading_z << std::endl;
 		std::cout << "wayPoints heading_w:" << WayPointsTest->wayPoints[i].heading_w << std::endl;
 	}
+	getchar();
+	SimOneAPI::NextFrame(frame);
 }
 
 TEST_F(GlobalTestNoSync, SetScenarioEventCB) {
+
 	SimOneAPI::SetScenarioEventCB([](int mainVehicleId, const char* event, const char* data) {
+		std::cout << "event:------" << event << std::endl;
 	});
+	while (1) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
 }
 
 
 int main(int argc, char* argv[]) {
 
 	//testing::GTEST_FLAG(output) = "xml:";
-	testing::GTEST_FLAG(filter) = "GlobalTestSync.GetSimOneGroundTruth";
+	testing::GTEST_FLAG(filter) = "GlobalTestNoSync.SetScenarioEventCB";
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }

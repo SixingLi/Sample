@@ -83,10 +83,10 @@ struct SimOne_Data_WayPoints_Entry
 	float posX; // MainVehicle WayPoints X on Opendrive (by meter)
 	float posY; // MainVehicle WayPoints Y on Opendrive (by meter)
 
-	float heading_x;
-	float heading_y;
-	float heading_z;
-	float heading_w;
+	float heading_x; // MainVehicle WayPoints heading orientation x in quaternion
+	float heading_y; // MainVehicle WayPoints heading orientation y in quaternion
+	float heading_z; // MainVehicle WayPoints heading orientation z in quaternion
+	float heading_w; // MainVehicle WayPoints heading orientation w in quaternion
 };
 
 struct SimOne_Data_WayPoints:public SimOne_Data
@@ -554,6 +554,7 @@ enum ESimOne_Case_Status
 #define SOSM_SIGNAL_LIGHTS_PREFIX "SOSM_SIGNAL_LIGHTS_"
 enum ESimOne_Signal_Light
 {
+	ESimOne_Signal_Light_None = 0,
 	ESimOne_Signal_Light_RightBlinker = 1,
 	ESimOne_Signal_Light_LeftBlinker = (1 << 1),
 	ESimOne_Signal_Light_DoubleFlash = (1 << 2),

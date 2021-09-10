@@ -66,10 +66,10 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Traffic Traffic)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/V2X/V2XADAS V2XADAS)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Dynamics Dynamics)
 
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/SimOneServiceAPI SimOneServiceAPI)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/SimOnePNCAPI SimOnePNCAPI)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/SimOneSensorAPI SimOneSensorAPI)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/SimOneV2XAPI SimOneV2XAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/SimOneServiceAPI SimOneServiceAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/SimOnePNCAPI SimOnePNCAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/SimOneSensorAPI SimOneSensorAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/SimOneV2XAPI SimOneV2XAPI)
 ENDIF()
 
 

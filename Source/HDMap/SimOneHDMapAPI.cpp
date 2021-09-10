@@ -172,11 +172,6 @@ extern "C"
 		return SimOneAPIService::IsTwoSideRoad(roadId);
 	}
 
-	SIMONE_API SimOneAPI::LaneInfo SimOneAPI::GetForwardLaneInfo(const SSD::SimPoint3D& pos, const SimOneAPI::TyrePosInfo& tyrePosInfo, const double& forward)
-	{
-		return SimOneAPIService::GetForwardLaneInfo(pos, tyrePosInfo, forward);
-	}
-
 	SIMONE_API double SimOneAPI::GetLaneLength(const SSD::SimString& id)
 	{
 		return SimOneAPIService::GetLaneLength(id);
@@ -197,37 +192,7 @@ extern "C"
 		return SimOneAPIService::IsInsideLane(inputPt, laneName, sideState);
 	}
 
-	SIMONE_API bool SimOneAPI::GetNearMostLaneWithHeight(const SSD::SimPoint3D& pos, bool drivingOnly, SSD::SimString& id, double& s, double& t,
-		double& s_toCenterLine, double& t_toCenterLine, bool& insideLane)
-	{
-		return SimOneAPIService::GetNearMostLaneWithHeight(pos, drivingOnly, id, s, t, s_toCenterLine, t_toCenterLine, insideLane);
-	}
-
-	SIMONE_API bool SimOneAPI::GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, const double& forward, SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList)
-	{
-		return SimOneAPIService::GetForwardLaneSample(inputPt, laneName, forward, laneInfoList);
-	}
-
-	SIMONE_API void SimOneAPI::GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo)
-	{
-		return SimOneAPIService::GetLaneLineInfo(laneLineInfo);
-	}
-
-	SIMONE_API void SimOneAPI::GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList)
-	{
-		SimOneAPIService::GetSectionList(roadId, rightList, leftList);
-	}
-
 	//add v3
-	SIMONE_API SSD::SimVector<int> SimOneAPI::GetLaneIndexList(const SSD::SimPoint3D& pos, int& currentLaneIndex, SSD::SimStringVector& laneIdList)
-	{
-		return SimOneAPIService::GetLaneIndexList(pos, currentLaneIndex, laneIdList);
-	}
-
-	SIMONE_API SimOneAPI::EDirectionType_ SimOneAPI::GetIconType(const SSD::SimPoint3D& pos)
-	{
-		return SimOneAPIService::GetIconType(pos);
-	}
 
 	SIMONE_API bool SimOneAPI::GetLaneSampleByLocation(const SSD::SimPoint3D& pos, HDMapStandalone::MLaneInfo& info)
 	{
