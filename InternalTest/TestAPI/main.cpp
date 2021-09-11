@@ -5,6 +5,10 @@
 #include <thread> 
 #include <chrono>
 #include <iostream>
+#include <windows.h>
+
+void Test_V2X(bool IsCallBackMode);
+
 using namespace std;
 int main(int argc, char* argv[])
 {
@@ -12,7 +16,7 @@ int main(int argc, char* argv[])
 	const char* MainVehicleId = "0";
 	std::unique_ptr<SimOne_Data_Obstacle> pObstacle = std::make_unique<SimOne_Data_Obstacle>();
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
-	std::unique_ptr<SimOne_Data_V2XNFS> pDetections = std::make_unique<SimOne_Data_V2XNFS>();
+	
 	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
 
 	const char* mainVehicleId = "0";
@@ -25,6 +29,10 @@ int main(int argc, char* argv[])
 		std::unique_ptr<SimOne_Data_Obstacle>  pObstacle = std::make_unique<SimOne_Data_Obstacle>();
 		std::map<int, SimOne_Data_RadarDetection> RadarDetectionMap;
 		std::unique_ptr<SimOne_Data_SensorConfigurations> SensorConfigurations = std::make_unique<SimOne_Data_SensorConfigurations>();
+		
+		Test_V2X(false);
+		
+		system("pause");
 		//bool resultGetRadarDetections = SimOneAPI::GetRadarDetections(0, "1", pRadarDetection.get());
 		//EXPECT_TRUE(resultGetRadarDetections) << "GetRadarDetections Error" << std::endl;
 		//char *SensorID;
@@ -111,20 +119,28 @@ int main(int argc, char* argv[])
 		//}
 
 
-		//////1 GetGroundTruth
-		////SimOneAPI::GetGroundTruth(0, pObstacle.get());
-		////if (pObstacle.get() != NULL) {
-		////	std::cout << "obstacleSize: " << pObstacle->obstacleSize << " height:" << pObstacle->obstacle[0].height << std::endl;
-		////}
-
-		//auto function = [](int mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) {
-		//	std::cout << pDetections->MsgFrameData << std::endl;
-		//};
-		//SimOneAPI::SetV2XInfoUpdateCB(function);
-
-
-
-	
 	}
 	return 0;
 }
+
+void Test_V2X(bool IsCallBackMode) {
+	if (IsCallBackMode) {
+		auto function = [](const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) {
+			std::cout << "########### SetV2XInfoUpdateCB strlen= "<<pDetections->V2XMsgFrameSize <<"  "<<pDetections->MsgFrameData << std::endl;
+		};
+		SimOneAPI::SetV2XInfoUpdateCB(function);
+	}
+	else {
+		std::unique_ptr<SimOne_Data_V2XNFS> pDetections = std::make_unique<SimOne_Data_V2XNFS>();
+		while (1) {
+			if (SimOneAPI::GetV2XInfo("0", "v2x", ESimOne_V2X_MessageFrame_PR::ESimOne_V2X_MessageFrame_PR_bsmFrame, pDetections.get())) {
+				std::cout << "########### GetV2XInfo strlen = " << strlen(pDetections->MsgFrameData) << "  " << pDetections->MsgFrameData << std::endl;
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+			else {
+				std::cout << "########### GetV2XInfo Fail" << std::endl;
+			}
+		}
+	}
+}
+

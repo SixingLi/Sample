@@ -1,8 +1,8 @@
-add_executable(OpenSimOneAPITest "")
+add_executable(TestAPI "")
 
-include_directories("${SIMONE_API_ROOT}/Source/APIService")
-include_directories("${SIMONE_API_ROOT}/Source/Sensor")
-include_directories("${SIMONE_API_ROOT}/Source/PNC")
+include_directories("${SIMONE_API_ROOT}/SourceCpp/APIService")
+include_directories("${SIMONE_API_ROOT}/SourceCpp/Sensor")
+include_directories("${SIMONE_API_ROOT}/SourceCpp/PNC")
 include_directories("${SIMONE_PATH_ROOT}/3rdparty")
 include_directories("${SIMONE_PATH_ROOT}/3rdparty/SSD/include")
 include_directories("${SIMONE_PATH_ROOT}/3rdparty/hdmap/include")
@@ -31,20 +31,20 @@ IF (MSVC)
 ENDIF()
 
 file(GLOB_RECURSE srcs *.h *.hh *i *.hpp *.c *.cc *.cpp)
-target_sources(OpenSimOneAPITest PRIVATE ${srcs})
+target_sources(TestAPI PRIVATE ${srcs})
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
-SetDefaultTargetProperties(OpenSimOneAPITest)
+SetDefaultTargetProperties(TestAPI)
 
 IF (WIN32)
-	target_link_libraries(OpenSimOneAPITest  ${CMAKE_CURRENT_LIST_DIR}/../lib/Win64/SimOneAPI.lib)
+	target_link_libraries(TestAPI  ${CMAKE_CURRENT_LIST_DIR}/../lib/Win64/SimOneAPI.lib)
 ENDIF()
 
 # IF (MSVC)
-	# SET_PROPERTY(TARGET OpenSimOneAPITest PROPERTY FOLDER "Test")
+	# SET_PROPERTY(TARGET TestAPI PROPERTY FOLDER "Test")
 # ENDIF()
 
-# add_custom_command(TARGET OpenSimOneAPITest PRE_BUILD
-                   # COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/blob.dat $<TARGET_FILE_DIR:OpenSimOneAPITest>/blob.dat)
-# add_custom_command(TARGET OpenSimOneAPITest PRE_BUILD
-                   # COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/blob.dat ${SIMONE_API_ROOT}/Build/build/OpenSimOneAPITest/blob.dat)
+# add_custom_command(TARGET TestAPI PRE_BUILD
+                   # COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/blob.dat $<TARGET_FILE_DIR:TestAPI>/blob.dat)
+# add_custom_command(TARGET TestAPI PRE_BUILD
+                   # COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/blob.dat ${SIMONE_API_ROOT}/Build/build/TestAPI/blob.dat)

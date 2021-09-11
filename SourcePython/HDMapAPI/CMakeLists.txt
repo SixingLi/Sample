@@ -49,30 +49,41 @@ set(HDMAP_LIB_NAME HDMapModule.lib)
 ENDIF()
 
 ######################################################################
-########################### pySimOneIO ##############################
+########################### HDMapAPI ##############################
 ######################################################################
-python_add_module(pySimOneIO SHARED ${CMAKE_CURRENT_LIST_DIR}/bindings.cpp)
-target_include_directories(pySimOneIO PRIVATE 
+python_add_module(HDMapAPI SHARED ${CMAKE_CURRENT_LIST_DIR}/bindings.cpp)
+target_include_directories(HDMapAPI PRIVATE 
 	${PYTHON_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 	${HDMap_INCLUDE_DIRS}
-	${SSD_INCLUDE})
-target_compile_definitions(pySimOneIO PRIVATE BOOST_PYTHON_STATIC_LIB)
+	${SSD_INCLUDE}
+	)
+include_directories(${SIMONE_API_ROOT}/SourceCPP/APIService)
+include_directories(${SIMONE_API_ROOT}/SourceCPP/HDMap)
+include_directories(${SIMONE_API_ROOT}/SourceCPP/Sensor/Task)
 
-target_link_libraries(pySimOneIO SimOneAPI
+target_compile_definitions(HDMapAPI PRIVATE BOOST_PYTHON_STATIC_LIB)
+
+target_link_libraries(HDMapAPI ${CMAKE_BUILD_NAME}
     debug ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/${PLATFORM_DIR}/release/${HDMAP_LIB_NAME}
 	optimized ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/${PLATFORM_DIR}/release/${HDMAP_LIB_NAME}
 	${PYTHON_LIBRARY}
-	${SIMONE_PATH_ROOT}/3rdparty/boost_python/lib/${PLATFORM_DIR}/release/${BOOSTPYTHON_LIB_NAME})
+	${SIMONE_PATH_ROOT}/3rdparty/boost_python/lib/${PLATFORM_DIR}/release/${BOOSTPYTHON_LIB_NAME}
+	)
+	
 
-IF (WIN32)
-	IF (NOT WITHOUT_HDMAP)
-	    #add_custom_command(TARGET autoconfig
-			#POST_BUILD
-			#COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/debug/${CMAKE_BUILD_NAME}.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/${CMAKE_BUILD_NAME}.lib
-			#COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/bin/debug/${CMAKE_BUILD_NAME}.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/${CMAKE_BUILD_NAME}.dll
-			#COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/debug/${CMAKE_BUILD_NAME}.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/${CMAKE_BUILD_NAME}.lib
-			#COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/bin/debug/${CMAKE_BUILD_NAME}.dll ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/${CMAKE_BUILD_NAME}.dll
-		#)
+IF (NOT WITHOUT_HDMAP)
+	IF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+		add_custom_command(TARGET HDMapAPI
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Debug/HDMapAPI.pyd ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/HDMapAPI.pyd
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Debug/HDMapAPI.pyd ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/HDMapAPI.pyd
+		)
+	ELSEIF (${CMAKE_BUILD_TYPE} STREQUAL "Release")
+		add_custom_command(TARGET HDMapAPI
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Release/HDMapAPI.pyd ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/HDMapAPI.pyd
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Release/HDMapAPI.pyd ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/HDMapAPI.pyd
+		)
 	ENDIF()
 ENDIF()

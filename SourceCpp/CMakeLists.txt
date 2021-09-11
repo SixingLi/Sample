@@ -35,9 +35,9 @@ include_directories("${SIMONE_PATH_FOUNDATION}/Source/Worker/BaseLibrary/SensorB
 include_directories("${SIMONE_PATH_FOUNDATION}/Source/Worker/BaseLibrary/BridgeBase/include")
 include_directories("${SIMONE_PATH_FOUNDATION}/Source/Logger/LogApi")
 
-include_directories("${SIMONE_API_ROOT}/Source/APIService")
-include_directories("${SIMONE_API_ROOT}/Source/HDMap")
-include_directories("${SIMONE_API_ROOT}/Source/Sensor")
+include_directories("${SIMONE_API_ROOT}/SourceCpp/APIService")
+include_directories("${SIMONE_API_ROOT}/SourceCpp/HDMap")
+include_directories("${SIMONE_API_ROOT}/SourceCpp/Sensor")
 
 IF (WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0501)
@@ -125,14 +125,6 @@ ENDIF()
 
 IF (WIN32)
 	IF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-		IF (NOT WITHOUT_HDMAP)
-		add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
-			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/win64/debug/SSD.dll ${CMAKE_CURRENT_LIST_DIR}/../Build/build/bin/debug/SSD.dll
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/win64/debug/HDMapModule.dll ${CMAKE_CURRENT_LIST_DIR}/../Build/build/bin/debug/HDMapModule.dll
-			)
-		ENDIF()
-
 		add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
 			POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/debug/${CMAKE_BUILD_NAME}.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/${CMAKE_BUILD_NAME}.lib
@@ -142,14 +134,6 @@ IF (WIN32)
 		)
 		
 	ELSEIF (${CMAKE_BUILD_TYPE} STREQUAL "Release")
-		IF (NOT WITHOUT_HDMAP)
-		add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
-			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/win64/release/SSD.dll ${CMAKE_CURRENT_LIST_DIR}/../Build/build/bin/release/SSD.dll
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/win64/release/HDMapModule.dll ${CMAKE_CURRENT_LIST_DIR}/../Build/build/bin/release/HDMapModule.dll
-			)
-		ENDIF()
-
 		add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
 			POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/release/${CMAKE_BUILD_NAME}.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/${CMAKE_BUILD_NAME}.lib

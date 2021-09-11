@@ -4,7 +4,7 @@
 #include <boost/python/class.hpp>
 #include <boost/python/return_value_policy.hpp>
 
-#include "../../Source/HDMap/SimOneHDMapAPI.h"
+#include "SimOneHDMapAPI.h"
 #include "public/MHDMap.h"
 
 using namespace boost::python;
