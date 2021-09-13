@@ -91,7 +91,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool ReceiveRouteMessageCB(void(*cb)(int fromId, ESimOne_Client_Type fromType, int length, const void* pBuffer, int commandId));
+		SIMONE_API bool ReceiveRouteMessageCB(void(*)(int fromId, ESimOne_Client_Type fromType, int length, const void* pBuffer, int commandId));
 
 		/*!
 		日志设置接口
@@ -126,11 +126,13 @@ extern "C"
 		\li brief:
 		*	Initialize SimOneAPI for autonomous driving algorithm
 		@param
-		*	hostVehicleId: host vehicle ID(from 0 to 9),isFrameSync: synchronize frame or not
+		*	hostVehicleId: host vehicle ID(from 0 to 9)
+		@param
+		*   isFrameSync: synchronize frame or not
 		@return
 		*	None
 		*/
-		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, const char *serverIP = "127.0.0.1", int port = 23789,void(*startCase)() = 0, void(*endCase)() = 0, int registerNodeId=0);
+		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, const char *serverIP = "127.0.0.1", int port = 23789,void(*)()=0, void(*)()=0, int registerNodeId=0);
 
 		/*!
 		停止API node
@@ -152,7 +154,7 @@ extern "C"
 		\li brief:
 		*	Get case information
 		@param[out]
-		*	pCaseInfo:caseName,caseId,taskId,sessionId
+		*	pCaseInfo: caseName,caseId,taskId,sessionId
 		@return
 		*	Success or not
 		*/
@@ -218,11 +220,13 @@ extern "C"
 		\li brief:
 		*	The callback function is called at the beginning and end of each frame.
 		@param
-		*   FrameStart:Callback function at the beginning of the frame FrameEnd:Callback function at the end of the frame
+		*   FrameStart:Callback function at the beginning of the frame 
+		@param
+		*   FrameEnd:Callback function at the end of the frame
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetFrameCB(void(*FrameStart)(int frame), void(*FrameEnd)(int frame));
+		SIMONE_API bool SetFrameCB(void(*)(int frame), void(*)(int frame));
 
 		/*!
 		获取主车状态信息
@@ -248,7 +252,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetMainVehicleStatusUpdateCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
+		SIMONE_API bool SetMainVehicleStatusUpdateCB(void(*)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
 	
 		/*!
 		获取高精度地图标识
