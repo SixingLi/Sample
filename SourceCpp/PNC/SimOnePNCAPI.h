@@ -156,22 +156,6 @@ extern "C"
 		SIMONE_API bool SetVehicleEvent(const char* mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent);
 
 		/*!
-		预测轨迹设置
-		\li function:
-		*	SetTrajectory
-		\li brief:
-		*	Set vehicle waypoints
-		@param
-		*   mainVehicleId: Vehicle index, configuration order from scenario editing, starting from 0
-		@param[in]
-		*   pTrajectory: vehicle trajectory data(input)
-		@return
-		*	Success or not
-		*/
-		SIMONE_API bool SetTrajectory(const char* mainVehicleId, SimOne_Data_Trajectory *Trajectory);
-
-
-		/*!
 		设置车辆信号灯状态
 		\li function:
 		*	SetSignalLights

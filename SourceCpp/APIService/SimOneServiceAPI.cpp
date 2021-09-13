@@ -26,7 +26,7 @@ extern "C"
 	{
 		cout << "mainVehicleId:" << mainVehicleId << "isFrameSync:" << isFrameSync<<"serverIP:"<<serverIP<<",port:"<< port<< endl;
 		SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information,"mainVehicleId:%s,isFrameSync:%d", mainVehicleId, isFrameSync);
-		SetServerInfo(serverIP, port);
+		SimOneAPIService::GetInstance()->setServerInfo(serverIP, port);
 		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneAPIService::GetInstance()->SimOneNodeReady()) {
 			while (true)
 			{
@@ -99,13 +99,11 @@ extern "C"
 		va_end(ap);
 		return true;
 	}
-	SIMONE_API bool SimOneAPI::SetServerInfo(const char *serverIP, int port) {
-		SimOneAPIService::GetInstance()->setServerInfo(serverIP, port);
-		return true;
-	}
+
 	SIMONE_API int SimOneAPI::Wait() {
 		return SimOneAPIService::GetInstance()->wait();
 	}
+
 	SIMONE_API void SimOneAPI::NextFrame(int frame) {
 		SimOneAPIService::GetInstance()->nextFrame(frame);
 	}

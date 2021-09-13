@@ -107,19 +107,6 @@ extern "C"
 		SIMONE_API bool SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...);
 
 		/*!
-		设置服务的地址和端口号
-		\li function:
-		*	SetServerInfo
-		\li brief:
-		*	Set the address and port number of the service
-		@param
-		*	serverIP:set connection bridgeio of IP address,port:set connection bridgeio of IP port
-		@return
-		*	Success or not
-		*/
-		SIMONE_API bool SetServerInfo(const char *serverIP = "127.0.0.1", int port = 23789);
-
-		/*!
 		SimOne API主入口
 		\li function:
 		*	InitSimOneAPI
