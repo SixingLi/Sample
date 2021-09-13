@@ -132,7 +132,7 @@ extern "C"
 		@return
 		*	None
 		*/
-		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, const char *serverIP = "127.0.0.1", int port = 23789,void(*)(), void(*)(), int registerNodeId=0);
+		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, const char *serverIP = "127.0.0.1", int port = 23789,void(*)()=0, void(*)()=0, int registerNodeId=0);
 
 		/*!
 		停止API node
