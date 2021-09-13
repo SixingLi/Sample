@@ -58,7 +58,7 @@ extern "C"
 
 	namespace SimOneAPI {
 
-		/*
+		/*!
 		获得对应车辆编号V2X中的UPER编码之后的v2x消息
 		\li function:
 		*	GetV2XSPATinfo
@@ -74,7 +74,7 @@ extern "C"
 		SIMONE_API bool GetV2XInfo(const char* mainVehicleId, const char* sensorId, int infoType, SimOne_Data_V2XNFS *pDetections);
 
 
-		/*
+		/*!
 		获得对应车辆编号V2X中的UPER编码之后的v2x消息更新回调
 		\li function:
 		*	SetV2XInfoUpdateCB
@@ -87,7 +87,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetV2XInfoUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
+		SIMONE_API bool SetV2XInfoUpdateCB(void(*)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
 	}
 #ifdef __cplusplus
 }
