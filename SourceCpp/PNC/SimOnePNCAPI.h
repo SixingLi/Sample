@@ -58,9 +58,9 @@ extern "C"
 		*	RegisterSimOneVehicleState
 		\li brief:
 		*	Register states of main vehicle dynamics
-		@param[pStateIndics]
+		@param
 		*   pStateIndics: array of state names
-		@param[size]
+		@param
 		*   size: state number in pStateIndics
 		@return
 		*	Success or not
@@ -73,7 +73,7 @@ extern "C"
 		*	GetSimOneVehicleState
 		\li brief:
 		*	Get states of main vehicle dynamics which are registered by RegisterSimOneVehicleState
-		@param[pVehExtraState]
+		@param
 		*   pVehExtraState: states of main vehicle dynamics
 		@return
 		*	Success or not
@@ -227,12 +227,14 @@ extern "C"
 		*   cb: scenario event callback function
 		@param
 		*	mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
+		@param
 		*	event: Command sent to the mainVehicle
+		@param
 		*	data: Not used yet
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data));
+		SIMONE_API bool SetScenarioEventCB(void(*)(const char* mainVehicleId, const char* event, const char* data));
 
 	}
 #ifdef __cplusplus
