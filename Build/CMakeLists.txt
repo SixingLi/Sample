@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8.0)
 project(SimOneAPI VERSION 3.0.0 LANGUAGES C CXX)
 
 set(OutPutDir "InternalTest")
-set(OutPutDirSDK "SampleAPI")
+set(OutPutDirSDK "Samples")
 
 IF (UNIX)
     set(CMAKE_C_COMPILER "/usr/bin/clang")
