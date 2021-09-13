@@ -173,19 +173,6 @@ extern "C"
 		};
 
 		/*!
-		获取高精度地图标识
-		\li function:
-		*	GetHDMapData
-		\li brief:
-		*	Get hdmap data which is configured by SimOne web app.
-		@param
-		*   hdMap: SimOne_Data_Map.
-		@return
-		*	True when get HDMap data success, else returns false.
-		*/
-		SIMONE_API bool GetHDMapData(SimOne_Data_Map& hdMap);
-
-		/*!
 		加载高精度地图
 		\li function:
 		*	LoadHDMap

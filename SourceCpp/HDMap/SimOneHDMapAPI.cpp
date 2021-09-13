@@ -13,13 +13,6 @@
 extern "C"
 {
 #endif
-#define MAX_DRIVER_NAME_LEN 10
-
-	SIMONE_API bool SimOneAPI::GetHDMapData(SimOne_Data_Map& hdMap)
-	{
-		return SimOneAPIService::GetHDMapData(hdMap);
-	}
-
 	SIMONE_API bool SimOneAPI::LoadHDMap(int timeOutSeconds)
 	{
 		return SimOneAPIService::LoadHDMap(timeOutSeconds);

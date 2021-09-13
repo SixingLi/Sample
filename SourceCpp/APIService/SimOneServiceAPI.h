@@ -249,6 +249,20 @@ extern "C"
 		*	Success or not
 		*/
 		SIMONE_API bool SetMainVehicleStatusUpdateCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
+	
+		/*!
+		获取高精度地图标识
+		\li function:
+		*	GetHDMapData
+		\li brief:
+		*	Get hdmap data which is configured by SimOne web app.
+		@param
+		*   hdMap: SimOne_Data_Map.
+		@return
+		*	True when get HDMap data success, else returns false.
+		*/
+		SIMONE_API bool GetHDMapData(SimOne_Data_Map& hdMap);
+
 	}
 #ifdef __cplusplus
 }
