@@ -250,7 +250,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetScenarioEventCB(void(*)(const char* mainVehicleId, const char* event, const char* data));
+		SIMONE_API bool SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data));
 
 	}
 #ifdef __cplusplus
