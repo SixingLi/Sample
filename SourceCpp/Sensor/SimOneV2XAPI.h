@@ -87,7 +87,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetV2XInfoUpdateCB(void(*)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
+		SIMONE_API bool SetV2XInfoUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
 	}
 #ifdef __cplusplus
 }
