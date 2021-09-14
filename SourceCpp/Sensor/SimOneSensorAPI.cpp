@@ -61,7 +61,7 @@ extern "C"
 		int num_radars = pTemp->ultrasonicRadarNum;
 		for (int i = 0; i < num_radars; i++)
 		{
-			if (pTemp->ultrasonicRadars[i].sensorId == sensorId)
+			if (strcmp(pTemp->ultrasonicRadars[i].sensorId,sensorId)==0)
 			{
 				memcpy(pUltrasonic, &pTemp->ultrasonicRadars[i], sizeof(SimOne_Data_UltrasonicRadar));
 				break;
