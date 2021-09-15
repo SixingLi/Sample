@@ -81,7 +81,7 @@ def SoInitSimOneAPI(mainVehicleId='0',isFrameSync = 0,serverIP = '127.0.0.1',por
 	return ret
 
 def SoStopSimOneNode():
-	SimoneAPI.Stop.restype = c_bool
+	SimoneAPI.StopSimOneNode.restype = c_bool
 	return SimoneAPI.StopSimOneNode()
 
 def SoAPIGetCaseInfo(data):
