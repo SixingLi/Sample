@@ -438,9 +438,8 @@ class SimOne_Data_Gps(SimOne_Data):
 	('wheelSpeedRR', c_float), # Speed of rear right wheel (by meter/sec)
 	('engineRpm', c_float), # Speed of engine (by r/min)
 	('odometer', c_float),#  odometer in meter.
-	('extraStates', c_float*SOSM_EXTRA_STATES_SIZE_MAX),# vehicle states subscripted by MainVehicleExtraDataIndics message
-	('extraStateSize', c_int)]
-
+	('extraStateSize', c_int),
+	('extraStates', c_float*SOSM_EXTRA_STATES_SIZE_MAX)]# vehicle states subscripted by MainVehicleExtraDataIndics message
 
 SOSM_OBSTACLE_SIZE_MAX = 255
 
