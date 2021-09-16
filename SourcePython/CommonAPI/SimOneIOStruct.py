@@ -442,7 +442,7 @@ class SimOne_Data_Gps(SimOne_Data):
 	('extraStateSize', c_int)]
 
 
-SOSM_OBSTACLE_SIZE_MAX = 100
+SOSM_OBSTACLE_SIZE_MAX = 255
 
 class ESimOne_Obstacle_Type(c_int):
 	ESimOne_Obstacle_Type_Unknown = 0
