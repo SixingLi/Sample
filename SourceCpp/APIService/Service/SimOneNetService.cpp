@@ -131,8 +131,10 @@ void SimOneAPIService::SetStartInfo(bool isJoinTimeLoop) {
 	mIsJoinTimeLoop = isJoinTimeLoop;
 }
 void SimOneAPIService::setServerInfo(const char* serverIP, int serverPort) {
-	mServerIP = serverIP;
-	mServerPort = serverPort;
+	if(serverIP)
+		mServerIP = serverIP;
+	if(serverPort > 0)
+		mServerPort = serverPort;
 	return;
 }
 void SimOneAPIService::bridgeLogOutput(ESimOne_LogLevel_Type level, const char *format, ...) {
@@ -761,11 +763,14 @@ bool SimOneAPIService::sendMessage(int set_fromId, Bridge::EBridgeClientType fro
 	return true;
 }
 bool SimOneAPIService::GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVehicleInfo) {
+	if (!pMainVehicleInfo)
+		return false;
 	memcpy(pMainVehicleInfo, &mpMainVehicleInfo, sizeof(SimOne_Data_MainVehicle_Info));
 	return true;
 }
 bool SimOneAPIService::GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
-
+	if (!pMainVehicleStatus)
+		return false;
 	Bridge::BridgeResultMainVehicleStatus mainVehicleInfo;
 	mainVehicleInfo.set_mainvehicleid(atoi(mMainVehicleId));
 	Message req;
@@ -817,6 +822,8 @@ bool SimOneAPIService::RegisterSimOneVehicleState(ESimOne_Data_Vehicle_State *pS
     if (!mbStarted) {
         return false;
     }
+	if (!pStateIndics)
+		return false;
 
     HotArea::MainVehicleExtraDataIndics indics;
     indics.set_vehicleid(atoi(mMainVehicleId));
@@ -829,9 +836,9 @@ bool SimOneAPIService::RegisterSimOneVehicleState(ESimOne_Data_Vehicle_State *pS
 }
 bool SimOneAPIService::GetSimOneVehicleState(SimOne_Data_Vehicle_Extra* pVehExtraState)
 {
+	if (!pVehExtraState)
+		return false;
     std::unique_lock<std::recursive_mutex> lock(mLastGPSDataMapLock);
-    if (!pVehExtraState)
-        return false;
     SimOne_Data_Vehicle_ExtraMap::iterator it = mLastVehExtraStateMap.find(atoi(mMainVehicleId));
     if (it == mLastVehExtraStateMap.end())
     {
@@ -896,9 +903,9 @@ std::string SimOneAPIService::GetSensorIdFromId(int id)
 }
 
 bool SimOneAPIService::GetTrafficLight(int mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight *pTrafficLight) {
-	std::unique_lock<std::recursive_mutex> lock(mTrafficLightsLock);
 	if (!pTrafficLight)
 		return false;
+	std::unique_lock<std::recursive_mutex> lock(mTrafficLightsLock);
 	SimOne_Data_TrafficLightsMap::iterator it = mTrafficLightsMap.find(atoi(mMainVehicleId));
 	if (it == mTrafficLightsMap.end())
 	{
@@ -919,10 +926,9 @@ bool SimOneAPIService::GetTrafficLight(int mainVehicleId, int opendriveLightId, 
 }
 
 bool SimOneAPIService::GetGps(int mainVehicleId, SimOne_Data_Gps *pGps) {
-
-	std::unique_lock<std::recursive_mutex> lock(mLastGPSDataMapLock);
 	if (!pGps)
 		return false;
+	std::unique_lock<std::recursive_mutex> lock(mLastGPSDataMapLock);
 	SimOne_Data_GpsMap::iterator it = mLastGPSDataMap.find(mainVehicleId);
 	if (it == mLastGPSDataMap.end())
 	{
@@ -934,12 +940,11 @@ bool SimOneAPIService::GetGps(int mainVehicleId, SimOne_Data_Gps *pGps) {
 }
 
 bool SimOneAPIService::GetObstacle(SimOne_Data_Obstacle *pObstacle) {
+	if (!pObstacle)
+		return false;
 	if (!mbIsOpenDefaultPerfectSensor)
 	{
-
 		std::unique_lock<std::recursive_mutex> lock(mLastObstacleMapLock);
-		if (!pObstacle)
-			return false;
 		SimOne_Data_ObstacleMap::iterator it = mLastObstacleMap.find(atoi(mMainVehicleId));
 		if (it == mLastObstacleMap.end())
 		{
@@ -961,11 +966,11 @@ bool SimOneAPIService::GetObstacle(SimOne_Data_Obstacle *pObstacle) {
 }
 
 bool SimOneAPIService::GetObstacle(int mainVehicleId, SimOne_Data_Obstacle *pObstacle) {
+	if (!pObstacle)
+		return false;
 	if (!mbIsOpenDefaultPerfectSensor)
 	{
 		std::unique_lock<std::recursive_mutex> lock(mLastObstacleMapLock);
-		if (!pObstacle)
-			return false;
 		SimOne_Data_ObstacleMap::iterator it = mLastObstacleMap.find(mainVehicleId);
 		if (it == mLastObstacleMap.end())
 		{
@@ -1017,10 +1022,9 @@ bool SimOneAPIService::SetEnvironment(SimOne_Data_Environment *pEnvironment) {
 }
 
 bool SimOneAPIService::GetGps(SimOne_Data_Gps *pGps) {
-
-	std::unique_lock<std::recursive_mutex> lock(mLastGPSDataMapLock);
 	if (!pGps)
 		return false;
+	std::unique_lock<std::recursive_mutex> lock(mLastGPSDataMapLock);
 	SimOne_Data_GpsMap::iterator it = mLastGPSDataMap.find(atoi(mMainVehicleId));
 	if (it == mLastGPSDataMap.end())
 	{
@@ -1068,9 +1072,9 @@ bool SimOneAPIService::onFromMainVehicleDataMessage(Message& msg) {
 }
 
 bool SimOneAPIService::GetDriverStatus(const int mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus) {
-	std::unique_lock<std::recursive_mutex> lock(mLastDriverStatusLock);
 	if (!pDriverStatus)
 		return false;
+	std::unique_lock<std::recursive_mutex> lock(mLastDriverStatusLock);
 
 	SimOne_Data_Driver_StatusMap::iterator it = mLastDriverStatusMap.find(mainVehicleId);
 	if (it == mLastDriverStatusMap.end())
@@ -1083,9 +1087,9 @@ bool SimOneAPIService::GetDriverStatus(const int mainVehicleId, SimOne_Data_Driv
 }
 
 bool SimOneAPIService::GetDriverControl(const int mainVehicleId, SimOne_Data_Control* pDriverControl) {
-	std::unique_lock<std::recursive_mutex> lock(mLastDriverControlLock);
 	if (!pDriverControl)
 		return false;
+	std::unique_lock<std::recursive_mutex> lock(mLastDriverControlLock);
 
 	SimOne_Data_Driver_ControlMap::iterator it = mLastDriverControlMap.find(mainVehicleId);
 	if (it == mLastDriverControlMap.end())
@@ -1173,6 +1177,8 @@ bool SimOneAPIService::onMainVehicleDriverControl(int mainVehicleId, proto::sens
 
 void SimOneAPIService::setWayPointsInfo(std::uint16_t type, const std::string* msgDataBody)
 {
+	if (!msgDataBody)
+		return;
 	SimOne_Data_WayPoints_Entry * pConf = (SimOne_Data_WayPoints_Entry*)msgDataBody->c_str();
 	if (pConf->index >= 100) {
 		return;
@@ -1257,6 +1263,8 @@ bool SimOneAPIService::sendVehicleControlPosReq(int mainVehicleId, SimOne_Data_P
 	if (!mbStarted) {
 		return false;
 	}
+	if (!pPose)
+		return false;
 	cybertron::proto::sensor::DataVehicleBodyState state;
 	state.set_fixheight(pPose->autoZ);
 	auto pos = state.mutable_position();
@@ -1279,6 +1287,8 @@ bool SimOneAPIService::sendVehicleTrajectory(int mainVehicleId, SimOne_Data_Traj
 	if (!mbStarted) {
 		return false;
 	}
+	if (!pTrajectory)
+		return false;
 	cybertron::proto::sensor::DataVehicleTrajectoryState state;
 	state.set_vehicleid(mainVehicleId);
 
@@ -1308,6 +1318,8 @@ bool SimOneAPIService::sendVehicleEventInfoReq(int mainVehicleId, SimOne_Data_Ve
 	if (!mbStarted) {
 		return false;
 	}
+	if (!pEvent)
+		return false;
 	cybertron::proto::sensor::DataVehicleEventInfo vehicleEventInfoState;
 
 	cybertron::proto::sensor::EVehicleEventType vehicleEventInfoType;
@@ -1374,6 +1386,8 @@ bool SimOneAPIService::sendVehicleControlReq(int mainVehicleId, SimOne_Data_Cont
 	if (!mbStarted) {
 		return false;
 	}
+	if (!pControl)
+		return false;
 	cybertron::proto::sensor::DataVehicleControlState state;
 
 	switch (pControl->throttleMode) {
@@ -1609,6 +1623,8 @@ bool SimOneAPIService::processMessagesUntil(
 	return true;
 }
 bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, const std::string* msgDataBody) {
+	if (!msgDataBody)
+		return false;
 	if (msgDataBody->size() != sizeof(SimOne_Data_Gps)) {
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "BridgeIO send GPS size:%d SimOneIOAPI receive GPS size:%d",msgDataBody->size(), sizeof(SimOne_Data_Gps));
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "SimOne_Data_Gps structure of receiver and transmitter is inconsistent");
@@ -1670,6 +1686,8 @@ bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, 
 	return true;
 }
 bool SimOneAPIService::onFromHotAreaObstacleData(Bridge::BridgeHotAreaHeader header, const std::string* msgDataBody) {
+	if (!msgDataBody)
+		return false;
 	if (!mbIsOpenDefaultPerfectSensor)
 	{
 		if (msgDataBody->size() != sizeof(SimOne_Data_Obstacle)) {
@@ -1716,6 +1734,8 @@ bool SimOneAPIService::onFromHotAreaObstacleData(Bridge::BridgeHotAreaHeader hea
 	return false;
 }
 bool SimOneAPIService::onFromHotAreaTrafficLightData(Bridge::BridgeHotAreaHeader header, const std::string* msgDataBody) {
+	if (!msgDataBody)
+		return false;
 	if (msgDataBody->size() != sizeof(SimOne_Data_TrafficLights)) {
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "BridgeIO send TrafficLights size:%d SimOneIOAPI receive TrafficLights size:%d", msgDataBody->size(), sizeof(SimOne_Data_Gps));
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "SimOne_Data_TrafficLights structure of receiver and transmitter is inconsistent");
@@ -1937,6 +1957,8 @@ bool SimOneAPIService::onFromSensorDataMessage(Message& msg)
 
 void SimOneAPIService::setEnvironmentInfo(std::uint16_t type, const std::string* msgDataBody)
 {
+	if (!msgDataBody)
+		return;
 	if (msgDataBody->size() != sizeof(SimOne_Data_Environment)) {
 		return;
 	}
@@ -1947,6 +1969,8 @@ void SimOneAPIService::setEnvironmentInfo(std::uint16_t type, const std::string*
 
 void SimOneAPIService::setSensorConfigurationsInfo(std::uint16_t type, const std::string* msgDataBody)
 {
+	if (!msgDataBody)
+		return;
 	SimOne_Data_SensorConfiguration * pConf = (SimOne_Data_SensorConfiguration*)msgDataBody->c_str();
 	mSensorConfigurations.data[mSensorConfigurations.dataSize] = *pConf;
 	mSensorConfigurations.dataSize++;
@@ -1981,7 +2005,8 @@ bool SimOneAPIService::onFromBridgeDataRouteMessage(Message& msg)
 	return true;
 }
 void SimOneAPIService::setCaseInfo(const std::string* msgDataBody) {
-
+	if (!msgDataBody)
+		return;
 	if (msgDataBody->size() != sizeof(SimOne_Data_CaseInfo)) {
 		return;
 	}
@@ -2000,6 +2025,8 @@ bool SimOneAPIService::onFromCaseStatusChange(Message& msg) {
 	return true;
 }
 void SimOneAPIService::setCaseStatus(const std::string* msgDataBody) {
+	if (!msgDataBody)
+		return;
 	if (msgDataBody->size() != sizeof(int)) {
 		return;
 	}
@@ -3071,6 +3098,8 @@ bool SimOneAPIService::GetLaneSampleByLocation(const SSD::SimPoint3D& pos, HDMap
 #ifndef WITHOUT_HDMAP
 
 void SimOneAPIService::setMapInfo(std::uint16_t type, const std::string* msgDataBody) {
+	if (!msgDataBody)
+		return;
 	if (msgDataBody->size() != sizeof(SimOne_Data_Map)) {
 		return;
 	}

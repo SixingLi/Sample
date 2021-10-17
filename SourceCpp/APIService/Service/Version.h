@@ -1,2 +1,2 @@
 #pragma once
-#define SIMONE_API_VERSION "2.3.0908"
+#define SIMONE_API_VERSION "3.0.0001"
