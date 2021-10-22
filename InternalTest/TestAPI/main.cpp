@@ -5,9 +5,11 @@
 #include <thread> 
 #include <chrono>
 #include <iostream>
-#include <windows.h>
+#include <string.h>
+// #include <windows.h>
 
 void Test_V2X(bool IsCallBackMode);
+void Test_GPS(bool IsCallBackMode);
 void Test_UltrasonicRadar(bool IsCallBackMode);
 void Test_SensorLaneInfo(bool IsCallBackMode);
 
@@ -16,9 +18,8 @@ int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
 	const char* MainVehicleId = "0";
-	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop,"10.66.9.111");
 	
-	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
 	std::unique_ptr<SimOne_Data_RadarDetection> pRadarDetection = std::make_unique<SimOne_Data_RadarDetection>();
 	std::unique_ptr<SimOne_Data_UltrasonicRadars> pUltrasonics = std::make_unique<SimOne_Data_UltrasonicRadars>();
 	std::unique_ptr<SimOne_Data_Obstacle>  pObstacle = std::make_unique<SimOne_Data_Obstacle>();
@@ -27,7 +28,8 @@ int main(int argc, char* argv[])
 	
 	//Test_V2X(false);
 	//Test_UltrasonicRadar(false);
-	Test_SensorLaneInfo(false);
+	//Test_SensorLaneInfo(false);
+	Test_GPS(false);
 	system("pause");
 	return 0;
 }
@@ -64,7 +66,29 @@ void Test_UltrasonicRadar(bool IsCallBackMode){
 	}
 }
 
+void Test_GPS(bool IsCallBackMode) {
+	if (IsCallBackMode) {
+		auto function = []( const char* mainVehicleId, SimOne_Data_Gps *pGps){
+				std::cout<<"pGps->posX:"<<pGps->posX<<",pGps->posY"<<pGps->posY<<endl;	
+		};
+		 SimOneAPI::SetGpsUpdateCB(function);
+	}
+	else {
+		std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
+		while(1)
+		{
+			if(SimOneAPI::GetGps("0", pGps.get())){
+				std::cout<<"pGps->posX:"<<pGps->posX<<",pGps->posY"<<pGps->posY<<endl;					
+			}else{
+
+				std::cout<<"Get GPS Fail"<<endl;
+			}
+		}
+	}
+}
+
 void Test_V2X(bool IsCallBackMode) {
+
 	if (IsCallBackMode) {
 		auto function = [](const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) {
 			std::cout << "########### SetV2XInfoUpdateCB strlen= "<<pDetections->V2XMsgFrameSize <<"  "<<pDetections->MsgFrameData << std::endl;

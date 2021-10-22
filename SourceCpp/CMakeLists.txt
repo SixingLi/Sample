@@ -2,29 +2,29 @@ cmake_minimum_required(VERSION 3.8.0)
 
 add_library(${CMAKE_BUILD_NAME} SHARED "")
 
-OPTION(WITHOUT_HDMAP "Build ${CMAKE_BUILD_NAME} without HDMap" OFF)
-IF (WITHOUT_HDMAP)
-	add_definitions(-DWITHOUT_HDMAP)
+OPTION(HDMAP "Build ${CMAKE_BUILD_NAME}  HDMap" ON)
+IF (HDMAP)
+	add_definitions(-DHDMAP)
 ENDIF()
 
-OPTION(WITHOUT_SENSOR "Build ${CMAKE_BUILD_NAME} without Sensor" OFF)
-IF (WITHOUT_SENSOR)
-	add_definitions(-DWITHOUT_SENSOR)
+OPTION(SENSOR "Build ${CMAKE_BUILD_NAME}  Sensor" ON)
+IF (SENSOR)
+	add_definitions(-DSENSOR)
 ENDIF()
 
-OPTION(WITHOUT_PNC "Build ${CMAKE_BUILD_NAME} without Planning and Control" OFF)
-IF (WITHOUT_PNC)
-	add_definitions(-DWITHOUT_PNC)
+OPTION(PNC "Build ${CMAKE_BUILD_NAME}  Planning and Control" ON)
+IF (PNC)
+	add_definitions(-DPNC)
 ENDIF()
 
-IF (NOT WITHOUT_HDMAP)
+IF (HDMAP)
 	include_directories("${SIMONE_PATH_ROOT}/3rdparty/SSD/include")
 	include_directories("${SIMONE_PATH_ROOT}/3rdparty/hdmap/include")
 	include_directories("${SIMONE_PATH_ROOT}/3rdparty/hdmap/include/modules")
 	include_directories("${SIMONE_PATH_ROOT}/3rdparty/SSD/include")
 ENDIF()
 
-IF (NOT WITHOUT_SENSOR)
+IF (SENSOR)
 	include_directories("${SIMONE_PATH_ROOT}/3rdparty/artifactory/ffmpeg/include")
 ENDIF()
 
@@ -78,7 +78,7 @@ IF (WIN32)
 	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronSensorBase.lib)
 	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/CybertronLogApi.lib)
 
-	IF (NOT WITHOUT_HDMAP)
+	IF (HDMAP)
 		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/win64/debug/SSD.lib)
 		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/win64/debug/HDMapModule.lib)
 		target_link_libraries(${CMAKE_BUILD_NAME} optimized ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/win64/release/SSD.lib)
@@ -103,7 +103,7 @@ ELSEIF (UNIX)
 	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/libCybertronSensorBase.a)
 	target_link_libraries(${CMAKE_BUILD_NAME} debug ${FOUNDATION_DBG_LIB_PATH}/libCybertronLogApi.a)
 
-	IF (NOT WITHOUT_HDMAP)
+	IF (HDMAP)
 		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/debug/libSSD.so)
 		target_link_libraries(${CMAKE_BUILD_NAME} debug ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/debug/libHDMapModule.so)
 		target_link_libraries(${CMAKE_BUILD_NAME} optimized ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/release/libSSD.so)
@@ -145,23 +145,20 @@ IF (WIN32)
 
 ELSEIF (UNIX)
 	 IF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-		add_custom_command(TARGET ${CMAKE_BUILD_NAME}
-		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${CMAKE_BINARY_DIR}/lib/lib${CMAKE_BUILD_NAME}.so ${CMAKE_CURRENT_LIST_DIR}/../Build/build_debug/bin/debug/lib${CMAKE_BUILD_NAME}.so
-	)
+
 	ELSEIF (${CMAKE_BUILD_TYPE} STREQUAL "Release")
-		IF (NOT WITHOUT_HDMAP)
-		add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
-			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/release/libSSD.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libSSD.so
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libHDMapModule.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libHDMapModule.so
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libProtobufModule.a ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libProtobufModule.a
+		IF (HDMAP)
+			add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
+				POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/SSD/lib/linux/release/libSSD.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libSSD.so
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libHDMapModule.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libHDMapModule.so
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_PATH_ROOT}/3rdparty/hdmap/lib/linux/release/libProtobufModule.a ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libProtobufModule.a
 			)
 		ENDIF()
-
 		add_custom_command(TARGET ${CMAKE_BUILD_NAME} 
 			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/lib${CMAKE_BUILD_NAME}.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/lib${CMAKE_BUILD_NAME}.so
-		)
+		 	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/lib${CMAKE_BUILD_NAME}.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/lib${CMAKE_BUILD_NAME}.so
+		 	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/lib${CMAKE_BUILD_NAME}.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/lib${CMAKE_BUILD_NAME}.so
+		 )
 	ENDIF()
 ENDIF()
