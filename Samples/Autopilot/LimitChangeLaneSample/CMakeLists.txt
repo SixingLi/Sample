@@ -12,9 +12,8 @@ target_sources(LimitChangeLane PRIVATE "src/LimitChangeLaneSample.cpp" ${headers
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
 # include_directories("${SIMONE_API}/include/")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/include/")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../util/")
 include_directories("${INCLUDE_DIR}")
-include_directories("${INCLUDE_DIR}/util")
 include_directories(${CMAKE_CURRENT_LIST_DIR}/eigen/3.2.3/include/eigen3)
 #include_directories("${CMAKE_CURRENT_LIST_DIR}/../../Workshop/util")
 #include_directories("${3RDPARTY}")

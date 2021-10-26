@@ -11,7 +11,7 @@ ENDIF()
 add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
  
 # top project
-project(SimOneIOAPISample VERSION 3.0.0 LANGUAGES C CXX)
+project(AutopilotSample VERSION 3.0.0 LANGUAGES C CXX)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 

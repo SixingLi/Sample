@@ -11,7 +11,7 @@ ENDIF()
 add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
  
 # top project
-project(TutorialSample VERSION 3.0.0 LANGUAGES C CXX)
+project(ADASSample VERSION 3.0.0 LANGUAGES C CXX)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
@@ -50,30 +50,14 @@ IF (CLOUD_PLATFORM)
 ENDIF(CLOUD_PLATFORM)
 	
 IF (CLOUD_PLATFORM)
-	#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/LKA LKA)
-	#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/AEB AEB)
+	#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/ADAS/LKA LKA)
+	#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/ADAS/AEB AEB)
 
 ELSE()
-	#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Autopilot/CurveSample CurveSample)
-	#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Autopilot/LimitChangeLaneSample LimitChangeLaneSample)
-	#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Autopilot/TrafficLightSample TrafficLightSample)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/AEB AEB)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/AVP AVP)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/LKA LKA)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/TrajectoryControl TrajectoryControl)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../HDMap HDMap)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Traffic Traffic)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../V2X/V2XADAS V2XADAS)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Dynamics Dynamics)
-
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Sensor/SensorImage SensorImage)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Sensor/SensorLidar SensorLidar)
-#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Sensor/SensorLidarROS SensorLidarROS)
-
-# add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneServiceAPI SimOneServiceAPI)
-# add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOnePNCAPI SimOnePNCAPI)
-# add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneSensorAPI SimOneSensorAPI)
-# add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneV2XAPI SimOneV2XAPI)
+	add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../AEB AEB)
+	add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../AVP AVP)
+	add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../LKA LKA)
+	add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../TrajectoryControl TrajectoryControl)
 ENDIF()
 
 

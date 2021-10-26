@@ -13,9 +13,8 @@ target_sources(Curve PRIVATE "src/CurveSample.cpp" ${headers})
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
 # include_directories("${SIMONE_API_SAMPLE}/include/")
-# include_directories("${SIMONE_API_SAMPLE}/SampleSource/Workshop/util")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../util")
 include_directories("${INCLUDE_DIR}")
-include_directories("${INCLUDE_DIR}/util")
 
 IF (WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0501)

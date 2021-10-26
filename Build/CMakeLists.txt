@@ -71,11 +71,11 @@ add_custom_target(autoconfig ALL DEPENDS)
 
 add_subdirectory(${SIMONE_API_ROOT}/SourceCpp SourceCpp)
 add_subdirectory(${SIMONE_API_ROOT}/InternalTest/TestAPI TestAPI)
-# add_dependencies(TestAPI ${CMAKE_BUILD_NAME})
+add_dependencies(TestAPI ${CMAKE_BUILD_NAME})
 
 IF (HDMAP)
-	# add_subdirectory(${SIMONE_API_ROOT}/SourcePython/HDMapAPI HDMapAPI)
-	# add_dependencies(HDMapAPI ${CMAKE_BUILD_NAME})
+	add_subdirectory(${SIMONE_API_ROOT}/SourcePython/HDMapAPI HDMapAPI)
+	add_dependencies(HDMapAPI ${CMAKE_BUILD_NAME})
 ENDIF()
 
 IF (WIN32)
@@ -99,6 +99,10 @@ IF (WIN32)
 		POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/Sensor/SimOneSensorAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneSensorAPI.h 
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneSensorAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/SimOneSensorAPI.py
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/streaming/include/SimOneStreamingAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneStreamingAPI.h
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/streaming/lib/SimOneStreamingAPI.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/SimOneStreamingAPI.dll
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/streaming/lib/SimOneStreamingAPI.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/SimOneStreamingAPI.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneStreamingAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/SimOneStreamingAPI.py
 		)
 		IF (V2X)
 			add_custom_command(TARGET autoconfig
@@ -152,7 +156,11 @@ IF (WIN32)
 		add_custom_command(TARGET autoconfig
 		POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/Sensor/SimOneSensorAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOneSensorAPI.h 
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/streaming/include/SimOneStreamingAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOneStreamingAPI.h
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/streaming/lib/SimOneStreamingAPI.dll ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/SimOneStreamingAPI.dll
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/streaming/lib/SimOneStreamingAPI.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/SimOneStreamingAPI.lib
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneSensorAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/SimOneSensorAPI.py
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneStreamingAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/SimOneStreamingAPI.py
 		)
 		IF (V2X)
 		message("---------------------------------------------------------------------------")

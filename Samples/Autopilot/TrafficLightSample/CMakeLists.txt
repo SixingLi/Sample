@@ -11,11 +11,10 @@ target_sources(TrafficLight PRIVATE "src/TrafficLightSample.cpp" ${headers})
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
-# include_directories("${SIMONE_API}/include/")
-#include_directories("${CMAKE_CURRENT_LIST_DIR}/../../Workshop/util")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/include/")
+
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../util")
 include_directories("${INCLUDE_DIR}")
-include_directories("${INCLUDE_DIR}/util")
+
 #include_directories("${3RDPARTY}")
 
 # find_package(OpenCV REQUIRED)
