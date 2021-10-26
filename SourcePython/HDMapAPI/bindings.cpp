@@ -297,7 +297,7 @@ HeightsInfo getHeights(const SSD::SimPoint3D& inputPt, const double& radius)
 	return std::move(info);
 }
 
-BOOST_PYTHON_MODULE(pySimOneIO)
+BOOST_PYTHON_MODULE(HDMapAPI)
 {
 	//from SimOneAPI
 	//
