@@ -58,9 +58,9 @@ target_include_directories(HDMapAPI PRIVATE
 	${HDMap_INCLUDE_DIRS}
 	${SSD_INCLUDE}
 	)
-include_directories(${SIMONE_API_ROOT}/SourceCPP/APIService)
-include_directories(${SIMONE_API_ROOT}/SourceCPP/HDMap)
-include_directories(${SIMONE_API_ROOT}/SourceCPP/Sensor/Task)
+include_directories(${SIMONE_API_ROOT}/SourceCpp/APIService)
+include_directories(${SIMONE_API_ROOT}/SourceCpp/HDMap)
+include_directories(${SIMONE_API_ROOT}/SourceCpp/Sensor/Task)
 
 target_compile_definitions(HDMapAPI PRIVATE BOOST_PYTHON_STATIC_LIB)
 
@@ -71,8 +71,7 @@ target_link_libraries(HDMapAPI ${CMAKE_BUILD_NAME}
 	${SIMONE_PATH_ROOT}/3rdparty/boost_python/lib/${PLATFORM_DIR}/release/${BOOSTPYTHON_LIB_NAME}
 	)
 	
-
-IF (NOT WITHOUT_HDMAP)
+IF (WIN32)
 	IF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 		add_custom_command(TARGET HDMapAPI
 			POST_BUILD
@@ -84,6 +83,20 @@ IF (NOT WITHOUT_HDMAP)
 			POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Release/HDMapAPI.pyd ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/HDMapAPI.pyd
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Release/HDMapAPI.pyd ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/HDMapAPI.pyd
+		)
+	ENDIF()
+ELSEIF(UNIX)
+	IF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+		add_custom_command(TARGET HDMapAPI
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Debug/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/HDMapAPI.so
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Debug/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/HDMapAPI.so
+		)
+	ELSEIF (${CMAKE_BUILD_TYPE} STREQUAL "Release")
+		add_custom_command(TARGET HDMapAPI
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Release/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/HDMapAPI.so
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Release/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/HDMapAPI.so
 		)
 	ENDIF()
 ENDIF()

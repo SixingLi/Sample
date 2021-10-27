@@ -38,13 +38,6 @@ SetDefaultTargetProperties(TestAPI)
 
 IF (WIN32)
 	target_link_libraries(TestAPI  ${CMAKE_CURRENT_LIST_DIR}/../lib/Win64/SimOneAPI.lib)
+ELSEIF(UNIX)
+	target_link_libraries(TestAPI  ${CMAKE_CURRENT_LIST_DIR}/../lib/Linux64/libSimOneAPI.so)
 ENDIF()
-
-# IF (MSVC)
-	# SET_PROPERTY(TARGET TestAPI PROPERTY FOLDER "Test")
-# ENDIF()
-
-# add_custom_command(TARGET TestAPI PRE_BUILD
-                   # COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/blob.dat $<TARGET_FILE_DIR:TestAPI>/blob.dat)
-# add_custom_command(TARGET TestAPI PRE_BUILD
-                   # COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/blob.dat ${SIMONE_API_ROOT}/Build/build/TestAPI/blob.dat)
