@@ -89,14 +89,14 @@ ELSEIF(UNIX)
 	IF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 		add_custom_command(TARGET HDMapAPI
 			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Debug/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/HDMapAPI.so
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Debug/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/HDMapAPI.so
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/HDMapAPI.so
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/HDMapAPI.so
 		)
 	ELSEIF (${CMAKE_BUILD_TYPE} STREQUAL "Release")
 		add_custom_command(TARGET HDMapAPI
 			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Release/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/HDMapAPI.so
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/Release/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/HDMapAPI.so
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/HDMapAPI.so
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/HDMapAPI/HDMapAPI.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/HDMapAPI.so
 		)
 	ENDIF()
 ENDIF()
