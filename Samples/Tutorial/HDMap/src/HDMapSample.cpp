@@ -29,6 +29,16 @@
 #include "SampleGetStoplineList.h"
 #include "SampleGetTrafficSignList.h"
 #include "SampleNavigate.h"
+#include "SampleGetLaneSampleByLocation.h"
+#include "SampleIsInsideLane.h"
+#include "SampleIsInJunction.h"
+#include "SampleIsDriving.h"
+#include "SampleGetLaneLength.h"
+#include "SampleGetSectionLaneList.h"
+#include "SampleIsTwoSideRoad.h"
+#include "SampleGetRoadLength.h"
+#include "SampleGetJunctionList.h"
+#include "SampleGetLaneData.h"
 
 #include <chrono>
 #include <thread>
@@ -49,7 +59,7 @@ void SamplesHDMapByLocation(const SSD::SimPoint3D& pos)
 	//4. GetDistanceToLaneBoundary
 	SampleGetDistanceToLaneBoundary(pos);
 	//5. GetLaneSample
-	SampleGetLaneSample(laneId);
+	SSD::SimString laneName = SampleGetLaneSample(laneId);
 	//6. GetLaneLink
 	SampleGetLaneLink(laneId);
 	//7. GetLaneType
@@ -62,36 +72,55 @@ void SamplesHDMapByLocation(const SSD::SimPoint3D& pos)
 	SampleGetLaneST(laneId, pos, s, t);
 	//10. GetRoadST
 	SampleGetRoadST(laneId, pos);
-	//11. ContainsLane
-	SampleContainsLane(laneId);
-	//12. GetCrossHatchList
-	SampleGetCrossHatchList(laneId);
-	//13. GetTrafficLightList
-	SSD::SimVector<HDMapStandalone::MSignal> trafficLight = SampleGetTrafficLightList();
-	//14. GetCrosswalkList
-	SampleGetCrosswalkList(pos, laneId, trafficLight);
-	//15. GetHeights
-	SampleGetHeights(pos, 10.0);
-	//16. GetInertialFromLaneST
+	//11. GetInertialFromLaneST
 	SampleGetInertialFromLaneST(laneId, s, t);
-	//17. GetLaneMiddlePoint
-	SampleGetLaneMiddlePoint(pos, laneId);
-	//18. GetParkingSpaceList
+	//12. ContainsLane
+	SampleContainsLane(laneId);
+	//13. GetParkingSpaceList
 	SSD::SimVector<HDMapStandalone::MParkingSpace> parkSpace = SampleGetParkingSpaceList();
 	std::cout << "parkSpace =" << parkSpace.size() << std::endl;
-	//20. GetRoadMark
-	SampleGetRoadMark(laneId, pos);
-	//21. GetStoplineList
-	SampleGetStoplineList(laneId, trafficLight);
-	//22. GetTrafficSignList
-	SampleGetTrafficSignList();
-	//23. Navigate
-	SSD::SimPoint3DVector inputPoints;
-	inputPoints.push_back(SSD::SimPoint3D(-63.999936, 1.955949, 0));
-	inputPoints.push_back(SSD::SimPoint3D(123.502658, 1.482458, 0));
-	SampleNavigate(inputPoints);
-	//24 .GenerateRoute
+	//14. GenerateRoute
 	SampleGenerateRoute();
+	//15. Navigate
+	SSD::SimPoint3DVector inputPoints;
+	inputPoints.push_back(SSD::SimPoint3D(-131.75125, 40.961385, 0));
+	inputPoints.push_back(SSD::SimPoint3D(38.001163, 37.796493, 0));
+	SSD::SimVector<long> roadList = SampleNavigate(inputPoints);
+	//16. GetRoadMark
+	SampleGetRoadMark(laneId, pos);
+	//17. GetTrafficLightList
+	SSD::SimVector<HDMapStandalone::MSignal> trafficLight = SampleGetTrafficLightList();
+	//18. GetTrafficSignList
+	SampleGetTrafficSignList();
+	//19. GetStoplineList
+	SampleGetStoplineList(laneId, trafficLight);
+	//20. GetCrosswalkList
+	SampleGetCrosswalkList(pos, laneId, trafficLight);
+	//21. GetCrossHatchList
+	SampleGetCrossHatchList(laneId);
+	//22. GetLaneMiddlePoint
+	SampleGetLaneMiddlePoint(pos, laneId);
+	//23. GetHeights
+	SampleGetHeights(pos, 10.0);
+	//24. GetLaneData
+	SSD::SimVector<HDMapStandalone::MLaneInfo> data;
+	SampleGetLaneData(data);
+	//25. GetJunctionList
+	SampleGetJunctionList(laneId);
+	//28. GetLaneLength
+	SampleGetLaneLength(laneId);
+	//29. GetSectionLaneList
+	SSD::SimStringVector sectionLaneList;
+	SampleGetSectionLaneList(laneId, sectionLaneList);
+	//30. IsDriving
+	SampleIsDriving(laneId);
+	//32. IsInsideLane
+	SSD::SimPoint3D inputPt(-64.251235, 48.126736, 0);
+	HDMapStandalone::MSideState sideState;
+	SampleIsInsideLane(inputPt, laneName, sideState);
+	//33. GetLaneSampleByLocation
+	HDMapStandalone::MLaneInfo info;
+	SampleGetLaneSampleByLocation(inputPt, info);
 }
 
 void gpsCB(const char * mainVehicleID, SimOne_Data_Gps *gps)

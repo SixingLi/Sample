@@ -8,15 +8,15 @@ using namespace HDMapStandalone;
 using SSD::SimPoint3D;
 using SSD::SimString;
 
-void SampleGetLaneSample(const SimString& laneId)
+SimString SampleGetLaneSample(const SimString& laneId)
 {
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "**************************GetLaneSample*************************");
 	MLaneInfo info;
 	if (!SimOneAPI::GetLaneSample(laneId, info))
 	{
 		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Error: lane does not eixst in the map.");
-		return;
 	}
-		
+	SSD::SimString laneName = info.laneName;
 	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "left boundary knot size: %d", info.leftBoundary.size());
 	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "left boundary knot list:");
 
@@ -43,4 +43,5 @@ void SampleGetLaneSample(const SimString& laneId)
 		const SimPoint3D& knot = info.centerLine[i];
 		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "( %f, %f, %f),", knot.x, knot.y, knot.z);
 	}
+	return laneName;
 }

@@ -10,6 +10,7 @@ using SSD::SimString;
 
 SimString SampleGetNearMostLane(const SimPoint3D& pos)
 {
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "**************************GetNearMostLane*************************");
 	SimString laneId;
 	double s, t, s_toCenterLine, t_toCenterLine;
 	if (!SimOneAPI::GetNearMostLane(pos, laneId, s, t, s_toCenterLine, t_toCenterLine))

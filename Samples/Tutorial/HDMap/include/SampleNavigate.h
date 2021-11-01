@@ -1,13 +1,16 @@
 #pragma once
 #include "SimOneServiceAPI.h"
 #include <iostream>
+#include "SampleGetRoadLength.h"
+#include "SampleIsTwoSideRoad.h"
 
 using SSD::SimString;
 
-void SampleNavigate(const SSD::SimPoint3DVector& inputPoints)
+SSD::SimVector<long> SampleNavigate(const SSD::SimPoint3DVector& inputPoints)
 {
 	SSD::SimVector<int> indexOfValidPoints;
 	SSD::SimVector<long> roadIdList;
+	SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "***********************Navigate***********************");
 	bool result = SimOneAPI::Navigate(inputPoints, indexOfValidPoints, roadIdList);
 	if (!result)
 	{
@@ -19,6 +22,11 @@ void SampleNavigate(const SSD::SimPoint3DVector& inputPoints)
 	}
 	for (auto&item : roadIdList)
 	{
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Debug, "roadId: %ld", item);
+		//26. GetRoadLength
+		SampleGetRoadLength(item);
+		//27. IsTwoSideRoad
+		SampleIsTwoSideRoad(item);
+
 	}
+	return roadIdList;
 }
