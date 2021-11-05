@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+
+Samples/bin/
+Samples/lib/
+Samples/include/*
+Samples/Workshop/AVP/eigen/
+Samples/Build/build/
