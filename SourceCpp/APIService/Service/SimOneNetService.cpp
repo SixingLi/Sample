@@ -51,6 +51,7 @@ SimOneAPIService::SimOneAPIService() :
 	mpObstacleUpdateCB(nullptr),
 	mpTrafficLightUpdateCB(nullptr),
 	mpScenarioEventCB(nullptr),
+	mpTrafficEventCB(nullptr),
 	mpStartCase(nullptr),
 	mpEndCase(nullptr),
 	mpFrameStart(nullptr),
@@ -257,6 +258,7 @@ void SimOneAPIService::zeroMemory() {
 	mpObstacleUpdateCB = nullptr;
 	mpTrafficLightUpdateCB = nullptr;
 	mpScenarioEventCB = nullptr;
+	mpTrafficEventCB = nullptr;
 	mpStartCase = nullptr;
 	mpEndCase = nullptr;
 	mpFrameStart = nullptr;
@@ -566,6 +568,9 @@ void SimOneAPIService::onServerMessage(Message& msg) {
 		break;
 	case Bridge::EBridgeScenarioEvent:
 		ret = onFromBridgeScenarioEvent(msg);
+		break;
+	case Bridge::EBridgeTrafficEvent:
+		ret = onFromBridgeTrafficEvent(msg);
 		break;
 #endif
 	default:
@@ -1123,6 +1128,20 @@ bool SimOneAPIService::onFromBridgeScenarioEvent(Message& msg)
 	}
 	return true;
 }
+bool SimOneAPIService::onFromBridgeTrafficEvent(Message& msg)
+{
+	Bridge::BridgeTrafficEvent trafficEvent;
+	if (!msg.toProtobuf(trafficEvent)){
+		return false;
+	}
+	cybertron::proto::traffic::TrafficEvent evt;
+	if (evt.ParseFromString(trafficEvent.buffer())){
+			if (mpTrafficEventCB != nullptr){
+				mpTrafficEventCB(std::to_string(evt.vehicleid()).c_str(), evt.data().c_str());
+			}
+	}
+	return true;
+}
 bool SimOneAPIService::onMainVehicleDriverStatus(int mainVehicleId, proto::sensor::DataDriverStatus status) {
 
 	std::unique_lock<std::recursive_mutex> lock(mLastDriverStatusLock);
@@ -1189,8 +1208,12 @@ void SimOneAPIService::setWayPointsInfo(std::uint16_t type, const std::string* m
 
 bool SimOneAPIService::SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data))
 {
-	//Init();
 	mpScenarioEventCB = cb;
+	return true;
+}
+bool SimOneAPIService::SetTrafficEventCB(void(*cb)(const char* mainVehicleId,const char* data))
+{
+	mpTrafficEventCB = cb;
 	return true;
 }
 

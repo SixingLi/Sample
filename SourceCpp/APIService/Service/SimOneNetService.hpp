@@ -8,6 +8,7 @@
 #include "cybertron/network/Message.hpp"
 #include "Traffic/ScenarioEvent.pb.h"
 #include "Traffic/TrafficCommon.pb.h"
+#include "Traffic/TrafficEvent.pb.h"
 #include "Node/HotArea.pb.h"
 #include "Node/Bridge.pb.h"
 #include "Sensor/Vehicle.pb.h"
@@ -162,6 +163,7 @@ protected:
 	bool onFromSensorDataMessage(Message& msg);
 	bool onFromBridgeDataRouteMessage(Message& msg);
 	bool onFromBridgeScenarioEvent(Message& msg);
+	bool onFromBridgeTrafficEvent(Message& msg);
 
 	bool onMainVehicleDriverStatus(int MainVehicleId, proto::sensor::DataDriverStatus status);
 	bool onMainVehicleDriverControl(int MainVehicleId, proto::sensor::DataVehicleControlState status);
@@ -208,7 +210,7 @@ public:
 	bool SetSensorDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
 	bool SetUltrasonicRadarsCB(void(*cb)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
     bool SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data));
-
+	bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
 
 #ifndef WITHOUT_HDMAP
 	static bool LoadHDMap(const int& timeOutSeconds);
@@ -292,6 +294,7 @@ private:
 	//
 	void(*mpFrameEnd)(int frame);
 	void(*mpScenarioEventCB)(const char* mainVehicleId, const char* event, const char* data);
+	void(*mpTrafficEventCB)(const char* mainVehicleId, const char* data);
 	bool mbCaseStartEventAlreadyCallback;
 	bool mbCaseStopEventAlreadyCallback;
 private:
