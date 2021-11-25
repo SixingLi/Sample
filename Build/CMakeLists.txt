@@ -15,23 +15,22 @@ ENDIF()
 
 add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 
-
-OPTION(HDMAP "Build ${CMAKE_BUILD_NAME} without HDMap" ON)
+OPTION(HDMAP "Build ${CMAKE_BUILD_NAME} HDMap" ON)
 IF (HDMAP)
 	add_definitions(-DHDMAP)
 ENDIF()
 
-OPTION(SENSOR "Build ${CMAKE_BUILD_NAME} without Sensor" ON)
+OPTION(SENSOR "Build ${CMAKE_BUILD_NAME} Sensor" ON)
 IF (SENSOR)
 	add_definitions(-DSENSOR)
 ENDIF()
 
-OPTION(PNC "Build ${CMAKE_BUILD_NAME} without Planning and Control" ON)
+OPTION(PNC "Build ${CMAKE_BUILD_NAME} Planning and Control" ON)
 IF (PNC)
 	add_definitions(-DPNC)
 ENDIF()
 
-OPTION(V2X "Build ${CMAKE_BUILD_NAME} without V2X" ON)
+OPTION(V2X "Build ${CMAKE_BUILD_NAME} V2X" ON)
 IF (V2X)
 	add_definitions(-DV2X)
 ENDIF()
@@ -62,7 +61,7 @@ endfunction()
 include_directories("${SIMONE_PATH_ROOT}/3rdparty")
 IF (UNIX)
 set(PythonLibs ${SIMONE_PATH_ROOT}/3rdparty/artifactory/python36/bin)
-ELSE (UNIX)
+ELSE ()
 set(PythonLibs ${SIMONE_PATH_ROOT}/3rdparty/artifactory/python36)
 ENDIF()
 find_package(PythonLibs 3.6 REQUIRED)
@@ -204,7 +203,7 @@ ELSEIF (UNIX)
 
 	SET(FOUNDATION_DBG_LIB_PATH ${SIMONE_PATH_FOUNDATION}/Build/build/lib/Debug)
 	SET(FOUNDATION_REL_LIB_PATH ${SIMONE_PATH_FOUNDATION}/Build/build/lib/Release)
-	
+
     	add_custom_command(TARGET autoconfig
 		POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/nlohmann ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/nlohmann/
