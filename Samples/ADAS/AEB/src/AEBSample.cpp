@@ -97,15 +97,15 @@ int main()
 			std::unique_ptr<SimOne_Data_Control> pControl = std::make_unique<SimOne_Data_Control>();
 
 			// Control mainVehicle with SimOneDriver
-			//SimOneAPI::GetDriverControl(MainVehicleId, pControl.get());
+			SimOneAPI::GetDriverControl(MainVehicleId, pControl.get());
 
 			// Control mainVehicle without SimOneDriver
-			pControl->throttle = 0.5;
+			/*pControl->throttle = 0.5;
 			pControl->brake = 0;
 			pControl->steering = 0;
 			pControl->handbrake = 0;
 			pControl->isManualGear = 0;
-			pControl->gear = static_cast<ESimOne_Gear_Mode>(1);
+			pControl->gear = static_cast<ESimOne_Gear_Mode>(1);*/
 
 			if (isObstalceBehind) {
 				double defaultDistance = 10.f;
