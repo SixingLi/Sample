@@ -17,7 +17,7 @@ int main()
 	bool inAEBState = false;
 	bool isSimOneInitialized = false;
 	const char* MainVehicleId = "0";
-	bool isJoinTimeLoop = 0;
+	bool isJoinTimeLoop = true;
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop); 
 	SimOneAPI::SetDriverName(MainVehicleId, "AEB");
 
@@ -47,7 +47,7 @@ int main()
 			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Fetch obstacle failed");
 		}
 		
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running && pObstacle->timestamp > 0 && pGps->timestamp > 0) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running) {
 			if (!isSimOneInitialized) {
 				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOne Initialized!");
 				isSimOneInitialized = true;
