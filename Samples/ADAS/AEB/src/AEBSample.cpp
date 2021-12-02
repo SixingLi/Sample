@@ -17,7 +17,7 @@ int main()
 	bool inAEBState = false;
 	bool isSimOneInitialized = false;
 	const char* MainVehicleId = "0";
-	bool isJoinTimeLoop = 0;
+	bool isJoinTimeLoop = true;
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop); 
 	SimOneAPI::SetDriverName(MainVehicleId, "AEB");
 
@@ -47,7 +47,7 @@ int main()
 			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Fetch obstacle failed");
 		}
 		
-		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running && pObstacle->timestamp > 0 && pGps->timestamp > 0) {
+		if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running) {
 			if (!isSimOneInitialized) {
 				SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOne Initialized!");
 				isSimOneInitialized = true;
@@ -97,15 +97,15 @@ int main()
 			std::unique_ptr<SimOne_Data_Control> pControl = std::make_unique<SimOne_Data_Control>();
 
 			// Control mainVehicle with SimOneDriver
-			SimOneAPI::GetDriverControl(MainVehicleId, pControl.get());
+			//SimOneAPI::GetDriverControl(MainVehicleId, pControl.get());
 
 			// Control mainVehicle without SimOneDriver
-			/*pControl->throttle = 0.5;
+			pControl->throttle = 0.5;
 			pControl->brake = 0;
 			pControl->steering = 0;
 			pControl->handbrake = 0;
 			pControl->isManualGear = 0;
-			pControl->gear = static_cast<ESimOne_Gear_Mode>(1);*/
+			pControl->gear = static_cast<ESimOne_Gear_Mode>(1);
 
 			if (isObstalceBehind) {
 				double defaultDistance = 10.f;
