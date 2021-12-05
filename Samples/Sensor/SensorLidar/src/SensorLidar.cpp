@@ -8,10 +8,10 @@
 std::string gIP = "127.0.0.1";
 unsigned short gInfoPort = 7788;
 unsigned short gPort = 6699;
-SimOne_Data_Point_Cloud gDataPointCloud;
+SimOne_Streaming_Point_Cloud gDataPointCloud;
 std::mutex	gDataPointCloudMutex;
 
-void dataPointCloudCallback(SimOne_Data_Point_Cloud *pPointCloud)
+void dataPointCloudCallback(SimOne_Streaming_Point_Cloud *pPointCloud)
 {
 	std::lock_guard<std::mutex> lock(gDataPointCloudMutex);
 	gDataPointCloud.frame = pPointCloud->frame;
@@ -33,27 +33,27 @@ int main(int argc, char* argv[])
 	}
 	printf("IP: %s;  Port: %d; Info Port: %d\n", gIP.c_str(), gPort, gInfoPort);
 
-	SimOneSM::SetStreamingPointCloudUpdateCB(gIP.c_str(), gPort, gInfoPort, dataPointCloudCallback);
+	SimOneAPI::SetStreamingPointCloudUpdateCB(gIP.c_str(), gPort, gInfoPort, dataPointCloudCallback);
 
-	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer("51 Simone pointCloud"));
+	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer("51WORLD LiDAR Viewer"));
 	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr viewCloud(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
 	viewer->setBackgroundColor(0, 0, 0);
 	viewer->addPointCloud<pcl::PointXYZRGBA>(viewCloud, "cloud");
 	viewer->addCoordinateSystem(0.1);
 	viewer->initCameraParameters();
-	viewer->setCameraPosition(0, 0, 50, 0, 0, 0);
+	viewer->setCameraPosition(-8, 0, 4.5, 1, 0, 0);
 
 	int lastFrame = 0;
 	while (1)
 	{
 		{
 			std::lock_guard<std::mutex> lock(gDataPointCloudMutex);
-			if (gDataPointCloud.frame != lastFrame && gDataPointCloud.pointStep == sizeof(SimOne_Point_XYZI)) {
+			if (gDataPointCloud.frame != lastFrame && gDataPointCloud.pointStep == sizeof(SimOne_Streaming_Point_XYZI)) {
 				viewCloud->points.clear();
 				int pointCount = gDataPointCloud.pointCloudDataSize / gDataPointCloud.pointStep;
 				viewCloud->points.resize(pointCount);
-				SimOne_Point_XYZI* pPoint = (SimOne_Point_XYZI*)gDataPointCloud.pointCloudData;
+				SimOne_Streaming_Point_XYZI* pPoint = (SimOne_Streaming_Point_XYZI*)gDataPointCloud.pointCloudData;
 				for (int i = 0; i < pointCount; i++, pPoint++) {
 					auto& viewPoint = viewCloud->points[i];
 					viewPoint.x = pPoint->x;

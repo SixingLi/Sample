@@ -36,7 +36,7 @@ set_target_properties(SensorLidarROS PROPERTIES
 		)
 
 
-target_link_libraries(SensorLidarROS ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingIOAPI.so)
+target_link_libraries(SensorLidarROS ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so)
 target_link_libraries(SensorLidarROS ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58)
 target_link_libraries(SensorLidarROS ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58)
 target_link_libraries(SensorLidarROS ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56)
@@ -48,7 +48,7 @@ target_link_libraries(SensorLidarROS ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 add_custom_command(TARGET SensorLidarROS
 		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingIOAPI.so ${CMAKE_BINARY_DIR}/bin/libSimOneStreamingIOAPI.so
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so ${CMAKE_BINARY_DIR}/bin/libSimOneStreamingAPI.so
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58 ${CMAKE_BINARY_DIR}/bin/libavcodec.so.58
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58 ${CMAKE_BINARY_DIR}/bin/libavformat.so.58
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56 ${CMAKE_BINARY_DIR}/bin/libavutil.so.56

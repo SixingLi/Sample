@@ -36,7 +36,7 @@ set_target_properties(SensorLidarView PROPERTIES
 
 IF (WIN32)
     include_directories("${PCL_HOME}/include/vtk-8.0")
-	target_link_libraries(SensorLidarView ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingIOAPI.lib)
+	target_link_libraries(SensorLidarView ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.lib)
 	SET(PCL_LIB_PATH ${PCL_HOME}/lib/Win64)
 	FILE(GLOB_RECURSE ALL_PCL_LIBS  ${PCL_LIB_PATH}/*.lib)
 	target_link_libraries(SensorLidarView ${ALL_PCL_LIBS})
@@ -48,7 +48,7 @@ IF (WIN32)
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/avutil-56.dll ${CMAKE_BINARY_DIR}/bin/avutil-56.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/swresample-3.dll ${CMAKE_BINARY_DIR}/bin/swresample-3.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/swscale-5.dll ${CMAKE_BINARY_DIR}/bin/swscale-5.dll
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingIOAPI.dll ${CMAKE_BINARY_DIR}/bin/SimOneStreamingIOAPI.dll
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.dll ${CMAKE_BINARY_DIR}/bin/SimOneStreamingAPI.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PCL_HOME}/bin/OpenNI2.dll ${CMAKE_BINARY_DIR}/bin/OpenNI2.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PCL_HOME}/bin/pcl_common_release.dll ${CMAKE_BINARY_DIR}/bin/pcl_common_release.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PCL_HOME}/bin/pcl_io_ply_release.dll ${CMAKE_BINARY_DIR}/bin/pcl_io_ply_release.dll
@@ -59,7 +59,7 @@ IF (WIN32)
 
 ELSEIF (UNIX)
     include_directories("${PCL_HOME}/include/vtk-6.2")
-	target_link_libraries(SensorLidarView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingIOAPI.so)
+	target_link_libraries(SensorLidarView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so)
 	target_link_libraries(SensorLidarView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58)
 	target_link_libraries(SensorLidarView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58)
 	target_link_libraries(SensorLidarView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56)
@@ -73,7 +73,7 @@ ELSEIF (UNIX)
 
 	add_custom_command(TARGET SensorLidarView
 		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingIOAPI.so ${CMAKE_BINARY_DIR}/bin/libSimOneStreamingIOAPI.so
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so ${CMAKE_BINARY_DIR}/bin/libSimOneStreamingAPI.so
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58 ${CMAKE_BINARY_DIR}/bin/libavcodec.so.58
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58 ${CMAKE_BINARY_DIR}/bin/libavformat.so.58
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56 ${CMAKE_BINARY_DIR}/bin/libavutil.so.56

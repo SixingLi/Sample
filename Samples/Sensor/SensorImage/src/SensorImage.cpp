@@ -7,10 +7,10 @@
 
 std::string gIP = "127.0.0.1";
 unsigned short gPort = 13956;
-SimOne_Data_Image gDataImage;
+SimOne_Streaming_Image gDataImage;
 std::mutex	gDataImageMutex;
 
-void dataImageCallback(SimOne_Data_Image *pImage)
+void dataImageCallback(SimOne_Streaming_Image *pImage)
 {
 	std::lock_guard<std::mutex> lock(gDataImageMutex);
 	gDataImage.frame = pImage->frame;
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 	}
 	printf("IP: %s; Port: %d\n", gIP.c_str(), gPort);
 
-	SimOneSM::SetStreamingImageCB(gIP.c_str(), gPort, dataImageCallback);
+	SimOneAPI::SetStreamingImageUpdateCB(gIP.c_str(), gPort, dataImageCallback);
 	int lastFrame = 0;
 	while (1)
 	{

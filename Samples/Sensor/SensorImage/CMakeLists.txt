@@ -35,7 +35,7 @@ set_target_properties(SensorImageView PROPERTIES
 		)
 
 IF (WIN32)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingIOAPI.lib)
+	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.lib)
 	target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/opencv_world346.lib)
 	
 	add_custom_command(TARGET SensorImageView
@@ -45,12 +45,12 @@ IF (WIN32)
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/avutil-56.dll ${CMAKE_BINARY_DIR}/bin/avutil-56.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/swresample-3.dll ${CMAKE_BINARY_DIR}/bin/swresample-3.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/swscale-5.dll ${CMAKE_BINARY_DIR}/bin/swscale-5.dll
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingIOAPI.dll ${CMAKE_BINARY_DIR}/bin/SimOneStreamingIOAPI.dll
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.dll ${CMAKE_BINARY_DIR}/bin/SimOneStreamingAPI.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/opencv_world346.dll ${CMAKE_BINARY_DIR}/bin/opencv_world346.dll
     )
 
 ELSEIF (UNIX)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingIOAPI.so)
+	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so)
 	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58)
 	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58)
 	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56)
@@ -65,7 +65,7 @@ ELSEIF (UNIX)
 
 	add_custom_command(TARGET SensorImageView
 		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingIOAPI.so ${CMAKE_BINARY_DIR}/bin/libSimOneStreamingIOAPI.so
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so ${CMAKE_BINARY_DIR}/bin/libSimOneStreamingAPI.so
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58 ${CMAKE_BINARY_DIR}/bin/libavcodec.so.58
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58 ${CMAKE_BINARY_DIR}/bin/libavformat.so.58
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56 ${CMAKE_BINARY_DIR}/bin/libavutil.so.56
