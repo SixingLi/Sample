@@ -13,7 +13,7 @@ add_definitions(-D_UNICODE)
 add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 
 set(SIMONE_SDK_PATH_ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
-SET(PCL_HOME ${SIMONE_SDK_PATH_ROOT}/Sensor/3rdparty/pcl)
+SET(PCL_HOME ${SIMONE_SDK_PATH_ROOT}/SensorRaw/3rdparty/pcl)
 include_directories("${SIMONE_SDK_PATH_ROOT}/include")
 include_directories("${PCL_HOME}/include")
 include_directories("${PCL_HOME}/include/pcl")
