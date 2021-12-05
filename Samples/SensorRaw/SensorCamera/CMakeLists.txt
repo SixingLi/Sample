@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8.0)
 
-project(SensorImageProject VERSION 3.0.0 LANGUAGES C CXX)
+project(SensorCameraProject VERSION 3.0.0 LANGUAGES C CXX)
 
 IF (WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0501)
@@ -21,11 +21,11 @@ include_directories("${OPENCV_HOME}/include")
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 SET(CMAKE_INSTALL_RPATH "./")
 
-add_executable(SensorImageView "")
-target_sources(SensorImageView PRIVATE "src/SensorImage.cpp")
+add_executable(SensorCameraView "")
+target_sources(SensorCameraView PRIVATE "src/SensorCamera.cpp")
 
-set_target_properties(SensorImageView PROPERTIES CXX_STANDARD 14)
-set_target_properties(SensorImageView PROPERTIES
+set_target_properties(SensorCameraView PROPERTIES CXX_STANDARD 14)
+set_target_properties(SensorCameraView PROPERTIES
 			ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin
 			LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin
 			RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin
@@ -35,10 +35,10 @@ set_target_properties(SensorImageView PROPERTIES
 		)
 
 IF (WIN32)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.lib)
-	target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/opencv_world346.lib)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.lib)
+	target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/opencv_world346.lib)
 	
-	add_custom_command(TARGET SensorImageView
+	add_custom_command(TARGET SensorCameraView
         POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/avcodec-58.dll ${CMAKE_BINARY_DIR}/bin/avcodec-58.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/avformat-58.dll ${CMAKE_BINARY_DIR}/bin/avformat-58.dll
@@ -50,20 +50,20 @@ IF (WIN32)
     )
 
 ELSEIF (UNIX)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswresample.so.3)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswscale.so.5)
-	target_link_libraries(SensorImageView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libx264.so.148)
-    target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/libopencv_highgui.so.3.4)
-	target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/libopencv_core.so.3.4)
-	target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/libopencv_imgcodecs.so.3.4)
-	target_link_libraries(SensorImageView ${OPENCV_LIB_PATH}/libopencv_imgproc.so.3.4)
-	target_link_libraries(SensorImageView pthread)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavformat.so.58)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswresample.so.3)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswscale.so.5)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libx264.so.148)
+    target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/libopencv_highgui.so.3.4)
+	target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/libopencv_core.so.3.4)
+	target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/libopencv_imgcodecs.so.3.4)
+	target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/libopencv_imgproc.so.3.4)
+	target_link_libraries(SensorCameraView pthread)
 
-	add_custom_command(TARGET SensorImageView
+	add_custom_command(TARGET SensorCameraView
 		POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so ${CMAKE_BINARY_DIR}/bin/libSimOneStreamingAPI.so
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavcodec.so.58 ${CMAKE_BINARY_DIR}/bin/libavcodec.so.58
