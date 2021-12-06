@@ -58,7 +58,6 @@ function(SetDefaultTargetProperties target)
     )
 endfunction()
 
-include_directories("${SIMONE_PATH_ROOT}/3rdparty")
 IF (UNIX)
 set(PythonLibs ${SIMONE_PATH_ROOT}/3rdparty/artifactory/python36/bin)
 ELSE ()
