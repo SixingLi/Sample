@@ -133,7 +133,7 @@ void ros_trans_node::pub_point_cloud_cb(SimOne_Streaming_Point_Cloud* pPointclou
   pointCloud.width = pPointcloud->width;   // inti
   // printf("point cloud height: %d\n",pointCloud.height);
 
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 4; i++)
   {
     pcl::PCLPointField field;
     field.name = sNames[i].c_str();
@@ -492,10 +492,10 @@ void ros_trans_node::rcv_esp_ctl_cb(const msg_gen::esp_control& msg)
   esp.vlcShutdown = msg.vlcShutdown;
   esp.gearMode = msg.gearMode;
 
-  if (!SimOneAPI::SetESPDrive(0, &esp))
-  {
-    printf("\033[1m\033[31m[rcv_esp_ctl_cb] Set ESPDrive failed!\033[0m\n");
-  }
+  // if (!SimOneAPI::SetESPDrive(0, &esp))
+  // {
+  //   printf("\033[1m\033[31m[rcv_esp_ctl_cb] Set ESPDrive failed!\033[0m\n");
+  // }
 }
 
 void ros_trans_node::run_rcv()
