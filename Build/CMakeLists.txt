@@ -143,6 +143,10 @@ IF (WIN32)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOnePNCAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/SimOnePNCAPI.py
 		)
 	ENDIF()	
+	add_custom_command(TARGET autoconfig
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/ ${CMAKE_BINARY_DIR}/bin/Debug
+    )
 ###-----------------------------------------------------------------------------------------------------------------------------###
     add_custom_command(TARGET autoconfig
 		POST_BUILD
@@ -298,5 +302,9 @@ ELSEIF (UNIX)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/PNC/SimOnePNCAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOnePNCAPI.h
 		)
 	ENDIF()
+	add_custom_command(TARGET autoconfig
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/ ${CMAKE_BINARY_DIR}/bin/Debug
+    )
 ENDIF()
 
