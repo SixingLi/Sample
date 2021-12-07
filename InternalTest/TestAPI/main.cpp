@@ -31,8 +31,9 @@ int main(int argc, char* argv[])
 
 void Test_SensorSensorDetection(const char * MainVehicleID, bool isCallBackMode) {
 	if (isCallBackMode) {
-		auto function = [](const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
-			std::cout << pGroundtruth->frame << "," << pGroundtruth->objectSize << endl;//The Lane's leftLane ID 
+		auto function = [](const char* MainVehicleID, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
+			printf("hostVehicle:%s frame:%d objectSize:%d\n", MainVehicleID, pGroundtruth->frame, pGroundtruth->objectSize);
+			//std::cout <<"hostVehicle:"<<*mainVehicleId<<"frame:"<< pGroundtruth->frame << "," << pGroundtruth->objectSize << endl;//The Lane's leftLane ID 
 		};
 		SimOneAPI::SetSensorDetectionsUpdateCB(function);
 	}

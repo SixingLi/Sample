@@ -15,7 +15,8 @@ TaskUltrasonicRadar::~TaskUltrasonicRadar()
 
 uint16_t TaskUltrasonicRadar::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
 {
-	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
+	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
+	const char* mainVehId = tempStr.c_str();
 	if (commanId != cybertron::proto::sensor::EDataType_UltrasonicRadar)
 	{
 		return -1;

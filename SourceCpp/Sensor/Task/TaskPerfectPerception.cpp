@@ -19,7 +19,8 @@ TaskPerfectPerception::~TaskPerfectPerception()
 }
 
 bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorContext, const std::string* pBuffer) {
-	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
+	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
+	const char* mainVehId = tempStr.c_str();
 	if (!mPerfectPerceptionDetections.ParseFromString(*pBuffer)) {
 		return false;
 	}
@@ -83,7 +84,8 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 	return true;
 }
 bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, const std::string* pBuffer) {
-	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
+	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
+	const char* mainVehId = tempStr.c_str();
 	cybertron::proto::sensor::GroundTruth groundTruthMsg;
 	if (!groundTruthMsg.ParseFromString(*pBuffer)) {
 		return false;

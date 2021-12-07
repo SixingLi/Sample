@@ -72,9 +72,6 @@ public:
 		//mbEnable = false;
 	}
 	virtual ~CTaskSensorBase() {}
-	static const char* int2string(int id) {
-		return std::to_string(id).c_str();
-	}
 	void makeSensorHeader(SensorContext* pContext, Bridge::BridgeSensorHeader* pHeader) {
 		pHeader->set_timestamp(pContext->timestamp);
 		pHeader->set_time_of_simulation(pContext->time_of_simulation);

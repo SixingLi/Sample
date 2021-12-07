@@ -36,7 +36,8 @@ uint16_t TaskV2XNFS::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 
 void TaskV2XNFS::DoSendMsgFrame(SensorContext* pSensorContext, const std::string &pBuffer) {
 
-	const char* mainVehId = int2string(pSensorContext->mainVehicleId);
+	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
+	const char* mainVehId = tempStr.c_str();
 	SimOne_Data_V2XNFS V2xMsgBSMFrame;
 	SimOne_Data_V2XNFS V2xMsgRSMFrame;
 	SimOne_Data_V2XNFS V2xMsgMAPFrame;
