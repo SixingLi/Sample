@@ -111,9 +111,9 @@ def SoAPISetFrameCB(startcb, stopcb):
 	ret = SimoneAPI.SetFrameCB(api_framestart_cb, api_framestop_cb)
 	return ret
 
-def SoGetMainVehicleStatus(data):
+def SoGetMainVehicleStatus(mainVehicleId, data):
 	SimoneAPI.GetMainVehicleStatus.restype = c_bool
-	return SimoneAPI.GetMainVehicleStatus(pointer(data))
+	return SimoneAPI.GetMainVehicleStatus(mainVehicleId, pointer(data))
 
 def SoAPISetMainVehicleStatusCB(cb):
 	SimoneAPI.SetMainVehicleStatusCB.restype = c_bool

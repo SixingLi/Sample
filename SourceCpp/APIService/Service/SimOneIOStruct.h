@@ -73,10 +73,11 @@ struct SimOne_Data_Map
 	char opendriveMd5[SOSM_MAP_ODMD5_LENGT];
 };
 // ----------------------------
-// SimOne MainVehilce WayPoints (SimOne Output) 
+// SimOne MainVehicle WayPoints (SimOne Output) 
 // ----------------------------
 #define SOSM_WAYPOINTS_LABEL "SOSM_WAYPOINTS"
 #define SOSM_WAYPOINTS_SIZE_MAX 100
+#define MAX_MAINVEHICLE_NAME_LEN 64
 struct SimOne_Data_WayPoints_Entry 
 {
 	int index;
@@ -91,6 +92,7 @@ struct SimOne_Data_WayPoints_Entry
 
 struct SimOne_Data_WayPoints:public SimOne_Data
 {
+	char mainVehicleId[MAX_MAINVEHICLE_NAME_LEN];
 	int wayPointsSize; // MainVehicle WayPoints size
 	SimOne_Data_WayPoints_Entry wayPoints[SOSM_WAYPOINTS_SIZE_MAX]; // WayPoints, 100 max
 };
@@ -109,11 +111,6 @@ struct SimOne_Data_Pose_Control : public SimOne_Data
 	bool autoZ = false;// Automatically set Z according to scene
 };
 
-#define OSI_API_STRAT_CONTROL "SOSM_OSI_API_STRAT_CONTROL"
-struct OSI_API_Control
-{
-	bool OSIAPI_Control = false;
-};
 // ----------------------------
 // Vehicle control data (SimOne Input)
 // ----------------------------
@@ -307,15 +304,15 @@ struct SimOne_Data_Gps : public SimOne_Data
 	float velY; // MainVehicle Velocity Y on Opendrive (by meter)
 	float velZ; // MainVehicle Velocity Z on Opendrive (by meter)
 	float throttle; //MainVehicle throttle
-	float brake; //MainVehilce brake;
+	float brake; //MainVehicle brake;
 	float steering; //MainVehicle Wheel Steering angle (deg)
 	int gear; // MainVehicle gear position
-	float accelX; // MainVehilce Acceleration X on Opendrive (by meter)
-	float accelY; // MainVehilce Acceleration Y on Opendrive (by meter)
-	float accelZ; // MainVehilce Acceleration Z on Opendrive (by meter)
-	float angVelX; // MainVehilce Angular Velocity X on Opendrive (by meter)
-	float angVelY; // MainVehilce Angular Velocity Y on Opendrive (by meter)
-	float angVelZ; // MainVehilce Angular Velocity Z on Opendrive (by meter)
+	float accelX; // MainVehicle Acceleration X on Opendrive (by meter)
+	float accelY; // MainVehicle Acceleration Y on Opendrive (by meter)
+	float accelZ; // MainVehicle Acceleration Z on Opendrive (by meter)
+	float angVelX; // MainVehicle Angular Velocity X on Opendrive (by meter)
+	float angVelY; // MainVehicle Angular Velocity Y on Opendrive (by meter)
+	float angVelZ; // MainVehicle Angular Velocity Z on Opendrive (by meter)
 	float wheelSpeedFL;  // Speed of front left wheel (by meter/sec)
 	float wheelSpeedFR;  // Speed of front right wheel (by meter/sec)
 	float wheelSpeedRL;  // Speed of rear left wheel (by meter/sec)
@@ -457,27 +454,6 @@ struct SimOne_Data_Vehicle_Extra
 {
     int dataSize;
     float extra_states[SOSM_VEHICLE_EXTRA_STATE_MAX_SIZE];
-};
-
-#define SOSM_MAIN_VEHICLE "SOSM_MAIN_VEHICLE"
-struct SimOne_Data_MainVehicle : public SimOne_Data
-{
-	int mainVehicleId;				// MainVehicle ID
-	float posX; 					// Position X on Opendrive (by meter)
-	float posY; 					// Position Y on Opendrive (by meter)
-	float posZ; 					// Position Z on Opendrive (by meter)
-	float oriX; 					// Rotation X on Opendrive (by radian)
-	float oriY; 					// Rotation Y on Opendrive (by radian)
-	float oriZ; 					// Rotation Z on Opendrive (by radian)
-	float speed;					// MainVehicle speed
-	int nextTrafficLightColorId;	// current traffic lisght 0-read 1-yellow 2-green 3-unknown
-	int gear; 						// MainVehicle gear position
-	float throttle; 				// MainVehicle throttle
-	float brake; 					// MainVehicle brake;
-	float steering; 				// MainVehicle Steering angle
-	float length;
-	float width;
-	float height;
 };
 
 // ----------------------------
@@ -634,7 +610,7 @@ enum ESimOne_V2X_MessageFrame_PR {
 struct SimOne_Data_SensorConfiguration
 {
 	int id;
-	int mainVehicle;
+	char mainVehicleId[SENSOR_IDTYPE_MAX];
 	char sensorId[SENSOR_IDTYPE_MAX];
 	char sensorType[SENSOR_IDTYPE_MAX];
 	float x;
@@ -948,17 +924,16 @@ struct SimOne_Data_Prediction : public SimOne_Data
 	float veh_delta_t;
 };
 #define MAX_MAINVEHICLE_NUM 10
-#define MAX_MAINVEHICLE_NAME_LEN 64
 struct SimOne_Data_MainVehicle_Info
 {
 	int size;
-	int id_list[MAX_MAINVEHICLE_NUM];
+	char id_list[MAX_MAINVEHICLE_NUM][MAX_MAINVEHICLE_NAME_LEN];
 	char type_list[MAX_MAINVEHICLE_NUM][MAX_MAINVEHICLE_NAME_LEN];
 };
 
 struct SimOne_Data_MainVehicle_Status
 {
-	int mainVehicleId;
+	char mainVehicleId[MAX_MAINVEHICLE_NAME_LEN];
 	int mainVehicleStatus;
 };
 

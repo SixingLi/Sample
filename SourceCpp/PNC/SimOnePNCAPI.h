@@ -65,7 +65,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool RegisterVehicleState(ESimOne_Data_Vehicle_State *pStateIndics, int size);
+		SIMONE_API bool RegisterVehicleState(const char* mainVehicleId, ESimOne_Data_Vehicle_State *pStateIndics, int size);
 
 		/*!
 		获取通过RegisterSimOneVehicleState注册的主车状态信息
@@ -78,7 +78,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetVehicleState(SimOne_Data_Vehicle_Extra* pVehExtraState);
+		SIMONE_API bool GetVehicleState(const char* mainVehicleId, SimOne_Data_Vehicle_Extra* pVehExtraState);
 
 		/*!
 		设置主车位置
@@ -213,7 +213,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetWayPoints(SimOne_Data_WayPoints* pWayPoints);
+		SIMONE_API bool GetWayPoints(const char* mainVehicleId, SimOne_Data_WayPoints* pWayPoints);
 
 
 

@@ -226,7 +226,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
+		SIMONE_API bool GetMainVehicleStatus(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
 
 		/*!
 		获取主车状态信息回调
@@ -239,7 +239,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetMainVehicleStatusUpdateCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
+		SIMONE_API bool SetMainVehicleStatusUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
 	
 		/*!
 		获取高精度地图标识
