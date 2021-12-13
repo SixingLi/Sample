@@ -68,7 +68,7 @@ extern "C"
 		}
 	}
 
-	SIMONE_API bool SimOneAPI::StopSimOneNode() {
+	SIMONE_API bool SimOneAPI::TerminateSimOneAPI() {
 		return SimOneAPIService::GetInstance()->Stop();
 	}
 
