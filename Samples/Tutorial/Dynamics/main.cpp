@@ -2,7 +2,7 @@
 #include "SimOnePNCAPI.h"
 #include "SimOneSensorAPI.h"
 #include "TestSample.hpp"
-#include <string>
+#include <string.h>
 
 using namespace std;
 

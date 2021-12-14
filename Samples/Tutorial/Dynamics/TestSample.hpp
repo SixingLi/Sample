@@ -39,8 +39,8 @@ public:
 			pControl->timestamp = gpsPtr->timestamp;
 			bool testre = SimOneAPI::SetDrive(mainVehicleId, pControl.get());
 
-			SimOneAPI::RegisterVehicleState(&simOneState, 1);
-			SimOneAPI::GetVehicleState(pVehExtraState.get());
+			SimOneAPI::RegisterVehicleState("0", &simOneState, 1);
+			SimOneAPI::GetVehicleState("0", pVehExtraState.get());
 			mDynaLog.saveData(gpsPtr.get(), pVehExtraState.get());
 			if (UtilMath::mpsToKmph(UtilMath::calculateSpeed(gpsPtr->velX, gpsPtr->velY, gpsPtr->velZ)) >= targetSpeed) {
 				speedReached = true;
@@ -91,7 +91,7 @@ public:
 		}
 	}
 
-	static enum SteerType
+	enum SteerType
 	{
 		sineSteer,
 		rampSteer,
@@ -139,8 +139,8 @@ public:
 		std::unique_ptr<SimOne_Data_Gps> gpsPtr = std::make_unique<SimOne_Data_Gps>();
 		ESimOne_Data_Vehicle_State simOneState = ESimOne_Data_Vehicle_State_SO_TimePassed;
 		std::unique_ptr<SimOne_Data_Vehicle_Extra> pVehExtraState = std::make_unique<SimOne_Data_Vehicle_Extra>();
-		SimOneAPI::RegisterVehicleState(&simOneState, 1);
-		SimOneAPI::GetVehicleState(pVehExtraState.get());
+		SimOneAPI::RegisterVehicleState("0", &simOneState, 1);
+		SimOneAPI::GetVehicleState("0", pVehExtraState.get());
 		const float startTime = pVehExtraState->extra_states[0];
 
 		pControl->throttle = 0.0f;
@@ -151,11 +151,11 @@ public:
 		while (1)
 		{
 			SimOneAPI::GetGps(mainVehicleId, gpsPtr.get());
-			SimOneAPI::RegisterVehicleState(&simOneState, 1);
-			SimOneAPI::GetVehicleState(pVehExtraState.get());
+			SimOneAPI::RegisterVehicleState("0", &simOneState, 1);
+			SimOneAPI::GetVehicleState("0", pVehExtraState.get());
 			pControl->throttle = speedControl(gpsPtr.get(), UtilMath::kmphToMps(targetSpd));
 			if (steerType == sineSteer) {
-				pControl->steering =25.0f * std::sinf(2 * PI* 0.1* (pVehExtraState->extra_states[0] - startTime)*(pVehExtraState->extra_states[0] - startTime))/maxSteerDeg;
+				pControl->steering =25.0f * sinf(2 * PI* 0.1* (pVehExtraState->extra_states[0] - startTime)*(pVehExtraState->extra_states[0] - startTime))/maxSteerDeg;
 				SimOneAPI::SetDrive(mainVehicleId, pControl.get());
 				if ((pVehExtraState->extra_states[0] - startTime) >= 10.0f) {
 					pControl->steering = 0.0f;
