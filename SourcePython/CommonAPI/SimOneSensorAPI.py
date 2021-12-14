@@ -105,9 +105,9 @@ def SoApiSetSensorDetectionsUpdateCB(cb):
 	SimoneAPI.SetSensorDetectionsUpdateCB(simoneapi_sensor_detections_cb_func)
 	SIMONEAPI_SENSOR_DETECTIONS_CB = cb
 
-def SoGetSensorConfigurations(sensorConfigurations):
+def SoGetSensorConfigurations(mainVehicleId, sensorConfigurations):
 	SimoneAPI.GetSensorConfigurations.restype = c_bool
-	return SimoneAPI.GetSensorConfigurations(pointer(sensorConfigurations))
+	return SimoneAPI.GetSensorConfigurations(mainVehicleId, pointer(sensorConfigurations))
 
 def SoGetEnvironment(pEnvironment):
 	SimoneAPI.GetEnvironment.restype = c_bool

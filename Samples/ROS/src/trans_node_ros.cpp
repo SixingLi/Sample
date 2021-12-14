@@ -560,7 +560,7 @@ void ros_trans_node::simone_ini()
   //     {
   //         if (SimOneAPI::GetCaseRunStatus() == SimOne_Case_Status::SimOne_Case_Status_Stop) // || shutdown_requested)
   //         {
-  //             SimOneAPI::StopSimOneNode();
+  //             SimOneAPI::TerminateSimOneAPI();
   //             std::cout << "preparing to shut down..." << std::endl;
   //             return;
   //         }
@@ -626,7 +626,7 @@ void ros_trans_node::monitor_case_status()
   {
     if(SimOneAPI::GetCaseRunStatus() ==ESimOne_Case_Status::ESimOne_Case_Status_Stop)
     {
-      SimOneAPI::StopSimOneNode();
+      SimOneAPI::TerminateSimOneAPI();
       break;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));

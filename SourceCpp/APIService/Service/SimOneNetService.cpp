@@ -301,8 +301,8 @@ void SimOneAPIService::zeroMemory() {
 #ifndef WITHOUT_SENSOR
 	TaskSensorManager::getInstance().ManagerClear();
 #endif
-	memset(&mWayPoints, 0, sizeof(SimOne_Data_WayPoints));
-	memset(&mSensorConfigurations, 0, sizeof(SimOne_Data_SensorConfigurations));
+	mWayPointsMap.clear();
+	mSensorConfigurationsMap.clear();
 	memset(&mEnvironmentData, 0, sizeof(SimOne_Data_Environment));
 	memset(&mCaseInfo, 0, sizeof(SimOne_Data_CaseInfo));
 	return;
@@ -773,11 +773,11 @@ bool SimOneAPIService::GetMainVehicleList(SimOne_Data_MainVehicle_Info *pMainVeh
 	memcpy(pMainVehicleInfo, &mpMainVehicleInfo, sizeof(SimOne_Data_MainVehicle_Info));
 	return true;
 }
-bool SimOneAPIService::GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
+bool SimOneAPIService::GetMainVehicleStatus(int mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
 	if (!pMainVehicleStatus)
 		return false;
 	Bridge::BridgeResultMainVehicleStatus mainVehicleInfo;
-	mainVehicleInfo.set_mainvehicleid(atoi(mMainVehicleId));
+	mainVehicleInfo.set_mainvehicleid(mainVehicleId);
 	Message req;
 	req.fromProtobuf(Bridge::EBridgeReqMainVehicleStatus, mainVehicleInfo);
 	mpClientSync->send(req);
@@ -794,7 +794,9 @@ bool SimOneAPIService::GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMai
 	if (!result.toProtobuf(mainVehicleStatus)) {
 		return false;
 	}
-	mpMainVehicleStatus.mainVehicleId = mainVehicleStatus.mainvehicleid();
+	std::string strVehicleId = std::to_string(mainVehicleStatus.mainvehicleid());
+	memset(mpMainVehicleStatus.mainVehicleId, 0, MAX_MAINVEHICLE_NAME_LEN);
+	memcpy(mpMainVehicleStatus.mainVehicleId, strVehicleId.c_str(), strVehicleId.size());
 	mpMainVehicleStatus.mainVehicleStatus = mainVehicleStatus.mainvehiclestatus();
 	memcpy(pMainVehicleStatus, &mpMainVehicleStatus, sizeof(SimOne_Data_MainVehicle_Status));
 	return true;
@@ -819,7 +821,7 @@ bool SimOneAPIService::ReceiveRouteMessageCB(void(*cb)(int fromId, ESimOne_Clien
 	mpRouteMessageCB = cb;
 	return true;
 }
-bool SimOneAPIService::RegisterSimOneVehicleState(ESimOne_Data_Vehicle_State *pStateIndics, int size)
+bool SimOneAPIService::RegisterSimOneVehicleState(int mainVehicleId, ESimOne_Data_Vehicle_State *pStateIndics, int size)
 {
     if (!mpClientSync) {
         return false;
@@ -831,20 +833,20 @@ bool SimOneAPIService::RegisterSimOneVehicleState(ESimOne_Data_Vehicle_State *pS
 		return false;
 
     HotArea::MainVehicleExtraDataIndics indics;
-    indics.set_vehicleid(atoi(mMainVehicleId));
+    indics.set_vehicleid(mainVehicleId);
     for (int i = 0; i < size; i++) {
         indics.add_extra_state_indics(pStateIndics[i]);
     }
-    sendMainVehicleMessage(atoi(mMainVehicleId), cybertron::proto::sensor::EDataType_VehicleExtraStateIndics, indics);
+    sendMainVehicleMessage(mainVehicleId, cybertron::proto::sensor::EDataType_VehicleExtraStateIndics, indics);
 
     return true;
 }
-bool SimOneAPIService::GetSimOneVehicleState(SimOne_Data_Vehicle_Extra* pVehExtraState)
+bool SimOneAPIService::GetSimOneVehicleState(int mainVehicleId, SimOne_Data_Vehicle_Extra* pVehExtraState)
 {
 	if (!pVehExtraState)
 		return false;
     std::unique_lock<std::recursive_mutex> lock(mLastGPSDataMapLock);
-    SimOne_Data_Vehicle_ExtraMap::iterator it = mLastVehExtraStateMap.find(atoi(mMainVehicleId));
+    SimOne_Data_Vehicle_ExtraMap::iterator it = mLastVehExtraStateMap.find(mainVehicleId);
     if (it == mLastVehExtraStateMap.end())
     {
         return false;
@@ -885,10 +887,13 @@ bool SimOneAPIService::GetTaskData(string key, int sensorType, int commandId, vo
 	return true;
 }
 
-bool SimOneAPIService::GetSensorConfigurations(SimOne_Data_SensorConfigurations *pSensorConfigurations) {
+bool SimOneAPIService::GetSensorConfigurations(int mainVehicleId, SimOne_Data_SensorConfigurations *pSensorConfigurations) {
 	if (!pSensorConfigurations)
 		return false;
-	memcpy(pSensorConfigurations, &mSensorConfigurations, sizeof(SimOne_Data_SensorConfigurations));
+	auto iter = mSensorConfigurationsMap.find(mainVehicleId);
+	if (iter == mSensorConfigurationsMap.end())
+		return false;
+	memcpy(pSensorConfigurations, &iter->second, sizeof(SimOne_Data_SensorConfigurations));
 	return true;
 }
 bool SimOneAPIService::GetEnvironment(SimOne_Data_Environment *pEnvironment) {
@@ -941,32 +946,6 @@ bool SimOneAPIService::GetGps(int mainVehicleId, SimOne_Data_Gps *pGps) {
 	}
 
 	memcpy(pGps, &it->second, sizeof(SimOne_Data_Gps));
-	return true;
-}
-
-bool SimOneAPIService::GetObstacle(SimOne_Data_Obstacle *pObstacle) {
-	if (!pObstacle)
-		return false;
-	if (!mbIsOpenDefaultPerfectSensor)
-	{
-		std::unique_lock<std::recursive_mutex> lock(mLastObstacleMapLock);
-		SimOne_Data_ObstacleMap::iterator it = mLastObstacleMap.find(atoi(mMainVehicleId));
-		if (it == mLastObstacleMap.end())
-		{
-			return false;
-		}
-
-		memcpy(pObstacle, &it->second, sizeof(SimOne_Data_Obstacle));
-	}
-	else
-	{
-		ETaskCommandId commandId = ETaskCommandId_PerfectPerceptionGroundTruth;
-		int sensorType = Bridge::ESensorType_PerfectPerception;
-		string key = std::to_string(atoi(mMainVehicleId));
-		if (!GetTaskData(key, sensorType, commandId, (void*)pObstacle)) {
-			return false;
-		}
-	}
 	return true;
 }
 
@@ -1024,20 +1003,6 @@ bool SimOneAPIService::SetEnvironment(SimOne_Data_Environment *pEnvironment) {
 		return true;
 	}
 	return false;
-}
-
-bool SimOneAPIService::GetGps(SimOne_Data_Gps *pGps) {
-	if (!pGps)
-		return false;
-	std::unique_lock<std::recursive_mutex> lock(mLastGPSDataMapLock);
-	SimOne_Data_GpsMap::iterator it = mLastGPSDataMap.find(atoi(mMainVehicleId));
-	if (it == mLastGPSDataMap.end())
-	{
-		return false;
-	}
-
-	memcpy(pGps, &it->second, sizeof(SimOne_Data_Gps));
-	return true;
 }
 
 #endif
@@ -1198,12 +1163,9 @@ void SimOneAPIService::setWayPointsInfo(std::uint16_t type, const std::string* m
 {
 	if (!msgDataBody)
 		return;
-	SimOne_Data_WayPoints_Entry * pConf = (SimOne_Data_WayPoints_Entry*)msgDataBody->c_str();
-	if (pConf->index >= 100) {
-		return;
-	}
-	mWayPoints.wayPoints[pConf->index] = *pConf;
-	mWayPoints.wayPointsSize++;
+	SimOne_Data_WayPoints * pConf = (SimOne_Data_WayPoints*)msgDataBody->c_str();
+	int vehicleId = string2Int(pConf->mainVehicleId);
+	mWayPointsMap[vehicleId] = *pConf;
 }
 
 bool SimOneAPIService::SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data))
@@ -1217,10 +1179,12 @@ bool SimOneAPIService::SetTrafficEventCB(void(*cb)(const char* mainVehicleId,con
 	return true;
 }
 
-bool SimOneAPIService::GetWayPoints(SimOne_Data_WayPoints* pWayPoints) {
+bool SimOneAPIService::GetWayPoints(int mainVehicleId, SimOne_Data_WayPoints* pWayPoints) {
 	if (!pWayPoints)
 		return false;
-	memcpy(pWayPoints, &mWayPoints, sizeof(SimOne_Data_WayPoints));
+	if (mWayPointsMap.find(mainVehicleId) == mWayPointsMap.end())
+		return false;
+	memcpy(pWayPoints, &mWayPointsMap[mainVehicleId], sizeof(SimOne_Data_WayPoints));
 	return true;
 }
 
@@ -1852,10 +1816,12 @@ bool SimOneAPIService::onFromBridgeResultMainVehicleStatus(Message& msg) {
 	if (!msg.toProtobuf(mainVehicleStatus)) {
 		return false;
 	}
-	mpMainVehicleStatus.mainVehicleId = mainVehicleStatus.mainvehicleid();
+	std::string strVehicleId = std::to_string(mainVehicleStatus.mainvehicleid());
+	memset(mpMainVehicleStatus.mainVehicleId, 0, MAX_MAINVEHICLE_NAME_LEN);
+	memcpy(mpMainVehicleStatus.mainVehicleId, strVehicleId.c_str(), strVehicleId.size());
 	mpMainVehicleStatus.mainVehicleStatus = mainVehicleStatus.mainvehiclestatus();
 	if (mpMainVehicleChangeStatus) {
-		mpMainVehicleChangeStatus(&mpMainVehicleStatus);
+		mpMainVehicleChangeStatus(mpMainVehicleStatus.mainVehicleId, &mpMainVehicleStatus);
 	}
 	return true;
 }
@@ -1868,9 +1834,11 @@ bool SimOneAPIService::onFromBridgeResultMainVehicleList(Message& msg) {
 	}
 	for (auto i = 0; i < mainVehiclelist.mainvehicle_info().size(); i++)
 	{
-		int id = mainVehiclelist.mainvehicle_info(i).id();
+		std::string strVehicleId = std::to_string(mainVehiclelist.mainvehicle_info(i).id());
+		memset(mpMainVehicleInfo.id_list[i], 0, MAX_MAINVEHICLE_NAME_LEN);
+		memcpy(mpMainVehicleInfo.id_list[i], strVehicleId.c_str(), strVehicleId.size());
 		std::string type = mainVehiclelist.mainvehicle_info(i).type();
-		mpMainVehicleInfo.id_list[i] = id;
+		memset(mpMainVehicleInfo.type_list[i], 0, MAX_MAINVEHICLE_NAME_LEN);
 		memcpy(mpMainVehicleInfo.type_list[i], type.c_str(), type.size());
 
 		mpMainVehicleInfo.size++;
@@ -1995,14 +1963,18 @@ void SimOneAPIService::setSensorConfigurationsInfo(std::uint16_t type, const std
 	if (!msgDataBody)
 		return;
 	SimOne_Data_SensorConfiguration * pConf = (SimOne_Data_SensorConfiguration*)msgDataBody->c_str();
-	mSensorConfigurations.data[mSensorConfigurations.dataSize] = *pConf;
-	mSensorConfigurations.dataSize++;
-	mSensorIdMap[pConf->id] = std::string(pConf->sensorId);
-	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SensorConfigurations size:%d", mSensorConfigurations.dataSize);
-	for (int i = 0; i < mSensorConfigurations.dataSize; i++)
-	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SensorConfigurations Id:%d seneorType:%s", mSensorConfigurations.data[i].sensorId, mSensorConfigurations.data[i].sensorType);
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, 
+		"SensorConfigurations mainVehicleId:%s sensorId:%s seneorType:%s", pConf->mainVehicleId, pConf->sensorId, pConf->sensorType);
+	int mainVehId = string2Int(pConf->mainVehicleId);
+	if (mSensorConfigurationsMap.find(mainVehId) == mSensorConfigurationsMap.end()) {
+		SimOne_Data_SensorConfigurations emptySensorConfigurations;
+		memset(&emptySensorConfigurations, 0, sizeof(SimOne_Data_SensorConfigurations));
+		mSensorConfigurationsMap[mainVehId] = emptySensorConfigurations;
 	}
+	SimOne_Data_SensorConfigurations& sensorConfigurations = mSensorConfigurationsMap[mainVehId];
+	sensorConfigurations.data[sensorConfigurations.dataSize] = *pConf;
+	sensorConfigurations.dataSize++;
+	mSensorIdMap[pConf->id] = std::string(pConf->sensorId);
 }
 #endif //Sensor
 bool SimOneAPIService::onFromBridgeDataRouteMessage(Message& msg)
@@ -2065,7 +2037,7 @@ bool SimOneAPIService::SetEndCaseCB(void(*cb)()) {
 	mpEndCase = cb;
 	return true;
 }
-bool SimOneAPIService::SetMainVehicleStatusCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus)) {
+bool SimOneAPIService::SetMainVehicleStatusCB(void(*cb)(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus)) {
 	mpMainVehicleChangeStatus = cb;
 	return true;
 }

@@ -13,11 +13,12 @@ extern "C"
 #endif
 #define MAX_DRIVER_NAME_LEN 10
 
-	SIMONE_API bool SimOneAPI::GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
-		return SimOneAPIService::GetInstance()->GetMainVehicleStatus(pMainVehicleStatus);
+	SIMONE_API bool SimOneAPI::GetMainVehicleStatus(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetMainVehicleStatus(mainVehId, pMainVehicleStatus);
 	}
 
-	SIMONE_API bool SimOneAPI::SetMainVehicleStatusUpdateCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus)) {
+	SIMONE_API bool SimOneAPI::SetMainVehicleStatusUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus)) {
 		SimOneAPIService::GetInstance()->SetMainVehicleStatusCB(cb);
 		return true;
 	}
@@ -43,11 +44,11 @@ extern "C"
 
 			while (true)
 			{
-				bool bRet = GetMainVehicleStatus(&mainVehicleStatus);
+				bool bRet = GetMainVehicleStatus(mainVehicleId, &mainVehicleStatus);
 				if (!bRet) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(100));
 				}
-				if (mainVehicleStatus.mainVehicleId == atoi(mainVehicleId) && mainVehicleStatus.mainVehicleStatus > 0) {
+				if (std::string(mainVehicleStatus.mainVehicleId) == std::string(mainVehicleId) && mainVehicleStatus.mainVehicleStatus > 0) {
 					std::cout << "mainVehicle is ready" << std::endl;
 					break;
 				}
@@ -67,7 +68,7 @@ extern "C"
 		}
 	}
 
-	SIMONE_API bool SimOneAPI::StopSimOneNode() {
+	SIMONE_API bool SimOneAPI::TerminateSimOneAPI() {
 		return SimOneAPIService::GetInstance()->Stop();
 	}
 

@@ -238,7 +238,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetSensorConfigurations(SimOne_Data_SensorConfigurations *pSensorConfigurations);
+		SIMONE_API bool GetSensorConfigurations(const char* mainVehicleId, SimOne_Data_SensorConfigurations *pSensorConfigurations);
 
 		/*!
 		获取当前环境相关信息（天气、光照、地面等）

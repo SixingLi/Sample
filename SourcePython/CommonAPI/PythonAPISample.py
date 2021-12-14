@@ -27,11 +27,11 @@ if __name__ == '__main__':
 			ESimOne_Data_Vehicle_State.ESimOne_Data_Vehicle_State_S0_Vz_SM, 
 			ESimOne_Data_Vehicle_State.ESimOne_Data_Vehicle_State_SO_My_DR_L1);
 		vehicleStatelen = len(vehicleState)
-		if(SoRegisterVehicleState(vehicleState)):
+		if(SoRegisterVehicleState('0',vehicleState,vehicleStatelen)):
 			print("RegisterVehicleState Success")
 
 		vehicleExtraState = SimOne_Data_Vehicle_Extra();
-		if(SoGetVehicleState(vehicleExtraState)):
+		if(SoGetVehicleState('0',vehicleExtraState)):
 			for i in range(0,vehicleStatelen):
 				print("SoGetVehicleState Success: state{0}:= {1}".format(i,vehicleExtraState.extra_states[i]))
 			

@@ -73,14 +73,14 @@ public:
 
 	bool SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, ESimOne_Client_Type toNodeType);
 
-	bool GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
+	bool GetMainVehicleStatus(int mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
 	//1
 	bool GetEnvironment(SimOne_Data_Environment *pEnvironment);
 	bool SetEnvironment(SimOne_Data_Environment *pEnvironment);
 	//2
-	bool GetWayPoints(SimOne_Data_WayPoints* pWayPoints);
+	bool GetWayPoints(int mainVehicleId, SimOne_Data_WayPoints* pWayPoints);
 	//3
-	bool GetSensorConfigurations(SimOne_Data_SensorConfigurations *pSensorConfigurations);
+	bool GetSensorConfigurations(int mainVehicleId, SimOne_Data_SensorConfigurations *pSensorConfigurations);
 	std::string GetSensorIdFromId(int id);
 	//4 
 	bool GetCaseInfo(SimOne_Data_CaseInfo* pCaseInfo);
@@ -170,11 +170,8 @@ protected:
 
 public:
 	bool ForwardStep();
-	bool GetGps(SimOne_Data_Gps *pGps);
-    bool RegisterSimOneVehicleState(ESimOne_Data_Vehicle_State *pStateIndics, int size);
-    bool GetSimOneVehicleState(SimOne_Data_Vehicle_Extra* pVehExtraState);
-	bool GetObstacle(SimOne_Data_Obstacle *pObstacle);
-	//bool GetTrafficLight(SimOne_Data_TrafficLights *pTrafficLights);
+    bool RegisterSimOneVehicleState(int mainVehicleId, ESimOne_Data_Vehicle_State *pStateIndics, int size);
+    bool GetSimOneVehicleState(int mainVehicleId, SimOne_Data_Vehicle_Extra* pVehExtraState);
 
 	bool GetGps(int mainVehicleId, SimOne_Data_Gps *pGps);
 	bool GetObstacle(int mainVehicleId, SimOne_Data_Obstacle *pObstacle);
@@ -188,7 +185,7 @@ public:
 
 	bool SetStartCaseCB(void(*cb)());
 	bool SetEndCaseCB(void(*cb)());
-	bool SetMainVehicleStatusCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
+	bool SetMainVehicleStatusCB(void(*cb)(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
 	
 	bool SetFrameStartCB(void(*cb)(int frame));
 	bool SetFrameEndCB(void(*cb)(int frame));
@@ -277,7 +274,7 @@ private:
 	//
 	void(*mpCaseStart)();
 	void(*mpCaseStop)();
-	void(*mpMainVehicleChangeStatus)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
+	void(*mpMainVehicleChangeStatus)(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
 	void(*mpGpsUpdateCB)(const char* mainVehicleId, SimOne_Data_Gps *pGps);
 	void(*mpObstacleUpdateCB)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle);
 	void(*mpTrafficLightUpdateCB)(const char* mainVehicleId, SimOne_Data_TrafficLights *pTrafficLights);
@@ -324,6 +321,8 @@ private:
 	typedef map<int, SimOne_Data_Control> SimOne_Data_Driver_ControlMap;
 	typedef map<int, SimOne_Data_TrafficLights> SimOne_Data_TrafficLightsMap;
 	typedef map<int, SimOne_Data_MainVehicle_Info*> SimOne_Data_MainVehicle_InfoMap;
+	typedef map<int, SimOne_Data_SensorConfigurations> SimOne_Data_SensorConfigurationsMap;
+	typedef map<int, SimOne_Data_WayPoints> SimOne_Data_WayPointsMap;
 		
 	//  mainVehicleId
 	SimOne_Data_GpsMap mLastGPSDataMap;
@@ -351,9 +350,9 @@ private:
 	SimOne_Data_MainVehicle_Info  mpMainVehicleInfo;
 	SimOne_Data_MainVehicle_Status mpMainVehicleStatus;
 	SimOne_Data_Environment mEnvironmentData;
-	SimOne_Data_SensorConfigurations mSensorConfigurations;
+	SimOne_Data_SensorConfigurationsMap mSensorConfigurationsMap;
 	std::map<int, std::string> mSensorIdMap;
-	SimOne_Data_WayPoints mWayPoints;
+	SimOne_Data_WayPointsMap mWayPointsMap;
 	SimOne_Data_CaseInfo mCaseInfo;
 	int mCaseStatus;
 	SimOne_Data_Map mHDMapInfo;

@@ -74,9 +74,9 @@ def SoInitSimOneAPI(mainVehicleId='0',isFrameSync = 0,serverIP = '127.0.0.1',por
 	ret = SimoneAPI.InitSimOneAPI(mainVehicleId,isFrameSync,_input,port,startcase,stopcase,registerNodeId)
 	return ret
 
-def SoStopSimOneNode():
-	SimoneAPI.StopSimOneNode.restype = c_bool
-	return SimoneAPI.StopSimOneNode()
+def SoTerminateSimOneAPI():
+	SimoneAPI.TerminateSimOneAPI.restype = c_bool
+	return SimoneAPI.TerminateSimOneAPI()
 
 def SoAPIGetCaseInfo(data):
 	SimoneAPI.GetCaseInfo.restype = c_bool
@@ -111,9 +111,9 @@ def SoAPISetFrameCB(startcb, stopcb):
 	ret = SimoneAPI.SetFrameCB(api_framestart_cb, api_framestop_cb)
 	return ret
 
-def SoGetMainVehicleStatus(data):
+def SoGetMainVehicleStatus(mainVehicleId, data):
 	SimoneAPI.GetMainVehicleStatus.restype = c_bool
-	return SimoneAPI.GetMainVehicleStatus(pointer(data))
+	return SimoneAPI.GetMainVehicleStatus(mainVehicleId, pointer(data))
 
 def SoAPISetMainVehicleStatusCB(cb):
 	SimoneAPI.SetMainVehicleStatusCB.restype = c_bool

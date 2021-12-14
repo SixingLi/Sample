@@ -12,13 +12,15 @@ def _api_scenarioEvent_cb(mainVehicleId, evt, data):
 
 api_scenarioEvent_cb = SimOne_ScenarioEventCBType(_api_scenarioEvent_cb)
 
-def SoRegisterVehicleState(data):
-    SimoneAPI.RegisterVehicleState.restype = c_bool
-    return SimoneAPI.RegisterVehicleState(pointer(data), len(data))
+def SoRegisterVehicleState(mainVehicleId, data, size):
+	SimoneAPI.RegisterVehicleState.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.RegisterVehicleState(_mainVehicleId,pointer(data),size)
 
-def SoGetVehicleState(data):
+def SoGetVehicleState(mainVehicleId,data):
 	SimoneAPI.GetVehicleState.restype = c_bool
-	return SimoneAPI.GetVehicleState(pointer(data))
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.GetVehicleState(_mainVehicleId,pointer(data))
 
 def SoSetPose(mainVehicleId, poseControl):
 	SimoneAPI.SetPose.restype = c_bool

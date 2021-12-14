@@ -150,7 +150,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_NET_API bool StopSimOneNode();
+		SIMONE_NET_API bool TerminateSimOneAPI();
 		/*!
 		通知simone内部系统已经准备好
 		\li function:

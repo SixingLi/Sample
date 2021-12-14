@@ -132,7 +132,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool StopSimOneNode();
+		SIMONE_API bool TerminateSimOneAPI();
 
 		/*!
 		获取案例详情

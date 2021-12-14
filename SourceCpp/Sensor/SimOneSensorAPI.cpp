@@ -118,9 +118,10 @@ extern "C"
 		return SimOneAPIService::GetInstance()->SetSensorDetectionsUpdateCB(cb);
 	}
 
-	SIMONE_API bool SimOneAPI::GetSensorConfigurations(SimOne_Data_SensorConfigurations *pSensorConfigurations)
+	SIMONE_API bool SimOneAPI::GetSensorConfigurations(const char* mainVehicleId, SimOne_Data_SensorConfigurations *pSensorConfigurations)
 	{
-		return SimOneAPIService::GetInstance()->GetSensorConfigurations(pSensorConfigurations);
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetSensorConfigurations(mainVehId, pSensorConfigurations);
 	}
 
 	SIMONE_API bool SimOneAPI::GetEnvironment(SimOne_Data_Environment *pEnvironment)
