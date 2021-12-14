@@ -241,9 +241,15 @@ class ESimOne_Data_Vehicle_State(c_int):
 	ESimOne_Data_Vehicle_State_SO_Steer_SW=108   # Steering wheel angle  unit: deg
 	ESimOne_Data_Vehicle_State_SO_TimePassed=109
 
+SOSM_VEHICLE_EXTRA_STATE_MAX_SIZE = 600
+class SimOne_Data_Vehicle_Extra(Structure):
+	_pack_ = 1
+	_fields_ = [
+	("dataSize",c_int),
+	("extra_states",c_float*SOSM_VEHICLE_EXTRA_STATE_MAX_SIZE)
+	]
+
 SOSM_TRAFFICLIGHT_SIZE_MAX = 100
-
-
 class SimOne_Data_TrafficLight(Structure):
 	_pack_ = 1
 	_fields_ = [

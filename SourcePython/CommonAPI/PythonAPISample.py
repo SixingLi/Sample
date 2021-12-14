@@ -1,6 +1,7 @@
 from SimOneServiceAPI import *
 from SimOneSensorAPI import *
 from SimOneV2XAPI import *
+from SimOnePNCAPI import *
 
 import time 
 
@@ -21,6 +22,19 @@ if __name__ == '__main__':
 		print(e)
 		pass
 	while Flag:
+		vehicleState = (ESimOne_Data_Vehicle_State * 3)(
+			ESimOne_Data_Vehicle_State.ESimOne_Data_Vehicle_State_SO_M_SW, 
+			ESimOne_Data_Vehicle_State.ESimOne_Data_Vehicle_State_S0_Vz_SM, 
+			ESimOne_Data_Vehicle_State.ESimOne_Data_Vehicle_State_SO_My_DR_L1);
+		vehicleStatelen = len(vehicleState)
+		if(SoRegisterVehicleState(vehicleState)):
+			print("RegisterVehicleState Success")
+
+		vehicleExtraState = SimOne_Data_Vehicle_Extra();
+		if(SoGetVehicleState(vehicleExtraState)):
+			for i in range(0,vehicleStatelen):
+				print("SoGetVehicleState Success: state{0}:= {1}".format(i,vehicleExtraState.extra_states[i]))
+			
 		gpsData = SimOne_Data_Gps()
 		if SoGetGps('0', gpsData):
 			print("timestamp:{0},posX:{1},posY:{2},brake:{3},steering:{4}".format(gpsData.timestamp,gpsData.posX,gpsData.posY,gpsData.brake,gpsData.steering))

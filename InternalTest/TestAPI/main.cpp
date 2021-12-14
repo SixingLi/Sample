@@ -13,24 +13,51 @@ void Test_GPS(const char * MainVehicleID, bool IsCallBackMode);
 void Test_UltrasonicRadar(const char * MainVehicleID);
 void Test_UltrasonicRadars(const char * MainVehicleID, bool IsCallBackMode);
 void Test_SensorLaneInfo(const char * MainVehicleID,bool IsCallBackMode);
-void Test_SensorSensorDetection(const char * MainVehicleID, bool isCallBackMode);
-void Test_RadarDetection(const char * MainVehicleID, bool isCallBackMode);
+void Test_SensorSensorDetection(const char * MainVehicleID, bool IsCallBackMode);
+void Test_RadarDetection(const char * MainVehicleID, bool IsCallBackMode);
+void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode);
 using namespace std;
 int main(int argc, char* argv[])
 {
-	bool isJoinTimeLoop = false;
+	bool isJoinTimeLoop = true;
 	string MainVehicleId = "0";
 	SimOneAPI::InitSimOneAPI(MainVehicleId.c_str(), isJoinTimeLoop);
 	
 	//Test_V2X(false);
 	//Test_UltrasonicRadars(MainVehicleId.c_str(),false);
 	//Test_UltrasonicRadar(MainVehicleId.c_str());
-	//Test_SensorLaneInfo(MainVehicleId.c_str(),true);
+	//Test_SensorLaneInfo(MainVehicleId.c_str(),false);
 	//Test_GPS(MainVehicleId.c_str(),true);
-	Test_SensorSensorDetection(MainVehicleId.c_str(),false);
-	//Test_RadarDetection(MainVehicleId.c_str(), false);
+	//Test_SensorSensorDetection(MainVehicleId.c_str(),true);
+	Test_RadarDetection(MainVehicleId.c_str(), false);
+	//Test_GetGroundTruth(MainVehicleId.c_str(), false);
 	system("pause");
 	return 0;
+}
+
+void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode) {
+	if (IsCallBackMode) {
+		auto function = [](const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle) {
+			std::cout << "mainVehicleId:" << mainVehicleId << ", pDetections->frame:" << pObstacle->frame << ", pDetections->detectNum:" << pObstacle->obstacleSize << endl;//The Lane's leftLane ID 
+			for (int i = 0; i < pObstacle->obstacleSize; i++) {
+				std::cout << "obstacle.type:" << pObstacle->obstacle[i].type << endl;;
+			}
+		};
+		SimOneAPI::SetGroundTruthUpdateCB(function);
+	}
+	else {
+		std::unique_ptr<SimOne_Data_Obstacle> pDetections = std::make_unique<SimOne_Data_Obstacle>();
+		while (true) {
+			bool flag = SimOneAPI::GetGroundTruth(MainVehicleID,  pDetections.get());
+			if (flag) {
+				std::cout << "mainVehicleId:" << MainVehicleID << ", pDetections->frame:" << pDetections->frame << ", pDetections->detectNum:" << pDetections->obstacleSize << endl;//The Lane's leftLane ID 
+				for (int i = 0; i < pDetections->obstacleSize; i++) {
+					std::cout << "obstacle.type:" << pDetections->obstacle[i].type << endl;;
+				}
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(30));
+		}
+	}
 }
 
 void Test_RadarDetection(const char * MainVehicleID, bool IsCallBackMode) {
@@ -46,14 +73,20 @@ void Test_RadarDetection(const char * MainVehicleID, bool IsCallBackMode) {
 	else {
 		std::unique_ptr<SimOne_Data_RadarDetection> pDetections = std::make_unique<SimOne_Data_RadarDetection>();
 		while (true) {
-			SimOneAPI::GetRadarDetections(MainVehicleID, "objectBasedRadar1", pDetections.get());
-			std::cout <<"mainVehicleId:"<< MainVehicleID <<", pDetections->frame:"<<pDetections->frame << ", pDetections->detectNum:"<<pDetections->detectNum <<endl;//The Lane's leftLane ID 
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			bool flag = SimOneAPI::GetRadarDetections(MainVehicleID, "objectBasedRadar1", pDetections.get());
+			if (flag) {
+				std::cout <<"mainVehicleId:"<< MainVehicleID <<", pDetections->frame:"<<pDetections->frame << ", pDetections->detectNum:"<<pDetections->detectNum <<endl;//The Lane's leftLane ID 
+				for (int i = 0; i < pDetections->detectNum; i++)
+				{
+					std::cout << "detections.range:" << pDetections->detections[i].range <<",pDetections->detections[i].azimuth:"<< pDetections->detections[i].azimuth <<endl;
+				}
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(30));
 		}
 	}
 }
-void Test_SensorSensorDetection(const char * MainVehicleID, bool isCallBackMode) {
-	if (isCallBackMode) {
+void Test_SensorSensorDetection(const char * MainVehicleID, bool IsCallBackMode) {
+	if (IsCallBackMode) {
 		auto function = [](const char* MainVehicleID, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
 			printf("hostVehicle:%s frame:%d objectSize:%d\n", MainVehicleID, pGroundtruth->frame, pGroundtruth->objectSize);
 			//std::cout <<"hostVehicle:"<<*mainVehicleId<<"frame:"<< pGroundtruth->frame << "," << pGroundtruth->objectSize << endl;//The Lane's leftLane ID 
