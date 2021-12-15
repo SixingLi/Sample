@@ -3,6 +3,7 @@
 INITIALIZE_EASYLOGGINGPP
 
 Logging::Logger pncapi_sample::log_scenario_event("scenario_event", "true", "true");
+Logging::Logger pncapi_sample::log_v2x_info("v2x_info", "true", "true");
 
 pncapi_sample::pncapi_sample(): log_simone_ini("simone_ini", "true", "true"), log_set_pose_ctl("set_pose_ctl", "true", "true"),
                                                                   log_set_drive_ctl("set_drive_ctl", "true", "true"), log_set_drive_trajectory("set_drive_trajectory", "true", "true"),
@@ -314,6 +315,13 @@ void pncapi_sample::get_sensor_detection()
     LOGInfo(log_get_sensor_detection) << "------ get_sensor_detection ------";
 }
 
+void pncapi_sample::set_v2x_info(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) 
+{
+  LOGInfo(log_v2x_info) << "V2XMsgFrameSize: " << pDetections->V2XMsgFrameSize;
+  LOGInfo(log_v2x_info) << "MsgFrameData : " << pDetections->MsgFrameData ;
+  LOGInfo(log_v2x_info) <<  "------------ set_v2x_info ------------";
+}
+
 void pncapi_sample::pub()
 {
   /*
@@ -329,6 +337,20 @@ void pncapi_sample::pub()
   if (!SimOneAPI::SetScenarioEventCB(set_scenario_event))
   {
     LOGError(log_scenario_event) << "SimOneSM::SetScenarioEventCB Failed!";
+  }
+
+  /*
+		* 获得对应车辆编号V2X中的UPER编码之后的v2x消息更新回调
+		* input param:
+		*     mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+    *     sensorId: Sensor Index
+		* output param:
+		*   pDetections: V2XASN data in SimOne_Data_V2XNFS format(output)
+		* return: Success or not
+		*/
+  if (!SimOneAPI::SetV2XInfoUpdateCB(set_v2x_info))
+  {
+    LOGError(log_v2x_info) << "SimOneAPI::SetV2XInfoUpdateCB";
   }
 
   Timer timer_pose_ctl, timer_drive_ctl, timer_drive_trajectory;
