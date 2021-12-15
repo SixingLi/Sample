@@ -58,9 +58,10 @@ def SoGetDriverControl(mainVehicleId, driverControlData):
 	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	return SimoneAPI.GetDriverControl(_mainVehicleId, pointer(driverControlData))
 
-def SoGetWayPoints(wayPointsData):
+def SoGetWayPoints(mainVehicleId,wayPointsData):
 	SimoneAPI.GetWayPoints.restype = c_bool
-	return SimoneAPI.GetWayPoints(pointer(wayPointsData))
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.GetWayPoints(_mainVehicleId,pointer(wayPointsData))
 
 def SoAPISetScenarioEventCB(cb):
 	if cb == 0:
