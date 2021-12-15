@@ -5,7 +5,9 @@
 #include <thread>
 #include <string>
 // #include <fstream>
+#include <math.h>
 
+#include "Service/SimOneIOStruct.h"
 #include "SimOneServiceAPI.h"
 #include "SimOnePNCAPI.h"
 #include "SimOneSensorAPI.h"
@@ -19,14 +21,24 @@ public:
 	pncapi_sample();
 	~pncapi_sample();
 
+	int64_t getCurrentTime();
+
 	void simone_ini();
 	void set_pose_ctl();
+	void set_drive_ctl();
+	void set_drive_trajectory();
+	void get_sensor_detection();
+	static void set_scenario_event(const char *mainVehicleId, const char *event, const char *data);
 
 	void pub();
 
 protected:
-	Logging::Logger log_set_pose_ctl;
 	Logging::Logger log_simone_ini;
+	Logging::Logger log_set_pose_ctl;
+	Logging::Logger log_set_drive_ctl;
+	Logging::Logger log_set_drive_trajectory;
+	Logging::Logger log_get_sensor_detection;
+	static Logging::Logger log_scenario_event;
 };
 
 #endif
