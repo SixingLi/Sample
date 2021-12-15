@@ -2,6 +2,8 @@
 #include "SimOneV2XAPI.h"
 #include "SimOnePNCAPI.h"
 #include "SimOneServiceAPI.h"
+#include "SimOneHDMapAPI.h"
+
 #include <thread> 
 #include <chrono>
 #include <iostream>
@@ -16,6 +18,9 @@ void Test_SensorLaneInfo(const char * MainVehicleID,bool IsCallBackMode);
 void Test_SensorSensorDetection(const char * MainVehicleID, bool IsCallBackMode);
 void Test_RadarDetection(const char * MainVehicleID, bool IsCallBackMode);
 void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode);
+
+void Test_HDMap();
+
 using namespace std;
 int main(int argc, char* argv[])
 {
@@ -29,7 +34,7 @@ int main(int argc, char* argv[])
 	//Test_SensorLaneInfo(MainVehicleId.c_str(),false);
 	//Test_GPS(MainVehicleId.c_str(),true);
 	//Test_SensorSensorDetection(MainVehicleId.c_str(),true);
-	Test_RadarDetection(MainVehicleId.c_str(), false);
+	//Test_RadarDetection(MainVehicleId.c_str(), false);
 	//Test_GetGroundTruth(MainVehicleId.c_str(), false);
 	system("pause");
 	return 0;
@@ -194,5 +199,9 @@ void Test_V2X(const char * MainVehicleID, bool IsCallBackMode) {
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
 	}
+}
+
+void Test_HDMap() {
+	SimOneAPI::LoadHDMap(10);
 }
 
