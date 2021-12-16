@@ -2,12 +2,12 @@
 # set(CMAKE_C_COMPILER "/usr/local/gcc")
 # set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
-add_executable(SimOnePNCAPI "")
+add_executable(PNCSample "")
 
 file(GLOB_RECURSE srcs *.h *.hh *i *.hpp *.c *.cc *.cpp *.py)
 file(GLOB_RECURSE headers *.h)
 
-target_sources(SimOnePNCAPI PRIVATE "src/SimOnePNCAPI_Sample.cpp" ${headers})
+target_sources(PNCSample PRIVATE "src/PNC_Sample.cpp" ${headers})
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
@@ -29,12 +29,12 @@ IF (MSVC)
 	string(REPLACE "/MDd" "/MD" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 ENDIF()
 
-SetDefaultTargetProperties(SimOnePNCAPI)
+SetDefaultTargetProperties(PNCSample)
 
 IF (WIN32)
-        target_link_libraries(SimOnePNCAPI  ${LIB_DIR}/SimOneAPI.lib ${LIB_DIR}/SSD.lib ${LIB_DIR}/HDMapModule.lib  ${LIB_DIR}/ProtobufModule.lib ${LIB_DIR}/ProtobufModule.lib ${LIB_DIR}/gtest.lib)
+        target_link_libraries(PNCSample  ${LIB_DIR}/SimOneAPI.lib ${LIB_DIR}/SSD.lib ${LIB_DIR}/HDMapModule.lib  ${LIB_DIR}/ProtobufModule.lib ${LIB_DIR}/ProtobufModule.lib ${LIB_DIR}/gtest.lib)
        
-        add_custom_command(TARGET SimOnePNCAPI
+        add_custom_command(TARGET PNCSample
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/SimOneAPI.dll ${BINARY_OUT_PATH}/SimOneAPI.dll
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/SSD.dll ${BINARY_OUT_PATH}/SSD.dll
@@ -42,22 +42,21 @@ IF (WIN32)
         )    
 
 ELSEIF (UNIX)
-		#target_link_libraries(SimOnePNCAPI debug ${LIB_DIR}/libgtest.a -pthread -lrt)
-		#target_link_libraries(SimOnePNCAPI optimized ${LIB_DIR}/libgtest.a -pthread -lrt)
-		
-        target_link_libraries(SimOnePNCAPI debug ${LIB_DIR}/libSimOneAPI.so)
-        target_link_libraries(SimOnePNCAPI optimized ${LIB_DIR}/libSimOneAPI.so -lpthread)
-        target_link_libraries(SimOnePNCAPI debug /usr/lib/x86_64-linux-gnu/libcurl.so.4)
-        target_link_libraries(SimOnePNCAPI optimized /usr/lib/x86_64-linux-gnu/libcurl.so.4)
-        target_link_libraries(SimOnePNCAPI debug ${LIB_DIR}/libSSD.so)
-        target_link_libraries(SimOnePNCAPI optimized ${LIB_DIR}/libSSD.so -lpthread)
-        target_link_libraries(SimOnePNCAPI debug ${LIB_DIR}/libHDMapModule.so)
-        target_link_libraries(SimOnePNCAPI optimized ${LIB_DIR}/libHDMapModule.so)
+		#target_link_libraries(PNCAPISample debug ${LIB_DIR}/libgtest.a -pthread -lrt)
+		#target_link_libraries(PNCSample optimized ${LIB_DIR}/libgtest.a -pthread -lrt)
+        target_link_libraries(PNCSample debug ${LIB_DIR}/libSimOneAPI.so)
+        target_link_libraries(PNCSample optimized ${LIB_DIR}/libSimOneAPI.so -lpthread)
+        target_link_libraries(PNCSample debug /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+        target_link_libraries(PNCSample optimized /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+        target_link_libraries(PNCSample debug ${LIB_DIR}/libSSD.so)
+        target_link_libraries(PNCSample optimized ${LIB_DIR}/libSSD.so -lpthread)
+        target_link_libraries(PNCSample debug ${LIB_DIR}/libHDMapModule.so)
+        target_link_libraries(PNCSample optimized ${LIB_DIR}/libHDMapModule.so)
 
-        target_link_libraries(SimOnePNCAPI debug ${LOCAL_LIB_DIR}/liblogger.so)
-        target_link_libraries(SimOnePNCAPI optimized ${LOCAL_LIB_DIR}/liblogger.so)
+        target_link_libraries(PNCSample debug ${LOCAL_LIB_DIR}/liblogger.so)
+        target_link_libraries(PNCSample optimized ${LOCAL_LIB_DIR}/liblogger.so)
     
-        add_custom_command(TARGET SimOnePNCAPI
+        add_custom_command(TARGET PNCSample
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/libSimOneAPI.so ${BINARY_OUT_PATH}/libSimOneAPI.so
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/libSSD.so ${BINARY_OUT_PATH}/libSSD.so
