@@ -58,6 +58,11 @@ extern "C"
 		return SimOneAPIService::GetInstance()->GetDriverStatus(mainVehId, pDriverStatus);
 	}
 
+	SIMONE_API bool SimOneAPI::GetControlMode(const char* mainVehicleId, SimOne_Data_Control_Mode* pControlMode) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetControlMode(mainVehId, pControlMode);
+	}
+
 	SIMONE_API bool SimOneAPI::GetDriverControl(const char* mainVehicleId, SimOne_Data_Control* pControl)
 	{
 		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);

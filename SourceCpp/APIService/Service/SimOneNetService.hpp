@@ -167,6 +167,7 @@ protected:
 
 	bool onMainVehicleDriverStatus(int MainVehicleId, proto::sensor::DataDriverStatus status);
 	bool onMainVehicleDriverControl(int MainVehicleId, proto::sensor::DataVehicleControlState status);
+	bool onMainVehicleControlMode(int MainVehicleId, proto::sensor::DataVehicleControlMode mode);
 
 public:
 	bool ForwardStep();
@@ -181,6 +182,7 @@ public:
 	bool GetTaskData(string key, int sensorType, int commandId, void* pbuffer);
 
 	bool GetDriverStatus(const int mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus);
+	bool GetControlMode(const int mainVehicleId, SimOne_Data_Control_Mode* pControlMode);
 	bool GetDriverControl(const int mainVehicleId, SimOne_Data_Control* pDriverStatus);
 
 	bool SetStartCaseCB(void(*cb)());
@@ -319,6 +321,7 @@ private:
 	typedef map<int, SimOne_Data_Obstacle> SimOne_Data_ObstacleMap;
 	typedef map<int, SimOne_Data_Driver_Status> SimOne_Data_Driver_StatusMap;
 	typedef map<int, SimOne_Data_Control> SimOne_Data_Driver_ControlMap;
+	typedef map<int, SimOne_Data_Control_Mode> SimOne_Data_Control_ModeMap;
 	typedef map<int, SimOne_Data_TrafficLights> SimOne_Data_TrafficLightsMap;
 	typedef map<int, SimOne_Data_MainVehicle_Info*> SimOne_Data_MainVehicle_InfoMap;
 	typedef map<int, SimOne_Data_SensorConfigurations> SimOne_Data_SensorConfigurationsMap;
@@ -339,6 +342,8 @@ private:
 	mutable std::recursive_mutex mLastDriverStatusLock;
 	SimOne_Data_Driver_ControlMap mLastDriverControlMap;
 	mutable std::recursive_mutex mLastDriverControlLock;
+	SimOne_Data_Control_ModeMap mLastControlModeMap;
+	mutable std::recursive_mutex mLastControlModeLock;
 	SimOne_Data_TrafficLightsMap mTrafficLightsMap;
 	mutable std::recursive_mutex mTrafficLightsLock;
 
