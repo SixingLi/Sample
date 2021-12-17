@@ -141,7 +141,7 @@ void pncapi_sample::set_drive_ctl()
     // pCtrl->brakeMode = ESimOne_Brake_Mode_Percent;
     // pCtrl->brake = data.brake_pedal_bar(); // double 制度踏板开度 单位bar
     pCtrl->steeringMode = ESimOne_Steering_Mode::ESimOne_Steering_Mode_SteeringWheelAngle; // steering wheel angle, degree
-    pCtrl->steering = -40;
+    pCtrl->steering = 0;
     // pCtrl->handbrake = false;
     pCtrl->isManualGear = false;
     pCtrl->gear = ESimOne_Gear_Mode::ESimOne_Gear_Mode_Drive; // forward gear for automatic gear
@@ -169,57 +169,65 @@ void pncapi_sample::set_drive_ctl()
     }
 }
 
-// 通过规划轨迹点驱动主车，不可同时使用SetDrive
+// 通过规划轨迹点驱动主车(有动力学)，不可同时使用SetDrive
 void pncapi_sample::set_drive_trajectory()
 {
   std::unique_ptr<SimOne_Data_Control_Trajectory> pTraj = std::make_unique<SimOne_Data_Control_Trajectory>();
-  std::unique_ptr<SimOne_Data_Gps> gpsInfo = std::make_unique<SimOne_Data_Gps>();
   int n = 10;
 
-  if (!SimOneAPI::GetGps(0, gpsInfo.get()))
+  if (m_flip.load())
   {
-    LOGError(log_set_drive_trajectory) << "SimOneAPI::GetGps Failed!";
-    return;
-  }
+    float posx = m_gps.posX;  // position x
+    float posy = m_gps.posY;  // position y
+    float speed = 10;            // m/s
+    float accel = 1;             // accelelation m/s^2
+    float theta = m_gps.oriZ; // yaw   rad
+    float kappa = 0;             // curvature
+    float relative_time = 0;     // time relative to the first trajectory point
+    float s = 0;                 // distance from the first trajectory point
 
-  float posx = gpsInfo->posX; // position x
-  float posy = gpsInfo->posY; // position y
-  float speed = 10; // m/s
-  float accel = 1; // accelelation m/s^2
-  float theta = gpsInfo->oriZ; // yaw   rad
-  float kappa = 0; // curvature
-  float relative_time = 0; // time relative to the first trajectory point
-  float s = 0; // distance from the first trajectory point
+    pTraj->point_num = n;
+    for (int i = 0; i < n; i++)
+    {
+      pTraj->points[i].posx = posx;
+      pTraj->points[i].posy = posy;
+      pTraj->points[i].speed = speed;
+      pTraj->points[i].accel = accel;
+      pTraj->points[i].theta = theta;
+      pTraj->points[i].kappa = kappa;
+      pTraj->points[i].relative_time = relative_time;
+      pTraj->points[i].s = s;
 
-  pTraj->point_num = n;
-  for (int i = 0; i < n; i++)
-  {
-    pTraj->points[i].posx = posx;
-    pTraj->points[i].posy = posy;
-    pTraj->points[i].speed = speed;
-    pTraj->points[i].accel = accel;
-    pTraj->points[i].theta = theta;
-    pTraj->points[i].kappa = kappa;
-    pTraj->points[i].relative_time = relative_time;
-    pTraj->points[i].s = s;
+      posx = posx + cos(theta);
+      posy = posy + sin(theta);
+      relative_time += 1;
+      s += 1;
 
-    posx = posx + cos(theta);
-    posy = posy + sin(theta);
-    relative_time += 1;
-    s += 1;
-  }
-  pTraj->isReverse = false;
+      LOGInfo(log_set_drive_trajectory) << "points[" << i << "].posx: " << pTraj->points[i].posx;
+      LOGInfo(log_set_drive_trajectory) << "points[" << i << "].posy: " << pTraj->points[i].posy;
+      LOGInfo(log_set_drive_trajectory) << "points[" << i << "].speed: " << pTraj->points[i].speed;
+      LOGInfo(log_set_drive_trajectory) << "points[" << i << "].accel: " << pTraj->points[i].accel;
+      LOGInfo(log_set_drive_trajectory) << "points[" << i << "].theta: " << pTraj->points[i].theta;
+      LOGInfo(log_set_drive_trajectory) << "points[" << i << "].kappa: " << pTraj->points[i].kappa;
+      LOGInfo(log_set_drive_trajectory) << "points[" << i << "].relative_time: " << pTraj->points[i].relative_time;
+      LOGInfo(log_set_drive_trajectory) << "points[" << i << "].s: " << pTraj->points[i].s;
+    }
+    pTraj->isReverse = false;
+    LOGInfo(log_set_drive_trajectory) << "isReverse: " << pTraj->isReverse;
 
-  /*
+    /*
 		 * 主车控制(通过规划轨迹，不可同时使用SetDrive)
 		 * input param:
 		 *     mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
 		 *     pControlTrajectory: vehicle planning trajectory
 		 * return: Success or not
 		*/
-  if (!SimOneAPI::SetDriveTrajectory("0", pTraj.get()))
-  {
-    LOGError(log_set_drive_trajectory) << "SimOneAPI::SetDrive Failed!";
+    if (!SimOneAPI::SetDriveTrajectory("0", pTraj.get()))
+    {
+      LOGError(log_set_drive_trajectory) << "SimOneAPI::SetDrive Failed!";
+    }
+
+    m_flip.store(false);
   }
 }
 
@@ -346,7 +354,6 @@ void pncapi_sample::get_sensor_detection(const char *mainVehicleId, const char *
     }
     LOGInfo(log_get_sensor_detection) << "------ get_sensor_detection ------";
   }
-
 
 // 获取传感器检测到车道与车道线数据回调
 void pncapi_sample::get_sensor_laneInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo)
@@ -528,24 +535,25 @@ void pncapi_sample::pub()
 
   Timer timer_pose_ctl, timer_drive_ctl, timer_drive_trajectory;
 
-  timer_pose_ctl.start(100, std::bind(&pncapi_sample::set_pose_ctl, this));
+  // timer_pose_ctl.start(10, std::bind(&pncapi_sample::set_pose_ctl, this));
   // timer_drive_ctl.start(100, std::bind(&pncapi_sample::set_drive_ctl, this));
-  // timer_drive_trajectory.start(1000, std::bind(&pncapi_sample::set_drive_trajectory, this));
+  timer_drive_trajectory.start(300, std::bind(&pncapi_sample::set_drive_trajectory, this));
 
   while(true)
   {
     if (SimOneAPI::GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Stop)
     {
-      timer_pose_ctl.stop();
+      // timer_pose_ctl.stop();
       // timer_drive_ctl.stop();
-      // timer_drive_trajectory.stop();
+      timer_drive_trajectory.stop();
 
       SimOneAPI::TerminateSimOneAPI();
       return;
     }
+  
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
   
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 
 // SimOne 案例初始化
