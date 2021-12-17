@@ -186,6 +186,21 @@ extern "C"
 		SIMONE_API bool GetDriverStatus(const char* mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus);
 
 		/*!
+		获取车辆控制模式
+		\li function:
+		*	GetControlMode
+		\li brief:
+		*	Get vehicle control mode
+		@param
+		*   mainVehicleId: Vehicle index, configuration order from scenario editing, starting from 0
+		@param[out]
+		*   pControlMode: Vehicle control mode(output)
+		@return
+		*	Success or not
+		*/
+		SIMONE_API bool GetControlMode(const char* mainVehicleId, SimOne_Data_Control_Mode* pControlMode);
+
+		/*!
 		获取SimOneDriver控制信号
 		\li function:
 		*	GetDriverControl

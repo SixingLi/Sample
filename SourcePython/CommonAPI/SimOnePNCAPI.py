@@ -31,6 +31,11 @@ def SoSetDrive(mainVehicleId, driveControl):
 	SimoneAPI.SetDrive.restype = c_bool
 	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	return SimoneAPI.SetDrive(_mainVehicleId, pointer(driveControl))
+	
+def SoSetDriveTrajectory(mainVehicleId, controlTrajectory):
+	SimoneAPI.SetDriveTrajectory.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.SetDriveTrajectory(_mainVehicleId, pointer(controlTrajectory))
 
 def SoSetDriverName(mainVehicleId, driverName):
 	SimoneAPI.SetDriverName.restype = c_bool
@@ -58,7 +63,12 @@ def SoGetDriverControl(mainVehicleId, driverControlData):
 	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	return SimoneAPI.GetDriverControl(_mainVehicleId, pointer(driverControlData))
 
-def SoGetWayPoints(mainVehicleId,wayPointsData):
+def SoGetControlMode(mainVehicleId, controlModeData):
+	SimoneAPI.GetControlMode.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneIOAPI.GetControlMode(_mainVehicleId, pointer(controlModeData))
+
+def SoGetWayPoints(mainVehicleId, wayPointsData):
 	SimoneAPI.GetWayPoints.restype = c_bool
 	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	return SimoneAPI.GetWayPoints(_mainVehicleId,pointer(wayPointsData))

@@ -295,6 +295,7 @@ void SimOneAPIService::zeroMemory() {
 #ifndef WITHOUT_PNC
 	mLastDriverStatusMap.clear();
 	mLastDriverControlMap.clear();
+	mLastControlModeMap.clear();
 #endif
 	mTrafficLightsMap.clear();
 	mSensorIdMap.clear();
@@ -1026,6 +1027,15 @@ bool SimOneAPIService::onFromMainVehicleDataMessage(Message& msg) {
 		onMainVehicleDriverStatus(mainvehicleid, status);
 	}
 	break;
+	case proto::sensor::EDataType_VehicleControlMode:
+	{
+		cybertron::proto::sensor::DataVehicleControlMode mode;
+		if (!mode.ParseFromString(mainVehicleMessage.buffer())) {
+			return false;
+		}
+		onMainVehicleControlMode(mainvehicleid, mode);
+	}
+	break;
 	case proto::sensor::EDataType_DriverControl:
 	{
 		cybertron::proto::sensor::DataVehicleControlState status;
@@ -1053,6 +1063,21 @@ bool SimOneAPIService::GetDriverStatus(const int mainVehicleId, SimOne_Data_Driv
 	}
 
 	memcpy(pDriverStatus, &it->second, sizeof(SimOne_Data_Driver_Status));
+	return true;
+}
+
+bool SimOneAPIService::GetControlMode(const int mainVehicleId, SimOne_Data_Control_Mode* pControlMode) {
+	std::unique_lock<std::recursive_mutex> lock(mLastControlModeLock);
+	if (!pControlMode)
+		return false;
+
+	SimOne_Data_Control_ModeMap::iterator it = mLastControlModeMap.find(mainVehicleId);
+	if (it == mLastControlModeMap.end())
+	{
+		return false;
+	}
+
+	memcpy(pControlMode, &it->second, sizeof(SimOne_Data_Control_Mode));
 	return true;
 }
 
@@ -1121,6 +1146,21 @@ bool SimOneAPIService::onMainVehicleDriverStatus(int mainVehicleId, proto::senso
 
 	return true;
 
+}
+
+bool SimOneAPIService::onMainVehicleControlMode(int mainVehicleId, proto::sensor::DataVehicleControlMode mode) {
+
+	std::unique_lock<std::recursive_mutex> lock(mLastControlModeLock);
+	SimOne_Data_Control_Mode modeData;
+	if (mode.controlmode() == cybertron::proto::sensor::EControl_Auto) {
+		modeData.controlMode = ESimOne_Control_Mode_Auto;
+	}
+	else if (mode.controlmode() == cybertron::proto::sensor::EControl_Manual) {
+		modeData.controlMode = ESimOne_Control_Mode_Manual;
+	}
+	mLastControlModeMap[mainVehicleId] = modeData;
+
+	return true;
 }
 
 bool SimOneAPIService::onMainVehicleDriverControl(int mainVehicleId, proto::sensor::DataVehicleControlState status) {
