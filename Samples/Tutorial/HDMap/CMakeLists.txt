@@ -2,6 +2,13 @@
 # set(CMAKE_C_COMPILER "/usr/local/gcc")
 # set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
+IF (UNIX)
+	set(CMAKE_C_COMPILER "/usr/bin/clang")
+	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -I/usr/include/libcxxabi")
+	set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
+ENDIF()
+
 add_executable(HDMap "")
 
 file(GLOB_RECURSE srcs *.h *.hh *i *.hpp *.c *.cc *.cpp *.py)

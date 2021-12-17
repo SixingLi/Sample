@@ -5,6 +5,7 @@
 #include <thread> 
 #include <chrono>
 #include <iostream>
+#include <cstring>
 
 int main(int argc, char* argv[])
 {

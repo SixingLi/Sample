@@ -33,7 +33,7 @@ void SampleIsInsideLane(const SSD::SimPoint3D& inputPt, const SSD::SimString& la
 		default:
 			SideType = "MSideState::none";
 		}
-		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "inputPoint is inside lane,%s", SideType);
+		SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "inputPoint is inside lane,%s", SideType.c_str());
 	}
 	
 }

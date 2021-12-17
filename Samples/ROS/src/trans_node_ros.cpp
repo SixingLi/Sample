@@ -638,7 +638,7 @@ int main(int argc, char* argv[])
 	ros::init(argc, argv, "ros_trans_node");
 	ros_trans_node tn;
 	tn.run();
-	ros::spin();
+	ros::spinOnce();
 	tn.monitor_case_status();
 	return 0;
 }

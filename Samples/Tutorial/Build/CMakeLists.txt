@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.8.0)
 
 IF (UNIX)
-	set(CMAKE_C_COMPILER "/usr/bin/clang")
-	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -I/usr/include/libcxxabi")
-	set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
+	# set(CMAKE_C_COMPILER "/usr/bin/clang")
+	# set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+	# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -I/usr/include/libcxxabi")
+	# set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 ENDIF()
 
@@ -61,6 +61,7 @@ ELSE()
 #add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/AVP AVP)
 #add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/LKA LKA)
 #add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SampleSource/Workshop/TrajectoryControl TrajectoryControl)
+
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../HDMap HDMap)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Traffic Traffic)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../V2X/V2XADAS V2XADAS)
@@ -71,12 +72,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Dynamics Dynamics)
 #add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Sensor/SensorLidarROS SensorLidarROS)
 
 # add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneServiceAPI SimOneServiceAPI)
-# add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOnePNCAPI SimOnePNCAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../PNC PNC)
 # add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneSensorAPI SimOneSensorAPI)
 # add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneV2XAPI SimOneV2XAPI)
 ENDIF()
-
-
-
-
-
