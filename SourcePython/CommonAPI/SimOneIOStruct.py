@@ -80,6 +80,15 @@ class SimOne_Data_MainVehicle_Status(Structure):
 		('mainVehicleStatus', c_int)]
 
 
+SOSM_MAP_OD_LENGT = 128
+SOSM_MAP_ODURL_LENGT = 256
+SOSM_MAP_ODMD5_LENGT = 128
+class SimOne_Data_Map(Structure):
+	_fields_ = [
+		('openDrive',c_char*MAX_MAINVEHICLE_NAME_LEN),
+		('openDriveUrl',c_char*SOSM_MAP_ODURL_LENGT),
+		('opendriveMd5',c_char*SOSM_MAP_ODMD5_LENGT)]
+
 SOSM_CASENAME_LENGT = 256
 SOSM_CASEID_LENGT = 256
 SOSM_TASKID_LENGT = 256

@@ -47,8 +47,8 @@ simoneapi_sensor_detections_cb_func = SensorDetectionsCbFuncType(_simoneapi_sens
 
 
 def SoGetGps(mainVehicleId, gpsData):
-	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	SimoneAPI.GetGps.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	return SimoneAPI.GetGps(_mainVehicleId, pointer(gpsData))
 
 def SoApiSetGpsUpdateCB(cb):
@@ -57,8 +57,8 @@ def SoApiSetGpsUpdateCB(cb):
 	SIMONEAPI_GPS_CB = cb
 
 def SoGetGroundTruth(mainVehicleId, obstacleData):
-	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	SimoneAPI.GetGroundTruth.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	ret = SimoneAPI.GetGroundTruth(_mainVehicleId, pointer(obstacleData))
 	return ret
 
@@ -68,9 +68,9 @@ def SoApiSetGroundTruthUpdateCB(cb):
 	SIMONEAPI_GROUNDTRUTH_CB = cb
 
 def SoGetRadarDetections(mainVehicleId, sensorId, detectionData):
+	SimoneAPI.GetRadarDetections.restype = c_bool
 	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	_sensorId = create_string_buffer(sensorId.encode(), 256)
-	SimoneAPI.GetRadarDetections.restype = c_bool
 	return SimoneAPI.GetRadarDetections(_mainVehicleId, _sensorId, pointer(detectionData))
 
 def SoApiSetRadarDetectionsUpdateCB(cb):
@@ -79,14 +79,14 @@ def SoApiSetRadarDetectionsUpdateCB(cb):
 	SIMONEAPI_RADARDETECTION_CB = cb
 
 def SoGetUltrasonicRadar(mainVehicleId, sensorId, ultrasonics):
+	SimoneAPI.GetUltrasonicRadar.restype = c_bool
 	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	_sensorId = create_string_buffer(sensorId.encode(), 256)
-	SimoneAPI.GetUltrasonicRadar.restype = c_bool
 	return SimoneAPI.GetUltrasonicRadar(_mainVehicleId, _sensorId, pointer(ultrasonics))
 
 def SoGetUltrasonicRadars(mainVehicleId, ultrasonics):
-	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	SimoneAPI.GetUltrasonicRadar.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	return SimoneAPI.GetUltrasonicRadars(_mainVehicleId, pointer(ultrasonics))
 
 def SoApiSetUltrasonicRadarsCB(cb):
@@ -107,7 +107,8 @@ def SoApiSetSensorDetectionsUpdateCB(cb):
 
 def SoGetSensorConfigurations(mainVehicleId, sensorConfigurations):
 	SimoneAPI.GetSensorConfigurations.restype = c_bool
-	return SimoneAPI.GetSensorConfigurations(mainVehicleId, pointer(sensorConfigurations))
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.GetSensorConfigurations(_mainVehicleId, pointer(sensorConfigurations))
 
 def SoGetEnvironment(pEnvironment):
 	SimoneAPI.GetEnvironment.restype = c_bool
@@ -119,11 +120,14 @@ def SoSetEnvironment(pEnvironment):
 
 def SoGetTrafficLights(mainVehicleId, opendriveLightId, trafficLight):
 	SimoneAPI.GetTrafficLight.restype = c_bool
-	return SimoneAPI.GetTrafficLight(mainVehicleId, opendriveLightId, pointer(trafficLight))
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.GetTrafficLight(_mainVehicleId, opendriveLightId, pointer(trafficLight))
 
 def SoGetSensorLaneInfo(mainVehicleId, sensorId,pLaneInfo):
 	SimoneAPI.GetSensorLaneInfo.restype = c_bool
-	return SimoneAPI.GetSensorLaneInfo(mainVehicleId, sensorId, pointer(pLaneInfo))
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	_sensorId = create_string_buffer(sensorId.encode(), 256)
+	return SimoneAPI.GetSensorLaneInfo(_mainVehicleId, _sensorId, pointer(pLaneInfo))
 
 def SoApiSetSensorLaneInfoCB(cb):
 	global SIMONEAPI_SENSORLANEINFO_CB

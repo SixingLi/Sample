@@ -63,6 +63,7 @@ def SoSetLogOut(logLevel,*args):
 
 def SoInitSimOneAPI(mainVehicleId='0',isFrameSync = 0,serverIP = '127.0.0.1',port=23789,startcase = 0, stopcase= 0,registerNodeId=0):
 	_input = create_string_buffer(serverIP.encode(), 256)
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	global G_API_StartCase_CB
 	global G_API_StopCase_CB
 	if startcase == 0:
@@ -71,7 +72,7 @@ def SoInitSimOneAPI(mainVehicleId='0',isFrameSync = 0,serverIP = '127.0.0.1',por
 		stopcase = None
 	G_API_StartCase_CB = startcase
 	G_API_StopCase_CB = stopcase
-	ret = SimoneAPI.InitSimOneAPI(mainVehicleId,isFrameSync,_input,port,startcase,stopcase,registerNodeId)
+	ret = SimoneAPI.InitSimOneAPI(_mainVehicleId,isFrameSync,_input,port,startcase,stopcase,registerNodeId)
 	return ret
 
 def SoTerminateSimOneAPI():
@@ -122,3 +123,7 @@ def SoAPISetMainVehicleStatusCB(cb):
 		cb = None
 	G_API_MainVehicleChangeStatusCB = cb
 	return SimoneAPI.SetMainVehicleStatusCB(api_mainvehiclestatusupdate_cb)
+
+def SoGetHDMapData(hdMap):
+	SimoneAPI.GetHDMapData.restype = c_bool
+	return SimoneAPI.GetHDMapData(hdMap)
