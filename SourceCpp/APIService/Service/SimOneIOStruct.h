@@ -987,6 +987,23 @@ struct SimOne_Data_Driver_Status : public SimOne_Data
 };
 
 // ----------------------------
+// Vehicle control mode (SimOne Output) 
+// ----------------------------
+#define SOSM_CONTROLMODE_PREFIX "SOSM_CONTROLMODE_"
+
+enum SimOne_Control_Mode
+{
+	ESimOne_Control_Mode_Unknown = 0,
+	ESimOne_Control_Mode_Auto = 1,
+	ESimOne_Control_Mode_Manual = 2
+};
+
+struct SimOne_Data_Control_Mode : public SimOne_Data
+{
+	SimOne_Control_Mode controlMode;
+};
+
+// ----------------------------
 // Scenario event
 // ----------------------------
 #define ENABLE_SCENARIO_EVENT

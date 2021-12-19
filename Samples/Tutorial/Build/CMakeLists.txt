@@ -72,12 +72,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Dynamics Dynamics)
 #add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../Sensor/SensorLidarROS SensorLidarROS)
 
 # add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneServiceAPI SimOneServiceAPI)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOnePNCAPI SimOnePNCAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../PNC PNC)
 # add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneSensorAPI SimOneSensorAPI)
 # add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../SimOneV2XAPI SimOneV2XAPI)
 ENDIF()
-
-
-
-
-
