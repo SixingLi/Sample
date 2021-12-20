@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string.h>
 // #include <windows.h>
+using namespace std;
 
 void Test_V2X(const char * MainVehicleID, bool IsCallBackMode);
 void Test_GPS(const char * MainVehicleID, bool IsCallBackMode);
@@ -18,16 +19,17 @@ void Test_SensorLaneInfo(const char * MainVehicleID,bool IsCallBackMode);
 void Test_SensorSensorDetection(const char * MainVehicleID, bool IsCallBackMode);
 void Test_RadarDetection(const char * MainVehicleID, bool IsCallBackMode);
 void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode);
+bool Test_HDMap_ALL(const vector<string> &apiNames);
 
-void Test_HDMap();
+string MainVehicleId = "0";
 
-using namespace std;
 int main(int argc, char* argv[])
 {
-	bool isJoinTimeLoop = true;
-	string MainVehicleId = "0";
+	bool isJoinTimeLoop = true;	
 	SimOneAPI::InitSimOneAPI(MainVehicleId.c_str(), isJoinTimeLoop);
-	
+	//std::vector<std::string> apiNames = {"GetTrafficSignList","GetTrafficLightList","GetCrossHatchList","GetLaneLink"};
+	std::vector<std::string> apiNames = {"GetTrafficLightList"};
+	Test_HDMap_ALL(apiNames);
 	//Test_V2X(false);
 	//Test_UltrasonicRadars(MainVehicleId.c_str(),false);
 	//Test_UltrasonicRadar(MainVehicleId.c_str());
@@ -201,7 +203,82 @@ void Test_V2X(const char * MainVehicleID, bool IsCallBackMode) {
 	}
 }
 
-void Test_HDMap() {
-	SimOneAPI::LoadHDMap(10);
+bool Test_HDMap_ALL(const vector<string> &apiNames) {
+	int success_count = 0;
+	if (SimOneAPI::LoadHDMap(3)) {
+		for (auto apiName : apiNames) {
+			std::cout << "get hdmap data success" << endl;
+			if (apiName == "GetTrafficSignList") {
+				SSD::SimVector<HDMapStandalone::MSignal> list;
+				SimOneAPI::GetTrafficSignList(list);
+				int listSize = list.size();
+				if (listSize > 0) {
+					std::cout << ">>>>>>>>>>>>>>>>>>>>>  GetTrafficSignList Size = " << listSize << endl;
+					success_count++;
+				}
+			}
+			else if (apiName == "GetTrafficLightList") {
+				SSD::SimVector<HDMapStandalone::MSignal> list;
+				SimOneAPI::GetTrafficLightList(list);
+				int listSize = list.size();
+				if (listSize > 0) {
+					std::cout << ">>>>>>>>>>>>>>>>>>>>>  GetTrafficLightList Size = " << listSize << endl;
+					success_count++;
+				}
+
+				for (auto signal : list){
+					std::unique_ptr<SimOne_Data_TrafficLight> pDetections = std::make_unique<SimOne_Data_TrafficLight>();
+					if(SimOneAPI::GetTrafficLight(MainVehicleId.c_str(), signal.id, pDetections.get()))
+						printf(">>>>>>>>>>>>>>>>>>>>>  SoGetTrafficLights opendriveId = %d, trafficLigtData.countDown = %d, trafficLigtData.status = %d\n", signal.id, pDetections->countDown, pDetections->status);
+
+				}
+			}
+			else if (apiName == "GetCrossHatchList") {
+				SSD::SimString id;
+				SSD::SimVector<HDMapStandalone::MObject> crossHatchList;
+				double s, t, s_toCenterLine, t_toCenterLine;
+				std::unique_ptr<SimOne_Data_Gps> pDetections = std::make_unique<SimOne_Data_Gps>();
+				SimOneAPI::GetGps(MainVehicleId.c_str(), pDetections.get());
+				SSD::SimPoint3D pos = { pDetections->posX,pDetections->posY ,pDetections->posZ };
+				SimOneAPI::GetNearMostLane(pos, id, s, t, s_toCenterLine, t_toCenterLine);
+				SimOneAPI::GetCrossHatchList(id, crossHatchList);
+				int listSize = crossHatchList.size();
+				if (listSize > 0) {
+					std::cout << ">>>>>>>>>>>>>>>>>>>>>  getCrossHatchList Size = " << listSize << endl;
+					success_count++;
+				}
+			}
+			else if (apiName == "GetLaneLink") {
+				SSD::SimString id;
+				HDMapStandalone::MLaneLink laneLink;
+				double s, t, s_toCenterLine, t_toCenterLine;
+				std::unique_ptr<SimOne_Data_Gps> pDetections = std::make_unique<SimOne_Data_Gps>();
+				SimOneAPI::GetGps(MainVehicleId.c_str(), pDetections.get());
+				SSD::SimPoint3D pos = { pDetections->posX,pDetections->posY ,pDetections->posZ };
+				SimOneAPI::GetNearMostLane(pos, id, s, t, s_toCenterLine, t_toCenterLine);
+				SimOneAPI::GetLaneLink(id, laneLink);
+				string laneID = id.GetString();
+				int listSize = laneLink.successorLaneNameList.size();
+				SSD::SimString leftLaneName = laneLink.leftNeighborLaneName;
+				if (listSize > 0 && !leftLaneName.Empty()) {
+					std::cout << ">>>>>>>>>>>>>>>>>>>>>  getLaneLink successorLaneNameList Size = " << listSize << endl;
+					success_count++;
+				}
+			}
+		}
+	}
+	else {
+		std::cout << "#####################  LoadHDMap Data fail!!!" << endl;
+		std::cout << "#####################  Test_HDMap_ALL fail!!!" << endl;
+		return false;
+	}
+	if (success_count == apiNames.size()) {
+		std::cout << "#####################  Test_HDMap_ALL success!!!" << endl;
+		return true;
+	}
+	else {
+		std::cout << "#####################  Test_HDMap_ALL fail!!!" << endl;
+		return false;
+	}
 }
 
