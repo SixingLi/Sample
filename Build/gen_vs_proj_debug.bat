@@ -3,6 +3,7 @@ set CurrentPath=%cd%
 cd %CurrentPath%
 path %ProgramFiles%\CMake\bin;%PATH%
 
+if exist clear_api.bat call clear_api.bat
 call "..\..\..\3rdparty\artifactory\python36.sh"
 call "..\..\..\3rdparty\artifactory\ffmpeg.sh"
 
