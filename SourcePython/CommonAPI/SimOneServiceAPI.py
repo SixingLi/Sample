@@ -89,7 +89,7 @@ def SoGetCaseRunStatus():
 
 def SoGetMainVehicleList(data):
 	SimoneAPI.GetMainVehicleList.restype = c_bool
-	return SimoneAPI.GetMainVehicleList(pointer(data), True)
+	return SimoneAPI.GetMainVehicleList(pointer(data))
 
 def SoAPIWait():
 	SimoneAPI.Wait.restype = c_int
