@@ -11,26 +11,38 @@
 // #include <windows.h>
 using namespace std;
 
+// SimOneServiceAPI
+void Test_InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, const char *serverIP = "127.0.0.1", int port = 23789,void(*startCase)()=0, void(*endCase)()=0, int registerNodeId=0);
+// void Test_GetVersion();
+// void Test_SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, ESimOne_Client_Type toNodeType); ------
+// void Test_ReceiveRouteMessageCB(void(*cb)(int fromId, ESimOne_Client_Type fromType, int length, const void* pBuffer, int commandId)); ------
+// void Test_SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...); ------
+
+// SimOneV2X
 void Test_V2X(const char * MainVehicleID, bool IsCallBackMode);
-void Test_GPS(const char * MainVehicleID, bool IsCallBackMode);
-void Test_UltrasonicRadar(const char * MainVehicleID);
-void Test_UltrasonicRadars(const char * MainVehicleID, bool IsCallBackMode);
-void Test_SensorLaneInfo(const char * MainVehicleID,bool IsCallBackMode);
-void Test_SensorSensorDetection(const char * MainVehicleID, bool IsCallBackMode);
-void Test_RadarDetection(const char * MainVehicleID, bool IsCallBackMode);
-void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode);
-bool Test_HDMap_ALL(const vector<string> &apiNames);
+
+// SimOneSensor
+void Test_SetEnvironment();
+void Test_GetEnvironment();
+
+// void Test_GPS(const char * MainVehicleID, bool IsCallBackMode);
+// void Test_UltrasonicRadar(const char * MainVehicleID);
+// void Test_UltrasonicRadars(const char * MainVehicleID, bool IsCallBackMode);
+// void Test_SensorLaneInfo(const char * MainVehicleID,bool IsCallBackMode);
+// void Test_SensorSensorDetection(const char * MainVehicleID, bool IsCallBackMode);
+// void Test_RadarDetection(const char * MainVehicleID, bool IsCallBackMode);
+// void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode);
+// bool Test_HDMap_ALL(const vector<string> &apiNames);
 
 string MainVehicleId = "0";
+// SimOnePNCAPI
 
 int main(int argc, char* argv[])
 {
-	bool isJoinTimeLoop = true;	
-	SimOneAPI::InitSimOneAPI(MainVehicleId.c_str(), isJoinTimeLoop);
-	//std::vector<std::string> apiNames = {"GetTrafficSignList","GetTrafficLightList","GetCrossHatchList","GetLaneLink"};
-	//std::vector<std::string> apiNames = {"GetTrafficLightList"};
-	//Test_HDMap_ALL(apiNames);
-	Test_V2X(MainVehicleId.c_str(),true);
+	Test_InitSimOneAPI("0", true, "10.66.9.111");
+	// Test_GetVersion();
+	
+	Test_V2X("0", false);
 	//Test_UltrasonicRadars(MainVehicleId.c_str(),false);
 	//Test_UltrasonicRadar(MainVehicleId.c_str());
 	//Test_SensorLaneInfo(MainVehicleId.c_str(),false);
@@ -38,8 +50,85 @@ int main(int argc, char* argv[])
 	//Test_SensorSensorDetection(MainVehicleId.c_str(),true);
 	//Test_RadarDetection(MainVehicleId.c_str(), false);
 	//Test_GetGroundTruth(MainVehicleId.c_str(), false);
-	system("pause");
+	// system("pause");
+
+	Test_SetEnvironment();
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	Test_GetEnvironment();
+
+	while (1)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(30));
+	}
 	return 0;
+}
+
+void Test_InitSimOneAPI(const char* mainVehicleId, bool isFrameSync, const char *serverIP, int port,void(*startCase)(), void(*endCase)(), int registerNodeId)
+{
+	SimOneAPI::InitSimOneAPI(mainVehicleId, isFrameSync, serverIP);
+}
+
+void Test_GetVersion()
+{
+	std::cout << "Version:" << SimOneAPI::GetVersion() << endl;;
+}
+
+void Test_SetEnvironment()
+{
+	// std::unique_ptr<SimOne_Data_Environment> Environment = std::make_unique<SimOne_Data_Environment>();
+	SimOne_Data_Environment pEnvironment;
+
+	pEnvironment.timeOfDay = 1000;
+        pEnvironment.heightAngle = 90;
+        pEnvironment.directionalLight = 0.5f;
+        pEnvironment.ambientLight = 0.5f;
+        pEnvironment.artificialLight = 0.5f;
+        pEnvironment.cloudDensity = 0.5f;
+        pEnvironment.fogDensity = 0.5f;
+        pEnvironment.rainDensity = 0.5f;
+        pEnvironment.snowDensity = 0.5f;
+        pEnvironment.groundHumidityLevel = 0.5f;
+        pEnvironment.groundDirtyLevel = 0.5f;
+        std::cout << "SetEnvironment timeOfDay ([0, 2400]): " << pEnvironment.timeOfDay << std::endl;
+        std::cout << "SetEnvironment heightAngle ([0, 90]): " << pEnvironment.heightAngle << std::endl;
+        std::cout << "SetEnvironment directionalLight ([0, 1]): " << pEnvironment.directionalLight << std::endl;
+        std::cout << "SetEnvironment ambientLight ([0, 1]): " << pEnvironment.ambientLight << std::endl;
+        std::cout << "SetEnvironment artificialLight ([0, 1]): " << pEnvironment.artificialLight << std::endl;
+        std::cout << "SetEnvironment cloudDensity ([0, 1]): " << pEnvironment.cloudDensity << std::endl;
+        std::cout << "SetEnvironment fogDensity ([0, 1]): " << pEnvironment.fogDensity << std::endl;
+        std::cout << "SetEnvironment rainDensity ([0, 1]): " << pEnvironment.rainDensity << std::endl;
+        std::cout << "SetEnvironment snowDensity ([0, 1]): " << pEnvironment.snowDensity << std::endl;
+        std::cout << "SetEnvironment groundHumidityLevel ([0, 1]): " << pEnvironment.groundHumidityLevel << std::endl;
+        std::cout << "SetEnvironment groundDirtyLevel ([0, 1]): " << pEnvironment.groundDirtyLevel << std::endl;
+        if(!SimOneAPI::SetEnvironment(&pEnvironment))
+	{
+        	std::cout << "SetEnvironment Failed!" << std::endl; 
+	}
+
+	std::cout << "------------ SetEnvironment Done ------------" << std::endl; 
+}
+
+void Test_GetEnvironment()
+{
+	std::unique_ptr<SimOne_Data_Environment> pEnvironment = std::make_unique<SimOne_Data_Environment>();
+
+	if (!SimOneAPI::GetEnvironment(pEnvironment.get()))
+	{
+		std::cout << "------------ GetEnvironment Failed ! ------------" << std::endl;
+		return;
+	}
+	std::cout << "GetEnvironment timeOfDay ([0, 2400]): " << pEnvironment->timeOfDay << std::endl;
+	std::cout << "GetEnvironment heightAngle ([0, 90]): " << pEnvironment->heightAngle << std::endl;
+	std::cout << "GetEnvironment directionalLight ([0, 1]): " << pEnvironment->directionalLight << std::endl;
+	std::cout << "GetEnvironment ambientLight ([0, 1]): " << pEnvironment->ambientLight << std::endl;
+	std::cout << "GetEnvironment artificialLight ([0, 1]): " << pEnvironment->artificialLight << std::endl;
+	std::cout << "GetEnvironment cloudDensity ([0, 1]): " << pEnvironment->cloudDensity << std::endl;
+	std::cout << "GetEnvironment fogDensity ([0, 1]): " << pEnvironment->fogDensity << std::endl;
+	std::cout << "GetEnvironment rainDensity ([0, 1]): " << pEnvironment->rainDensity << std::endl;
+	std::cout << "GetEnvironment snowDensity ([0, 1]): " << pEnvironment->snowDensity << std::endl;
+	std::cout << "GetEnvironment groundHumidityLevel ([0, 1]): " << pEnvironment->groundHumidityLevel << std::endl;
+	std::cout << "GetEnvironment groundDirtyLevel ([0, 1]): " << pEnvironment->groundDirtyLevel << std::endl;
+	std::cout << "------------ GetEnvironment Done ------------" << std::endl;
 }
 
 void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode) {

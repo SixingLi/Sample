@@ -299,7 +299,7 @@ void SimOneAPIService::zeroMemory() {
 #endif
 	mTrafficLightsMap.clear();
 	mSensorIdMap.clear();
-#ifndef WITHOUT_SENSOR
+#ifdef SENSOR
 	TaskSensorManager::getInstance().ManagerClear();
 #endif
 	mWayPointsMap.clear();
@@ -448,7 +448,7 @@ bool SimOneAPIService::connectSyncBridgeNode() {
 
 					switch (type)
 					{
-#ifndef  WITHOUT_SENSOR
+#ifdef  SENSOR
 					case Bridge::EOutSimOneMessageType_Environment:
 						setEnvironmentInfo(type, &(state.buffer()));
 						break;
@@ -555,7 +555,7 @@ void SimOneAPIService::onServerMessage(Message& msg) {
 	case Bridge::EBridgeFrameEnd:
 		ret = onFromFrameEnd(msg);
 		break;
-#ifndef WITHOUT_SENSOR
+#ifdef SENSOR
 	case Bridge::ESensorAnyDataMessage:
 		ret = onFromSensorDataMessage(msg);
 		break;
@@ -856,7 +856,7 @@ bool SimOneAPIService::GetSimOneVehicleState(int mainVehicleId, SimOne_Data_Vehi
     memcpy(pVehExtraState, it->second, sizeof(SimOne_Data_Vehicle_Extra));
     return true;
 }
-#ifndef WITHOUT_SENSOR  //Sensor Compile
+#ifdef SENSOR //Sensor Compile
 
 bool SimOneAPIService::SetObjectbasedDataEnable(bool enable) {
 	if (!mpClientSync) {
@@ -1938,7 +1938,7 @@ bool SimOneAPIService::onFromHotAreaDataMessage(Message& msg) {
 	}
 	return ret;
 }
-#ifndef WITHOUT_SENSOR
+#ifdef SENSOR
 bool SimOneAPIService::onFromSensorDataMessage(Message& msg)
 {
 	Bridge::SensorAnyDataMessage sensorMessage;
@@ -2096,7 +2096,7 @@ bool SimOneAPIService::SetObstacleUpdateCB(void(*cb)(const char* mainVehicleId, 
 	mpObstacleUpdateCB = cb;
 	return true;
 }
-#ifndef WITHOUT_SENSOR
+#ifdef SENSOR
 bool SimOneAPIService::SetGpsUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Gps *pGps))
 {
 	//Init();
