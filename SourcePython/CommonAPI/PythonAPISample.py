@@ -19,7 +19,7 @@ Flag = False
 if __name__ == '__main__':
 	mainVehicleID = '0'
 	try:
-		if SoInitSimOneAPI(mainVehicleID)==1:
+		if SoInitSimOneAPI(mainVehicleID, 0, "10.66.9.111")==1:
 			print("################## API init success!!!")
 			Flag =True
 		else:
@@ -27,6 +27,9 @@ if __name__ == '__main__':
 	except Exception as e:
 		print(e)
 		pass
+
+	SoApiSetV2XInfoUpdateCB(SoV2XCB)
+
 	while Flag:
 		# waypoint = SimOne_Data_WayPoints()
 		# SoGetWayPoints(mainVehicleID,waypoint)
@@ -55,23 +58,23 @@ if __name__ == '__main__':
 		# if SoGetV2XInfo(mainVehicleID,"obu1",1,v2xData):
 		# 	print("Size:{0},MsgFrameData:{1}".format(v2xData.V2XMsgFrameSize,v2xData.MsgFrameData))
 
-		SoApiSetV2XInfoUpdateCB(SoV2XCB)
 		
 		# planeInfo = SimOne_Data_LaneInfo()
 		# if SoGetSensorLaneInfo(mainVehicleID,"objectBasedCamera1",planeInfo):
 		# 	llaneid = planeInfo.laneLeftID;
 		# 	print("planeInfo.laneLeftID:{0}".format(llaneid))
 
-		pMainVehicleInfo = SimOne_Data_MainVehicle_Info();
-		if SoGetMainVehicleList(pMainVehicleInfo):
-			print("	pMainVehicleInfo.size:{0}, pMainVehicleInfo.idList:{1}".format(pMainVehicleInfo.size,pMainVehicleInfo.id_list[0]))
-			for index in range(pMainVehicleInfo.size):
-				print("pMainVehicleInfo.id:		{0}".format(pMainVehicleInfo.id_list[index].value))
-			for indextype in range(pMainVehicleInfo.size):
-				print("pMainVehicleInfo.type:		{0}".format(pMainVehicleInfo.type_list[indextype].value))
+		# pMainVehicleInfo = SimOne_Data_MainVehicle_Info();
+		# if SoGetMainVehicleList(pMainVehicleInfo):
+		# 	print("	pMainVehicleInfo.size:{0}, pMainVehicleInfo.idList:{1}".format(pMainVehicleInfo.size,pMainVehicleInfo.id_list[0]))
+		# 	for index in range(pMainVehicleInfo.size):
+		# 		print("pMainVehicleInfo.id:		{0}".format(pMainVehicleInfo.id_list[index].value))
+		# 	for indextype in range(pMainVehicleInfo.size):
+		# 		print("pMainVehicleInfo.type:		{0}".format(pMainVehicleInfo.type_list[indextype].value))
+
 		# pSensorConfig = SimOne_Data_SensorConfiguration()
 		# if SoGetSensorConfigurations(mainVehicleID, pSensorConfig):
 		# 	print("	pSensorConfig.sensorId:{0}, pSensorConfig.SensorType:{1}".format(pSensorConfig.sensorId,pSensorConfig.sensorType))
 			
-		time.sleep(100000)
+		time.sleep(0.1)
 		pass
