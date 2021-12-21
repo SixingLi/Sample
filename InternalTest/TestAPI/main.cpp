@@ -28,9 +28,9 @@ int main(int argc, char* argv[])
 	bool isJoinTimeLoop = true;	
 	SimOneAPI::InitSimOneAPI(MainVehicleId.c_str(), isJoinTimeLoop);
 	//std::vector<std::string> apiNames = {"GetTrafficSignList","GetTrafficLightList","GetCrossHatchList","GetLaneLink"};
-	std::vector<std::string> apiNames = {"GetTrafficLightList"};
-	Test_HDMap_ALL(apiNames);
-	//Test_V2X(false);
+	//std::vector<std::string> apiNames = {"GetTrafficLightList"};
+	//Test_HDMap_ALL(apiNames);
+	Test_V2X(MainVehicleId.c_str(),true);
 	//Test_UltrasonicRadars(MainVehicleId.c_str(),false);
 	//Test_UltrasonicRadar(MainVehicleId.c_str());
 	//Test_SensorLaneInfo(MainVehicleId.c_str(),false);
@@ -184,14 +184,14 @@ void Test_V2X(const char * MainVehicleID, bool IsCallBackMode) {
 
 	if (IsCallBackMode) {
 		auto function = [](const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) {
-			std::cout << "########### SetV2XInfoUpdateCB strlen= "<<pDetections->V2XMsgFrameSize <<"  "<<pDetections->MsgFrameData << std::endl;
+			std::cout << "########### sensorId:" << sensorId<<" SetV2XInfoUpdateCB strlen= "<<pDetections->V2XMsgFrameSize <<"  "<<pDetections->MsgFrameData << std::endl;
 		};
 		SimOneAPI::SetV2XInfoUpdateCB(function);
 	}
 	else {
 		std::unique_ptr<SimOne_Data_V2XNFS> pDetections = std::make_unique<SimOne_Data_V2XNFS>();
 		while (1) {
-			if (SimOneAPI::GetV2XInfo(MainVehicleID, "v2x", ESimOne_V2X_MessageFrame_PR::ESimOne_V2X_MessageFrame_PR_bsmFrame, pDetections.get())) {
+			if (SimOneAPI::GetV2XInfo(MainVehicleID, "obu1", ESimOne_V2X_MessageFrame_PR::ESimOne_V2X_MessageFrame_PR_bsmFrame, pDetections.get())) {
 				std::cout << "########### GetV2XInfo strlen = " << strlen(pDetections->MsgFrameData) << "  " << pDetections->MsgFrameData << std::endl;
 				std::this_thread::sleep_for(std::chrono::milliseconds(20));
 			}

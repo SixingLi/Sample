@@ -2013,8 +2013,9 @@ void SimOneAPIService::setSensorConfigurationsInfo(std::uint16_t type, const std
 	}
 	SimOne_Data_SensorConfigurations& sensorConfigurations = mSensorConfigurationsMap[mainVehId];
 	sensorConfigurations.data[sensorConfigurations.dataSize] = *pConf;
-	sensorConfigurations.dataSize++;
-	mSensorIdMap[pConf->id] = std::string(pConf->sensorId);
+	sensorConfigurations.dataSize++; 
+	if (mSensorIdMap.find(pConf->id) == mSensorIdMap.end())
+		mSensorIdMap[pConf->id] = std::string(pConf->sensorId);
 }
 #endif //Sensor
 bool SimOneAPIService::onFromBridgeDataRouteMessage(Message& msg)
