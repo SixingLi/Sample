@@ -223,11 +223,17 @@ ELSEIF (UNIX)
 		COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/eigen ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/eigen/
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/APIService/Service/SimOneIOStruct.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/Service/SimOneIOStruct.h
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/APIService/SimOneServiceAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOneServiceAPI.h
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneServiceAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/SimOneServiceAPI.py
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneIOStruct.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/SimOneIOStruct.py
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/PythonAPISample.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/PythonAPISample.py
 
 		COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/nlohmann ${SIMONE_API_ROOT}/${OutPutDir}/include/nlohmann/
 		COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/eigen ${SIMONE_API_ROOT}/${OutPutDir}/include/eigen/
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/APIService/Service/SimOneIOStruct.h ${SIMONE_API_ROOT}/${OutPutDir}/include/Service/SimOneIOStruct.h
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/APIService/SimOneServiceAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneServiceAPI.h
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneServiceAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOneServiceAPI.py
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneIOStruct.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOneIOStruct.py
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/PythonAPISample.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/PythonAPISample.py
 	)
 
 	IF (SENSOR)
@@ -242,8 +248,12 @@ ELSEIF (UNIX)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libswresample.so.3 ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libswresample.so.3
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libswscale.so.5 ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libswscale.so.5
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libx264.so.148 ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libx264.so.148
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneSensorAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/SimOneSensorAPI.py
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneStreamingAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/SimOneStreamingAPI.py
 
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/Sensor/SimOneSensorAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneSensorAPI.h 
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneSensorAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOneSensorAPI.py		
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneStreamingAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOneStreamingAPI.py
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_API_ROOT}/../../3rdparty/streaming/include/SimOneStreamingAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneStreamingAPI.h
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_API_ROOT}/../../3rdparty/streaming/lib/libSimOneStreamingAPI.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libSimOneStreamingAPI.so
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libavcodec.so.58 ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libavcodec.so.58
@@ -258,12 +268,14 @@ ELSEIF (UNIX)
 			add_custom_command(TARGET autoconfig
 			POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/Sensor/SimOneV2XAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOneV2XAPI.h 
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneV2XAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/SimOneV2XAPI.py
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/include/tsf.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/tsf.h
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/lib/linux/release/libtsf.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libtsf.so
 				COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/v2x_asn/v2x_I_New4Span/include ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/v2xinclude/
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/v2x_asn/v2x_I_New4Span/lib/linux/release/libV2X_ASN_New4Span.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libV2X_ASN_New4Span.so
 
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/Sensor/SimOneV2XAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneV2XAPI.h 
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOneV2XAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOneV2XAPI.py
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/include/tsf.h ${SIMONE_API_ROOT}/${OutPutDir}/include/tsf.h
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/lib/linux/release/libtsf.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libtsf.so
 				COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/v2x_asn/v2x_I_New4Span/include ${SIMONE_API_ROOT}/${OutPutDir}/include/v2xinclude/
@@ -300,6 +312,9 @@ ELSEIF (UNIX)
 		POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/PNC/SimOnePNCAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOnePNCAPI.h
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourceCpp/PNC/SimOnePNCAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOnePNCAPI.h
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOnePNCAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/SimOnePNCAPI.py
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/SourcePython/CommonAPI/SimOnePNCAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOnePNCAPI.py
+
 		)
 	ENDIF()
 	add_custom_command(TARGET autoconfig
