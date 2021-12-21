@@ -10,6 +10,11 @@ def start():
 
 def stop():
 	print("stop")
+
+def SoV2XCB(mainVehicleId, sensorId, Data_V2XNFS):
+	if Data_V2XNFS:
+		print("Data_V2XNFS:{0}, SensorID:{1}, Data_V2XNFS_Size:{2}, Data_V2XNFS_Frame: {3}".format(mainVehicleId,sensorId,Data_V2XNFS[0].V2XMsgFrameSize,Data_V2XNFS[0].MsgFrameData))
+
 Flag = False
 if __name__ == '__main__':
 	mainVehicleID = '0'
@@ -47,17 +52,26 @@ if __name__ == '__main__':
 		# 	print("Size:{0}".format(obstacleData.obstacleSize))
 
 		# v2xData = SimOne_Data_V2XNFS()
-		# if SoGetV2XInfo(mainVehicleID,"v2x",1,v2xData):
+		# if SoGetV2XInfo(mainVehicleID,"obu1",1,v2xData):
 		# 	print("Size:{0},MsgFrameData:{1}".format(v2xData.V2XMsgFrameSize,v2xData.MsgFrameData))
 
+		SoApiSetV2XInfoUpdateCB(SoV2XCB)
+		
 		# planeInfo = SimOne_Data_LaneInfo()
 		# if SoGetSensorLaneInfo(mainVehicleID,"objectBasedCamera1",planeInfo):
 		# 	llaneid = planeInfo.laneLeftID;
 		# 	print("planeInfo.laneLeftID:{0}".format(llaneid))
 
-		pSensorConfig = SimOne_Data_SensorConfiguration()
-		if SoGetSensorConfigurations(mainVehicleID, pSensorConfig):
-			print("	pSensorConfig.sensorId:{0}, pSensorConfig.SensorType:{1}".format(pSensorConfig.sensorId,pSensorConfig.sensorType))
+		pMainVehicleInfo = SimOne_Data_MainVehicle_Info();
+		if SoGetMainVehicleList(pMainVehicleInfo):
+			print("	pMainVehicleInfo.size:{0}, pMainVehicleInfo.idList:{1}".format(pMainVehicleInfo.size,pMainVehicleInfo.id_list[0]))
+			for index in range(pMainVehicleInfo.size):
+				print("pMainVehicleInfo.id:		{0}".format(pMainVehicleInfo.id_list[index].value))
+			for indextype in range(pMainVehicleInfo.size):
+				print("pMainVehicleInfo.type:		{0}".format(pMainVehicleInfo.type_list[indextype].value))
+		# pSensorConfig = SimOne_Data_SensorConfiguration()
+		# if SoGetSensorConfigurations(mainVehicleID, pSensorConfig):
+		# 	print("	pSensorConfig.sensorId:{0}, pSensorConfig.SensorType:{1}".format(pSensorConfig.sensorId,pSensorConfig.sensorType))
 			
-		time.sleep(0.3)
+		time.sleep(100000)
 		pass
