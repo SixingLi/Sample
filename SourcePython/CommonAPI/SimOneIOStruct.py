@@ -68,15 +68,17 @@ TOTAL_LEN = 640
 
 
 class SimOne_Data_MainVehicle_Info(Structure):
+	_pack_ = 1
 	_fields_ = [
 		('size', c_int),
-		('id_list', c_int*MAX_MAINVEHICLE_NUM),
+		('id_list', c_char*MAX_MAINVEHICLE_NAME_LEN*MAX_MAINVEHICLE_NUM),
 		('type_list', c_char*MAX_MAINVEHICLE_NAME_LEN*MAX_MAINVEHICLE_NUM)]
 
 
 class SimOne_Data_MainVehicle_Status(Structure):
+	_pack_ = 1
 	_fields_ = [
-		('mainVehicleId', c_int),
+		('mainVehicleId', c_char),
 		('mainVehicleStatus', c_int)]
 
 
