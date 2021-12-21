@@ -11,6 +11,8 @@
 // #include <windows.h>
 using namespace std;
 
+
+void Test_GetSensorConfigurations(const char * MainVehicleID);
 void Test_V2X(const char * MainVehicleID, bool IsCallBackMode);
 void Test_GPS(const char * MainVehicleID, bool IsCallBackMode);
 void Test_UltrasonicRadar(const char * MainVehicleID);
@@ -21,16 +23,17 @@ void Test_RadarDetection(const char * MainVehicleID, bool IsCallBackMode);
 void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode);
 bool Test_HDMap_ALL(const vector<string> &apiNames);
 
-string MainVehicleId = "0";
+string MainVehicleId = "1";
 
 int main(int argc, char* argv[])
 {
-	bool isJoinTimeLoop = true;	
+	bool isJoinTimeLoop = false;	
 	SimOneAPI::InitSimOneAPI(MainVehicleId.c_str(), isJoinTimeLoop);
 	//std::vector<std::string> apiNames = {"GetTrafficSignList","GetTrafficLightList","GetCrossHatchList","GetLaneLink"};
 	//std::vector<std::string> apiNames = {"GetTrafficLightList"};
 	//Test_HDMap_ALL(apiNames);
-	Test_V2X(MainVehicleId.c_str(),true);
+	Test_GetSensorConfigurations(MainVehicleId.c_str());
+	//Test_V2X(MainVehicleId.c_str(),true);
 	//Test_UltrasonicRadars(MainVehicleId.c_str(),false);
 	//Test_UltrasonicRadar(MainVehicleId.c_str());
 	//Test_SensorLaneInfo(MainVehicleId.c_str(),false);
@@ -41,6 +44,23 @@ int main(int argc, char* argv[])
 	system("pause");
 	return 0;
 }
+
+void Test_GetSensorConfigurations(const char * MainVehicleID) {
+	while (true) {
+		std::unique_ptr<SimOne_Data_SensorConfigurations> pConfigs = std::make_unique<SimOne_Data_SensorConfigurations>();
+		if (SimOneAPI::GetSensorConfigurations(MainVehicleID, pConfigs.get())) {
+			for (int i = 0; i < pConfigs->dataSize; i++) {
+
+				std::cout << "mainVehicleId:" << MainVehicleID << ", pConfigs->data[i].sensorId:" << pConfigs->data[i].sensorId << ", pConfigs->data[i].sensorType:" << pConfigs->data[i].sensorType << endl;//The Lane's leftLane ID 
+			}
+		}
+		else {
+			std::cout << "there is no sensor config in current vehicle!!!" << endl;//The Lane's leftLane ID 
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(30));
+	}
+}
+
 
 void Test_GetGroundTruth(const char * MainVehicleID, bool IsCallBackMode) {
 	if (IsCallBackMode) {

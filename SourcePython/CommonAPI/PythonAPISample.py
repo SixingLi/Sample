@@ -17,9 +17,9 @@ def SoV2XCB(mainVehicleId, sensorId, Data_V2XNFS):
 
 Flag = False
 if __name__ == '__main__':
-	mainVehicleID = '0'
+	mainVehicleID = '1'
 	try:
-		if SoInitSimOneAPI(mainVehicleID, 0, "10.66.9.111")==1:
+		if SoInitSimOneAPI(mainVehicleID)==1:
 			print("################## API init success!!!")
 			Flag =True
 		else:
@@ -28,7 +28,7 @@ if __name__ == '__main__':
 		print(e)
 		pass
 
-	SoApiSetV2XInfoUpdateCB(SoV2XCB)
+	# SoApiSetV2XInfoUpdateCB(SoV2XCB)
 
 	while Flag:
 		# waypoint = SimOne_Data_WayPoints()
@@ -72,9 +72,11 @@ if __name__ == '__main__':
 		# 	for indextype in range(pMainVehicleInfo.size):
 		# 		print("pMainVehicleInfo.type:		{0}".format(pMainVehicleInfo.type_list[indextype].value))
 
-		# pSensorConfig = SimOne_Data_SensorConfiguration()
-		# if SoGetSensorConfigurations(mainVehicleID, pSensorConfig):
-		# 	print("	pSensorConfig.sensorId:{0}, pSensorConfig.SensorType:{1}".format(pSensorConfig.sensorId,pSensorConfig.sensorType))
-			
+		pSensorConfigs = SimOne_Data_SensorConfigurations()
+		if SoGetSensorConfigurations(mainVehicleID, pSensorConfigs):
+			for index in range(pSensorConfigs.dataSize):
+				print("pSensorConfig.sensorId:{0}, pSensorConfig.SensorType:{1}".format(pSensorConfigs.data[index].sensorId,pSensorConfigs.data[index].sensorType))
+		
+
 		time.sleep(0.1)
 		pass

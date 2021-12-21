@@ -532,9 +532,9 @@ class SimOne_Data_SensorConfiguration(Structure):
 	_pack_ = 1
 	_fields_ = [
 	('id', c_int),
-	('mainVehicle', c_int), # 
-	('sensorId', c_char * SENSOR_IDTYPE_MAX), # Sensor's ID
-	('sensorType', c_char * SENSOR_IDTYPE_MAX),# Sensor's ESimOneNodeType
+	('mainVehicle', c_char*SENSOR_IDTYPE_MAX), # 
+	('sensorId', c_char*SENSOR_IDTYPE_MAX), # Sensor's ID
+	('sensorType', c_char*SENSOR_IDTYPE_MAX),# Sensor's ESimOneNodeType
 	('x', c_float),# Obstacle Position X no Opendrive (by meter)
 	('y', c_float),# Obstacle Position Y no Opendrive (by meter)
 	('z', c_float),# Obstacle Position Z no Opendrive (by meter)
