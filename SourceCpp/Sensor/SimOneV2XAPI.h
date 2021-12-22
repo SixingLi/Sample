@@ -61,29 +61,36 @@ extern "C"
 		/*!
 		获得对应车辆编号V2X中的UPER编码之后的v2x消息
 		\li function:
-		*	GetV2XSPATinfo
+		*	GetV2XInfo
 		\li brief:
 		*	Get V2X UPER ASN Message
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	sensorId: Id of the obu sensor
+		@param[in]
+		*	infoType: type of the obu message witch matches with enum ESimOne_V2X_MessageFrame_PR
 		@param[out]
-		*   pDetections: V2XASN data in SimOne_Data_V2XNFS format(output)
+		*	pDetections:  V2XASN data
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool GetV2XInfo(const char* mainVehicleId, const char* sensorId, int infoType, SimOne_Data_V2XNFS *pDetections);
-
 
 		/*!
 		获得对应车辆编号V2X中的UPER编码之后的v2x消息更新回调
 		\li function:
 		*	SetV2XInfoUpdateCB
 		\li brief:
-		*	Add mainVehicle V2X UPER ASN Message CallBack
+		*	Register mainVehicle V2X UPER ASN Message CallBack
 		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		*	mainVehicleId: Id of the main vehicle
 		@param[out]
-		*   pDetections: V2XASN data in SimOne_Data_V2XNFS format(output)
+		*	cb: callback func applying for obu message of the traffic-vehicle
+		*	param[out]:
+		*	mainVehicleId: Id of the main vehicle
+		*	sensorId: Id of the obu sensor
+		*	pDetections:  V2XASN data
 		@return
 		*	Success or not
 		*/

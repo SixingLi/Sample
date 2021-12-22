@@ -58,9 +58,11 @@ extern "C"
 		*	RegisterSimOneVehicleState
 		\li brief:
 		*	Register states of main vehicle dynamics
-		@param
-		*   pStateIndics: array of state names
-		@param
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	pStateIndics: array of state names
+		@param[in]
 		*   size: state number in pStateIndics
 		@return
 		*	Success or not
@@ -73,8 +75,10 @@ extern "C"
 		*	GetSimOneVehicleState
 		\li brief:
 		*	Get states of main vehicle dynamics which are registered by RegisterSimOneVehicleState
-		@param
-		*   pVehExtraState: states of main vehicle dynamics
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[out]
+		*	pVehExtraState: states of main vehicle dynamics
 		@return
 		*	Success or not
 		*/
@@ -86,15 +90,14 @@ extern "C"
 		*	SetPose
 		\li brief:
 		*	Set main vehicle pose
-		@param
-		*   mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
 		@param[in]
-		*   pPose: Pose to set(input)
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	pPose: Pose to set(input)
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool SetPose(const char* mainVehicleId, SimOne_Data_Pose_Control *pPose);
-
 
 		/*!
 		主车控制
@@ -102,10 +105,10 @@ extern "C"
 		*	SetDrive
 		\li brief:
 		*	Set vehicle drive control
-		@param
-		*   mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
 		@param[in]
-		*   pControl: vehicle control data(input)
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	pControl: vehicle control data
 		@return
 		*	Success or not
 		*/
@@ -117,10 +120,10 @@ extern "C"
 		*	SetDrive by planning trajectory. Not to use with SetDrive at the same time
 		\li brief:
 		*	Set vehicle drive control by planning trajectory
-		@param
-		*   mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
 		@param[in]
-		*   pControlTrajectory: vehicle planning trajectory (input)
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	pControlTrajectory: vehicle planning trajectory
 		@return
 		*	Success or not
 		*/
@@ -132,13 +135,14 @@ extern "C"
 		*	SetDriverName
 		\li brief:
 		*	Set vehicle driver's name
-		@param
-		*   mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
 		@param[in]
-		*   name: vehicle driver name, max length is 8
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	name: vehicle driver name, max length is 8
+		@return
+		*	None
 		*/
 		SIMONE_API void SetDriverName(const char* mainVehicleId, const char* name);
-
 
 		/*!
 		设置主车预警消息
@@ -146,10 +150,10 @@ extern "C"
 		*	SetVehicleEvent
 		\li brief:
 		*	Set vehicle event information
-		@param
-		*   mainVehicleId: Vehicle index, configuration order from scenario editing, starting from 0
 		@param[in]
-		*   pVehicleEvent: vehicle event information data(input)
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	pVehicleEvent: vehicle event information data
 		@return
 		*	Success or not
 		*/
@@ -161,8 +165,8 @@ extern "C"
 		*	SetSignalLights
 		\li brief:
 		*	Set signal lights
-		@param
-		*   mainVehicleId: Vehicle index, configuration order from scenario editing, starting from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
 		@param[in]
 		*	pTurnSignal: SimOne_Data_Turn_Signal data (output)
 		@return
@@ -176,10 +180,10 @@ extern "C"
 		*	GetDriverStatus
 		\li brief:
 		*	Get SimOneDriver status
-		@param
-		*   mainVehicleId: Vehicle index, configuration order from scenario editing, starting from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
 		@param[out]
-		*   pDriverStatus: SimOneDriver status data(output)
+		*	pDriverStatus: SimOneDriver status data
 		@return
 		*	Success or not
 		*/
@@ -191,10 +195,10 @@ extern "C"
 		*	GetControlMode
 		\li brief:
 		*	Get vehicle control mode
-		@param
-		*   mainVehicleId: Vehicle index, configuration order from scenario editing, starting from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
 		@param[out]
-		*   pControlMode: Vehicle control mode(output)
+		*	pControlMode: Vehicle control mode
 		@return
 		*	Success or not
 		*/
@@ -206,10 +210,10 @@ extern "C"
 		*	GetDriverControl
 		\li brief:
 		*	Get SimOneDriver drive control
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
 		@param[out]
-		*   pControl: vehicle control data from SimOneDriver(output)
+		*	pControl: vehicle control data from SimOneDriver
 		@return
 		*	Success or not
 		*/
@@ -221,31 +225,27 @@ extern "C"
 		*	GetWayPoints
 		\li brief:
 		*	Get MainVehile WayPoints
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
 		@param[out]
-		*   pWayPoints: MainVehicle WayPoints data(output)
+		*	pWayPoints: MainVehicle WayPoints data
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool GetWayPoints(const char* mainVehicleId, SimOne_Data_WayPoints* pWayPoints);
-
-
 
 		/*!
 		场景事件回调
 		\li function:
 		*	SetScenarioEventCB
 		\li brief:
-		*	Add scenario event callback
+		*	Register the callback func applying for setting scenario event
 		@param[in]
-		*   cb: scenario event callback function
-		@param
-		*	mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
-		@param
+		*	cb: scenario event callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
 		*	event: Command sent to the mainVehicle
-		@param
-		*	data: Not used yet
+		*	data: not in use
 		@return
 		*	Success or not
 		*/

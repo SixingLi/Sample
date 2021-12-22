@@ -64,10 +64,10 @@ extern "C"
 		*	GetGps
 		\li brief:
 		*	Get main vehicle GPS
-		@param
-		*   mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
 		@param[out]
-		*   pGps: GPS data(output)
+		*	pGps: GPS data
 		@return
 		*	Success or not
 		*/
@@ -78,11 +78,12 @@ extern "C"
 		\li function:
 		*	SetGpsUpdateCB
 		\li brief:
-		*	Add main vehicle GPS update callback
-		@param
-		*   mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
+		*	Register the callback func applying for GPS info
 		@param[in]
-		*   cb: GPS data update callback function
+		*	cb: GPS data update callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	pGps: GPS data
 		@return
 		*	Success or not
 		*/
@@ -94,10 +95,10 @@ extern "C"
 		*	GetGroundTruth
 		\li brief:
 		*	Get Ground Truth Data of Objects(Obstacles) from simulation scene.
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
 		@param[out]
-		*   pObstacle: Obstacle data(output)
+		*	pObstacle: Obstacle data
 		@return
 		*	Success or not
 		*/
@@ -108,16 +109,18 @@ extern "C"
 		\li function:
 		*	SetObstacleUpdateCB
 		\li brief:
-		*	Add main vehicle obstacle update callback
+		*	Register the callback func applying for obstacle info
 		@param
 		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
 		@param[in]
-		*   cb: Obstacle data fetch callback function
+		*	cb: Obstacle data update callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	pObstacle: Obstacle data
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool SetGroundTruthUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle));
-
 
 		/*!
 		得到毫米波雷达目标信息
@@ -125,12 +128,12 @@ extern "C"
 		*	GetRadarDetections
 		\li brief:
 		*	Get millimeter wave radar detections.
-		@param
-		*	mainVehicleId: Vehicle index, configure order of web UI, starts from 0
-		@param
-		*   sensorId: Sensor Index
-		@param
-		*	pDetections: Radar detections(output)
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	sensorId: Sensor Index
+		@param[out]
+		*	pDetections: Radar detections
 		@return
 		*	Success or not
 		*/
@@ -141,11 +144,13 @@ extern "C"
 		\li function:
 		*	SetRadarDetectionsUpdateCB
 		\li brief:
-		*	Millimeter wave radar detections update callback
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		*	Register the callback func applying for Millimeter wave radar detections
 		@param[in]
-		*   cb: Radar detections update callback function
+		*	cb: Radar detections update callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	sensorId: Sensor Index
+		*	pDetections: Detections data
 		@return
 		*	Success or not
 		*/
@@ -157,10 +162,12 @@ extern "C"
 		*	GetUltrasonicRadar
 		\li brief:
 		*	Get UltrasonicRadar imformations
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	sensorId: Sensor Index
 		@param[out]
-		*   pUltrasonic: ultrasonic data in SimOne_Data_UltrasonicRadar format(output)
+		*	pUltrasonic: ultrasonic data in SimOne_Data_UltrasonicRadar format
 		@return
 		*	Success or not
 		*/
@@ -172,10 +179,10 @@ extern "C"
 		*	GetUltrasonicRadars
 		\li brief:
 		*	Get UltrasonicRadars imfomations
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
 		@param[out]
-		*   pUltrasonics: ultrasonics data in SimOne_Data_UltrasonicRadars format(output)
+		*	pUltrasonics: ultrasonics data in SimOne_Data_UltrasonicRadars format
 		@return
 		*	Success or not
 		*/
@@ -186,16 +193,16 @@ extern "C"
 		\li function:
 		*	SetUltrasonicRadarsCB
 		\li brief:
-		*	Set ultrasonics update callback in UltrasonicRadars_data
-		@param
-		*   mainVehicleId: Vehilcle index, configure order of web UI, starts from 0
+		*	Register the callback func applying for ultrasonics radar detections
 		@param[in]
-		*   cb: Ultrasonics data update callback function
+		*	cb: Ultrasonics data update callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	pUltrasonics: Ultrasonics detections
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool SetUltrasonicRadarsCB(void(*cb)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
-
 
 		/*!
 		获取传感器检测到物体的对应真值
@@ -203,29 +210,33 @@ extern "C"
 		*	GetSensorDetections
 		\li brief:
 		*	Get Ground Truth objects for current sensor, support camera, lidar and perfect perception sensors.
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	sensorId: Sensor Index
 		@param[out]
-		*   pGroundtruth: SimOne_Data_SensorDetections data(output)
+		*	pGroundtruth: SimOne_Data_SensorDetections data
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool GetSensorDetections(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth);
 
 		/*!
-			传感器真值信息更新回调
-			\li function:
-			*	SetSensorDetectionsUpdateCB
-			\li brief:
-			*	Set GroundTruth update callback for current sensor, support camera, lidar and perfect perception sensors.
-			@param
-			*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
-			@param[in]
-			*   cb: Groundtruth data fetch callback function
-			@return
-			*	Success or not
-			*/
-		SIMONE_API bool SetSensorDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
+		传感器真值信息更新回调
+		\li function:
+		*	SetSensorDetectionsUpdateCB
+		\li brief:
+		*	Register the callback func applying for GroundTruth of current sensor, support camera, lidar and perfect perception sensors.
+		@param[in]
+		*	cb: Groundtruth data fetch callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	sensorId: Sensor Index
+		*	pGroundtruth: Groundtruth data
+		@return
+		*	Success or not
+		*/
+		SIMONE_API bool SetSensorDetectionsUpdateCB(void (*cb)(const char *mainVehicleId, const char *sensorId, SimOne_Data_SensorDetections *pGroundtruth));
 
 		/*!
 		得到所有传感器的配置信息（Id、类型、频率、位置和朝向等）
@@ -233,8 +244,10 @@ extern "C"
 		*	GetSensorConfigurations
 		\li brief:
 		*	Get Sensor's position information
-		@param
-		*    pSensorConfigurations: SensorConfigurations data (output)
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[out]
+		*	pSensorConfigurations: SensorConfigurations data
 		@return
 		*	Success or not
 		*/
@@ -246,8 +259,8 @@ extern "C"
 		*	GetEnvironment
 		\li brief:
 		*	Get current Environment
-		@param
-		*    pWeather: SimOne_Data_Environment data (output)
+		@param[in]
+		*	pEnvironment: SimOne_Data_Environment data
 		@return
 		*	Success or not
 		*/
@@ -259,8 +272,8 @@ extern "C"
 		*	SetEnvironment
 		\li brief:
 		*	Set Current Environment
-		@param
-		*    pWeather: SimOne_Data_Environment data (output)
+		@param[out]
+		*	pEnvironment: SimOne_Data_Environment data
 		@return
 		*	Success or not
 		*/
@@ -272,15 +285,16 @@ extern "C"
 		*	GetTrafficLight
 		\li brief:
 		*	Get traffic lights Data of Objects(light) from simulation scene.
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	opendriveLightId: traffic light Id on opendrive
 		@param[out]
-		*   pTrafficLights: light data(output)
+		*	pTrafficLights: light data
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool GetTrafficLight(const char* mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight* pTrafficLight);
-
 
 		/*!
 		获取传感器检测到车道与车道线数据
@@ -288,10 +302,12 @@ extern "C"
 		*	GetSensorLaneInfo
 		\li brief:
 		*	Get LaneInfo for current sensor, support camera and fusion sensor
-		@param
-		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	sensorId: Sensor Index
 		@param[out]
-		*   pLaneInfo: SimOne_Data_LaneInfo data(output)
+		*	pLaneInfo: SimOne_Data_LaneInfo data
 		@return
 		*	Success or not
 		*/
@@ -302,11 +318,15 @@ extern "C"
 		\li function:
 		*	SetSensorLaneInfoCB
 		\li brief:
-		*	Set LaneInfo for current sensor, support camera and fusion sensor
+		*	Register the callback func applying for LaneInfo from current sensor, support camera, and fusion sensors.
 		@param
 		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
 		@param[in]
-		*   cb: Groundtruth data fetch callback function
+		*	cb: Groundtruth data fetch callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	sensorId: Sensor Index
+		*	pLaneInfo: LaneInfo data
 		@return
 		*	Success or not
 		*/
