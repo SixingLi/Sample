@@ -21,7 +21,7 @@ int main()
 	const char* MainVehicleId ="0";
 	bool isJoinTimeLoop = true;
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop);
-	SimOneAPI::SetDriverName(0, "LKA");
+	SimOneAPI::SetDriverName(MainVehicleId, "LKA");
 	while (true) {
 		if (SimOneAPI::LoadHDMap(timeout)) {
 			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "HDMap Information Loaded");
@@ -32,7 +32,7 @@ int main()
 
 	SSD::SimPoint3DVector inputPoints;
 	std::unique_ptr<SimOne_Data_WayPoints> pWayPoints = std::make_unique<SimOne_Data_WayPoints>();
-	if (SimOneAPI::GetWayPoints(pWayPoints.get()))
+	if (SimOneAPI::GetWayPoints(MainVehicleId, pWayPoints.get()))
 	{
 		for (size_t i = 0; i < pWayPoints->wayPointsSize; ++i) {
 			SSD::SimPoint3D inputWayPoints(pWayPoints->wayPoints[i].posX, pWayPoints->wayPoints[i].posY, 0);
@@ -135,15 +135,15 @@ int main()
 			std::unique_ptr<SimOne_Data_Control> pControl = std::make_unique<SimOne_Data_Control>();
 
 			// Control mainVehicle with SimOneDriver
-			//SimOneAPI::GetDriverControl(0, pControl.get());
+			SimOneAPI::GetDriverControl(MainVehicleId, pControl.get());
 
 			// Control mainVehicle without SimOneDriver
-			pControl->throttle = 0.12f;
+			/*pControl->throttle = 0.12f;
 			pControl->brake = 0.f;
 			pControl->steering = 0.f;
 			pControl->handbrake = false;
 			pControl->isManualGear = false;
-			pControl->gear = static_cast<ESimOne_Gear_Mode>(1);
+			pControl->gear = static_cast<ESimOne_Gear_Mode>(1);*/
 
 			if (isObstalceBehind) {
 				double defaultDistance = 10.;
@@ -160,7 +160,7 @@ int main()
 			}
 			double steering = UtilDriver::calculateSteering(targetPath, pGps.get());
 			pControl->steering = (float)steering;
-			SimOneAPI::SetDrive(0, pControl.get());
+			SimOneAPI::SetDrive(MainVehicleId, pControl.get());
 		}
 		else {
 			SimOneAPI::SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOne Initializing...");
