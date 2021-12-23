@@ -35,9 +35,9 @@ include_directories("${SIMONE_PATH_FOUNDATION}/Source/Worker/BaseLibrary/SensorB
 include_directories("${SIMONE_PATH_FOUNDATION}/Source/Worker/BaseLibrary/BridgeBase/include")
 include_directories("${SIMONE_PATH_FOUNDATION}/Source/Logger/LogApi")
 
-include_directories("${SIMONE_API_ROOT}/SourceCpp/APIService")
-include_directories("${SIMONE_API_ROOT}/SourceCpp/HDMap")
-include_directories("${SIMONE_API_ROOT}/SourceCpp/Sensor")
+include_directories("${SIMONE_API_ROOT}/src/cpp/APIService")
+include_directories("${SIMONE_API_ROOT}/src/cpp/HDMap")
+include_directories("${SIMONE_API_ROOT}/src/cpp/Sensor")
 
 IF (WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0501)

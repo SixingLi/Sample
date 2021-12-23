@@ -17,8 +17,8 @@ SimOne 无人驾驶分布式仿真平台API模块，允许用户接入感知或�
 - ***InternalTest：*** 内部测试脚本
 - ***Matlab：*** Simulink接口及示例
 - ***Samples：*** C++及Python示例
-- ***SourceCpp：*** C++接口代码
-- ***SourcePython：*** Python接口代码
+- ***src/cpp：*** C++接口代码
+- ***src/python：*** Python接口代码
 
 ## 社区
   在使用过程中遇到问题，或有好的意见建议，请提交[Issues](https://gitee.com/OpenSimOne/OpenSimOne/issues)。

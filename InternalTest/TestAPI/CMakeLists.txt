@@ -1,9 +1,9 @@
 add_executable(TestAPI "")
 
-include_directories(${SIMONE_API_ROOT}/SourceCpp/APIService)
-include_directories(${SIMONE_API_ROOT}/SourceCpp/Sensor)
-include_directories(${SIMONE_API_ROOT}/SourceCpp/PNC)
-include_directories(${SIMONE_API_ROOT}/SourceCpp/HDMap)
+include_directories(${SIMONE_API_ROOT}/src/cpp/APIService)
+include_directories(${SIMONE_API_ROOT}/src/cpp/Sensor)
+include_directories(${SIMONE_API_ROOT}/src/cpp/PNC)
+include_directories(${SIMONE_API_ROOT}/src/cpp/HDMap)
 include_directories(${SIMONE_PATH_ROOT}/3rdparty)
 include_directories(${SIMONE_PATH_ROOT}/3rdparty/SSD/include)
 include_directories(${SIMONE_PATH_ROOT}/3rdparty/hdmap/include)

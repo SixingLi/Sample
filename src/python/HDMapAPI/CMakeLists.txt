@@ -58,9 +58,9 @@ target_include_directories(HDMapAPI PRIVATE
 	${HDMap_INCLUDE_DIRS}
 	${SSD_INCLUDE}
 	)
-include_directories(${SIMONE_API_ROOT}/SourceCpp/APIService)
-include_directories(${SIMONE_API_ROOT}/SourceCpp/HDMap)
-include_directories(${SIMONE_API_ROOT}/SourceCpp/Sensor/Task)
+include_directories(${SIMONE_API_ROOT}/src/cpp/APIService)
+include_directories(${SIMONE_API_ROOT}/src/cpp/HDMap)
+include_directories(${SIMONE_API_ROOT}/src/cpp/Sensor/Task)
 
 target_compile_definitions(HDMapAPI PRIVATE BOOST_PYTHON_STATIC_LIB)
 
