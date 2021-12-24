@@ -10,6 +10,97 @@ void tester::Test_InitSimOneAPI(bool isJoinTimeLoop, const char *serverIP)
 	SimOneAPI::InitSimOneAPI(mainVehicleId.c_str(), isJoinTimeLoop, serverIP);
 }
 
+void tester::Test_TerminateSimOneAPI()
+{
+	SimOneAPI::TerminateSimOneAPI();
+}
+
+void tester::Test_GetCaseInfo()
+{
+	std::unique_ptr<SimOne_Data_CaseInfo> mpCaseInfo = std::make_unique<SimOne_Data_CaseInfo>();
+	if (!SimOneAPI::GetCaseInfo(mpCaseInfo.get()))
+	{
+		std::cout << "GetCaseInfo Failed!" << std::endl;
+		return;
+	}
+	std::cout << "caseName: " << mpCaseInfo->caseName;
+	std::cout << "caseId: " << mpCaseInfo->caseId;
+	std::cout << "taskId: " << mpCaseInfo->taskId;
+}
+
+void tester::Test_GetCaseRunStatus()
+{
+	switch (SimOneAPI::GetCaseRunStatus())
+	{
+	case ESimOne_Case_Status::ESimOne_Case_Status_Unknown:
+		std::cout << "ESimOne_Case_Status_Unknown" << std::endl;
+		break;
+	case ESimOne_Case_Status::ESimOne_Case_Status_Stop:
+		std::cout << "ESimOne_Case_Status_Stop" << std::endl;
+		break;
+	case ESimOne_Case_Status::ESimOne_Case_Status_Running:
+		std::cout << "ESimOne_Case_Status_Running" << std::endl;
+		break;
+	case ESimOne_Case_Status::ESimOne_Case_Status_Pause:
+		std::cout << "ESimOne_Case_Status_Pause" << std::endl;
+		break;
+	default:
+		std::cout << "Invalid CaseRunStatus!" << std::endl;
+	}
+}
+
+void tester::Test_GetMainVehicleList()
+{
+	std::unique_ptr<SimOne_Data_MainVehicle_Info> MainVehicleListTest = std::make_unique<SimOne_Data_MainVehicle_Info>();
+	if(!SimOneAPI::GetMainVehicleList(MainVehicleListTest.get()))
+	{
+		std::cout << "GetMainVehicleList Failed!" << std::endl;
+		return;
+	}
+	std::cout << "size:" << MainVehicleListTest->size << std::endl;
+	for (int i = 0; i < MainVehicleListTest->size; i++)
+	{
+		std::cout << "id:" << MainVehicleListTest->id_list[i] << std::endl;
+		std::cout << "type:" << MainVehicleListTest->type_list[i] << std::endl;
+	}
+}
+
+void tester::Test_GetMainVehicleStatus(bool IsCallBackMode)
+{
+	if (IsCallBackMode)
+	{
+		auto function = [](const char *mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus) {
+			std::cout << "mainVehicleId: " << pMainVehicleStatus->mainVehicleId << std::endl;
+			std::cout << "mainVehicleStatus: " << pMainVehicleStatus->mainVehicleStatus << std::endl;
+		};
+		SimOneAPI::SetMainVehicleStatusUpdateCB(function);
+	}
+	else
+	{
+		std::unique_ptr<SimOne_Data_MainVehicle_Status> pMainVehicleStatus = std::make_unique<SimOne_Data_MainVehicle_Status>();
+		if (!SimOneAPI::GetMainVehicleStatus(mainVehicleId.c_str(), pMainVehicleStatus.get()))
+		{
+			std::cout << "GetMainVehicleStatus Failed!" << std::endl;
+			return;
+		}
+		std::cout << "mainVehicleId: " << pMainVehicleStatus->mainVehicleId << std::endl;
+		std::cout << "mainVehicleStatus: " << pMainVehicleStatus->mainVehicleStatus << std::endl;
+	}
+}
+
+void tester::Test_GetHDMapData()
+{
+	SimOne_Data_Map HDMap;
+	if (!SimOneAPI::GetHDMapData(HDMap))
+	{
+		std::cout << "GetHDMapData Failed!" << std::endl;
+		return;
+	}
+	std::cout << "openDrive: " << HDMap.openDrive << std::endl;;
+	std::cout << "openDriveUrl: " << HDMap.openDriveUrl << std::endl;;
+	std::cout << "opendriveMd5: " << HDMap.opendriveMd5 << std::endl;
+}
+
 void tester::Test_GetSensorConfigurations()
 {
 	while (true) {
@@ -103,15 +194,17 @@ void tester::Test_GetGroundTruth(bool IsCallBackMode)
 	}
 	else {
 		std::unique_ptr<SimOne_Data_Obstacle> pDetections = std::make_unique<SimOne_Data_Obstacle>();
+		int lastFrame = 0;
 		while (true) {
 			bool flag = SimOneAPI::GetGroundTruth(mainVehicleId.c_str(),  pDetections.get());
-			if (flag) {
+			if (flag && pDetections->frame != lastFrame) {
+				lastFrame  = pDetections->frame;
 				std::cout << "mainVehicleId:" << mainVehicleId << ", pDetections->frame:" << pDetections->frame << ", pDetections->detectNum:" << pDetections->obstacleSize << std::endl;//The Lane's leftLane ID 
 				for (int i = 0; i < pDetections->obstacleSize; i++) {
 					std::cout << "obstacle.type:" << pDetections->obstacle[i].type << std::endl;;
 				}
 			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(30));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 	}
 }
@@ -143,7 +236,7 @@ void tester::Test_RadarDetection(bool IsCallBackMode)
 	}
 }
 
-void tester::Test_SensorSensorDetection(bool IsCallBackMode)
+void tester::Test_SensorSensorDetections(bool IsCallBackMode)
 {
 	if (IsCallBackMode) {
 		auto function = [](const char* MainVehicleID, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
@@ -225,18 +318,17 @@ void tester::Test_GPS(bool IsCallBackMode)
 		std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
 		while(1)
 		{
-			if(SimOneAPI::GetGps(mainVehicleId.c_str(), pGps.get())){
-				std::cout<<"pGps->posX:"<<pGps->posX<<",pGps->posY"<<pGps->posY<< std::endl;					
-			}else{
-
+			if(!SimOneAPI::GetGps(mainVehicleId.c_str(), pGps.get())){
 				std::cout<<"Get GPS Fail"<< std::endl;
+				continue;
 			}
+			std::cout<<"pGps->posX:"<<pGps->posX<<",pGps->posY"<<pGps->posY<< std::endl;					
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
 	}
 }
 
-void tester::Test_V2X(bool IsCallBackMode)
+void tester::Test_V2XInfo(bool IsCallBackMode)
 {
 	if (IsCallBackMode) {
 		auto function = [](const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections) {
@@ -336,5 +428,32 @@ bool tester::Test_HDMap_ALL(const std::vector<std::string> &apiNames)
 	else {
 		std::cout << "#####################  Test_HDMap_ALL fail!!!" << std::endl;
 		return false;
+	}
+}
+
+void tester::Test_GetNearLanes()
+{
+	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
+	if (!SimOneAPI::GetGps(mainVehicleId.c_str(), pGps.get()))
+	{
+		std::cout << "Get GPS Fail" << std::endl;
+		return;
+	}
+	SSD::SimPoint3D pos(pGps->posX, pGps->posY, pGps->posZ);
+	double distance = 3.0;
+	SSD::SimStringVector nearLanes;
+	if(!SimOneAPI::GetNearLanes(pos, distance, nearLanes))
+	{
+		std::cout << "GetNearLanes Failed!" << std::endl;
+		return;
+	}
+	if (nearLanes.size() == 0)
+	{
+		std::cout << "nearLanes size: " << nearLanes.size() << std::endl;
+		return;
+	}
+	for (int i=0; i<nearLanes.size(); i++)
+	{
+		std::cout << "nearLanes[" << i << "]: " << nearLanes[i].GetString();
 	}
 }
