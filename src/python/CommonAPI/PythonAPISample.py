@@ -17,9 +17,9 @@ def SoV2XCB(mainVehicleId, sensorId, Data_V2XNFS):
 
 Flag = False
 if __name__ == '__main__':
-	mainVehicleID = '1'
+	mainVehicleID = '0'
 	try:
-		if SoInitSimOneAPI(mainVehicleID)==1:
+		if SoInitSimOneAPI(mainVehicleID, 0, "127.0.0.1")==1:
 			print("################## API init success!!!")
 			Flag =True
 		else:

@@ -13,11 +13,11 @@ Flag = False
 if __name__ == '__main__':
 	mainVehicleID = '0'
 	success_count = 0
-	# apiNames=["GetTrafficSignList","GetTrafficLightList","GetCrossHatchList","GetLaneLink","getTrafficLightList"]
-	apiNames=["getTrafficLightList"]
+	# apiNames=["GetTrafficSignList","GetTrafficLightList","GetCrossHatchList","GetLaneLink","getTrafficLightList", "getNearLanes"]
+	apiNames=["getNearLanes"]
 
 	try:
-		if SoInitSimOneAPI(mainVehicleID)==1:
+		if SoInitSimOneAPI(mainVehicleID, 0, "127.0.0.1")==1:
 			print("################## API init success!!!")
 			Flag =True
 		else:
@@ -31,6 +31,18 @@ if __name__ == '__main__':
 			try:
 				print("get hdmap data success")
 				for apiName in apiNames:
+					if apiName == "getNearLanes":
+						gpsData = SimOne_Data_Gps()
+						if SoGetGps(mainVehicleID, gpsData):
+							pt=HDMapAPI.pySimPoint3D(gpsData.posX,gpsData.posY,gpsData.posX)
+							lanesInfo=HDMapAPI.getNearLanes(pt, 3.0)
+							if lanesInfo.exists:
+								idListSize = lanesInfo.laneIdList.Size()
+								if idListSize>0:
+									print(">>>>>>>>>>>>>>>>>>>>>  getNearLanes Size = {0}".format(idListSize))
+								for i in range(idListSize):
+									laneId = lanesInfo.laneIdList.GetElement(i)
+									print(">>>>>>>>>>>>>>>>>>>>>  getNearLanes  laneId = {0}".format(laneId.GetString()))
 					if apiName == "getTrafficSignList":
 						signList=HDMapAPI.getTrafficSignList()
 						signSize = signList.Size()
