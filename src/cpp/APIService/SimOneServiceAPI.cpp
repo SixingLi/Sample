@@ -54,7 +54,7 @@ extern "C"
 				}
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
-			SimOneAPIService::GetInstance()->SimOneNodeReady();
+			//SimOneAPIService::GetInstance()->SimOneNodeReady();
 			while (true) {
 				if (GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running) {
 					break;
