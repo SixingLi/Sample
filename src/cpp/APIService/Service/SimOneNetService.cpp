@@ -231,6 +231,7 @@ bool SimOneAPIService::SimOneNodeReady() {
 		return false;
 	}
 	Bridge::BridgeSimOneAPIReady info;
+	info.set_hostvehicleid(atoi(mMainVehicleId));
 	mpClientSync->send(Bridge::EBridgeSimOneAPIReady, info);
 	return true;
 }
