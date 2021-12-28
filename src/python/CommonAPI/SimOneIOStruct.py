@@ -78,7 +78,7 @@ class SimOne_Data_MainVehicle_Info(Structure):
 class SimOne_Data_MainVehicle_Status(Structure):
 	_pack_ = 1
 	_fields_ = [
-		('mainVehicleId', c_char),
+		('mainVehicleId', c_char*MAX_MAINVEHICLE_NAME_LEN),
 		('mainVehicleStatus', c_int)]
 
 
