@@ -21,7 +21,7 @@ TaskImage::~TaskImage()
 void SetLaneLineInfo(SimOne_Data_LaneLineInfo &lineInfo, const cybertron::proto::sensor::LaneLine &line, std::ofstream& log_taskImage) {
 
 
-	if (line.linetype())
+	if (line.linetype()>0 && line.id()>0)
 	{
 		lineInfo.lineColor = (ESimOne_Boundary_Color)line.linecolor();
 		lineInfo.lineID = line.id();
@@ -138,7 +138,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 		{
 			pLaneInfo = new SimOne_Data_LaneInfo;
 		}
-
+		memset(pLaneInfo,0,sizeof(SimOne_Data_LaneInfo));
 		pLaneInfo->timestamp = pSensorContext->timestamp;
 		pLaneInfo->frame = pSensorContext->frame;
 		pLaneInfo->id = ImageDataSrc.lane().id();
