@@ -25,7 +25,7 @@ def SoGetStreamingImage(ip, port, imageData):
 def SoApiSetStreamingImageUpdateCB(ip, port, cb):
 	global SIMONEAPI_StreamingIMAGE_CB
 	_input = create_string_buffer(ip.encode(), 256)
-	SimoneStreamingAPI.SetStreamingImageCB(_input, port, simoneapi_streamingimage_cb_func)
+	SimoneStreamingAPI.SetStreamingImageUpdateCB(_input, port, simoneapi_streamingimage_cb_func)
 	SIMONEAPI_StreamingIMAGE_CB = cb
 
 def SoGetStreamingPointCloud(ip, port,infoPort, pointCloudData):
