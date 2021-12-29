@@ -19,8 +19,18 @@ ros::Publisher* ros_trans_node::pub_radar_p = nullptr;
 ros::Publisher* ros_trans_node::pub_sensor_p = nullptr;
 ros::Publisher* ros_trans_node::pub_laneinfo_p = nullptr;
 
+std::ofstream ros_trans_node::log_img;
+
 ros_trans_node::ros_trans_node(){}
 ros_trans_node::~ros_trans_node(){}
+
+int64_t ros_trans_node::getCurrentTime()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000; // milliseconds
+    // return tv.tv_sec * 1e6 + tv.tv_usec; // microseconds
+}
 
 void ros_trans_node::pub_gps_cb(const char* mainVehicleId, SimOne_Data_Gps *pGps)
 {
@@ -89,6 +99,8 @@ void ros_trans_node::pub_ground_truth_cb(const char* mainVehicleId, SimOne_Data_
 
 void ros_trans_node::pub_image_cb(SimOne_Streaming_Image* pImage)
 {
+  printf("--------------------------------------------- t-img before pub: %ld\n", getCurrentTime());
+
   if (pImage->width != 0 && pImage->height != 0)
   {
     sensor_msgs::Image img_d;
@@ -108,12 +120,22 @@ void ros_trans_node::pub_image_cb(SimOne_Streaming_Image* pImage)
     // image->version;		// int API version
     // image->dated;			// bool Mark if this data has been handled
 
+    // log_img << "width: " << pImage->width << "\n";
+    // log_img << "height: " << pImage->height << "\n";
+    // log_img << "imageDataSize: " << pImage->imageDataSize << "\n";
+    // log_img << "---------- frame: " << pImage->frame << " ------------\n";
+
     pub_image_p->publish(img_d);
+
+    printf("======================== t-img pub done: %ld\n", getCurrentTime());
   }
+
 }
 
 void ros_trans_node::pub_point_cloud_cb(SimOne_Streaming_Point_Cloud* pPointcloud)
 {
+  printf("--------------------------------------------- t-pcd before pub: %ld\n", getCurrentTime());
+
   // static std::string sNames[] = {"x", "y", "z", "intensity", "ring"};
   // static int sOffsets[] = {0, 4, 8, 12, 14};
   // static int sDatatypes[] = {7, 7, 7, 2, 2};
@@ -152,6 +174,8 @@ void ros_trans_node::pub_point_cloud_cb(SimOne_Streaming_Point_Cloud* pPointclou
   pcl_conversions::fromPCL(pointCloud, point_cloud_d); // pcl::toROSMsg(pointCloud, output_feature_msg.cluster);
 
   pub_point_cloud_p->publish(point_cloud_d);
+
+  printf("======================== t-pcd pub done: %ld\n", getCurrentTime());
 }
 
 void ros_trans_node::pub_radar_detections_cb(const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections)
@@ -512,6 +536,9 @@ void ros_trans_node::run()
 	std::thread rcv_thread = std::thread(std::bind(&ros_trans_node::run_rcv, this));
 	pub_thread.detach();
 	rcv_thread.detach();
+
+  // log_img.open("debug_img.txt", std::ios::trunc);
+  SimOneAPI::SetStreamingImageUpdateCB("10.66.9.244", 13956, pub_image_cb);
 }
 
 void ros_trans_node::config_ini()
