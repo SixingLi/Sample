@@ -1401,6 +1401,7 @@ bool SimOneAPIService::sendVehicleEventInfoReq(int mainVehicleId, SimOne_Data_Ve
 		break;
 	}
 
+	vehicleEventInfoState.set_vehicleid(mainVehicleId);
 	vehicleEventInfoState.set_type(vehicleEventInfoType);
 	vehicleEventInfoState.set_info(vehicleEventInfo);
 
