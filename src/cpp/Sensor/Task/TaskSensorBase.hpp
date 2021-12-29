@@ -12,6 +12,8 @@
 #pragma warning(disable:4267)
 #pragma warning(disable:4244)
 
+#define LT_DURATION 10000 // 跟踪有效时段 (ms)
+
 enum ETaskCommandId
 {
 	ETaskCommandId_ImageRaw = 10,
@@ -44,6 +46,16 @@ enum ETaskCommandId
 	ETaskCommandId_FusionObj = 70,
 	ETaskCommandId_FusionLane = 71
 };
+
+typedef struct
+{
+	int objId = 0; // Detection Object ID
+	float pre_velX = 0.0; // Detection Object Velocity X
+	float pre_velY = 0.0; // Detection Object Velocity Y
+	float pre_velZ = 0.0; // Detection Object Velocity Z
+	long long pre_Timestamp = 0; // timestamp millisecond
+} life_time_t;
+
 CYBERTRON_BEGIN
 class CTaskSensorBase
 {

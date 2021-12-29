@@ -29,7 +29,6 @@ uint16_t TaskUltrasonicRadar::Do(std::uint32_t sensorType, std::uint32_t commanI
 	SimOne_Data_UltrasonicRadars ultrasonicRadarsMuch;
 	SimOne_Data_UltrasonicRadars *pUltrasonicRadarsMuch = NULL;
 	int mainVehicleId = pSensorContext->mainVehicleId;
-	//int mainVehicleId
 	SimOne_Data_UltrasonicRadarsMap::iterator it = mLastUltrasonicRadarsMap.find(mainVehicleId);
 	if (it != mLastUltrasonicRadarsMap.end()) {
 		pUltrasonicRadarsMuch = it->second;
@@ -56,6 +55,7 @@ uint16_t TaskUltrasonicRadar::Do(std::uint32_t sensorType, std::uint32_t commanI
 				pUltrasonicRadarsMuch->ultrasonicRadars[i].obstacleDetections[j].obstacleRanges = DataIn.radars(i).ultrasonicradardetections(j).obstaclerange();
 				pUltrasonicRadarsMuch->ultrasonicRadars[i].obstacleDetections[j].x = DataIn.radars(i).ultrasonicradardetections(j).x();
 				pUltrasonicRadarsMuch->ultrasonicRadars[i].obstacleDetections[j].y = DataIn.radars(i).ultrasonicradardetections(j).y();
+				pUltrasonicRadarsMuch->ultrasonicRadars[i].obstacleDetections[j].z = DataIn.radars(i).ultrasonicradardetections(j).z();
 			}
 	}
 	{

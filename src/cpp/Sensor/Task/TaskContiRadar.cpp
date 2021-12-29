@@ -16,6 +16,8 @@ TaskContiRadar::~TaskContiRadar()
 
 uint16_t  TaskContiRadar::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
 {
+	static vector<life_time_t> acc_gen;
+
 	if (commanId != cybertron::proto::sensor::EDataType_RadarDetections)
 	{
 		return -1;
@@ -58,6 +60,50 @@ uint16_t  TaskContiRadar::Do(std::uint32_t sensorType, std::uint32_t commanId, C
 		pContiRadarDetections->detections[i].velX = cybObj.velocity().x();
 		pContiRadarDetections->detections[i].velY = cybObj.velocity().y();
 		pContiRadarDetections->detections[i].velZ = cybObj.velocity().z();
+		auto iter = acc_gen.begin();
+		while (iter != acc_gen.end())
+		{
+			if (iter->objId == pContiRadarDetections->detections[i].id)
+			{
+				int tDiff = pContiRadarDetections->timestamp - iter->pre_Timestamp;
+				if (tDiff < LT_DURATION && tDiff  != 0)
+				{
+					pContiRadarDetections->detections[i].accelX = (pContiRadarDetections->detections[i].velX - iter->pre_velX) / (tDiff / 1000.0);
+					pContiRadarDetections->detections[i].accelY = (pContiRadarDetections->detections[i].velY - iter->pre_velY) / (tDiff / 1000.0);
+					pContiRadarDetections->detections[i].accelZ = (pContiRadarDetections->detections[i].velZ - iter->pre_velZ) / (tDiff / 1000.0);
+					iter->pre_velX = pContiRadarDetections->detections[i].velX;
+					iter->pre_velY = pContiRadarDetections->detections[i].velY;
+					iter->pre_velZ = pContiRadarDetections->detections[i].velZ;
+					iter->pre_Timestamp = pContiRadarDetections->timestamp;
+					break;
+				}
+				else
+				{
+					iter = acc_gen.erase(iter);
+					continue;
+				}
+			}
+			iter++;
+		}
+		if (iter == acc_gen.end())
+                {
+			pContiRadarDetections->detections[i].accelX = 0.0;
+			pContiRadarDetections->detections[i].accelY = 0.0;
+			pContiRadarDetections->detections[i].accelZ = 0.0;
+			life_time_t acc_new;
+			acc_new.objId = pContiRadarDetections->detections[i].id;
+			acc_new.pre_velX = pContiRadarDetections->detections[i].velX;
+			acc_new.pre_velY = pContiRadarDetections->detections[i].velY;
+			acc_new.pre_velZ = pContiRadarDetections->detections[i].velZ;
+			acc_new.pre_Timestamp = pContiRadarDetections->timestamp;
+			acc_gen.push_back(acc_new);
+		}
+		pContiRadarDetections->detections[i].oriX = cybObj.rotation().x();
+		pContiRadarDetections->detections[i].oriY = cybObj.rotation().y();
+		pContiRadarDetections->detections[i].oriZ = cybObj.rotation().z();
+		pContiRadarDetections->detections[i].length = cybObj.size().x();
+		pContiRadarDetections->detections[i].width = cybObj.size().y();
+		pContiRadarDetections->detections[i].height = cybObj.size().z();
 		pContiRadarDetections->detections[i].range = cybObj.range();
 		pContiRadarDetections->detections[i].rangeRate = cybObj.rangerate();
 		pContiRadarDetections->detections[i].azimuth = cybObj.azimuth();

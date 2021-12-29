@@ -228,7 +228,18 @@ void tester::Test_RadarDetection(bool IsCallBackMode)
 				std::cout <<"mainVehicleId:"<< mainVehicleId.c_str() <<", pDetections->frame:"<<pDetections->frame << ", pDetections->detectNum:"<<pDetections->detectNum <<std::endl;//The Lane's leftLane ID 
 				for (int i = 0; i < pDetections->detectNum; i++)
 				{
-					std::cout << "detections.range:" << pDetections->detections[i].range <<",pDetections->detections[i].azimuth:"<< pDetections->detections[i].azimuth <<std::endl;
+					// std::cout << "detections.range:" << pDetections->detections[i].range <<",pDetections->detections[i].azimuth:"<< pDetections->detections[i].azimuth <<std::endl;
+					std::cout << "ip: " << pDetections->detections[i].id << std::endl;
+					std::cout << "type: " << pDetections->detections[i].type << std::endl;
+					std::cout << "accelX: " << pDetections->detections[i].accelX << std::endl;
+					std::cout << "accelY: " << pDetections->detections[i].accelY << std::endl;
+					std::cout << "accelZ: " << pDetections->detections[i].accelZ << std::endl;
+					std::cout << "oriX: " << pDetections->detections[i].oriX << std::endl;
+					std::cout << "oriY: " << pDetections->detections[i].oriY << std::endl;
+					std::cout << "oriZ: " << pDetections->detections[i].oriZ << std::endl;
+					std::cout << "length: " << pDetections->detections[i].length << std::endl;
+					std::cout << "width: " << pDetections->detections[i].width << std::endl;
+					std::cout << "height: " << pDetections->detections[i].height << std::endl;
 				}
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(30));
@@ -303,7 +314,8 @@ void tester::Test_UltrasonicRadar()
 	while (true) {
 		SimOneAPI::GetUltrasonicRadar(mainVehicleId.c_str(), "ultrasonic1", pDetections.get());
 		for (int i = 0; i < pDetections->obstacleNum; i++) {
-			std::cout << pDetections->frame << ", " << pDetections->obstacleDetections[i].x << ", " << pDetections->obstacleDetections[i].obstacleRanges << ", " << pDetections->obstacleDetections[i].x << ", " << pDetections->obstacleDetections[i].y << std::endl;
+			std::cout << pDetections->frame << ", " << pDetections->obstacleDetections[i].x << ", " << pDetections->obstacleDetections[i].obstacleRanges << ", "
+			<< pDetections->obstacleDetections[i].x << ", " << pDetections->obstacleDetections[i].y << ", " << pDetections->obstacleDetections[i].z << std::endl;
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}

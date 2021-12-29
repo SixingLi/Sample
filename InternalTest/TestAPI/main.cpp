@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 	tester t(mv_id);
 
 	bool isJoinTimeLoop = false;
-	const char* serverIP = "127.0.0.1";
+	const char* serverIP = "10.66.9.111";
 	t. Test_InitSimOneAPI(isJoinTimeLoop, serverIP);
 
 	// std::vector<std::string> apiNames = {"GetTrafficSignList","GetTrafficLightList","GetCrossHatchList","GetLaneLink"};
@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	// t.Test_GetSensorConfigurations();
 	// t.Test_V2X(true);
 	// t.Test_UltrasonicRadars(false);
-	// t.Test_UltrasonicRadar();
+	t.Test_UltrasonicRadar();
 	// t.Test_SensorLaneInfo(false);
 	// t.Test_GPS(true);
 	// t.Test_SensorSensorDetections(true);

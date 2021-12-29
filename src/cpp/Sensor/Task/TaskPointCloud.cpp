@@ -17,6 +17,8 @@ TaskPointCloud::~TaskPointCloud()
 
 uint16_t TaskPointCloud::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
 {
+	static vector<life_time_t> acc_gen;
+
 	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
 	const char* mainVehId = tempStr.c_str();
 	if (commanId != cybertron::proto::sensor::EDataType_PointCloudWithGroundTruth)
@@ -64,6 +66,45 @@ uint16_t TaskPointCloud::Do(std::uint32_t sensorType, std::uint32_t commanId, CT
 		pPointCloudDetections->objects[i].velX = PointCloudSrcIn.ground_truth().obstacles(i).velocity().x();
 		pPointCloudDetections->objects[i].velY = PointCloudSrcIn.ground_truth().obstacles(i).velocity().y();
 		pPointCloudDetections->objects[i].velZ = PointCloudSrcIn.ground_truth().obstacles(i).velocity().z();
+		auto iter = acc_gen.begin();
+                while (iter != acc_gen.end())
+                {
+                    if (iter->objId == pPointCloudDetections->objects[i].id)
+                    {
+                        int tDiff = pPointCloudDetections->timestamp - iter->pre_Timestamp;
+                        if (tDiff < LT_DURATION && tDiff  != 0)
+                        {
+				pPointCloudDetections->objects[i].accelX = (pPointCloudDetections->objects[i].velX - iter->pre_velX) / (tDiff / 1000.0);
+				pPointCloudDetections->objects[i].accelY = (pPointCloudDetections->objects[i].velY - iter->pre_velY) / (tDiff / 1000.0);
+				pPointCloudDetections->objects[i].accelZ = (pPointCloudDetections->objects[i].velZ - iter->pre_velZ) / (tDiff / 1000.0);
+
+				iter->pre_velX = pPointCloudDetections->objects[i].velX;
+				iter->pre_velY = pPointCloudDetections->objects[i].velY;
+				iter->pre_velZ = pPointCloudDetections->objects[i].velZ;
+				iter->pre_Timestamp = pPointCloudDetections->timestamp;
+				break;
+                        }
+                        else
+                        {
+				iter = acc_gen.erase(iter);
+				continue;
+			}
+                    }
+                    iter++;
+                }
+                if (iter == acc_gen.end())
+                {
+			pPointCloudDetections->objects[i].accelX = 0.0;
+			pPointCloudDetections->objects[i].accelY = 0.0;
+			pPointCloudDetections->objects[i].accelZ = 0.0;
+			life_time_t acc_new;
+			acc_new.objId = pPointCloudDetections->objects[i].id;
+			acc_new.pre_velX = pPointCloudDetections->objects[i].velX;
+			acc_new.pre_velY = pPointCloudDetections->objects[i].velY;
+			acc_new.pre_velZ = pPointCloudDetections->objects[i].velZ;
+			acc_new.pre_Timestamp = pPointCloudDetections->timestamp;
+			acc_gen.push_back(acc_new);
+		}
 		pPointCloudDetections->objects[i].probability = PointCloudSrcIn.ground_truth().obstacles(i).probability();
 		pPointCloudDetections->objects[i].relativePosX = PointCloudSrcIn.ground_truth().obstacles(i).relativepos().x();
 		pPointCloudDetections->objects[i].relativePosY = PointCloudSrcIn.ground_truth().obstacles(i).relativepos().y();

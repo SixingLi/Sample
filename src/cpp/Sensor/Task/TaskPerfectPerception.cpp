@@ -18,7 +18,10 @@ TaskPerfectPerception::~TaskPerfectPerception()
 
 }
 
-bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorContext, const std::string* pBuffer) {
+bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorContext, const std::string* pBuffer)
+{
+	static vector<life_time_t> acc_gen;
+
 	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
 	const char* mainVehId = tempStr.c_str();
 	if (!mPerfectPerceptionDetections.ParseFromString(*pBuffer)) {
@@ -29,7 +32,6 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 	//Detections
 	if (SimOneAPIService::GetInstance()->IsNeedSendObjectbasedData())
 	{
-
 		SimOne_Data_SensorDetections *pPerfectPerceptionGroundTruth = NULL;
 		SimOne_Data_SensorDetectionsMap::iterator it = mLastSensorDetectionsMap.find(sensorKey);
 		if (it != mLastSensorDetectionsMap.end()) {
@@ -61,6 +63,45 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 			pPerfectPerceptionGroundTruth->objects[i].velX = mPerfectPerceptionDetections.obstacles(i).velocity().x();
 			pPerfectPerceptionGroundTruth->objects[i].velY = mPerfectPerceptionDetections.obstacles(i).velocity().y();
 			pPerfectPerceptionGroundTruth->objects[i].velZ = mPerfectPerceptionDetections.obstacles(i).velocity().z();
+			auto iter = acc_gen.begin();
+			while (iter != acc_gen.end())
+			{
+				if (iter->objId == pPerfectPerceptionGroundTruth->objects[i].id)
+				{
+					int tDiff = pPerfectPerceptionGroundTruth->timestamp - iter->pre_Timestamp;
+					if (tDiff < LT_DURATION && tDiff != 0)
+					{
+						pPerfectPerceptionGroundTruth->objects[i].accelX = (pPerfectPerceptionGroundTruth->objects[i].velX - iter->pre_velX) / (tDiff / 1000.0);
+						pPerfectPerceptionGroundTruth->objects[i].accelY = (pPerfectPerceptionGroundTruth->objects[i].velY - iter->pre_velY) / (tDiff / 1000.0);
+						pPerfectPerceptionGroundTruth->objects[i].accelZ = (pPerfectPerceptionGroundTruth->objects[i].velZ - iter->pre_velZ) / (tDiff / 1000.0);
+
+						iter->pre_velX = pPerfectPerceptionGroundTruth->objects[i].velX;
+						iter->pre_velY = pPerfectPerceptionGroundTruth->objects[i].velY;
+						iter->pre_velZ = pPerfectPerceptionGroundTruth->objects[i].velZ;
+						iter->pre_Timestamp = pPerfectPerceptionGroundTruth->timestamp;
+						break;
+					}
+					else
+					{
+						iter = acc_gen.erase(iter);
+						continue;
+					}
+				}
+				iter++;
+			}
+			if (iter == acc_gen.end())
+			{
+				pPerfectPerceptionGroundTruth->objects[i].accelX = 0.0;
+				pPerfectPerceptionGroundTruth->objects[i].accelY = 0.0;
+				pPerfectPerceptionGroundTruth->objects[i].accelZ = 0.0;
+				life_time_t acc_new;
+				acc_new.objId = pPerfectPerceptionGroundTruth->objects[i].id;
+				acc_new.pre_velX = pPerfectPerceptionGroundTruth->objects[i].velX;
+				acc_new.pre_velY = pPerfectPerceptionGroundTruth->objects[i].velY;
+				acc_new.pre_velZ = pPerfectPerceptionGroundTruth->objects[i].velZ;
+				acc_new.pre_Timestamp = pPerfectPerceptionGroundTruth->timestamp;
+				acc_gen.push_back(acc_new);
+			}
 			pPerfectPerceptionGroundTruth->objects[i].probability = mPerfectPerceptionDetections.obstacles(i).probability();
 			pPerfectPerceptionGroundTruth->objects[i].relativePosX = mPerfectPerceptionDetections.obstacles(i).relativepos().x();
 			pPerfectPerceptionGroundTruth->objects[i].relativePosY = mPerfectPerceptionDetections.obstacles(i).relativepos().y();
@@ -83,7 +124,10 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 	}
 	return true;
 }
-bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, const std::string* pBuffer) {
+bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, const std::string* pBuffer)
+{
+	static vector<life_time_t> acc_gen;
+
 	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
 	const char* mainVehId = tempStr.c_str();
 	cybertron::proto::sensor::GroundTruth groundTruthMsg;
@@ -124,6 +168,45 @@ bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, co
 		pObstacle->obstacle[i].length = groundTruthMsg.obstacles(i).size().x();
 		pObstacle->obstacle[i].width = groundTruthMsg.obstacles(i).size().y();
 		pObstacle->obstacle[i].height = groundTruthMsg.obstacles(i).size().z();
+		auto iter = acc_gen.begin();
+		while (iter != acc_gen.end())
+		{
+			if (iter->objId == pObstacle->obstacle[i].id)
+			{
+				int tDiff = pObstacle->timestamp - iter->pre_Timestamp;
+				if (tDiff < LT_DURATION && tDiff != 0)
+				{
+					pObstacle->obstacle[i].accelX = (pObstacle->obstacle[i].velX - iter->pre_velX) / (tDiff / 1000.0);
+					pObstacle->obstacle[i].accelY = (pObstacle->obstacle[i].velY - iter->pre_velY) / (tDiff / 1000.0);
+					pObstacle->obstacle[i].accelZ = (pObstacle->obstacle[i].velZ - iter->pre_velZ) / (tDiff / 1000.0);
+
+					iter->pre_velX = pObstacle->obstacle[i].velX;
+					iter->pre_velY = pObstacle->obstacle[i].velY;
+					iter->pre_velZ = pObstacle->obstacle[i].velZ;
+					iter->pre_Timestamp = pObstacle->timestamp;
+					break;
+				}
+				else
+				{
+					iter = acc_gen.erase(iter);
+					continue;
+				}
+			}
+			iter++;
+		}
+		if (iter == acc_gen.end())
+		{
+			pObstacle->obstacle[i].accelX = 0.0;
+			pObstacle->obstacle[i].accelY = 0.0;
+			pObstacle->obstacle[i].accelZ = 0.0;
+			life_time_t acc_new;
+			acc_new.objId = pObstacle->obstacle[i].id;
+			acc_new.pre_velX = pObstacle->obstacle[i].velX;
+			acc_new.pre_velY = pObstacle->obstacle[i].velY;
+			acc_new.pre_velZ = pObstacle->obstacle[i].velZ;
+			acc_new.pre_Timestamp = pObstacle->timestamp;
+			acc_gen.push_back(acc_new);
+		}
 	}
 	{
 		std::unique_lock<std::recursive_mutex> lock(mLastObstacleMapLock);
