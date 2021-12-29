@@ -778,7 +778,7 @@ class SimOne_LineCurve_Parameter(Structure):
 	('length', c_float)]
 
 SOSM_SENSOR_LANE_OBJECT_SIZE_MAX = 256
-SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX = 80
+SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX = 250
 class SimOne_Data_LaneLineInfo(Structure):
 	_pack_ = 1
 	_fields_ = [

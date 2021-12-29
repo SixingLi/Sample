@@ -639,7 +639,7 @@ struct SimOne_Data_SensorConfigurations
 #define SOSM_SENSOR_DETECTIONS_PREFIX "SOSM_SENSOR_DETECTIONS_"
 #define SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX 256
 #define SOSM_SENSOR_LANE_OBJECT_SIZE_MAX 256
-#define SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX 80
+#define SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX 250
 struct SimOne_Data_SensorDetections_Entry
 {
 	int id;					// Detection Object ID
