@@ -504,6 +504,9 @@ struct SimOne_Data_Obstacle_Entry
 	float length; // Obstacle length
 	float width; // Obstacle width
 	float height; // Obstacle height
+	float accelX; // Obstacle Acceleration X on Opendrive (by meter)
+	float accelY; // Obstacle Acceleration Y on Opendrive (by meter)
+	float accelZ; // Obstacle Acceleration Z on Opendrive (by meter)
 };
 
 struct SimOne_Data_Obstacle : public SimOne_Data
@@ -654,6 +657,9 @@ struct SimOne_Data_SensorDetections_Entry
 	float velX;				// Detection Object Velocity X
 	float velY;				// Detection Object Velocity Y
 	float velZ;				// Detection Object Velocity Z
+	float accelX; // Obstacle Acceleration X on Opendrive (by meter)
+	float accelY; // Obstacle Acceleration Y on Opendrive (by meter)
+	float accelZ; // Obstacle Acceleration Z on Opendrive (by meter)
 	float probability;		// Detection probability
 	float relativePosX;		// Relative position X in sensor space
 	float relativePosY;		// Relative position Y in sensor space
@@ -840,6 +846,15 @@ struct SimOne_Data_RadarDetection_Entry {
 	float velX;				// Detection Object Velocity X
 	float velY;				// Detection Object Velocity Y
 	float velZ;				// Detection Object Velocity Z
+	float accelX; // Obstacle Acceleration X on Opendrive (by meter)
+	float accelY; // Obstacle Acceleration Y on Opendrive (by meter)
+	float accelZ; // Obstacle Acceleration Z on Opendrive (by meter)
+	float oriX; // Obstacle Rotation X on Opendrive (by radian)
+	float oriY; // Obstacle Rotation Y on Opendrive (by radian)
+	float oriZ; // Obstacle Rotation Z on Opendrive (by radian)
+	float length; // Obstacle length
+	float width; // Obstacle width
+	float height; // Obstacle height
 	float range;			// Detection Object relative range in meter
 	float rangeRate;		// Detection Object relative range rate in m/s
 	float azimuth;			// Detection Object azimuth angle
@@ -867,6 +882,7 @@ struct SimOne_Data_UltrasonicRadarDetection_Entry{
 	float obstacleRanges = 0;
 	float x = 0;
 	float y = 0;
+	float z = 0;
 };
 struct SimOne_Data_UltrasonicRadar : public SimOne_Data {
 	char sensorId[SENSOR_IDTYPE_MAX];	//UltrasonicRadar's ID

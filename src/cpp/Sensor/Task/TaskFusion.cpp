@@ -51,6 +51,8 @@ void TaskFusion::SetLaneLineInfo(SimOne_Data_LaneLineInfo &lineInfo, const cyber
 
 uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
 {
+	static vector<life_time_t> acc_gen;
+
 	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
 	const char*mainVehId = tempStr.c_str();
 	if (commanId != cybertron::proto::sensor::EDataType_SensorFusion)
@@ -99,6 +101,45 @@ uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTask
 		pFusionDetections->objects[i].velX = FusionDataSrc.ground_truth().obstacles(i).velocity().x();
 		pFusionDetections->objects[i].velY = FusionDataSrc.ground_truth().obstacles(i).velocity().y();
 		pFusionDetections->objects[i].velZ = FusionDataSrc.ground_truth().obstacles(i).velocity().z();
+		auto iter = acc_gen.begin();
+                while (iter != acc_gen.end())
+                {
+                    if (iter->objId == pFusionDetections->objects[i].id)
+                    {
+                        int tDiff = pFusionDetections->timestamp - iter->pre_Timestamp;
+                        if (tDiff < LT_DURATION && tDiff  != 0)
+                        {
+				pFusionDetections->objects[i].accelX = (pFusionDetections->objects[i].velX - iter->pre_velX) / (tDiff / 1000.0);
+				pFusionDetections->objects[i].accelY = (pFusionDetections->objects[i].velY - iter->pre_velY) / (tDiff / 1000.0);
+				pFusionDetections->objects[i].accelZ = (pFusionDetections->objects[i].velZ - iter->pre_velZ) / (tDiff / 1000.0);
+
+				iter->pre_velX = pFusionDetections->objects[i].velX;
+				iter->pre_velY = pFusionDetections->objects[i].velY;
+				iter->pre_velZ = pFusionDetections->objects[i].velZ;
+				iter->pre_Timestamp = pFusionDetections->timestamp;
+				break;
+                        }
+                        else
+                        {
+				iter = acc_gen.erase(iter);
+				continue;
+			}
+                    }
+                    iter++;
+                }
+                if (iter == acc_gen.end())
+                {
+			pFusionDetections->objects[i].accelX = 0.0;
+			pFusionDetections->objects[i].accelY = 0.0;
+			pFusionDetections->objects[i].accelZ = 0.0;
+			life_time_t acc_new;
+			acc_new.objId = pFusionDetections->objects[i].id;
+			acc_new.pre_velX = pFusionDetections->objects[i].velX;
+			acc_new.pre_velY = pFusionDetections->objects[i].velY;
+			acc_new.pre_velZ = pFusionDetections->objects[i].velZ;
+			acc_new.pre_Timestamp = pFusionDetections->timestamp;
+			acc_gen.push_back(acc_new);
+		}
 		pFusionDetections->objects[i].probability = FusionDataSrc.ground_truth().obstacles(i).probability();
 		pFusionDetections->objects[i].relativePosX = FusionDataSrc.ground_truth().obstacles(i).relativepos().x();
 		pFusionDetections->objects[i].relativePosY = FusionDataSrc.ground_truth().obstacles(i).relativepos().y();

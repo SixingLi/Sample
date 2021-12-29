@@ -51,6 +51,8 @@ void SetLaneLineInfo(SimOne_Data_LaneLineInfo &lineInfo, const cybertron::proto:
 
 uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer)
 {
+	static vector<life_time_t> acc_gen;
+
 	std::string tempStr = std::to_string(pSensorContext->mainVehicleId);
 	const char* mainVehId = tempStr.c_str();
 	if (commanId != cybertron::proto::sensor::EDataType_ImageWithGroundTruth)
@@ -96,6 +98,45 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 		pImageDetections->objects[i].velX = ImageDataSrc.ground_truth().obstacles(i).velocity().x();
 		pImageDetections->objects[i].velY = ImageDataSrc.ground_truth().obstacles(i).velocity().y();
 		pImageDetections->objects[i].velZ = ImageDataSrc.ground_truth().obstacles(i).velocity().z();
+		auto iter = acc_gen.begin();
+		while (iter != acc_gen.end())
+		{
+			if (iter->objId == pImageDetections->objects[i].id)
+			{
+				int tDiff = pImageDetections->timestamp - iter->pre_Timestamp;
+				if (tDiff < LT_DURATION && tDiff  != 0)
+				{
+					pImageDetections->objects[i].accelX = (pImageDetections->objects[i].velX - iter->pre_velX) / (tDiff / 1000.0);
+					pImageDetections->objects[i].accelY = (pImageDetections->objects[i].velY - iter->pre_velY) / (tDiff / 1000.0);
+					pImageDetections->objects[i].accelZ = (pImageDetections->objects[i].velZ - iter->pre_velZ) / (tDiff / 1000.0);
+
+					iter->pre_velX = pImageDetections->objects[i].velX;
+					iter->pre_velY = pImageDetections->objects[i].velY;
+					iter->pre_velZ = pImageDetections->objects[i].velZ;
+					iter->pre_Timestamp = pImageDetections->timestamp;
+					break;
+				}
+				else
+				{
+					iter = acc_gen.erase(iter);
+					continue;
+				}
+			}
+			iter++;
+		}
+		if (iter == acc_gen.end())
+                {
+			pImageDetections->objects[i].accelX = 0.0;
+			pImageDetections->objects[i].accelY = 0.0;
+			pImageDetections->objects[i].accelZ = 0.0;
+			life_time_t acc_new;
+			acc_new.objId = pImageDetections->objects[i].id;
+			acc_new.pre_velX = pImageDetections->objects[i].velX;
+			acc_new.pre_velY = pImageDetections->objects[i].velY;
+			acc_new.pre_velZ = pImageDetections->objects[i].velZ;
+			acc_new.pre_Timestamp = pImageDetections->timestamp;
+			acc_gen.push_back(acc_new);
+		}
 		pImageDetections->objects[i].probability = ImageDataSrc.ground_truth().obstacles(i).probability();
 		pImageDetections->objects[i].relativePosX = ImageDataSrc.ground_truth().obstacles(i).relativepos().x();
 		pImageDetections->objects[i].relativePosY = ImageDataSrc.ground_truth().obstacles(i).relativepos().y();

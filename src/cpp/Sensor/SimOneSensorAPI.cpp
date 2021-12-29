@@ -83,8 +83,6 @@ extern "C"
 		return SimOneAPIService::GetInstance()->SetUltrasonicRadarsCB(cb);
 	}
 
-
-
 	SIMONE_API bool SimOneAPI::GetSensorDetections(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
 
 		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
