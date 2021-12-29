@@ -71,7 +71,7 @@ uint16_t TaskPointCloud::Do(std::uint32_t sensorType, std::uint32_t commanId, CT
                 {
                     if (iter->objId == pPointCloudDetections->objects[i].id)
                     {
-                        int tDiff = pPointCloudDetections->timestamp - iter->pre_Timestamp;
+                        int tDiff = pSensorContext->time_of_simulation  - iter->pre_Timestamp;
                         if (tDiff < LT_DURATION && tDiff  != 0)
                         {
 				pPointCloudDetections->objects[i].accelX = (pPointCloudDetections->objects[i].velX - iter->pre_velX) / (tDiff / 1000.0);
@@ -81,7 +81,7 @@ uint16_t TaskPointCloud::Do(std::uint32_t sensorType, std::uint32_t commanId, CT
 				iter->pre_velX = pPointCloudDetections->objects[i].velX;
 				iter->pre_velY = pPointCloudDetections->objects[i].velY;
 				iter->pre_velZ = pPointCloudDetections->objects[i].velZ;
-				iter->pre_Timestamp = pPointCloudDetections->timestamp;
+				iter->pre_Timestamp = pSensorContext->time_of_simulation;
 				break;
                         }
                         else
@@ -102,7 +102,7 @@ uint16_t TaskPointCloud::Do(std::uint32_t sensorType, std::uint32_t commanId, CT
 			acc_new.pre_velX = pPointCloudDetections->objects[i].velX;
 			acc_new.pre_velY = pPointCloudDetections->objects[i].velY;
 			acc_new.pre_velZ = pPointCloudDetections->objects[i].velZ;
-			acc_new.pre_Timestamp = pPointCloudDetections->timestamp;
+			acc_new.pre_Timestamp = pSensorContext->time_of_simulation;
 			acc_gen.push_back(acc_new);
 		}
 		pPointCloudDetections->objects[i].probability = PointCloudSrcIn.ground_truth().obstacles(i).probability();

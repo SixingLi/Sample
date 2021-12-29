@@ -106,7 +106,7 @@ uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTask
                 {
                     if (iter->objId == pFusionDetections->objects[i].id)
                     {
-                        int tDiff = pFusionDetections->timestamp - iter->pre_Timestamp;
+                        int tDiff = pSensorContext->time_of_simulation - iter->pre_Timestamp;
                         if (tDiff < LT_DURATION && tDiff  != 0)
                         {
 				pFusionDetections->objects[i].accelX = (pFusionDetections->objects[i].velX - iter->pre_velX) / (tDiff / 1000.0);
@@ -116,7 +116,7 @@ uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTask
 				iter->pre_velX = pFusionDetections->objects[i].velX;
 				iter->pre_velY = pFusionDetections->objects[i].velY;
 				iter->pre_velZ = pFusionDetections->objects[i].velZ;
-				iter->pre_Timestamp = pFusionDetections->timestamp;
+				iter->pre_Timestamp = pSensorContext->time_of_simulation;
 				break;
                         }
                         else
@@ -137,7 +137,7 @@ uint16_t  TaskFusion::Do(std::uint32_t sensorType, std::uint32_t commanId, CTask
 			acc_new.pre_velX = pFusionDetections->objects[i].velX;
 			acc_new.pre_velY = pFusionDetections->objects[i].velY;
 			acc_new.pre_velZ = pFusionDetections->objects[i].velZ;
-			acc_new.pre_Timestamp = pFusionDetections->timestamp;
+			acc_new.pre_Timestamp = pSensorContext->time_of_simulation;
 			acc_gen.push_back(acc_new);
 		}
 		pFusionDetections->objects[i].probability = FusionDataSrc.ground_truth().obstacles(i).probability();
