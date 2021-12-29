@@ -66,7 +66,7 @@ def SoGetDriverControl(mainVehicleId, driverControlData):
 def SoGetControlMode(mainVehicleId, controlModeData):
 	SimoneAPI.GetControlMode.restype = c_bool
 	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
-	return SimoneIOAPI.GetControlMode(_mainVehicleId, pointer(controlModeData))
+	return SimoneAPI.GetControlMode(_mainVehicleId, pointer(controlModeData))
 
 def SoGetWayPoints(mainVehicleId, wayPointsData):
 	SimoneAPI.GetWayPoints.restype = c_bool
