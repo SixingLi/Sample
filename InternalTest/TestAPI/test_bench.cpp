@@ -201,7 +201,7 @@ void tester::Test_GetGroundTruth(bool IsCallBackMode)
 				lastFrame  = pDetections->frame;
 				std::cout << "mainVehicleId:" << mainVehicleId << ", pDetections->frame:" << pDetections->frame << ", pDetections->detectNum:" << pDetections->obstacleSize << std::endl;//The Lane's leftLane ID 
 				for (int i = 0; i < pDetections->obstacleSize; i++) {
-					std::cout << "obstacle.type:" << pDetections->obstacle[i].type << std::endl;;
+					std::cout << "obstacle.type:" << pDetections->obstacle[i].type << std::endl;
 				}
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -240,8 +240,11 @@ void tester::Test_SensorSensorDetections(bool IsCallBackMode)
 {
 	if (IsCallBackMode) {
 		auto function = [](const char* MainVehicleID, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
-			printf("hostVehicle:%s frame:%d objectSize:%d\n", MainVehicleID, pGroundtruth->frame, pGroundtruth->objectSize);
-			//std::cout <<"hostVehicle:"<<*mainVehicleId<<"frame:"<< pGroundtruth->frame << "," << pGroundtruth->objectSize << std::endl;//The Lane's leftLane ID 
+			printf("hostVehicle: %s frame: %d objectSize: %d\n", MainVehicleID, pGroundtruth->frame, pGroundtruth->objectSize);
+			for (int i = 0; i < pGroundtruth->objectSize; i++)
+			{
+				printf("obstacle.type: %d\n", pGroundtruth->objects[i].type);
+			}
 		};
 		SimOneAPI::SetSensorDetectionsUpdateCB(function);
 	}
@@ -249,7 +252,7 @@ void tester::Test_SensorSensorDetections(bool IsCallBackMode)
 		std::unique_ptr<SimOne_Data_SensorDetections> pGroundtruth = std::make_unique<SimOne_Data_SensorDetections>();
 		while (true) {
 			SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "sensorFusion1", pGroundtruth.get());
-			std::cout << pGroundtruth->frame << "," << pGroundtruth->objectSize << std::endl;//The Lane's leftLane ID 
+			std::cout << pGroundtruth->frame << "," << pGroundtruth->objectSize << std::endl;
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
 	}
@@ -456,4 +459,30 @@ void tester::Test_GetNearLanes()
 	{
 		std::cout << "nearLanes[" << i << "]: " << nearLanes[i].GetString();
 	}
+}
+
+void tester::Test_SetVehicleEvent()
+{
+	SimOne_Data_Vehicle_EventInfo event; 
+	// event.type =  ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Forward_Collision_Warning; // front_crash_warning
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Backward_Collision_Warning; // back_crash_warning
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Left_Turn_Decision; // turn_left
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Left_Turn_Warning; // left_warning
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Right_Turn_Decision; // turn_right
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Right_Turn_Warning; // right_warning
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Forward_Straight_Decision; // straight_through
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Forward_Straight_Warning; // straight_warning
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Over_Speed_Warning; // overspeeding_warning
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Lane_Change_Decision; // lane_change
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Lane_Change_Warning; // lane_change_warning
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Overtake_Decision; // overtake
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Emergency_Braking_Decision; // emergency_braking
+	// event.type = ESimone_Vehicle_EventInfo_Type::ESimone_Vehicle_EventInfo_Type_Accelerate_Decision; // accelerate
+
+	if (! SimOneAPI::SetVehicleEvent(mainVehicleId.c_str(), &event))
+	{
+		std::cout << "SetVehicleEvent Failed!" << std::endl;
+		return;
+	}
+	std::cout << "SetVehicleEvent Done!" << std::endl;
 }

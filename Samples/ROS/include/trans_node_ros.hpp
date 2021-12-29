@@ -122,6 +122,8 @@ public:
   ros_trans_node();
   ~ros_trans_node();
 
+  static int64_t getCurrentTime();
+
   void config_ini();
   void simone_ini();
   int init();
@@ -161,6 +163,8 @@ private:
   static ros::Publisher* pub_sensor_p;
   static ros::Publisher* pub_laneinfo_p;
   // ros::Timer timer_image;
+
+  static std::ofstream log_img;
 
   std::unique_ptr<SimOne_Data_Control> pCtrl = std::make_unique<SimOne_Data_Control>();
 

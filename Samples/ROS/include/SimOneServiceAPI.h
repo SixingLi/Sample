@@ -66,28 +66,44 @@ extern "C"
 		SIMONE_API const char* GetVersion();
 
 		/*!
-		节点通信发送数据API
+		节点通信数据发送API
 		\li function:
 		*	SendRouteMessage
 		\li brief:
-		*	node send data to other node.
-		@param
+		*	send data to other node.
+		@param[in]
 		*	length: send data length.
-		@param
+		@param[in]
 		*	pBuffer: send data
+		@param[in]
+		*	msgId: message id
+		@param[in]
+		*	toNodeId: the node's id which the message send to
+		@param[in]
+		*	toNodeType: the node's type which the message send to
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, ESimOne_Client_Type toNodeType);
 	
 		/*!
-		节点通信接收数据API
+		节点通信数据接收API
 		\li function:
 		*	ReceiveRouteMessageCB
 		\li brief:
 		*	API Recvice data from other node.
 		@param
-		*	length: the data length recevied 
+		*	cb: call back func registered for receiving message
+		*	param[out]:
+		*		fromId: the node's id which the message sent from
+		*	param[out]:
+		*		fromType: the node's type which the message sent from
+		*	param[out];
+		*		length: the data length recevied 
+		*	param[out];
+		*		pBuffer: the data content recevied 
+		*	param[out];
+		*		commandId: not in use
 		@return
 		*	Success or not
 		*/
@@ -99,30 +115,42 @@ extern "C"
 		*	SetLogOut
 		\li brief:
 		*	Set log interface
-		@param
-		*	level:warning,error,info flag:true/false
+		@param[in]
+		*	level: warning,error,info flag:true/false
+		@param[in]
+		*	format: output format
 		@return
 		*	Success or not
 		*/
 		SIMONE_API bool SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...);
 
 		/*!
-		SimOne API主入口
+		初始化SimOne API
 		\li function:
 		*	InitSimOneAPI
 		\li brief:
 		*	Initialize SimOneAPI for autonomous driving algorithm
-		@param
+		@param[in]
 		*	hostVehicleId: host vehicle ID(from 0 to 9)
-		@param
-		*   isFrameSync: synchronize frame or not
+		@param[in]
+		*	isFrameSync: synchronize frame or not
+		@param[in]
+		*	serverIP: BridgeIO server ip
+		@param[in]
+		*	port: BridgeIO server port
+		@param[in]
+		*	startCase: callback func which being called before case start
+		@param[in]
+		*	endCase: callback func which being called after case end
+		@param[in]
+		*	registerNodeId: not in use
 		@return
 		*	None
 		*/
 		SIMONE_API bool InitSimOneAPI(const char* mainVehicleId = "0", bool isFrameSync =false, const char *serverIP = "127.0.0.1", int port = 23789,void(*startCase)()=0, void(*endCase)()=0, int registerNodeId=0);
 
 		/*!
-		停止API node
+		退出API node
 		\li function:
 		*	GetVersion
 		\li brief:
@@ -167,7 +195,7 @@ extern "C"
 		\li brief:
 		*	Get the main vehicle information list
 		@param[out]
-		*	pMainVehicleInfo:mainvehicle id/num/type data(output)
+		*	pMainVehicleInfo: mainvehicle id/num/type data(output)
 		@return
 		*	Success or not
 		*/
@@ -180,7 +208,7 @@ extern "C"
 		\li brief:
 		*	Get the current frame value
 		@param
-		*   None
+		*	None
 		@return
 		*	frame value
 		*/
@@ -192,24 +220,25 @@ extern "C"
 		*	NextFrame
 		\li brief:
 		*	Go to the next frame
-		@param
-		*   frame: current frame value
+		@param[in]
+		*	frame: current frame value
 		@return
 		*	None
 		*/
 		SIMONE_API void NextFrame(int frame);
-
 
 		/*!
 		仿真场景中每帧的回调,每帧开始和结束时调用回调函数
 		\li function:
 		*	SetFrameCB
 		\li brief:
-		*	The callback function is called at the beginning and end of each frame.
-		@param
-		*   FrameStart:Callback function at the beginning of the frame 
-		@param
-		*   FrameEnd:Callback function at the end of the frame
+		*	Register the callback func which being called at the beginning and end of each frame.
+		@param[in]
+		*	FrameStart: callback func which being called at the beginning of the frame
+		*	frame: current frame index
+		@param[in]
+		*	FrameEnd: callback func which being called at the end of the frame
+		*	frame: current frame index
 		@return
 		*	Success or not
 		*/
@@ -220,37 +249,42 @@ extern "C"
 		\li function:
 		*	GetMainVehicleStatus
 		\li brief:
-		*	Get the status information of mainvehicle
-		@param
-		*	pMainVehicleStatus[out]:id,status
+		*	Get the status information of the mainvehicle
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[out]
+		*	pMainVehicleStatus: status data which applied for
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetMainVehicleStatus(SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
+		SIMONE_API bool GetMainVehicleStatus(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
 
 		/*!
 		获取主车状态信息回调
 		\li function:
 		*	SetMainVehicleStatusCB
 		\li brief:
-		*	Get the status information of mainvehicle callback
-		@param
-		*	cb: VehicleStatus data fetch callback function
+		*	Register the callback func applying for status info of the mainvehicle
+		@param[in]
+		*	cb: callback func applying for status info of the mainvehicle
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	pMainVehicleStatus: VehicleStatus data
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetMainVehicleStatusUpdateCB(void(*cb)(SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
+		SIMONE_API bool SetMainVehicleStatusUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus));
 	
 		/*!
 		获取高精度地图标识
 		\li function:
 		*	GetHDMapData
 		\li brief:
-		*	Get hdmap data which is configured by SimOne web app.
-		@param
-		*   hdMap: SimOne_Data_Map.
+		*	Get the hdmap data which is designated by configuring on SimOne web app.
+		@param[out]
+		*	hdMap: SimOne_Data_Map data
 		@return
-		*	True when get HDMap data success, else returns false.
+		*	Success or not
 		*/
 		SIMONE_API bool GetHDMapData(SimOne_Data_Map& hdMap);
 

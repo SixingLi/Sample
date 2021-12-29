@@ -34,7 +34,7 @@ if __name__ == '__main__':
 					if apiName == "getNearLanes":
 						gpsData = SimOne_Data_Gps()
 						if SoGetGps(mainVehicleID, gpsData):
-							pt=HDMapAPI.pySimPoint3D(gpsData.posX,gpsData.posY,gpsData.posX)
+							pt=HDMapAPI.pySimPoint3D(gpsData.posX,gpsData.posY,gpsData.posZ)
 							lanesInfo=HDMapAPI.getNearLanes(pt, 3.0)
 							if lanesInfo.exists:
 								idListSize = lanesInfo.laneIdList.Size()
