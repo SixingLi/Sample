@@ -68,7 +68,7 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 			{
 				if (iter->objId == pPerfectPerceptionGroundTruth->objects[i].id)
 				{
-					int tDiff = pPerfectPerceptionGroundTruth->timestamp - iter->pre_Timestamp;
+					int tDiff = pSensorContext->time_of_simulation - iter->pre_Timestamp;
 					if (tDiff < LT_DURATION && tDiff != 0)
 					{
 						pPerfectPerceptionGroundTruth->objects[i].accelX = (pPerfectPerceptionGroundTruth->objects[i].velX - iter->pre_velX) / (tDiff / 1000.0);
@@ -78,7 +78,7 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 						iter->pre_velX = pPerfectPerceptionGroundTruth->objects[i].velX;
 						iter->pre_velY = pPerfectPerceptionGroundTruth->objects[i].velY;
 						iter->pre_velZ = pPerfectPerceptionGroundTruth->objects[i].velZ;
-						iter->pre_Timestamp = pPerfectPerceptionGroundTruth->timestamp;
+						iter->pre_Timestamp = pSensorContext->time_of_simulation;
 						break;
 					}
 					else
@@ -99,7 +99,7 @@ bool TaskPerfectPerception::processObstacleDetection(SensorContext* pSensorConte
 				acc_new.pre_velX = pPerfectPerceptionGroundTruth->objects[i].velX;
 				acc_new.pre_velY = pPerfectPerceptionGroundTruth->objects[i].velY;
 				acc_new.pre_velZ = pPerfectPerceptionGroundTruth->objects[i].velZ;
-				acc_new.pre_Timestamp = pPerfectPerceptionGroundTruth->timestamp;
+				acc_new.pre_Timestamp = pSensorContext->time_of_simulation;
 				acc_gen.push_back(acc_new);
 			}
 			pPerfectPerceptionGroundTruth->objects[i].probability = mPerfectPerceptionDetections.obstacles(i).probability();
@@ -173,7 +173,7 @@ bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, co
 		{
 			if (iter->objId == pObstacle->obstacle[i].id)
 			{
-				int tDiff = pObstacle->timestamp - iter->pre_Timestamp;
+				int tDiff = pSensorContext->time_of_simulation - iter->pre_Timestamp;
 				if (tDiff < LT_DURATION && tDiff != 0)
 				{
 					pObstacle->obstacle[i].accelX = (pObstacle->obstacle[i].velX - iter->pre_velX) / (tDiff / 1000.0);
@@ -183,7 +183,7 @@ bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, co
 					iter->pre_velX = pObstacle->obstacle[i].velX;
 					iter->pre_velY = pObstacle->obstacle[i].velY;
 					iter->pre_velZ = pObstacle->obstacle[i].velZ;
-					iter->pre_Timestamp = pObstacle->timestamp;
+					iter->pre_Timestamp = pSensorContext->time_of_simulation;
 					break;
 				}
 				else
@@ -204,7 +204,7 @@ bool TaskPerfectPerception::processGroundTruth(SensorContext* pSensorContext, co
 			acc_new.pre_velX = pObstacle->obstacle[i].velX;
 			acc_new.pre_velY = pObstacle->obstacle[i].velY;
 			acc_new.pre_velZ = pObstacle->obstacle[i].velZ;
-			acc_new.pre_Timestamp = pObstacle->timestamp;
+			acc_new.pre_Timestamp = pSensorContext->time_of_simulation;
 			acc_gen.push_back(acc_new);
 		}
 	}

@@ -103,7 +103,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 		{
 			if (iter->objId == pImageDetections->objects[i].id)
 			{
-				int tDiff = pImageDetections->timestamp - iter->pre_Timestamp;
+				int tDiff = pSensorContext->time_of_simulation - iter->pre_Timestamp;
 				if (tDiff < LT_DURATION && tDiff  != 0)
 				{
 					pImageDetections->objects[i].accelX = (pImageDetections->objects[i].velX - iter->pre_velX) / (tDiff / 1000.0);
@@ -113,7 +113,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 					iter->pre_velX = pImageDetections->objects[i].velX;
 					iter->pre_velY = pImageDetections->objects[i].velY;
 					iter->pre_velZ = pImageDetections->objects[i].velZ;
-					iter->pre_Timestamp = pImageDetections->timestamp;
+					iter->pre_Timestamp = pSensorContext->time_of_simulation;
 					break;
 				}
 				else
@@ -134,7 +134,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 			acc_new.pre_velX = pImageDetections->objects[i].velX;
 			acc_new.pre_velY = pImageDetections->objects[i].velY;
 			acc_new.pre_velZ = pImageDetections->objects[i].velZ;
-			acc_new.pre_Timestamp = pImageDetections->timestamp;
+			acc_new.pre_Timestamp = pSensorContext->time_of_simulation;
 			acc_gen.push_back(acc_new);
 		}
 		pImageDetections->objects[i].probability = ImageDataSrc.ground_truth().obstacles(i).probability();

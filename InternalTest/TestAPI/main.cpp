@@ -16,10 +16,10 @@ int main(int argc, char* argv[])
 	// t.Test_GetSensorConfigurations();
 	// t.Test_V2X(true);
 	// t.Test_UltrasonicRadars(false);
-	t.Test_UltrasonicRadar();
+	// t.Test_UltrasonicRadar();
 	// t.Test_SensorLaneInfo(false);
 	// t.Test_GPS(true);
-	// t.Test_SensorSensorDetections(true);
+	t.Test_SensorSensorDetections(true);
 	// t.Test_RadarDetection(false);
 	// t.Test_GetGroundTruth(false);
 	// system("pause");
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 	// std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	// t.Test_GetEnvironment();
 
-	t.Test_SetVehicleEvent();
+	// t.Test_SetVehicleEvent();
 
 	while (1)
 	{
