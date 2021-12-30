@@ -36,6 +36,7 @@ class tester
 		void Test_GetMainVehicleStatus(bool IsCallBackMode);
 		void Test_GetHDMapData();
 
+
 		// HDMap API
 		bool Test_HDMap_ALL(const std::vector<std::string> &apiNames);
 		// LoadHDMap: Test in Test_HDMap_ALL
@@ -91,6 +92,9 @@ class tester
 		// ------ bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
 
 		// Sensor API
+		void Test_GetHdMapData();
+		// SimOneSensor
+		void Test_GetEnvironment();
 		void Test_GPS(bool IsCallBackMode);
 		void Test_GetGroundTruth(bool IsCallBackMode);
 		void Test_RadarDetection(bool IsCallBackMode);
@@ -98,7 +102,6 @@ class tester
 		void Test_UltrasonicRadars(bool IsCallBackMode);
 		void Test_SensorSensorDetections(bool IsCallBackMode);
 		void Test_GetSensorConfigurations();
-		void Test_GetEnvironment();
 		void Test_SetEnvironment();
 		// GetTrafficLight: Test in Test_HDMap_ALL
 		void Test_SensorLaneInfo(bool IsCallBackMode);

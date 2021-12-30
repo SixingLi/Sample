@@ -115,7 +115,7 @@ extern "C"
 		return true;
 	}
 
-	SIMONE_API bool SimOneAPI::GetHDMapData(SimOne_Data_Map& hdMap)
+	SIMONE_API bool SimOneAPI::GetHDMapData(SimOne_Data_Map *hdMap)
 	{
 		return SimOneAPIService::GetHDMapData(hdMap);
 	}

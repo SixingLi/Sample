@@ -202,7 +202,7 @@ public:
 	bool SetSensorLaneInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLane));
 
 #ifndef WITHOUT_HDMAP
-	static bool GetHDMapData(SimOne_Data_Map& hdMap);
+	static bool GetHDMapData(SimOne_Data_Map* hdMap);
 	bool SetV2XInfoUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections));
 #endif
 

@@ -1,4 +1,4 @@
-#include "SimOneNetService.hpp"
+﻿#include "SimOneNetService.hpp"
 #include "Version.h"
 #include "UtilUrlRequest.hpp"
 #include "UtilString.h"
@@ -3159,11 +3159,11 @@ void SimOneAPIService::setMapInfo(std::uint16_t type, const std::string* msgData
 	return;
 }
 
-bool SimOneAPIService::GetHDMapData(SimOne_Data_Map& hdMap)
+bool SimOneAPIService::GetHDMapData(SimOne_Data_Map* hdMap)
 {
 	if (&(GetInstance()->mHDMapInfo) != NULL)
 	{
-		memcpy(&hdMap, &(GetInstance()->mHDMapInfo), sizeof(SimOne_Data_Map));
+		memcpy(hdMap, &(GetInstance()->mHDMapInfo), sizeof(SimOne_Data_Map));
 		return true;
 	}
 	return false;

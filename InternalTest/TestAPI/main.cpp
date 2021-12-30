@@ -6,22 +6,23 @@ int main(int argc, char* argv[])
 	tester t(mv_id);
 
 	bool isJoinTimeLoop = false;
-	const char* serverIP = "10.66.9.111";
-	t. Test_InitSimOneAPI(isJoinTimeLoop, serverIP);
+	const char* serverIP = "127.0.0.1";
+	t.Test_InitSimOneAPI(isJoinTimeLoop, serverIP);
 
 	// std::vector<std::string> apiNames = {"GetTrafficSignList","GetTrafficLightList","GetCrossHatchList","GetLaneLink"};
 	// std::vector<std::string> apiNames = {"GetTrafficLightList"};
 	// t.Test_HDMap_ALL(apiNames);
-
-	// t.Test_GetSensorConfigurations();
-	// t.Test_V2X(true);
-	// t.Test_UltrasonicRadars(false);
-	// t.Test_UltrasonicRadar();
-	// t.Test_SensorLaneInfo(false);
-	// t.Test_GPS(true);
-	t.Test_SensorSensorDetections(true);
-	// t.Test_RadarDetection(false);
-	// t.Test_GetGroundTruth(false);
+	//t.Test_GetHdMapData();
+	//t.Test_GetSensorConfigurations();
+	//t.Test_V2X(true);
+	//t.Test_UltrasonicRadars(false);
+	//t.Test_UltrasonicRadar();
+	//t.Test_SensorLaneInfo(false);
+	//t.Test_GPS(true);
+	//t.Test_SensorSensorDetections(true);
+	t.Test_GetMainVehicleStatus(true);
+	//t.Test_RadarDetection(false);
+	//t.Test_GetGroundTruth(false);
 	// system("pause");
 
 	// t.Test_SetEnvironment();

@@ -286,7 +286,7 @@ extern "C"
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool GetHDMapData(SimOne_Data_Map& hdMap);
+		SIMONE_API bool GetHDMapData(SimOne_Data_Map* hdMap);
 
 	}
 #ifdef __cplusplus

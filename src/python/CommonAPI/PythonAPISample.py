@@ -100,7 +100,7 @@ if __name__ == '__main__':
 		
 		# planeInfo = SimOne_Data_LaneInfo()
 		# if SoGetSensorLaneInfo(mainVehicleID,"objectBasedCamera1",planeInfo):
-		# 	llaneid = planeInfo.laneLeftID;
+		# 	llaneid = planeInfo.lanseLeftID;
 		# 	print("planeInfo.laneLeftID:{0}".format(llaneid))
 
 		# pMainVehicleInfo = SimOne_Data_MainVehicle_Info();
@@ -115,7 +115,9 @@ if __name__ == '__main__':
 		# if SoGetSensorConfigurations(mainVehicleID, pSensorConfigs):
 		# 	for index in range(pSensorConfigs.dataSize):
 		# 		print("pSensorConfig.sensorId:{0}, pSensorConfig.SensorType:{1}".format(pSensorConfigs.data[index].sensorId,pSensorConfigs.data[index].sensorType))
-		
+
+		pHdmapData = SimOne_Data_Map()
+		if SoGetHDMapData(pHdmapData):
 
 		time.sleep(1) # 0.1
 		pass

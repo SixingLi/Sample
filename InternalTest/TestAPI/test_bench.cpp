@@ -90,15 +90,15 @@ void tester::Test_GetMainVehicleStatus(bool IsCallBackMode)
 
 void tester::Test_GetHDMapData()
 {
-	SimOne_Data_Map HDMap;
-	if (!SimOneAPI::GetHDMapData(HDMap))
+	std::unique_ptr<SimOne_Data_Map> pHdmap = std::make_unique<SimOne_Data_Map>();
+	if (!SimOneAPI::GetHDMapData(pHdmap.get()))
 	{
 		std::cout << "GetHDMapData Failed!" << std::endl;
 		return;
 	}
-	std::cout << "openDrive: " << HDMap.openDrive << std::endl;;
-	std::cout << "openDriveUrl: " << HDMap.openDriveUrl << std::endl;;
-	std::cout << "opendriveMd5: " << HDMap.opendriveMd5 << std::endl;
+	std::cout << "openDrive: " << pHdmap->openDrive << std::endl;;
+	std::cout << "openDriveUrl: " << pHdmap->openDriveUrl << std::endl;;
+	std::cout << "opendriveMd5: " << pHdmap->opendriveMd5 << std::endl;
 }
 
 void tester::Test_GetSensorConfigurations()
@@ -180,6 +180,19 @@ void tester::Test_GetEnvironment()
 	std::cout << "GetEnvironment groundDirtyLevel ([0, 1]): " << pEnvironment->groundDirtyLevel << std::endl;
 	std::cout << "------------ GetEnvironment Done ------------" << std::endl;
 }
+
+void tester::Test_GetHdMapData() {
+	std::unique_ptr<SimOne_Data_Map> hdMap = std::make_unique<SimOne_Data_Map>();
+	while (true) {
+		if (SimOneAPI::GetHDMapData(hdMap.get())) {
+			std::cout << "hdMap.OpenDrive:" << hdMap->openDrive<< std::endl;
+			std::this_thread::sleep_for(std::chrono::milliseconds(30));
+		}
+	}
+}
+
+
+
 
 void tester::Test_GetGroundTruth(bool IsCallBackMode)
 {
