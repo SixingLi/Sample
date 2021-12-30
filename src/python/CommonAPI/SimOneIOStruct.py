@@ -835,14 +835,3 @@ class SimOne_Data_Driver_Status(SimOne_Data):
 	_fields_ = [
 		('driverStatus', ESimOne_Driver_Status)
 	]
-	
-class ESimOne_Control_Mode(c_int):
-	ESimOne_Control_Mode_Unknown = 0,
-	ESimOne_Control_Mode_Auto = 1,
-	ESimOne_Control_Mode_Manual = 2
-	
-class SimOne_Data_Control_Mode(SimOne_Data):
-	_pack_ = 1
-	_fields_ = [
-		('controlMode', ESimOne_Control_Mode)
-	]

@@ -116,14 +116,14 @@ def SoGetMainVehicleStatus(mainVehicleId, data):
 	SimoneAPI.GetMainVehicleStatus.restype = c_bool
 	return SimoneAPI.GetMainVehicleStatus(mainVehicleId, pointer(data))
 
-def SoAPISetMainVehicleStatusCB(cb):
-	SimoneAPI.SetMainVehicleStatusCB.restype = c_bool
+def SoAPISetMainVehicleStatusUpdateCB(cb):
+	SimoneAPI.SetMainVehicleStatusUpdateCB.restype = c_bool
 	global G_API_MainVehicleChangeStatusCB
 	if cb == 0:
 		cb = None
 	G_API_MainVehicleChangeStatusCB = cb
-	return SimoneAPI.SetMainVehicleStatusCB(api_mainvehiclestatusupdate_cb)
+	return SimoneAPI.SetMainVehicleStatusUpdateCB(api_mainvehiclestatusupdate_cb)
 
 def SoGetHDMapData(hdMap):
 	SimoneAPI.GetHDMapData.restype = c_bool
-	return SimoneAPI.GetHDMapData(hdMap)
+	return SimoneAPI.GetHDMapData(pointer(hdMap))
