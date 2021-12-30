@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string>
 #include <chrono>
@@ -10,10 +10,10 @@
 #include "cybertron/core/UtilTime.hpp"
 
 /*
-	Õâ¸öÀà×¨ÃÅ½øĞĞÒµÎñµÄĞÔÄÜÍ³¼ÆÓÃµÄ£¬Ö÷ÒªÍ³¼Æ
-	1£º´«¸ĞÆ÷½Úµã´Ó×ÔÉí·¢ËÍµ½BridgeIOµÄÊ±¼äÏûºÄ£¬BridgeIOµ½API²ãµÄÏûºÄ
-	2£ºÈÈÇøÊı¾İ´Ó×ÔÉí·¢ËÍµ½BridgeIOµÄÊ±¼äÏûºÄ£¬BridgeIOµ½API²ãµÄÏûºÄ
-	±¾ÀàÖ»¼ÆËã£¬ÄÚ²¿ÒµÎñ½ÚµãÍùÍâ·¢µÄÊı¾İ·¢ËÍµÄĞÔÄÜÍ³¼Æ
+	è¿™ä¸ªç±»ä¸“é—¨è¿›è¡Œä¸šåŠ¡çš„æ€§èƒ½ç»Ÿè®¡ç”¨çš„ï¼Œä¸»è¦ç»Ÿè®¡
+	1ï¼šä¼ æ„Ÿå™¨èŠ‚ç‚¹ä»è‡ªèº«å‘é€åˆ°BridgeIOçš„æ—¶é—´æ¶ˆè€—ï¼ŒBridgeIOåˆ°APIå±‚çš„æ¶ˆè€—
+	2ï¼šçƒ­åŒºæ•°æ®ä»è‡ªèº«å‘é€åˆ°BridgeIOçš„æ—¶é—´æ¶ˆè€—ï¼ŒBridgeIOåˆ°APIå±‚çš„æ¶ˆè€—
+	æœ¬ç±»åªè®¡ç®—ï¼Œå†…éƒ¨ä¸šåŠ¡èŠ‚ç‚¹å¾€å¤–å‘çš„æ•°æ®å‘é€çš„æ€§èƒ½ç»Ÿè®¡
 */
 using namespace cybertron;
 class SimOneDataStat {
@@ -29,19 +29,19 @@ public:
 
 	struct DataStat
 	{
-		//µ±Ç°×Ü¹²½ÓÊÕÁË¶àÉÙ°ü
+		//å½“å‰æ€»å…±æ¥æ”¶äº†å¤šå°‘åŒ…
 		std::uint64_t totalCount;
-		//µ±Ç°×Ü¹²½ÓÊÕ¶àÉÙ×Ö½Ú
+		//å½“å‰æ€»å…±æ¥æ”¶å¤šå°‘å­—èŠ‚
 		std::uint64_t totalPacketSize;
-		//×Ü¹²ÏûºÄÁË¶àÉÙÊ±¼ä
+		//æ€»å…±æ¶ˆè€—äº†å¤šå°‘æ—¶é—´
 		std::uint64_t totalTimeMs[3];
-		//Æ½¾ùµÄÊ±¼äÏûºÄÊÇ¶àÉÙ
+		//å¹³å‡çš„æ—¶é—´æ¶ˆè€—æ˜¯å¤šå°‘
 		std::uint64_t AvgTimeMS[3];
-		//×î´óÊ±¼äÏûºÄÊÇ¶àÉÙ
+		//æœ€å¤§æ—¶é—´æ¶ˆè€—æ˜¯å¤šå°‘
 		std::uint64_t MaxTimeMS[3];
-		//×îĞ¡Ê±¼äÏûºÄÊÇ¶àÉÙ
+		//æœ€å°æ—¶é—´æ¶ˆè€—æ˜¯å¤šå°‘
 		std::uint64_t MinTimeMS[3];
-		//ÓĞ¶àÉÙ°ü³¬¹ıãĞÖµ
+		//æœ‰å¤šå°‘åŒ…è¶…è¿‡é˜ˆå€¼
 		std::uint64_t thresholdCount[3];
 	};
 	struct DataContent
@@ -68,12 +68,12 @@ public:
 	void setFilePath(char *filePath) { mLogFilePath = filePath; };
 	void setOutputInterval(int intervalPacketCount) { mIntervalPacketCount = intervalPacketCount; }
 private:
-	//µ±Ç°×Ü¹²µÄÔËĞĞÊ±¼ä
+	//å½“å‰æ€»å…±çš„è¿è¡Œæ—¶é—´
 	std::uint64_t mStartTimeStamp;
 	std::uint64_t mTotalTimeSec;
 	int mIndex;
 
-	//¶¨Ê±¶àÉÙÃëÊä³ö
+	//å®šæ—¶å¤šå°‘ç§’è¾“å‡º
 	int mOutPutTimeSec;
 
 	DataStat		mHotAreaStat;
