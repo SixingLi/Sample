@@ -1367,11 +1367,23 @@ bool SimOneAPIService::sendVehicleEventInfoReq(int mainVehicleId, SimOne_Data_Ve
 		vehicleEventInfoType = cybertron::proto::sensor::ELeft_Turn_Decision;
 		vehicleEventInfo = "LeftTurnDecision";
 		break;
+	case ESimone_Vehicle_EventInfo_Type_Left_Turn_Warning:
+		vehicleEventInfoType = cybertron::proto::sensor::ELeft_Turn_Warning;
+		vehicleEventInfo = "LeftTurnWarning";
+		break;
+	case ESimone_Vehicle_EventInfo_Type_Right_Turn_Decision:
+		vehicleEventInfoType = cybertron::proto::sensor::ERight_Turn_Decision;
+		vehicleEventInfo = "RightTurnDecision";
+		break;
 	case ESimone_Vehicle_EventInfo_Type_Right_Turn_Warning:
 		vehicleEventInfoType = cybertron::proto::sensor::ERight_Turn_Warning;
 		vehicleEventInfo = "RightTurnWarning";
 		break;
 	case ESimone_Vehicle_EventInfo_Type_Forward_Straight_Decision:
+		vehicleEventInfoType = cybertron::proto::sensor::EForward_Straight_Decision;
+		vehicleEventInfo = "ForwardStraightDecision";
+		break;
+	case ESimone_Vehicle_EventInfo_Type_Forward_Straight_Warning:
 		vehicleEventInfoType = cybertron::proto::sensor::EForward_Straight_Warning;
 		vehicleEventInfo = "ForwardStraightWarning";
 		break;
