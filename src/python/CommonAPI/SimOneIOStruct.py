@@ -500,9 +500,12 @@ class SimOne_Data_Obstacle_Entry(Structure):
 	('velX', c_float), # Obstacle Velocity X no Opendrive (by meter)
 	('velY', c_float), # Obstacle Velocity Y no Opendrive (by meter)
 	('velZ', c_float), # Obstacle Velocity Z no Opendrive (by meter)
-	('length', c_float), # Obstacle length
-	('width', c_float), # Obstacle width
-	('height', c_float)] # Obstacle height
+	('length', c_float), 	# Obstacle length
+	('width', c_float),  	# Obstacle width
+	('height', c_float),	# Obstacle height
+	('accelX', c_float),	# Obstacle Acceleration X
+	('accelY', c_float),	# Obstacle Acceleration Y
+	('accelZ', c_float)] 	# Obstacle Acceleration Z
 
 
 class SimOne_Data_Obstacle(SimOne_Data):
@@ -598,6 +601,15 @@ class SimOne_Data_RadarDetection_Entry(Structure):
 	('velX', c_float),			# Obstacle Velocity X no Opendrive (by meter)
 	('velY', c_float),			# Obstacle Velocity Y no Opendrive (by meter)
 	('velZ', c_float),			# Obstacle Velocity Z no Opendrive (by meter)
+	('accelX', c_float),
+	('accelY', c_float),
+	('accelZ', c_float),
+	('oriX', c_float),
+	('oriY', c_float),
+	('oriZ', c_float),
+	('length', c_float),
+	('width', c_float),
+	('height', c_float),
 	('range', c_float),			# Obstacle relative range in meter 
 	('rangeRate', c_float),		# Obstacle relative range rate in m/s
 	('azimuth', c_float),		# Obstacle azimuth angle
@@ -617,8 +629,9 @@ class SimOne_Data_UltrasonicRadarDetection_Entry(Structure):
 	_pack_ = 1
 	_fields_ = [
 		('obstacleRanges', c_float),  # Obstacle from Ultrasonic distance
-		('x', c_float),  # Obstacle relativelX
-		('y', c_float) # Obstacle relativelY
+		('x', c_float),	# Obstacle relativelX
+		('y', c_float),	# Obstacle relativelY
+		('z', c_float)	# Obstacle relativelZ
 		]
 
 class SimOne_Data_UltrasonicRadar(SimOne_Data):
