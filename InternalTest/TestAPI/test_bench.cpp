@@ -275,9 +275,7 @@ void tester::Test_SensorSensorDetections(bool IsCallBackMode)
 	else {
 		std::unique_ptr<SimOne_Data_SensorDetections> pGroundtruth = std::make_unique<SimOne_Data_SensorDetections>();
 		while (true) {
-			// SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "sensorFusion1", pGroundtruth.get());
-			// SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "objectBasedCamera1", pGroundtruth.get());
-			//SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "objectBasedLidar1", pGroundtruth.get());
+			// "sensorFusion1" "objectBasedCamera1" "objectBasedLidar1" "perfectPerception1"
 			SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "perfectPerception1", pGroundtruth.get());
 			std::cout << pGroundtruth->frame << "," << pGroundtruth->objectSize << std::endl;
 			for (int i = 0; i < pGroundtruth->objectSize; i++) {
