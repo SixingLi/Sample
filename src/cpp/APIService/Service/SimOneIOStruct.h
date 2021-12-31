@@ -657,9 +657,9 @@ struct SimOne_Data_SensorDetections_Entry
 	float velX;				// Detection Object Velocity X
 	float velY;				// Detection Object Velocity Y
 	float velZ;				// Detection Object Velocity Z
-	float accelX; // Obstacle Acceleration X on Opendrive (by meter)
-	float accelY; // Obstacle Acceleration Y on Opendrive (by meter)
-	float accelZ; // Obstacle Acceleration Z on Opendrive (by meter)
+	float accelX;			// Detection Object accel X
+	float accelY;			// Detection Object accel Y
+	float accelZ;			// Detection Object accel Z
 	float probability;		// Detection probability
 	float relativePosX;		// Relative position X in sensor space
 	float relativePosY;		// Relative position Y in sensor space

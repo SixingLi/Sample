@@ -264,7 +264,7 @@ void tester::Test_SensorSensorDetections(bool IsCallBackMode)
 {
 	if (IsCallBackMode) {
 		auto function = [](const char* MainVehicleID, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth) {
-			printf("hostVehicle: %s frame: %d objectSize: %d\n", MainVehicleID, pGroundtruth->frame, pGroundtruth->objectSize);
+			//printf("hostVehicle: %s frame: %d objectSize: %d\n", MainVehicleID, pGroundtruth->frame, pGroundtruth->objectSize);
 			for (int i = 0; i < pGroundtruth->objectSize; i++)
 			{
 				printf("obstacle.type: %d\n", pGroundtruth->objects[i].type);
@@ -277,8 +277,12 @@ void tester::Test_SensorSensorDetections(bool IsCallBackMode)
 		while (true) {
 			// SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "sensorFusion1", pGroundtruth.get());
 			// SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "objectBasedCamera1", pGroundtruth.get());
-			SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "objectBasedLidar1", pGroundtruth.get());
+			//SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "objectBasedLidar1", pGroundtruth.get());
+			SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "perfectPerception1", pGroundtruth.get());
 			std::cout << pGroundtruth->frame << "," << pGroundtruth->objectSize << std::endl;
+			for (int i = 0; i < pGroundtruth->objectSize; i++) {
+				std::cout << "######### type: "<<pGroundtruth->objects[i].type << std::endl;
+			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
 	}

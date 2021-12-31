@@ -475,7 +475,7 @@ class ESimOne_Obstacle_Type(c_int):
 	ESimOne_Obstacle_Type_Rider = 17
 	ESimOne_Obstacle_Type_Truck = 18
 	ESimOne_Obstacle_Type_Bus = 19
-	ESimOne_Obstacle_Type_SpecialVehicle = 20
+	ESimOne_Obstacle_Type_Train = 20
 	ESimOne_Obstacle_Type_Motorcycle = 21
 	ESimOne_Obstacle_Type_Dynamic = 22
 	ESimOne_Obstacle_Type_GuardRail = 23
@@ -666,6 +666,9 @@ class SimOne_Data_SensorDetections_Entry(Structure):
 	('velX', c_float),		# Detection Object Velocity X
 	('velY', c_float),		# Detection Object Velocity Y
 	('velZ', c_float),		# Detection Object Velocity Z
+	('accelX',c_float), 		# Detection Object accel X
+	('accelY',c_float), 		# Detection Object accel Y
+	('accelZ',c_float), 		# Detection Object accel Z
 	('probability', c_float),	# Detection probability
 	('relativePosX', c_float),	# Relative position X in sensor space
 	('relativePosY', c_float),	# Relative position Y in sensor space
@@ -817,7 +820,7 @@ class SimOne_Data_WayPoints_Entry(Structure):
 	('heading_x', c_float), # MainVehicle WayPoints heading orientation x in quaternion
 	('heading_y', c_float), # MainVehicle WayPoints heading orientation y in quaternion
 	('heading_z', c_float), # MainVehicle WayPoints heading orientation z in quaternion
-	('heading_w', c_float),] # MainVehicle WayPoints heading orientation w in quaternion
+	('heading_w', c_float)] # MainVehicle WayPoints heading orientation w in quaternion
 
 class SimOne_Data_WayPoints(SimOne_Data):
 	_pack_ = 1
@@ -835,3 +838,15 @@ class SimOne_Data_Driver_Status(SimOne_Data):
 	_fields_ = [
 		('driverStatus', ESimOne_Driver_Status)
 	]
+
+class ESimOne_Control_Mode(c_int):
+	ESimOne_Control_Mode_Unknown = 0,
+	ESimOne_Control_Mode_Auto = 1,
+	ESimOne_Control_Mode_Manual = 2
+	
+class SimOne_Data_Control_Mode(SimOne_Data):
+	_pack_ = 1
+	_fields_ = [
+		('controlMode', ESimOne_Control_Mode)
+	]
+

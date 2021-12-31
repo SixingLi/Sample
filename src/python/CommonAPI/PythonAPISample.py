@@ -14,12 +14,20 @@ def stop():
 def SoV2XCB(mainVehicleId, sensorId, Data_V2XNFS):
 	if Data_V2XNFS:
 		print("Data_V2XNFS:{0}, SensorID:{1}, Data_V2XNFS_Size:{2}, Data_V2XNFS_Frame: {3}".format(mainVehicleId,sensorId,Data_V2XNFS[0].V2XMsgFrameSize,Data_V2XNFS[0].MsgFrameData))
+
 def SoMainVehicleStaus(mainVehicleId, data):
 	if data:
 		print("mainVehicleId:{0},data:{1}".format(mainVehicleId,data.mainVehicleStatus))
+
+def SoSetSensorDetectionUpdateCBTest(mainVehicleId, sensorId, data):
+	if data:
+		# print("mainVehicleId:{0},SensorId:{1}, data:{2}".format(mainVehicleId,sensorId,data[0].objectSize))
+		for i in range(data[0].objectSize):
+			print("data[0][{0}].type:{1}".format(i,data[0].objects[i].type.value))
+
 Flag = False
 if __name__ == '__main__':
-	mainVehicleID = '0'
+	mainVehicleID = '1'
 	try:
 		if SoInitSimOneAPI(mainVehicleID, 0, "127.0.0.1")==1:
 			print("################## API init success!!!")
@@ -31,7 +39,8 @@ if __name__ == '__main__':
 		pass
 
 	# SoApiSetV2XInfoUpdateCB(SoV2XCB)
-	SoAPISetMainVehicleStatusUpdateCB(SoMainVehicleStaus)
+	# SoAPISetMainVehicleStatusUpdateCB(SoMainVehicleStaus)
+	SoApiSetSensorDetectionsUpdateCB(SoSetSensorDetectionUpdateCBTest)
 	while Flag:
 		# waypoint = SimOne_Data_WayPoints()
 		# SoGetWayPoints(mainVehicleID,waypoint)
@@ -74,10 +83,10 @@ if __name__ == '__main__':
 		# 	for indextype in range(pMainVehicleInfo.size):
 		# 		print("pMainVehicleInfo.type:		{0}".format(pMainVehicleInfo.type_list[indextype].value))
 
-		pSensorConfigs = SimOne_Data_SensorConfigurations()
-		if SoGetSensorConfigurations(mainVehicleID, pSensorConfigs):
-			for index in range(pSensorConfigs.dataSize):
-				print("pSensorConfig.sensorId:{0}, pSensorConfig.SensorType:{1}".format(pSensorConfigs.data[index].sensorId,pSensorConfigs.data[index].sensorType))
+		# pSensorConfigs = SimOne_Data_SensorConfigurations()
+		# if SoGetSensorConfigurations(mainVehicleID, pSensorConfigs):
+		# 	for index in range(pSensorConfigs.dataSize):
+		# 		print("pSensorConfig.sensorId:{0}, pSensorConfig.SensorType:{1}".format(pSensorConfigs.data[index].sensorId,pSensorConfigs.data[index].sensorType))
 		
 		# pHdmapData = SimOne_Data_Map()
 		# if SoGetHDMapData(pHdmapData):
