@@ -592,31 +592,31 @@ SOSM_RADAR_SIZE_MAX = 256
 class SimOne_Data_RadarDetection_Entry(Structure):
 	_pack_ = 1
 	_fields_ = [
-	('id', c_int),				# Obstacle ID
-	('subId', c_int),			# Obstacle Sub ID
-	('type', ESimOne_Obstacle_Type),			# Obstacle Type
-	('posX', c_float),			# Obstacle Position X no Opendrive (by meter)
-	('posY', c_float),			# Obstacle Position Y no Opendrive (by meter)
-	('posZ', c_float),			# Obstacle Position Z no Opendrive (by meter)
-	('velX', c_float),			# Obstacle Velocity X no Opendrive (by meter)
-	('velY', c_float),			# Obstacle Velocity Y no Opendrive (by meter)
-	('velZ', c_float),			# Obstacle Velocity Z no Opendrive (by meter)
-	('accelX', c_float),
-	('accelY', c_float),
-	('accelZ', c_float),
-	('oriX', c_float),
-	('oriY', c_float),
-	('oriZ', c_float),
-	('length', c_float),
-	('width', c_float),
-	('height', c_float),
-	('range', c_float),			# Obstacle relative range in meter 
-	('rangeRate', c_float),		# Obstacle relative range rate in m/s
-	('azimuth', c_float),		# Obstacle azimuth angle
-	('vertical', c_float),		# Obstacle vertical angle
-	('snrdb', c_float),			# Signal noise ratio
-	('rcsdb', c_float),			# Obstacle RCS
-	('probability', c_float)]	# detection probability
+	('id', c_int), # Obstacle ID
+	('subId', c_int), # Obstacle Sub ID
+	('type', ESimOne_Obstacle_Type), # Obstacle Type
+	('posX', c_float), # Obstacle Position X on Opendrive (by meter)
+	('posY', c_float), # Obstacle Position Y on Opendrive (by meter)
+	('posZ', c_float), # Obstacle Position Z on Opendrive (by meter)
+	('velX', c_float), # Obstacle Velocity X (m/s)
+	('velY', c_float), # Obstacle Velocity Y (m/s)
+	('velZ', c_float), # Obstacle Velocity Z (m/s)
+	('accelX', c_float), # Obstacle Acceleration X (m/s^2)
+	('accelY', c_float), # Obstacle Acceleration Y (m/s^2)
+	('accelZ', c_float), # Obstacle Acceleration Z (m/s^2)
+	('oriX', c_float), # Obstacle Rotation X (by radian)
+	('oriY', c_float), # Obstacle Rotation Y (by radian)
+	('oriZ', c_float), # Obstacle Rotation Z (by radian)
+	('length', c_float), # Obstacle length
+	('width', c_float), # Obstacle width 
+	('height', c_float), # Obstacle height 
+	('range', c_float), # Obstacle relative range in meter 
+	('rangeRate', c_float), # Obstacle relative range rate in m/s
+	('azimuth', c_float), # Obstacle azimuth angle
+	('vertical', c_float), # Obstacle vertical angle
+	('snrdb', c_float), # Signal noise ratio
+	('rcsdb', c_float), # Obstacle RCS
+	('probability', c_float)] # detection probability
 
 
 class SimOne_Data_RadarDetection(SimOne_Data):
