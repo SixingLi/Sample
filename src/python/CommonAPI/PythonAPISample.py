@@ -2,6 +2,7 @@ from SimOneServiceAPI import *
 from SimOneSensorAPI import *
 from SimOneV2XAPI import *
 from SimOnePNCAPI import *
+from SimOneStreamingAPI import *
 
 import time 
 
@@ -27,9 +28,9 @@ def SoSetSensorDetectionUpdateCBTest(mainVehicleId, sensorId, data):
 
 Flag = False
 if __name__ == '__main__':
-	mainVehicleID = '1'
+	mainVehicleID = '0'
 	try:
-		if SoInitSimOneAPI(mainVehicleID, 0, "127.0.0.1")==1:
+		if SoInitSimOneAPI(mainVehicleID, 0, "10.66.9.111")==1:
 			print("################## API init success!!!")
 			Flag =True
 		else:
@@ -41,6 +42,7 @@ if __name__ == '__main__':
 	# SoApiSetV2XInfoUpdateCB(SoV2XCB)
 	# SoAPISetMainVehicleStatusUpdateCB(SoMainVehicleStaus)
 	SoApiSetSensorDetectionsUpdateCB(SoSetSensorDetectionUpdateCBTest)
+
 	while Flag:
 		# waypoint = SimOne_Data_WayPoints()
 		# SoGetWayPoints(mainVehicleID,waypoint)
@@ -91,6 +93,12 @@ if __name__ == '__main__':
 		# pHdmapData = SimOne_Data_Map()
 		# if SoGetHDMapData(pHdmapData):
 		# 	print("pHdmapData.openDrive:{0},pHdmapData.openDriveUrl:{1}".format(pHdmapData.openDrive,pHdmapData.openDriveUrl))
-		
+
+		# ImageData = SimOne_Data_Image()
+		# Ip = "10.66.9.244"
+		# Port = 13944
+		# if SoGetStreamingImage(Ip, Port, ImageData):
+		# 	print("ImageData.width:{0},ImageData.height:{1}, ImageData.format:{2}, ImageData.imagedataSize:{3}".format(ImageData.width, ImageData.height, ImageData.format, ImageData.imagedataSize))
+
 		time.sleep(0.1)
 		pass
