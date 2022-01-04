@@ -1,5 +1,7 @@
 #include "test_bench.h"
 
+dumper tester::dbg_data;
+
 tester::tester(const char* mv_id):mainVehicleId(mv_id){}
 
 tester::~tester(){}
@@ -191,17 +193,11 @@ void tester::Test_GetHdMapData() {
 	}
 }
 
-
-
-
 void tester::Test_GetGroundTruth(bool IsCallBackMode)
 {
 	if (IsCallBackMode) {
 		auto function = [](const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle) {
-			std::cout << "mainVehicleId:" << mainVehicleId << ", pDetections->frame:" << pObstacle->frame << ", pDetections->detectNum:" << pObstacle->obstacleSize << std::endl;//The Lane's leftLane ID 
-			for (int i = 0; i < pObstacle->obstacleSize; i++) {
-				std::cout << "obstacle.type:" << pObstacle->obstacle[i].type << std::endl;;
-			}
+			dbg_data.dump_ground_truth(mainVehicleId, pObstacle);
 		};
 		SimOneAPI::SetGroundTruthUpdateCB(function);
 	}
@@ -212,10 +208,7 @@ void tester::Test_GetGroundTruth(bool IsCallBackMode)
 			bool flag = SimOneAPI::GetGroundTruth(mainVehicleId.c_str(),  pDetections.get());
 			if (flag && pDetections->frame != lastFrame) {
 				lastFrame  = pDetections->frame;
-				std::cout << "mainVehicleId:" << mainVehicleId << ", pDetections->frame:" << pDetections->frame << ", pDetections->detectNum:" << pDetections->obstacleSize << std::endl;//The Lane's leftLane ID 
-				for (int i = 0; i < pDetections->obstacleSize; i++) {
-					std::cout << "obstacle.type:" << pDetections->obstacle[i].type << std::endl;
-				}
+				dbg_data.dump_ground_truth(mainVehicleId.c_str(), pDetections.get());
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
@@ -226,10 +219,9 @@ void tester::Test_RadarDetection(bool IsCallBackMode)
 {
 	if (IsCallBackMode) {
 		auto function = [](const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections) {
-			std::cout <<"mainVehicleId:"<< mainVehicleId<<", pDetections->frame:"<<pDetections->frame << ", pDetections->detectNum:"<<pDetections->detectNum <<std::endl;//The Lane's leftLane ID 
-			for (auto i = 0; i < pDetections->detectNum;i++) {
-				std::cout <<" test.rcsdb:" << pDetections->detections[i].rcsdb << "," <<" test.rcsdb:"<< pDetections->detections[i].probability << std::endl;//The Lane's leftLane ID 
-			}
+
+
+
 		};
 		SimOneAPI::SetRadarDetectionsUpdateCB(function);
 	}
@@ -238,22 +230,7 @@ void tester::Test_RadarDetection(bool IsCallBackMode)
 		while (true) {
 			bool flag = SimOneAPI::GetRadarDetections(mainVehicleId.c_str(), "objectBasedRadar1", pDetections.get());
 			if (flag) {
-				std::cout <<"mainVehicleId:"<< mainVehicleId.c_str() <<", pDetections->frame:"<<pDetections->frame << ", pDetections->detectNum:"<<pDetections->detectNum <<std::endl;//The Lane's leftLane ID 
-				for (int i = 0; i < pDetections->detectNum; i++)
-				{
-					// std::cout << "detections.range:" << pDetections->detections[i].range <<",pDetections->detections[i].azimuth:"<< pDetections->detections[i].azimuth <<std::endl;
-					std::cout << "ip: " << pDetections->detections[i].id << std::endl;
-					std::cout << "type: " << pDetections->detections[i].type << std::endl;
-					std::cout << "accelX: " << pDetections->detections[i].accelX << std::endl;
-					std::cout << "accelY: " << pDetections->detections[i].accelY << std::endl;
-					std::cout << "accelZ: " << pDetections->detections[i].accelZ << std::endl;
-					std::cout << "oriX: " << pDetections->detections[i].oriX << std::endl;
-					std::cout << "oriY: " << pDetections->detections[i].oriY << std::endl;
-					std::cout << "oriZ: " << pDetections->detections[i].oriZ << std::endl;
-					std::cout << "length: " << pDetections->detections[i].length << std::endl;
-					std::cout << "width: " << pDetections->detections[i].width << std::endl;
-					std::cout << "height: " << pDetections->detections[i].height << std::endl;
-				}
+
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(30));
 		}
@@ -342,7 +319,7 @@ void tester::Test_GPS(bool IsCallBackMode)
 {
 	if (IsCallBackMode) {
 		auto function = []( const char* mainVehicleId, SimOne_Data_Gps *pGps){
-				std::cout<<"pGps->frame:"<< pGps->frame<<", pGps->posX:"<<pGps->posX<<",pGps->posY"<<pGps->posY<< std::endl;
+				dbg_data.dump_gps(mainVehicleId, pGps);
 		};
 		 SimOneAPI::SetGpsUpdateCB(function);
 	}
@@ -354,7 +331,7 @@ void tester::Test_GPS(bool IsCallBackMode)
 				std::cout<<"Get GPS Fail"<< std::endl;
 				continue;
 			}
-			std::cout<<"pGps->posX:"<<pGps->posX<<",pGps->posY"<<pGps->posY<< std::endl;					
+			dbg_data.dump_gps(mainVehicleId.c_str(), pGps.get());
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
 	}

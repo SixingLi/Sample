@@ -6,6 +6,7 @@
 #include "SimOnePNCAPI.h"
 #include "SimOneServiceAPI.h"
 #include "SimOneHDMapAPI.h"
+#include "dumper.h"
 
 #include <thread> 
 #include <chrono>
@@ -108,6 +109,8 @@ class tester
 
 		// Sensor-V2X API
 		void Test_V2XInfo(bool IsCallBackMode);
+
+		static dumper dbg_data;
 
 	private:
 		std::string mainVehicleId;
