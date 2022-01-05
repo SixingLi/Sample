@@ -13,6 +13,8 @@ if sys == "Windows":
 elif sys == "Linux":
 	HDMapModule = "libHDMapModule.so"
 	SimoneAPI_dll = "libSimOneAPI.so"
+	SimOneStreamingDep = ["libavutil.so.56","libswresample.so.3",
+	"libx264.so.148","libavcodec.so.58","libavformat.so.58","libswscale.so.5"]
 	SimoneStreamingAPI_dll = "libSimOneStreamingAPI.so"
 
 SimOneLibPaths = [
@@ -36,6 +38,9 @@ for path in SimOneLibPaths:
 	try:# python v3.8+
 		CDLL(path+HDMapModule, winmode=DEFAULT_MODE)
 		SimoneAPI = CDLL(path + SimoneAPI_dll, winmode=DEFAULT_MODE)
+		if sys == "Linux":
+			for dep in SimOneStreamingDep:
+				CDLL(path + dep)
 		SimoneStreamingAPI = CDLL(path + SimoneStreamingAPI_dll, winmode=DEFAULT_MODE)
 		LoadDllSuccess = True
 	except Exception as e:
@@ -49,6 +54,9 @@ for path in SimOneLibPaths:
 		# python 2.7 - 3.7
 		CDLL(path+HDMapModule)
 		SimoneAPI = CDLL(path + SimoneAPI_dll)
+		if sys == "Linux":
+			for dep in SimOneStreamingDep:
+				CDLL(path + dep)
 		SimoneStreamingAPI = CDLL(path + SimoneStreamingAPI_dll)
 		LoadDllSuccess = True
 	except Exception as e:
