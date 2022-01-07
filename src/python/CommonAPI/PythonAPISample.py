@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
 	# SoApiSetV2XInfoUpdateCB(SoV2XCB)
 	# SoAPISetMainVehicleStatusUpdateCB(SoMainVehicleStaus)
-	SoApiSetSensorDetectionsUpdateCB(SoSetSensorDetectionUpdateCBTest)
+	# SoApiSetSensorDetectionsUpdateCB(SoSetSensorDetectionUpdateCBTest)
 
 	while Flag:
 		# waypoint = SimOne_Data_WayPoints()
@@ -72,10 +72,92 @@ if __name__ == '__main__':
 		# 	print("Size:{0},MsgFrameData:{1}".format(v2xData.V2XMsgFrameSize,v2xData.MsgFrameData))
 
 		
-		# planeInfo = SimOne_Data_LaneInfo()
-		# if SoGetSensorLaneInfo(mainVehicleID,"objectBasedCamera1",planeInfo):
-		# 	llaneid = planeInfo.lanseLeftID;
-		# 	print("planeInfo.laneLeftID:{0}".format(llaneid))
+		planeInfo = SimOne_Data_LaneInfo()
+		if SoGetSensorLaneInfo(mainVehicleID,"sensorFusion1",planeInfo): # "objectBasedCamera1"
+			id = planeInfo.id
+			laneType = planeInfo.laneType
+			laneLeftID = planeInfo.laneLeftID
+			laneRightID = planeInfo.laneRightID
+			lanePredecessorID = planeInfo.lanePredecessorID
+			laneSuccessorID = planeInfo.laneSuccessorID
+			print("id: {0}".format(id))
+			print("laneType: {0}".format(laneType))
+			print("laneLeftID: {0}".format(laneLeftID))
+			print("laneRightID: {0}".format(laneRightID))
+			i = 0
+			while i <3:
+				print("lanePredecessorID[{0}]: {1}".format(i, lanePredecessorID[i]))
+				i += 1
+			i = 0
+			while i <3:
+				print("laneSuccessorID[{0}]: {1}".format(i, laneSuccessorID[i]))
+				i += 1
+			l_Line = planeInfo.l_Line
+			l_Line_lineID = l_Line.lineID
+			l_Line_lineType = l_Line.lineType.value
+			l_Line_lineColor = l_Line.lineColor.value
+			l_Line_linewidth = l_Line.linewidth
+			l_Line_C3 = l_Line.C3
+			# l_Line_linePoints = l_Line.linePoints
+			# l_Line_linecurveparameter = l_Line.linecurveParameter
+			print("l_Line_lineID: {0}".format(l_Line_lineID))
+			print("l_Line_lineType: {0}".format(l_Line_lineType))
+			print("l_Line_lineColor: {0}".format(l_Line_lineColor))
+			print("l_Line_linewidth: {0}".format(l_Line_linewidth))
+			print("l_Line_C3: {0}".format(l_Line_C3))
+			c_Line = planeInfo.c_Line
+			c_Line_lineID = c_Line.lineID
+			c_Line_lineType = c_Line.lineType.value
+			c_Line_lineColor = c_Line.lineColor.value
+			c_Line_linewidth = c_Line.linewidth
+			c_Line_C3 = c_Line.C3
+			# c_Line_linePoints = c_Line.linePoints
+			# c_Line_linecurveparameter = c_Line.linecurveParameter
+			print("c_Line_lineID: {0}".format(c_Line_lineID))
+			print("c_Line_lineType: {0}".format(c_Line_lineType))
+			print("c_Line_lineColor: {0}".format(c_Line_lineColor))
+			print("c_Line_linewidth: {0}".format(c_Line_linewidth))
+			print("c_Line_C3: {0}".format(c_Line_C3))
+			r_Line = planeInfo.r_Line
+			r_Line_lineID = r_Line.lineID
+			r_Line_lineType = r_Line.lineType.value
+			r_Line_lineColor = r_Line.lineColor.value
+			r_Line_linewidth = r_Line.linewidth
+			r_Line_C3 = r_Line.C3
+			# r_Line_linePoints = r_Line.linePoints
+			# r_Line_linecurveparameter = r_Line.linecurveParameter
+			print("r_Line_lineID: {0}".format(r_Line_lineID))
+			print("r_Line_lineType: {0}".format(r_Line_lineType))
+			print("r_Line_lineColor: {0}".format(r_Line_lineColor))
+			print("r_Line_linewidth: {0}".format(r_Line_linewidth))
+			print("r_Line_C3: {0}".format(r_Line_C3))
+			ll_Line = planeInfo.ll_Line
+			ll_Line_lineID = ll_Line.lineID
+			ll_Line_lineType = ll_Line.lineType.value
+			ll_Line_lineColor = ll_Line.lineColor.value
+			ll_Line_linewidth = ll_Line.linewidth
+			ll_Line_C3 = ll_Line.C3
+			# ll_Line_linePoints = ll_Line.linePoints
+			# ll_Line_linecurveparameter = ll_Line.linecurveParameter
+			print("ll_Line_lineID: {0}".format(ll_Line_lineID))
+			print("ll_Line_lineType: {0}".format(ll_Line_lineType))
+			print("ll_Line_lineColor: {0}".format(ll_Line_lineColor))
+			print("ll_Line_linewidth: {0}".format(ll_Line_linewidth))
+			print("ll_Line_C3: {0}".format(ll_Line_C3))
+			rr_Line = planeInfo.rr_Line
+			rr_Line_lineID = rr_Line.lineID
+			rr_Line_lineType = rr_Line.lineType.value
+			rr_Line_lineColor = rr_Line.lineColor.value
+			rr_Line_linewidth = rr_Line.linewidth
+			rr_Line_C3 = rr_Line.C3
+			# rr_Line_linePoints = rr_Line.linePoints
+			# rr_Line_linecurveparameter = rr_Line.linecurveParameter
+			print("rr_Line_lineID: {0}".format(rr_Line_lineID))
+			print("rr_Line_lineType: {0}".format(rr_Line_lineType))
+			print("rr_Line_lineColor: {0}".format(rr_Line_lineColor))
+			print("rr_Line_linewidth: {0}".format(rr_Line_linewidth))
+			print("rr_Line_C3: {0}".format(rr_Line_C3))
+			print("------------ SoGetSensorLaneInfo ------------")
 
 		# pMainVehicleInfo = SimOne_Data_MainVehicle_Info();
 		# if SoGetMainVehicleList(pMainVehicleInfo):
