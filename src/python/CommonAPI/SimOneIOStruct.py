@@ -811,7 +811,6 @@ class SimOne_Data_LaneLineInfo(Structure):
 	('lineType', ESimOne_Boundary_Type),
 	('lineColor', ESimOne_Boundary_Color),
 	('linewidth', c_float),
-	('C3', c_float),
 	('linePoints', SimOneData_Vec3f * SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX),
 	('linecurveParameter', SimOne_LineCurve_Parameter)]
 
