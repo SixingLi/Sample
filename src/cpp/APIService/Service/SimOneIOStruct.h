@@ -837,37 +837,37 @@ struct SimOne_Data_Point_Cloud : public SimOne_Data
 #define SOSM_RADAR_SIZE_MAX 256
 
 struct SimOne_Data_RadarDetection_Entry {
-	int id;					// Detection Object ID
-	int subId;				// Detection Object Sub ID
-	ESimOne_Obstacle_Type type;	// Detection Object Type
-	float posX;				// Detection Object Position X in meter
-	float posY;				// Detection Object Position Y in meter
-	float posZ;				// Detection Object Position Z in meter
-	float velX;				// Detection Object Velocity X
-	float velY;				// Detection Object Velocity Y
-	float velZ;				// Detection Object Velocity Z
-	float accelX; // Obstacle Acceleration X on Opendrive (by meter)
-	float accelY; // Obstacle Acceleration Y on Opendrive (by meter)
-	float accelZ; // Obstacle Acceleration Z on Opendrive (by meter)
-	float oriX; // Obstacle Rotation X on Opendrive (by radian)
-	float oriY; // Obstacle Rotation Y on Opendrive (by radian)
-	float oriZ; // Obstacle Rotation Z on Opendrive (by radian)
+	int id; // Detection Object ID
+	int subId; // Detection Object Sub ID
+	ESimOne_Obstacle_Type type; // Detection Object Type
+	float posX; // Detection Object Position X in meter
+	float posY; // Detection Object Position Y in meter
+	float posZ; // Detection Object Position Z in meter
+	float velX; // Detection Object Velocity X
+	float velY; // Detection Object Velocity Y
+	float velZ; // Detection Object Velocity Z
+	float accelX; // Obstacle Acceleration X no Opendrive (m/s^2)
+	float accelY; // Obstacle Acceleration Y no Opendrive (m/s^2)
+	float accelZ; // Obstacle Acceleration Z no Opendrive (m/s^2)
+	float oriX; // Obstacle Rotation X (by radian)
+	float oriY; // Obstacle Rotation Y (by radian)
+	float oriZ; // Obstacle Rotation Z (by radian)
 	float length; // Obstacle length
 	float width; // Obstacle width
 	float height; // Obstacle height
-	float range;			// Detection Object relative range in meter
-	float rangeRate;		// Detection Object relative range rate in m/s
-	float azimuth;			// Detection Object azimuth angle
-	float vertical;			// Detection Object vertical angle
-	float snrdb;			// Signal noise ratio
-	float rcsdb;			// Detection Object RCS
-	float probability;		// Detection probability
+	float range; // Detection Object relative range in meter
+	float rangeRate; // Detection Object relative range rate in m/s
+	float azimuth; // Detection Object azimuth angle
+	float vertical; // Detection Object vertical angle
+	float snrdb; // Signal noise ratio
+	float rcsdb; // Detection Object RCS
+	float probability; // Detection probability
 };
 
 struct SimOne_Data_RadarDetection : public SimOne_Data
 {
-	int detectNum;												// Detection Object number
-	SimOne_Data_RadarDetection_Entry detections[SOSM_RADAR_SIZE_MAX];	// Detection Objects, 256 max
+	int detectNum; // Detection Object number
+	SimOne_Data_RadarDetection_Entry detections[SOSM_RADAR_SIZE_MAX]; // Detection Objects, 256 max
 };
 
 // ----------------------------
@@ -973,7 +973,7 @@ enum ESimOne_TrafficLight_Status
 
 struct SimOne_Data_TrafficLight
 {
-	int index;
+	bool isMainVehicleNextTrafficLight;
 	int opendriveLightId;
 	int countDown;
 	ESimOne_TrafficLight_Status status;

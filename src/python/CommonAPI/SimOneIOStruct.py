@@ -13,6 +13,8 @@ if sys == "Windows":
 elif sys == "Linux":
 	HDMapModule = "libHDMapModule.so"
 	SimoneAPI_dll = "libSimOneAPI.so"
+	SimOneStreamingDep = ["libavutil.so.56","libswresample.so.3",
+	"libx264.so.148","libavcodec.so.58","libavformat.so.58","libswscale.so.5"]
 	SimoneStreamingAPI_dll = "libSimOneStreamingAPI.so"
 
 SimOneLibPaths = [
@@ -36,6 +38,9 @@ for path in SimOneLibPaths:
 	try:# python v3.8+
 		CDLL(path+HDMapModule, winmode=DEFAULT_MODE)
 		SimoneAPI = CDLL(path + SimoneAPI_dll, winmode=DEFAULT_MODE)
+		if sys == "Linux":
+			for dep in SimOneStreamingDep:
+				CDLL(path + dep)
 		SimoneStreamingAPI = CDLL(path + SimoneStreamingAPI_dll, winmode=DEFAULT_MODE)
 		LoadDllSuccess = True
 	except Exception as e:
@@ -49,6 +54,9 @@ for path in SimOneLibPaths:
 		# python 2.7 - 3.7
 		CDLL(path+HDMapModule)
 		SimoneAPI = CDLL(path + SimoneAPI_dll)
+		if sys == "Linux":
+			for dep in SimOneStreamingDep:
+				CDLL(path + dep)
 		SimoneStreamingAPI = CDLL(path + SimoneStreamingAPI_dll)
 		LoadDllSuccess = True
 	except Exception as e:
@@ -592,31 +600,31 @@ SOSM_RADAR_SIZE_MAX = 256
 class SimOne_Data_RadarDetection_Entry(Structure):
 	_pack_ = 1
 	_fields_ = [
-	('id', c_int),				# Obstacle ID
-	('subId', c_int),			# Obstacle Sub ID
-	('type', ESimOne_Obstacle_Type),			# Obstacle Type
-	('posX', c_float),			# Obstacle Position X no Opendrive (by meter)
-	('posY', c_float),			# Obstacle Position Y no Opendrive (by meter)
-	('posZ', c_float),			# Obstacle Position Z no Opendrive (by meter)
-	('velX', c_float),			# Obstacle Velocity X no Opendrive (by meter)
-	('velY', c_float),			# Obstacle Velocity Y no Opendrive (by meter)
-	('velZ', c_float),			# Obstacle Velocity Z no Opendrive (by meter)
-	('accelX', c_float),
-	('accelY', c_float),
-	('accelZ', c_float),
-	('oriX', c_float),
-	('oriY', c_float),
-	('oriZ', c_float),
-	('length', c_float),
-	('width', c_float),
-	('height', c_float),
-	('range', c_float),			# Obstacle relative range in meter 
-	('rangeRate', c_float),		# Obstacle relative range rate in m/s
-	('azimuth', c_float),		# Obstacle azimuth angle
-	('vertical', c_float),		# Obstacle vertical angle
-	('snrdb', c_float),			# Signal noise ratio
-	('rcsdb', c_float),			# Obstacle RCS
-	('probability', c_float)]	# detection probability
+	('id', c_int), # Obstacle ID
+	('subId', c_int), # Obstacle Sub ID
+	('type', ESimOne_Obstacle_Type), # Obstacle Type
+	('posX', c_float), # Obstacle Position X on Opendrive (by meter)
+	('posY', c_float), # Obstacle Position Y on Opendrive (by meter)
+	('posZ', c_float), # Obstacle Position Z on Opendrive (by meter)
+	('velX', c_float), # Obstacle Velocity X (m/s)
+	('velY', c_float), # Obstacle Velocity Y (m/s)
+	('velZ', c_float), # Obstacle Velocity Z (m/s)
+	('accelX', c_float), # Obstacle Acceleration X (m/s^2)
+	('accelY', c_float), # Obstacle Acceleration Y (m/s^2)
+	('accelZ', c_float), # Obstacle Acceleration Z (m/s^2)
+	('oriX', c_float), # Obstacle Rotation X (by radian)
+	('oriY', c_float), # Obstacle Rotation Y (by radian)
+	('oriZ', c_float), # Obstacle Rotation Z (by radian)
+	('length', c_float), # Obstacle length
+	('width', c_float), # Obstacle width 
+	('height', c_float), # Obstacle height 
+	('range', c_float), # Obstacle relative range in meter 
+	('rangeRate', c_float), # Obstacle relative range rate in m/s
+	('azimuth', c_float), # Obstacle azimuth angle
+	('vertical', c_float), # Obstacle vertical angle
+	('snrdb', c_float), # Signal noise ratio
+	('rcsdb', c_float), # Obstacle RCS
+	('probability', c_float)] # detection probability
 
 
 class SimOne_Data_RadarDetection(SimOne_Data):
@@ -803,7 +811,6 @@ class SimOne_Data_LaneLineInfo(Structure):
 	('lineType', ESimOne_Boundary_Type),
 	('lineColor', ESimOne_Boundary_Color),
 	('linewidth', c_float),
-	('C3', c_float),
 	('linePoints', SimOneData_Vec3f * SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX),
 	('linecurveParameter', SimOne_LineCurve_Parameter)]
 
