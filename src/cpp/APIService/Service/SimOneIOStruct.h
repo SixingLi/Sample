@@ -973,7 +973,7 @@ enum ESimOne_TrafficLight_Status
 
 struct SimOne_Data_TrafficLight
 {
-	int index;
+	bool isMainVehicleNextTrafficLight;
 	int opendriveLightId;
 	int countDown;
 	ESimOne_TrafficLight_Status status;
