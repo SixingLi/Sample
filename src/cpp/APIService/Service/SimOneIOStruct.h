@@ -43,7 +43,7 @@
 struct SimOne_Data
 {
 	long long timestamp = 0; // timestamp millisecond
-	int frame;
+	int frame = 0;
 	int version = 0; // API version
 };
 struct SimOne_Data_Vec3f
@@ -973,10 +973,10 @@ enum ESimOne_TrafficLight_Status
 
 struct SimOne_Data_TrafficLight
 {
-	bool isMainVehicleNextTrafficLight;
-	int opendriveLightId;
-	int countDown;
-	ESimOne_TrafficLight_Status status;
+	bool isMainVehicleNextTrafficLight = false;
+	int opendriveLightId = 0;
+	int countDown = 0;
+	ESimOne_TrafficLight_Status status = ESimOne_TrafficLight_Status_Invalid;
 };
 
 struct SimOne_Data_TrafficLights : public SimOne_Data
