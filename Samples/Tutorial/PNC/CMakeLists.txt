@@ -7,7 +7,7 @@ add_executable(PNCSample "")
 file(GLOB_RECURSE srcs *.h *.hh *i *.hpp *.c *.cc *.cpp *.py)
 file(GLOB_RECURSE headers *.h)
 
-target_sources(PNCSample PRIVATE "src/PNC_Sample.cpp" ${headers})
+target_sources(PNCSample PRIVATE "src/PNC_Sample.cpp" "src/dumper.cpp"${headers})
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
@@ -42,8 +42,6 @@ IF (WIN32)
         )    
 
 ELSEIF (UNIX)
-		#target_link_libraries(PNCAPISample debug ${LIB_DIR}/libgtest.a -pthread -lrt)
-		#target_link_libraries(PNCSample optimized ${LIB_DIR}/libgtest.a -pthread -lrt)
         target_link_libraries(PNCSample debug ${LIB_DIR}/libSimOneAPI.so)
         target_link_libraries(PNCSample optimized ${LIB_DIR}/libSimOneAPI.so -lpthread)
         target_link_libraries(PNCSample debug /usr/lib/x86_64-linux-gnu/libcurl.so.4)
@@ -53,9 +51,6 @@ ELSEIF (UNIX)
         target_link_libraries(PNCSample debug ${LIB_DIR}/libHDMapModule.so)
         target_link_libraries(PNCSample optimized ${LIB_DIR}/libHDMapModule.so)
 
-        target_link_libraries(PNCSample debug ${LOCAL_LIB_DIR}/liblogger.so)
-        target_link_libraries(PNCSample optimized ${LOCAL_LIB_DIR}/liblogger.so)
-    
         add_custom_command(TARGET PNCSample
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${LIB_DIR}/libSimOneAPI.so ${BINARY_OUT_PATH}/libSimOneAPI.so

@@ -119,7 +119,71 @@ void dumper::dump_sensor_detections(const char* mainVehicleId, const char* senso
 	for (int i = 0; i < pData->objectSize; i++)
 	{
 		std::cout << "objects[" << i  << "].id" << pData->objects[i].id << std::endl;
-		std::cout << "objects[" << i  << "].type: " << pData->objects[i].type << std::endl;
+		switch (pData->objects[i].type)
+		{
+		case ESimOne_Obstacle_Type_Unknown:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Unknown" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Pedestrian:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Pedestrian" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Car:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Car" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Bicycle:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Bicycle" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_BicycleStatic:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_BicycleStatic" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Motorcycle:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Motorcycle" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Truck:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Truck" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Pole:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Pole" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Static:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Static" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Fence:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Fence" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_RoadMark:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_RoadMark" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_TrafficSign:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_TrafficSign" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_TrafficLight:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_TrafficLight" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Rider:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Rider" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Bus:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Bus" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Train:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Train" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_Dynamic:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Dynamic" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_GuardRail:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_GuardRail" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_SpeedLimitSign:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_SpeedLimitSign" << std::endl;
+			break;
+		case ESimOne_Obstacle_Type_RoadObstacle:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_RoadObstacle" << std::endl;
+			break;
+		default:
+			std::cout << "obstacles[" << i << "].type: Invalid Object Type" << std::endl;
+		}
 		std::cout << "objects[" << i  << "].posX/Y/Z: " << "[" << pData->objects[i].posX << ", " << pData->objects[i].posY << ", " << pData->objects[i].posZ << "]" << std::endl;
 		std::cout << "objects[" << i  << "].oriX/Y/Z: " << "[" << pData->objects[i].oriX << ", " << pData->objects[i].oriY << ", " << pData->objects[i].oriZ << "]" << std::endl;
 		std::cout << "objects[" << i  << "].length: " << pData->objects[i].length << std::endl;

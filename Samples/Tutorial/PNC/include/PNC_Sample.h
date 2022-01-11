@@ -14,7 +14,7 @@
 #include "SimOneV2XAPI.h"
 #include "timer.hpp"
 
-#include "logger/logger.h"
+#include "dumper.h"
 
 class pncapi_sample
 {
@@ -38,15 +38,7 @@ public:
 protected:
 	static SimOne_Data_Gps m_gps;
 	static std::atomic<bool> m_flip;
-
-	Logging::Logger log_simone_ini;
-	Logging::Logger log_set_pose_ctl;
-	Logging::Logger log_set_drive_ctl;
-	Logging::Logger log_set_drive_trajectory;
-	static Logging::Logger log_get_gps;
-	static Logging::Logger log_get_sensor_detection;
-	static Logging::Logger log_get_sensor_laneinfo;
-	static Logging::Logger log_scenario_event;
+	static dumper data_dmper;
 };
 
 #endif
