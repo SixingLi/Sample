@@ -3,6 +3,7 @@
 
 #include "Service/SimOneIOStruct.h"
 #include <iostream>
+using namespace std;
 
 class dumper
 {

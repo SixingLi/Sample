@@ -1,12 +1,16 @@
 #include "dumper.h"
+using namespace std;
 
-dumper::dumper(){}
+dumper::dumper(){
+	cout.setf(ios::fixed);
+}
 dumper::~dumper(){}
 
 void dumper::dump_gps(const char* mainVehicleId, SimOne_Data_Gps* pData)
 {
+	cout.setf(ios::fixed);
 	std::cout<<"------ mainVehicleId:"<< mainVehicleId << std::endl;
-	std::cout<<"------ frame:"<< pData->frame << std::endl;
+	std::cout<<"------ frame:"<< pData->frame << std::endl;	
 	std::cout << "posX/Y/Z: [" << pData->posX << ", " << pData->posY << ", " << pData->posZ << "]" << std::endl;
 	std::cout << "oriX/Y/Z: [" << pData->oriX << ", " << pData->oriY << ", " << pData->oriZ << "]" << std::endl;
 	std::cout << "velX/Y/Z: [" << pData->velX << ", " << pData->velY << ", " << pData->velZ << "]" << std::endl;
@@ -171,7 +175,7 @@ void dumper::dump_environment(SimOne_Data_Environment* pData)
 void dumper::dump_traffic_light(const char* mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight* pData)
 {
 	std::cout <<"------ mainVehicleId:"<< mainVehicleId << std::endl;
-	std::cout << "index: " << pData->index << std::endl;
+	std::cout << "index: " << pData->isMainVehicleNextTrafficLight << std::endl;
 	std::cout << "opendriveLightId: " << pData->opendriveLightId << std::endl;
 	std::cout << "countDown: " << pData->countDown << std::endl;
 	switch (pData->status)
