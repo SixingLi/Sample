@@ -174,12 +174,8 @@ void dumper::dump_environment(SimOne_Data_Environment* pData)
 
 void dumper::dump_traffic_light(const char* mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight* pData)
 {
-	std::cout <<"------ mainVehicleId:"<< mainVehicleId << std::endl;
-<<<<<<< HEAD
+	std::cout <<"------ mainVehicleId:"<< mainVehicle
 	std::cout << "index: " << pData->isMainVehicleNextTrafficLight << std::endl;
-=======
-	//std::cout << "index: " << pData->index << std::endl;
->>>>>>> master
 	std::cout << "opendriveLightId: " << pData->opendriveLightId << std::endl;
 	std::cout << "countDown: " << pData->countDown << std::endl;
 	switch (pData->status)
