@@ -18,9 +18,10 @@ file(GLOB_RECURSE srcs *.h *.hh *i *.hpp *.c *.cc *.cpp)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
 set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/lib)
-set(3RDPARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/../../../../3rdparty)
-
+set(SAMPLES_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 set(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/include")
+
+include_directories("${SAMPLES_DIR}/include")
 include_directories("${INCLUDE_DIR}")
 include_directories("${INCLUDE_DIR}/3rdparty")
 include_directories("${INCLUDE_DIR}/msg_gen")
@@ -69,13 +70,14 @@ elseif(CMAKE_BUILD_TYPE MATCHES "Release")
 	file(GLOB APILibFiles "${CMAKE_CURRENT_LIST_DIR}/../../Build/build_release/lib/*")
         file(GLOB SSDLibFiles "${3RDPARTY_DIR}/SSD/lib/linux/release/*")
 endif()
-	file(GLOB StreamingAPILibFiles "${3RDPARTY_DIR}/streaming/lib/*.so")
-	file(GLOB ffmpegLibFiles "${3RDPARTY_DIR}/artifactory/ffmpeg/lib/*")
 
-	file(COPY ${APILibFiles} DESTINATION ${LIB_DIR})
-        file(COPY ${SSDLibFiles} DESTINATION ${LIB_DIR})
-        file(COPY ${StreamingAPILibFiles} DESTINATION ${LIB_DIR})
-        file(COPY ${ffmpegLibFiles} DESTINATION ${LIB_DIR})
+file(GLOB StreamingAPILibFiles "${3RDPARTY_DIR}/streaming/lib/*.so")
+file(GLOB ffmpegLibFiles "${3RDPARTY_DIR}/artifactory/ffmpeg/lib/*")
+
+file(COPY ${APILibFiles} DESTINATION ${LIB_DIR})
+file(COPY ${SSDLibFiles} DESTINATION ${LIB_DIR})
+file(COPY ${StreamingAPILibFiles} DESTINATION ${LIB_DIR})
+file(COPY ${ffmpegLibFiles} DESTINATION ${LIB_DIR})
 
 # add_custom_command(TARGET trans_node_ros
 #     POST_BUILD

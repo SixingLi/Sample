@@ -4,6 +4,7 @@ include_directories(${SIMONE_API_ROOT}/src/cpp/APIService)
 include_directories(${SIMONE_API_ROOT}/src/cpp/Sensor)
 include_directories(${SIMONE_API_ROOT}/src/cpp/PNC)
 include_directories(${SIMONE_API_ROOT}/src/cpp/HDMap)
+
 include_directories(${SIMONE_PATH_ROOT}/3rdparty)
 include_directories(${SIMONE_PATH_ROOT}/3rdparty/SSD/include)
 include_directories(${SIMONE_PATH_ROOT}/3rdparty/hdmap/include)
@@ -19,7 +20,6 @@ ENDIF()
 IF (WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0501)
 ENDIF()
-
 
 add_definitions(-DNOMINMAX)
 add_definitions(-DUNICODE)
