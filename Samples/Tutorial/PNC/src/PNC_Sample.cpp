@@ -231,8 +231,8 @@ void pncapi_sample::get_sensor_laneInfo(const char *mainVehicleId, const char *s
   data_dmper.dump_sensor_laneInfo(mainVehicleId, sensorId, pLaneInfo);
 }
 
-// 消息发布
-void pncapi_sample::pub()
+// 主车控制 
+void pncapi_sample::mv_ctl()
 {
   /*
     * 注册主车GPS更新回调
@@ -337,7 +337,7 @@ int main(int argc, char* argv[])
 {
   pncapi_sample sp;
   sp.simone_ini();
-  sp.pub();
+  sp.mv_ctl();
 
   return 0;
 }

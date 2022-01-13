@@ -23,6 +23,7 @@ class tester
 
 		// Service API
 		void Test_GetVersion();
+		void Test_GetHdMapData();
 		// ------ void Test_SendRouteMessage(int length, void* pBuffer, int msgId, int toNodeId, ESimOne_Client_Type toNodeType);
 		// ------ void Test_ReceiveRouteMessageCB(void(*cb)(int fromId, ESimOne_Client_Type fromType, int length, const void* pBuffer, int commandId));
 		// ------ void Test_SetLogOut(ESimOne_LogLevel_Type level, const char *format, ...);
@@ -37,13 +38,11 @@ class tester
 		void Test_GetMainVehicleStatus(bool IsCallBackMode);
 		void Test_GetHDMapData();
 
-
 		// HDMap API
 		bool Test_HDMap_ALL(const std::vector<std::string> &apiNames);
 		// LoadHDMap: Test in Test_HDMap_ALL
 		// GetNearMostLane: Test in Test_HDMap_ALL
 		void Test_GetNearLanes();
-
 		// ------ bool GetNearLanesWithAngle(const SSD::SimPoint3D& pos, const double& distance, const double& headingAngle, const double& angleShift, SSD::SimStringVector& nearLanes);
 		// ------ bool GetDistanceToLaneBoundary(const SSD::SimPoint3D& pos, SSD::SimString& id, double& distToLeft, double& distToRight, double& distToLeft2D, double& distToRight2D);
 		// ------ bool GetLaneSample(const SSD::SimString &id, HDMapStandalone::MLaneInfo& info);
@@ -93,7 +92,6 @@ class tester
 		// ------ bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
 
 		// Sensor API
-		void Test_GetHdMapData();
 		// SimOneSensor
 		void Test_GetEnvironment();
 		void Test_GPS(bool IsCallBackMode);
@@ -101,7 +99,7 @@ class tester
 		void Test_RadarDetection(bool IsCallBackMode);
 		void Test_UltrasonicRadar();
 		void Test_UltrasonicRadars(bool IsCallBackMode);
-		void Test_SensorSensorDetections(bool IsCallBackMode);
+		void Test_GetSensorDetections(bool IsCallBackMode);
 		void Test_GetSensorConfigurations();
 		void Test_SetEnvironment();
 		// GetTrafficLight: Test in Test_HDMap_ALL

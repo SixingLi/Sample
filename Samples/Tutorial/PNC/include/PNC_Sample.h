@@ -33,7 +33,7 @@ public:
 	static void get_sensor_laneInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo);
 	static void set_scenario_event(const char *mainVehicleId, const char *event, const char *data);
 
-	void pub();
+	void mv_ctl();
 
 protected:
 	static SimOne_Data_Gps m_gps;

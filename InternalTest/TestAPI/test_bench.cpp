@@ -232,7 +232,7 @@ void tester::Test_RadarDetection(bool IsCallBackMode)
 	}
 }
 
-void tester::Test_SensorSensorDetections(bool IsCallBackMode)
+void tester::Test_GetSensorDetections(bool IsCallBackMode)
 {
 	if (IsCallBackMode)
 	{
