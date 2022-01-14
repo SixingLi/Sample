@@ -32,7 +32,7 @@ ENDIF()
 SetDefaultTargetProperties(SensorSample)
 
 IF (WIN32)
-        target_link_libraries(SensorSample  ${LIB_DIR}/SimOneAPI.lib ${LIB_DIR}/SSD.lib ${LIB_DIR}/HDMapModule.lib  ${LIB_DIR}/ProtobufModule.lib ${LIB_DIR}/ProtobufModule.lib ${LIB_DIR}/gtest.lib)
+        target_link_libraries(SensorSample  ${LIB_DIR}/SimOneAPI.lib ${LIB_DIR}/SSD.lib ${LIB_DIR}/HDMapModule.lib  ${LIB_DIR}/ProtobufModule.lib ${LIB_DIR}/ProtobufModule.lib)
        
         add_custom_command(TARGET SensorSample
         POST_BUILD
