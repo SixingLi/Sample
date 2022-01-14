@@ -285,8 +285,8 @@ void pncapi_sample::mv_ctl()
   Timer timer_pose_ctl, timer_drive_ctl, timer_drive_trajectory;
 
   // timer_pose_ctl.start(10, std::bind(&pncapi_sample::set_pose_ctl, this));
-  // timer_drive_ctl.start(100, std::bind(&pncapi_sample::set_drive_ctl, this));
-  timer_drive_trajectory.start(300, std::bind(&pncapi_sample::set_drive_trajectory, this));
+  timer_drive_ctl.start(100, std::bind(&pncapi_sample::set_drive_ctl, this));
+  // timer_drive_trajectory.start(300, std::bind(&pncapi_sample::set_drive_trajectory, this));
 
   while(true)
   {
