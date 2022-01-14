@@ -7,7 +7,7 @@ add_executable(PNCSample "")
 file(GLOB_RECURSE srcs *.h *.hh *i *.hpp *.c *.cc *.cpp *.py)
 file(GLOB_RECURSE headers *.h)
 
-target_sources(PNCSample PRIVATE "src/PNC_Sample.cpp" "src/dumper.cpp"${headers})
+target_sources(PNCSample PRIVATE "src/PNC_Sample.cpp" "src/dumper.cpp" ${headers})
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
