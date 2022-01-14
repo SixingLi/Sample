@@ -1,5 +1,25 @@
 #include "PNC_Sample.h"
 
+#ifdef _WIN32
+int gettimeofday(struct timeval *t, void *timezone)
+{
+  struct _timeb timebuffer;
+  _ftime(&timebuffer);
+  t->tv_sec = timebuffer.time;
+  t->tv_usec = 1000 * timebuffer.millitm;
+  return 0;
+}
+
+clock_t times(struct tms *__buffer)
+{
+  __buffer->tms_utime = clock();
+  __buffer->tms_stime = 0;
+  __buffer->tms_cstime = 0;
+  __buffer->tms_cutime = 0;
+  return __buffer->tms_utime;
+}
+#endif
+
 dumper pncapi_sample::data_dmper;
 
 SimOne_Data_Gps pncapi_sample::m_gps;
@@ -285,8 +305,8 @@ void pncapi_sample::mv_ctl()
   Timer timer_pose_ctl, timer_drive_ctl, timer_drive_trajectory;
 
   // timer_pose_ctl.start(10, std::bind(&pncapi_sample::set_pose_ctl, this));
-  // timer_drive_ctl.start(100, std::bind(&pncapi_sample::set_drive_ctl, this));
-  timer_drive_trajectory.start(300, std::bind(&pncapi_sample::set_drive_trajectory, this));
+  timer_drive_ctl.start(100, std::bind(&pncapi_sample::set_drive_ctl, this));
+  // timer_drive_trajectory.start(300, std::bind(&pncapi_sample::set_drive_trajectory, this));
 
   while(true)
   {
