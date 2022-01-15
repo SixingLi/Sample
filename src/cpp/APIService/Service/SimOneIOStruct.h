@@ -262,6 +262,22 @@ enum ESimone_Vehicle_EventInfo_Type
 	ESimone_Vehicle_EventInfo_Type_Accelerate_Decision = 13			// 	accelerate
 
 };
+#define SO_MAX_TRAFFIC_EVENT_NUM 256
+struct TrafficEvent_DetailInfo {
+	int hostVehicle;
+	double time;
+	char actualValue[SO_MAX_TRAFFIC_EVENT_NUM];
+	char expectOp[SO_MAX_TRAFFIC_EVENT_NUM];
+	char expectValue1[SO_MAX_TRAFFIC_EVENT_NUM];
+	char expectValue2[SO_MAX_TRAFFIC_EVENT_NUM];
+	char judgeId[SO_MAX_TRAFFIC_EVENT_NUM];
+	char judgeType[SO_MAX_TRAFFIC_EVENT_NUM];
+	char requireProperty[SO_MAX_TRAFFIC_EVENT_NUM];
+	char taskId[SO_MAX_TRAFFIC_EVENT_NUM];
+	char valueType[SO_MAX_TRAFFIC_EVENT_NUM];
+	char version[SO_MAX_TRAFFIC_EVENT_NUM];
+};
+
 
 struct SimOne_Data_Vehicle_EventInfo : public SimOne_Data
 {
