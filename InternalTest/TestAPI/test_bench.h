@@ -88,12 +88,13 @@ class tester
 		// ------ bool GetControlMode(const char* mainVehicleId, SimOne_Data_Control_Mode* pControlMode);
 		// ------ bool GetDriverControl(const char* mainVehicleId, SimOne_Data_Control* pControl);
 		// ------ bool GetWayPoints(const char* mainVehicleId, SimOne_Data_WayPoints* pWayPoints);
-		// ------ bool SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data));
+		// ------ bool SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content));
 		// ------ bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
 
 		// Sensor API
 		// SimOneSensor
 		void Test_GetEnvironment();
+		void Test_GetMessage();
 		void Test_GPS(bool IsCallBackMode);
 		void Test_GetGroundTruth(bool IsCallBackMode);
 		void Test_RadarDetection(bool IsCallBackMode);

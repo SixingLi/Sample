@@ -1115,8 +1115,13 @@ bool SimOneAPIService::onFromBridgeScenarioEvent(Message& msg)
 			auto& triggerEvt = evt.triggerevent();
 			if (mpScenarioEventCB != nullptr)
 			{
-				mpScenarioEventCB(mMainVehicleId, triggerEvt.event().c_str(), triggerEvt.data().c_str());
-				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "trigger event:%s trigger data:%s", triggerEvt.event().c_str(), triggerEvt.data().c_str());
+				std::string targetId = "0";
+				if (triggerEvt.target_size() != 0)
+				{
+					targetId = triggerEvt.target(0).c_str();
+				}
+				mpScenarioEventCB(triggerEvt.source().c_str(), targetId.c_str(), triggerEvt.data().c_str(), triggerEvt.event().c_str());
+				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "trigger type:%s, trigger content:%s", triggerEvt.data().c_str(), triggerEvt.event().c_str());
 			}
 		}
 	}
@@ -1269,11 +1274,12 @@ void SimOneAPIService::setWayPointsInfo(std::uint16_t type, const std::string* m
 	mWayPointsMap[vehicleId] = *pConf;
 }
 
-bool SimOneAPIService::SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data))
+bool SimOneAPIService::SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content))
 {
 	mpScenarioEventCB = cb;
 	return true;
 }
+
 bool SimOneAPIService::SetTrafficEventCB(void(*cb)(const char* mainVehicleId, TrafficEvent_DetailInfo *trafficEventDetailInfo))
 {
 	mpTrafficEventCB = cb;
