@@ -1946,7 +1946,6 @@ bool SimOneAPIService::onFromHotAreaDataMessage(Message& msg) {
 	case Bridge::EHotAreaTrafficLightData:
 		ret = onFromHotAreaTrafficLightData(header, &(hotAreaMessage.buffer()));
 		break;
-		break;
 	default:
 		break;
 	}
