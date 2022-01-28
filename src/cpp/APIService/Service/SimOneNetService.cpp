@@ -1218,7 +1218,10 @@ bool SimOneAPIService::onMainVehicleControlMode(int mainVehicleId, proto::sensor
 
 	std::unique_lock<std::recursive_mutex> lock(mLastControlModeLock);
 	SimOne_Data_Control_Mode modeData;
-	if (mode.controlmode() == cybertron::proto::sensor::EControl_Auto) {
+	if (mode.controlmode() == cybertron::proto::sensor::EControl_UnInit) {
+		modeData.controlMode = ESimOne_Control_Mode_Unknown;
+	}
+	else if (mode.controlmode() == cybertron::proto::sensor::EControl_Auto) {
 		modeData.controlMode = ESimOne_Control_Mode_Auto;
 	}
 	else if (mode.controlmode() == cybertron::proto::sensor::EControl_Manual) {
