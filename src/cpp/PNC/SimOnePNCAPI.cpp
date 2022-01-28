@@ -81,10 +81,11 @@ extern "C"
 		return SimOneAPIService::GetInstance()->GetWayPoints(mainVehId, pWayPoints);
 	}
 
-	SIMONE_API bool SimOneAPI::SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data))
+	SIMONE_API bool SimOneAPI::SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content))
 	{
 		return SimOneAPIService::GetInstance()->SetScenarioEventCB(cb);
 	}
+
 	SIMONE_API bool SimOneAPI::SetTrafficEventCB(void(*cb)(const char* mainVehicleId,const char* data))
 	{
 		return SimOneAPIService::GetInstance()->SetTrafficEventCB(cb);

@@ -243,13 +243,15 @@ extern "C"
 		@param[in]
 		*	cb: scenario event callback function
 		*	param[out]
-		*	mainVehicleId: Id of the main vehicle
-		*	event: Command sent to the mainVehicle
-		*	data: not in use
+		*	source: ID of vehicle send message
+		*	target: Id of vehicle get message
+		*	type: the type of message, such as "Command" or "Event" 
+		*	content: the content of message
+
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data));
+		SIMONE_API bool SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content));
 		SIMONE_API bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
 
 	}

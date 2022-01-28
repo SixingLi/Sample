@@ -208,7 +208,7 @@ public:
 
 	bool SetSensorDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
 	bool SetUltrasonicRadarsCB(void(*cb)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
-    bool SetScenarioEventCB(void(*cb)(const char* mainVehicleId, const char* event, const char* data));
+	bool SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content));
 	bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
 
 #ifndef WITHOUT_HDMAP
@@ -292,7 +292,7 @@ private:
 	void(*mpFrameStart)(int frame);
 	//
 	void(*mpFrameEnd)(int frame);
-	void(*mpScenarioEventCB)(const char* mainVehicleId, const char* event, const char* data);
+	void(*mpScenarioEventCB)(const char* source, const char* target, const char* type, const char* content);
 	void(*mpTrafficEventCB)(const char* mainVehicleId, const char* data);
 	bool mbCaseStartEventAlreadyCallback;
 	bool mbCaseStopEventAlreadyCallback;

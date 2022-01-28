@@ -121,6 +121,16 @@ void tester::Test_GetSensorConfigurations()
 	}
 }
 
+
+void tester::Test_GetMessage()
+{
+	auto function = [](const char* source, const char* target, const char* type, const char* content) {
+		std::cout << "source:" << std::string(source) << ", target:" << std::string(target) << ", type:" << std::string(type) << ", content:" << std::string(content) << std::endl;
+	};
+	SimOneAPI::SetScenarioEventCB(function);
+}
+
+
 void tester::Test_GetVersion()
 {
 	std::cout << "Version:" << SimOneAPI::GetVersion() << std::endl;;
