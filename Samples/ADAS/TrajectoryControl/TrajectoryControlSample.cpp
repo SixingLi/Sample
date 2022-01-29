@@ -261,7 +261,7 @@ int main()
     for (int j = 0; j < nnn; j++) {
         state[j] = (ESimOne_Data_Vehicle_State)j;
     }
-    SimOneAPI::RegisterVehicleState(state, nnn);
+    SimOneAPI::RegisterVehicleState(MainVehicleId, state, nnn);
 
     int nextTraj = 0;
     bool reachTraj = false;

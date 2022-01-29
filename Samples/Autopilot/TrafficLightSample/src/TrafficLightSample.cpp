@@ -234,7 +234,7 @@ int main()
 	SSD::SimPoint3D endPt;
 	inputPoints.push_back(MainVehiclePos);
 
-	if (SimOneAPI::GetWayPoints(&WayPoints))
+	if (SimOneAPI::GetWayPoints(MainVehicleId, &WayPoints))
 	{
 		int waySize = WayPoints.wayPointsSize;
 		endPt.x = WayPoints.wayPoints[waySize - 1].posX;
