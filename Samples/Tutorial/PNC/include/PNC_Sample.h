@@ -31,7 +31,7 @@ public:
 	static void get_gps(const char* mainVehicleId, SimOne_Data_Gps *pGps);
   	static void get_sensor_detection(const char *mainVehicleId, const char *sensorId, SimOne_Data_SensorDetections *pGroundtruth);
 	static void get_sensor_laneInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo);
-	static void set_scenario_event(const char *mainVehicleId, const char *event, const char *data);
+	static void set_scenario_event(const char* source, const char* target, const char* type, const char* content);
 
 	void mv_ctl();
 

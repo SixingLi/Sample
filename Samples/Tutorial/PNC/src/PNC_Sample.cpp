@@ -202,9 +202,9 @@ void pncapi_sample::set_drive_trajectory()
 }
 
 // 接的场景事件消息的回调
-void pncapi_sample::set_scenario_event(const char *mainVehicleId, const char *event, const char *data)
+void pncapi_sample::set_scenario_event(const char* source, const char* target, const char* type, const char* content)
 {
-  std::string event_info(event);
+  std::string event_info(content);
   std::string car_flw_prefix("CarFollowing");
   if (!event_info.compare(0, car_flw_prefix.length(), car_flw_prefix))
   {
@@ -266,7 +266,7 @@ void pncapi_sample::mv_ctl()
 		*   cb: Groundtruth data fetch callback function
 		* return: Success or not
 		*/
-  if (!SimOneAPI::SetSensorDetectionsUpdateCB(get_sensor_detection));
+  if (!SimOneAPI::SetSensorDetectionsUpdateCB(get_sensor_detection))
   {
     std::cout << "SimOneAPI::SetSensorDetectionsUpdateCB Failed!" << std::endl;
   }

@@ -218,7 +218,7 @@ int main(int argc, char* argv[])
 
 
 	/* 5. Get terminal point */
-	while (!SimOneAPI::GetWayPoints(wayPointsPtr.get()))
+	while (!SimOneAPI::GetWayPoints(MainVehicleId, wayPointsPtr.get()))
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}

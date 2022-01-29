@@ -114,7 +114,7 @@ void sensorapi_sample::Test_RadarDetection(bool IsCallBackMode)
 			{
 				std::cout << "GetRadarDetections Failed!" << std::endl;
 			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(30));
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
 	}
 }
