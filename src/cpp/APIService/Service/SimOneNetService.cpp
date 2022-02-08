@@ -1162,11 +1162,14 @@ bool SimOneAPIService::onMainVehicleControlMode(int mainVehicleId, proto::sensor
 	if (mode.controlmode() == cybertron::proto::sensor::EControl_UnInit) {
 		modeData.controlMode = ESimOne_Control_Mode_Unknown;
 	}
-	else if (mode.controlmode() == cybertron::proto::sensor::EControl_Auto) {
-		modeData.controlMode = ESimOne_Control_Mode_Auto;
-	}
 	else if (mode.controlmode() == cybertron::proto::sensor::EControl_Manual) {
 		modeData.controlMode = ESimOne_Control_Mode_Manual;
+	}
+	else if (mode.controlmode() == cybertron::proto::sensor::EControl_API) {
+		modeData.controlMode = ESimOne_Control_Mode_API;
+	}
+	else if (mode.controlmode() == cybertron::proto::sensor::EControl_Auto) {
+		modeData.controlMode = ESimOne_Control_Mode_Auto;
 	}
 	mLastControlModeMap[mainVehicleId] = modeData;
 

@@ -1010,8 +1010,9 @@ struct SimOne_Data_Driver_Status : public SimOne_Data
 enum SimOne_Control_Mode
 {
 	ESimOne_Control_Mode_Unknown = 0,
-	ESimOne_Control_Mode_Auto = 1,
-	ESimOne_Control_Mode_Manual = 2
+	ESimOne_Control_Mode_Manual = 1,
+	ESimOne_Control_Mode_API = 2,
+	ESimOne_Control_Mode_Auto = 3
 };
 
 struct SimOne_Data_Control_Mode : public SimOne_Data
