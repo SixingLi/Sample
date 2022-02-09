@@ -654,7 +654,7 @@ void SimOneAPIService::run() {
 		{
 			if (mbStarted) {
 				Message msg;
-				int b = mpClientSync->receiveEnhance(msg, 5000);
+				int b = mpClientSync->receiveEnhanceEx(msg, 5000);
 				if (b == -1) {
 					bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "Close Recv Connecting");
 					break;
