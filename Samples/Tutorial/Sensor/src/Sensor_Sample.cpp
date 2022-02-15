@@ -252,13 +252,16 @@ void sensorapi_sample::Test_SensorLaneInfo(bool IsCallBackMode)
 
 int main(int argc, char* argv[])
 {
-	const char* mv_id = "0";
-  sensorapi_sample st(mv_id);
+	const char *mv_id = "0";
+	sensorapi_sample st(mv_id);
 
 	bool isJoinTimeLoop = false;
-	const char* serverIP = "10.66.9.194";
+	const char *serverIP = "127.0.0.1";
 	st.InitSimOneAPI(isJoinTimeLoop, serverIP);
 	st.Test_GetSensorDetections(true);
-
-  return 0;
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+	return 0;
 }
