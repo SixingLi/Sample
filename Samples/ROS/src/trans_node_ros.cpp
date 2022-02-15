@@ -536,9 +536,6 @@ void ros_trans_node::run()
 	std::thread rcv_thread = std::thread(std::bind(&ros_trans_node::run_rcv, this));
 	pub_thread.detach();
 	rcv_thread.detach();
-
-  // log_img.open("debug_img.txt", std::ios::trunc);
-  SimOneAPI::SetStreamingImageUpdateCB("10.66.9.244", 13956, pub_image_cb);
 }
 
 void ros_trans_node::config_ini()
