@@ -140,6 +140,8 @@ IF (WIN32)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/bin/release/${CMAKE_BUILD_NAME}.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/${CMAKE_BUILD_NAME}.dll
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/lib/release/${CMAKE_BUILD_NAME}.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/${CMAKE_BUILD_NAME}.lib
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/bin/release/${CMAKE_BUILD_NAME}.dll ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/${CMAKE_BUILD_NAME}.dll
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/bin/release/${CMAKE_BUILD_NAME}.dll ${SIMONE_API_ROOT}/${MatlabHDMapDir}/${CMAKE_BUILD_NAME}.dll
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/bin/release/${CMAKE_BUILD_NAME}.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/${CMAKE_BUILD_NAME}.dll
 		)
 	ENDIF()
 

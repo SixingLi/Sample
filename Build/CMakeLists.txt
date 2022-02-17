@@ -4,6 +4,8 @@ project(SimOneAPI VERSION 3.0.0 LANGUAGES C CXX)
 
 set(OutPutDir "InternalTest")
 set(OutPutDirSDK "Samples")
+set(MatlabSimOneDir "Samples/Matlab/sfunction_R2018a/SimOneModule/bin")
+set(MatlabHDMapDir "Samples/Matlab/sfunction_R2018a/HDMapModule/bin")
 
 IF (UNIX)
 	set(CMAKE_C_COMPILER "/usr/bin/clang")
@@ -218,6 +220,20 @@ IF (WIN32)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOnePNCAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/SimOnePNCAPI.py
 		)
 	ENDIF()
+    
+	add_custom_command(TARGET autoconfig
+			POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/hdmap/lib/win64/release/HDMapModule.dll ${SIMONE_API_ROOT}/${MatlabHDMapDir}/HDMapModule.dll
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/SSD/lib/win64/release/SSD.dll ${SIMONE_API_ROOT}/${MatlabHDMapDir}/SSD.dll
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/hdmap/lib/win64/release/HDMapModule.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/HDMapModule.dll
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/SSD/lib/win64/release/SSD.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/SSD.dll
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/streaming/lib/SimOneStreamingAPI.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/SimOneStreamingAPI.dll
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/avcodec-58.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/avcodec-58.dll
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/avformat-58.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/avformat-58.dll
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/avutil-56.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/avutil-56.dll
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/swresample-3.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/swresample-3.dll
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/swscale-5.dll ${SIMONE_API_ROOT}/${MatlabSimOneDir}/swscale-5.dll
+		)
 ELSEIF (UNIX)
 
 	SET(FOUNDATION_DBG_LIB_PATH ${SIMONE_PATH_FOUNDATION}/Build/build/lib/Debug)
