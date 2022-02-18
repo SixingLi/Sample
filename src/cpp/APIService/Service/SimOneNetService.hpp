@@ -164,6 +164,7 @@ protected:
 	bool onFromBridgeDataRouteMessage(Message& msg);
 	bool onFromBridgeScenarioEvent(Message& msg);
 	bool onFromBridgeTrafficEvent(Message& msg);
+	bool onEndTaskReasonFromNodeTime(Message& msg);
 
 	bool onMainVehicleDriverStatus(int MainVehicleId, proto::sensor::DataDriverStatus status);
 	bool onMainVehicleDriverControl(int MainVehicleId, proto::sensor::DataVehicleControlState status);
@@ -209,7 +210,7 @@ public:
 	bool SetSensorDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
 	bool SetUltrasonicRadarsCB(void(*cb)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
 	bool SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content));
-	bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
+	bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, TrafficEvent_DetailInfo *trafficEventDetailInfo));
 
 #ifndef WITHOUT_HDMAP
 	static bool LoadHDMap(const int& timeOutSeconds);
@@ -293,7 +294,7 @@ private:
 	//
 	void(*mpFrameEnd)(int frame);
 	void(*mpScenarioEventCB)(const char* source, const char* target, const char* type, const char* content);
-	void(*mpTrafficEventCB)(const char* mainVehicleId, const char* data);
+	void(*mpTrafficEventCB)(const char* mainVehicleId,TrafficEvent_DetailInfo *trafficEventDetailInfo);
 	bool mbCaseStartEventAlreadyCallback;
 	bool mbCaseStopEventAlreadyCallback;
 private:

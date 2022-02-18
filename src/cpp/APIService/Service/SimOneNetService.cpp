@@ -574,6 +574,9 @@ void SimOneAPIService::onServerMessage(Message& msg) {
 	case Bridge::EBridgeTrafficEvent:
 		ret = onFromBridgeTrafficEvent(msg);
 		break;
+	case Bridge::EEndTaskReasonFromNodeTime:
+		ret = onEndTaskReasonFromNodeTime(msg);
+		break;
 #endif
 	default:
 		// ignore
@@ -1128,14 +1131,71 @@ bool SimOneAPIService::onFromBridgeScenarioEvent(Message& msg)
 bool SimOneAPIService::onFromBridgeTrafficEvent(Message& msg)
 {
 	Bridge::BridgeTrafficEvent trafficEvent;
-	if (!msg.toProtobuf(trafficEvent)){
+	if (!msg.toProtobuf(trafficEvent)) {
 		return false;
 	}
 	cybertron::proto::traffic::TrafficEvent evt;
-	if (evt.ParseFromString(trafficEvent.buffer())){
-			if (mpTrafficEventCB != nullptr){
-				mpTrafficEventCB(std::to_string(evt.vehicleid()).c_str(), evt.data().c_str());
+	if (evt.ParseFromString(trafficEvent.buffer())) {
+		if (mpTrafficEventCB != nullptr) {
+			TrafficEvent_DetailInfo trafficEventDetailInfo;
+			memset(&trafficEventDetailInfo, 0, sizeof(trafficEventDetailInfo));
+			cybertron::json trafficEvent;
+			//cybertron::json trafficEventDetailJson;
+			if (!JsonReader::loadString(trafficEvent, evt.data().c_str())) {
+				logInfo("Load traffic event config json failed");
+				return false;
 			}
+			trafficEventDetailInfo.hostVehicle = evt.vehicleid();
+			auto trafficEventDetailJson = JsonReader::getChild(trafficEvent, "detail_for_api");
+			std::string  actualValue = cybertron::JsonReader::getString(trafficEventDetailJson, "actual_value");
+			std::string  expectOp = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_op");
+			std::string  expectValue1 = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_value1");
+			std::string  expectValue2 = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_value2");
+			std::string  judgeId = cybertron::JsonReader::getString(trafficEventDetailJson, "judge_id");
+			std::string  judgeType = cybertron::JsonReader::getString(trafficEventDetailJson, "judge_type");
+			std::string  requireProperty = cybertron::JsonReader::getString(trafficEventDetailJson, "require_property");
+			std::string  taskId = cybertron::JsonReader::getString(trafficEventDetailJson, "task_id");
+			std::string  valueType = cybertron::JsonReader::getString(trafficEventDetailJson, "value_type");
+			std::string  version = cybertron::JsonReader::getString(trafficEventDetailJson, "version");
+
+			trafficEventDetailInfo.time = cybertron::JsonReader::getDouble(trafficEventDetailJson, "time");
+			memcpy(trafficEventDetailInfo.actualValue, actualValue.c_str(), actualValue.size());
+			memcpy(trafficEventDetailInfo.expectOp, expectOp.c_str(), expectOp.size());
+			memcpy(trafficEventDetailInfo.expectValue1, expectValue1.c_str(), expectValue1.size());
+			memcpy(trafficEventDetailInfo.expectValue2, expectValue2.c_str(), expectValue2.size());
+			memcpy(trafficEventDetailInfo.judgeId, judgeId.c_str(), judgeId.size());
+			memcpy(trafficEventDetailInfo.judgeType, judgeType.c_str(), judgeType.size());
+			memcpy(trafficEventDetailInfo.requireProperty, requireProperty.c_str(), requireProperty.size());
+			memcpy(trafficEventDetailInfo.taskId, taskId.c_str(), taskId.size());
+			memcpy(trafficEventDetailInfo.valueType, valueType.c_str(), valueType.size());
+			memcpy(trafficEventDetailInfo.version, version.c_str(), version.size());
+			mpTrafficEventCB(std::to_string(trafficEventDetailInfo.hostVehicle).c_str(), &trafficEventDetailInfo);
+		}
+	}
+	return true;
+}
+
+bool SimOneAPIService::onEndTaskReasonFromNodeTime(Message& msg) {
+	Bridge::EndTaskReasonFromNodeTime data;
+	if (!msg.toProtobuf(data)) {
+		return false;
+	}
+	std::string endTaskReason;
+	if (data.endtaskreason() == 2) {
+		endTaskReason = "collision";
+	}
+	else if (data.endtaskreason() == 6) {
+		endTaskReason = "timeout";
+	}
+	if (mpTrafficEventCB != nullptr) {
+		TrafficEvent_DetailInfo trafficEventDetailInfo;
+		memset(&trafficEventDetailInfo, 0, sizeof(trafficEventDetailInfo));
+		trafficEventDetailInfo.hostVehicle = data.hostvehicleid();
+		trafficEventDetailInfo.time = data.time();
+		memcpy(trafficEventDetailInfo.taskId, data.taskid().c_str(), data.taskid().size());
+		memcpy(trafficEventDetailInfo.judgeType, endTaskReason.c_str(), endTaskReason.size());
+		memcpy(trafficEventDetailInfo.requireProperty, endTaskReason.c_str(), endTaskReason.size());
+		mpTrafficEventCB(std::to_string(trafficEventDetailInfo.hostVehicle).c_str(),&trafficEventDetailInfo);
 	}
 	return true;
 }
@@ -1226,7 +1286,8 @@ bool SimOneAPIService::SetScenarioEventCB(void(*cb)(const char* source, const ch
 	mpScenarioEventCB = cb;
 	return true;
 }
-bool SimOneAPIService::SetTrafficEventCB(void(*cb)(const char* mainVehicleId,const char* data))
+
+bool SimOneAPIService::SetTrafficEventCB(void(*cb)(const char* mainVehicleId, TrafficEvent_DetailInfo *trafficEventDetailInfo))
 {
 	mpTrafficEventCB = cb;
 	return true;
@@ -1957,7 +2018,6 @@ bool SimOneAPIService::onFromHotAreaDataMessage(Message& msg) {
 		break;
 	case Bridge::EHotAreaTrafficLightData:
 		ret = onFromHotAreaTrafficLightData(header, &(hotAreaMessage.buffer()));
-		break;
 		break;
 	default:
 		break;
