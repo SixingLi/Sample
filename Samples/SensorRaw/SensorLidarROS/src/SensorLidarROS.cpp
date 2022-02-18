@@ -55,11 +55,11 @@ int main(int argc, char* argv[])
 	ros::init(ros_argc,nullptr,"SimOne");
     	ros::NodeHandle nh;
 	ros::Publisher point_pub = nh.advertise<sensor_msgs::PointCloud2> (gTopic, 10);
-	ros::Rate loop_rate(1000);
+	ros::Rate loop_rate(20);
 
-	static std::string sNames[] = {"x", "y", "z", "intensity", "ring"};
-	static int sOffsets[] = {0, 4, 8, 12, 14};
-	static int sDatatypes[] = {7, 7, 7, 2, 2};
+  static std::string sNames[] = {"x", "y", "z", "intensity"};
+  static int sOffsets[] = {0, 4, 8, 12};
+  static int sDatatypes[] = {7, 7, 7, 7};
 
 
 	int lastFrame = 0;
@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 				pointCloud_msg.height = gDataPointCloud.height;
 				pointCloud_msg.width = gDataPointCloud.width;
 
-				for (int i = 0; i < 5; i++)
+				for (int i = 0; i < 4; i++)
 				{
 					pcl::PCLPointField field;
 					field.name = sNames[i].c_str();

@@ -171,8 +171,8 @@ if __name__ == '__main__':
 		# 	print("pHdmapData.openDrive:{0},pHdmapData.openDriveUrl:{1}".format(pHdmapData.openDrive,pHdmapData.openDriveUrl))
 
 		# ImageData = SimOne_Data_Image()
-		# Ip = "10.66.9.244"
-		# Port = 13944
+		# Ip = "127.0.0.1"
+		# Port = 13956
 		# if SoGetStreamingImage(Ip, Port, ImageData):
 		# 	print("ImageData.width:{0},ImageData.height:{1}, ImageData.format:{2}, ImageData.imagedataSize:{3}".format(ImageData.width, ImageData.height, ImageData.format, ImageData.imagedataSize))
 

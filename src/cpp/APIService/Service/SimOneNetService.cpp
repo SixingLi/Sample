@@ -1122,6 +1122,7 @@ bool SimOneAPIService::onFromBridgeScenarioEvent(Message& msg)
 				}
 				mpScenarioEventCB(triggerEvt.source().c_str(), targetId.c_str(), triggerEvt.data().c_str(), triggerEvt.event().c_str());
 				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "trigger type:%s, trigger content:%s", triggerEvt.data().c_str(), triggerEvt.event().c_str());
+
 			}
 		}
 	}

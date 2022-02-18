@@ -14,10 +14,10 @@ extern "C"
 #endif
 #define MAX_DRIVER_NAME_LEN 10
 	SIMONE_API bool SimOneAPI::GetV2XInfo(const char* mainVehicleId, const char* sensorId, int infoType, SimOne_Data_V2XNFS *pDetections) {
-		//cout << "mainVehicleId:"<< mainVehicleId<<",sensorId:"<< sensorId<<",infoType:"<< infoType << endl;
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
 		ETaskCommandId commandId = (ETaskCommandId)(ETaskCommandId_V2XNFSRawBSM + infoType - 1);
 		int sensorType = Bridge::ESensorType_V2XNFS;
-		string temp = mainVehicleId;
+		string temp = std::to_string(mainVehId);
 		string key = temp.append("_").append(sensorId).append("_").append(std::to_string(infoType));
 		return SimOneAPIService::GetInstance()->GetTaskData(key, sensorType, (int)commandId, (void *)pDetections);
 	}

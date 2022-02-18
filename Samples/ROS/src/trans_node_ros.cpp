@@ -407,8 +407,10 @@ void ros_trans_node::run_pub()
 
   if (!SimOneAPI::SetGpsUpdateCB(pub_gps_cb)){printf("\033[1m\033[31m[run_pub]: SetSimOneGpsCB Failed!\033[0m\n");}
   if (!SimOneAPI::SetGroundTruthUpdateCB(pub_ground_truth_cb)){printf("\033[1m\033[31m[run_pub]: SetSimOneGroundTruthCB Failed!\033[0m\n");}
-  if (!SimOneAPI::SetStreamingImageUpdateCB(img_ip.c_str(), img_port, pub_image_cb)){printf("\033[1m\033[31m[run_pub]: SetImageUpdateCB Failed!\033[0m\n");}
-  if (!SimOneAPI::SetStreamingPointCloudUpdateCB(pcd_ip.c_str(), pcd_port, pcd_port_info, pub_point_cloud_cb)){printf("\033[1m\033[31m[run_pub]: SetPointCloudUpdateCB Failed!\033[0m\n");}
+  if(enable_physical_sensor) {
+    if (!SimOneAPI::SetStreamingImageUpdateCB(img_ip.c_str(), img_port, pub_image_cb)){printf("\033[1m\033[31m[run_pub]: SetImageUpdateCB Failed!\033[0m\n");}
+    if (!SimOneAPI::SetStreamingPointCloudUpdateCB(pcd_ip.c_str(), pcd_port, pcd_port_info, pub_point_cloud_cb)){printf("\033[1m\033[31m[run_pub]: SetPointCloudUpdateCB Failed!\033[0m\n");}
+  }
   if (!SimOneAPI::SetRadarDetectionsUpdateCB(pub_radar_detections_cb)){printf("\033[1m\033[31m[run_pub]: SetRadarDetectionsUpdateCB Failed!\033[0m\n");}
   if (!SimOneAPI::SetSensorDetectionsUpdateCB(pub_sensor_detections_cb)){printf("\033[1m\033[31m[run_pub]: SetSensorDetectionsUpdateCB Failed!\033[0m\n");}
   if (!SimOneAPI::SetSensorLaneInfoCB(pub_sensor_laneInfo_cb)){printf("\033[1m\033[31m[run_pub]: SetSensorLaneInfoCB Failed!\033[0m\n");}
@@ -536,9 +538,6 @@ void ros_trans_node::run()
 	std::thread rcv_thread = std::thread(std::bind(&ros_trans_node::run_rcv, this));
 	pub_thread.detach();
 	rcv_thread.detach();
-
-  // log_img.open("debug_img.txt", std::ios::trunc);
-  SimOneAPI::SetStreamingImageUpdateCB("10.66.9.244", 13956, pub_image_cb);
 }
 
 void ros_trans_node::config_ini()
@@ -549,6 +548,7 @@ void ros_trans_node::config_ini()
 
   vehicle_id = config.ReadString("HostVehicle", "Vehicle_ID", "0");
 
+  enable_physical_sensor = config.ReadInt("Sensor", "ENABLED", 0) > 0;
 	img_ip = config.ReadString("Sensor", "IMG_IP", "127.0.0.1");
   img_port= config.ReadInt("Sensor", "IMG_PORT", 0);
 
@@ -641,7 +641,7 @@ void ros_trans_node::simone_ini()
   // ------------ RegisterSimOneVehicleState End ------------
 }
 
-int ros_trans_node::init()
+void ros_trans_node::init()
 {
 	config_ini();
 	simone_ini();

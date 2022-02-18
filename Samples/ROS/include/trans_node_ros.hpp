@@ -126,7 +126,7 @@ public:
 
   void config_ini();
   void simone_ini();
-  int init();
+  void init();
 
   void monitor_case_status();
 
@@ -172,6 +172,7 @@ private:
   std::string vehicle_id;
   SimOne_Data_CaseInfo caseInfo;
 
+  bool enable_physical_sensor;
   std::string img_ip;
   unsigned short img_port;
 

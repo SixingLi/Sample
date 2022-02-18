@@ -17,7 +17,7 @@ file(GLOB_RECURSE srcs *.h *.hh *i *.hpp *.c *.cc *.cpp)
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${srcs})
 
-set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/lib)
+set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/../lib/Linux64)
 set(SAMPLES_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 set(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/include")
 
