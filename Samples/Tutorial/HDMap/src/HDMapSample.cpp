@@ -140,8 +140,8 @@ void SamplesGenerateRoute()
 int main(int argc, char* argv[])
 {
 	bool isJoinTimeLoop = false;
-	//const char* MainVehicleId = "0";
-	SimOneAPI::InitSimOneAPI();
+	const char* MainVehicleId = "0";
+	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop, "127.0.0.1");
 	//SimOneAPI::StartSimOneNode(0,0,0);
 	//while (true)
 	//{
