@@ -252,6 +252,22 @@ extern "C"
 		*	Success or not
 		*/
 		SIMONE_API bool SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content));
+		
+		/*!
+		场景判定事件回调
+		\li function:
+		*	SetTrafficEventCB
+		\li brief:
+		*	Register the callback func applying for scenario judge event
+		@param[in]
+		*	cb: scenario judge event callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	trafficEventDetailInfo: detail info for scenario judge event.
+
+		@return
+		*	Success or not
+		*/
 		SIMONE_API bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, TrafficEvent_DetailInfo *trafficEventDetailInfo));
 
 	}
