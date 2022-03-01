@@ -131,6 +131,7 @@ public:
 
 	bool sendVehicleEventInfoReq(int mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent);
 	bool sendVehicleControlReq(int mainVehicleId, SimOne_Data_Control *pControl, const char* driverName);
+	bool sendVehicleDriveModeReq(int mainVehicleId, SimOne_Data_Drive_Mode *pDriveMode);
 	bool sendVehicleControlPosReq(int mainVehicleId, SimOne_Data_Pose_Control *pPose);
     bool sendVehicleTrajectoryControlReq(int mainVehicleId, SimOne_Data_Control_Trajectory *pControlTraj, const char* driverName);
 	bool sendVehicleTrajectory(int mainVehicleId, SimOne_Data_Trajectory *pTrajectory, const char* driverName);

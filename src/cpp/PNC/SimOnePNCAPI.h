@@ -115,6 +115,21 @@ extern "C"
 		SIMONE_API bool SetDrive(const char* mainVehicleId, SimOne_Data_Control *pControl);
 
 		/*!
+		主车控制模式
+		\li function:
+		*	SetDriveMode
+		\li brief:
+		*	Set vehicle drive control mode
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	pDriveMode: vehicle drive control mode
+		@return
+		*	Success or not
+		*/
+		SIMONE_API bool SetDriveMode(const char* mainVehicleId, SimOne_Data_Drive_Mode *pDriveMode);
+
+		/*!
 		主车控制
 		\li function:
 		*	SetDrive by planning trajectory. Not to use with SetDrive at the same time
