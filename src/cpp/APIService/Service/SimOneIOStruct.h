@@ -493,7 +493,7 @@ enum ESimOne_Obstacle_Type
 	ESimOne_Obstacle_Type_Rider = 17,
 	ESimOne_Obstacle_Type_Truck = 18,
 	ESimOne_Obstacle_Type_Bus = 19,
-	ESimOne_Obstacle_Type_Train = 20,
+	ESimOne_Obstacle_Type_SpecialVehicle = 20,
 	ESimOne_Obstacle_Type_Motorcycle = 21,
 	ESimOne_Obstacle_Type_Dynamic = 22,
 	ESimOne_Obstacle_Type_GuardRail = 23,

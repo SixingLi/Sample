@@ -166,8 +166,8 @@ void dumper::dump_sensor_detections(const char* mainVehicleId, const char* senso
 		case ESimOne_Obstacle_Type_Bus:
 			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Bus" << std::endl;
 			break;
-		case ESimOne_Obstacle_Type_Train:
-			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Train" << std::endl;
+		case ESimOne_Obstacle_Type_SpecialVehicle:
+			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_SpecialVehicle" << std::endl;
 			break;
 		case ESimOne_Obstacle_Type_Dynamic:
 			std::cout << "obstacles[" << i << "].type: ESimOne_Obstacle_Type_Dynamic" << std::endl;

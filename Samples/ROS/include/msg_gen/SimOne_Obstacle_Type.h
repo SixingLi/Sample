@@ -78,8 +78,8 @@ struct SimOne_Obstacle_Type_
 #if defined(_WIN32) && defined(ESimOne_Obstacle_Type_Bus)
   #undef ESimOne_Obstacle_Type_Bus
 #endif
-#if defined(_WIN32) && defined(ESimOne_Obstacle_Type_Train)
-  #undef ESimOne_Obstacle_Type_Train
+#if defined(_WIN32) && defined(ESimOne_Obstacle_Type_SpecialVehicle)
+  #undef ESimOne_Obstacle_Type_SpecialVehicle
 #endif
 #if defined(_WIN32) && defined(ESimOne_Obstacle_Type_Motorcycle)
   #undef ESimOne_Obstacle_Type_Motorcycle
@@ -114,7 +114,7 @@ struct SimOne_Obstacle_Type_
     ESimOne_Obstacle_Type_Rider = 17u,
     ESimOne_Obstacle_Type_Truck = 18u,
     ESimOne_Obstacle_Type_Bus = 19u,
-    ESimOne_Obstacle_Type_Train = 20u,
+    ESimOne_Obstacle_Type_SpecialVehicle = 20u,
     ESimOne_Obstacle_Type_Motorcycle = 21u,
     ESimOne_Obstacle_Type_Dynamic = 22u,
     ESimOne_Obstacle_Type_GuardRail = 23u,
@@ -283,7 +283,7 @@ struct Definition< ::msg_gen::SimOne_Obstacle_Type_<ContainerAllocator> >
 "uint8 ESimOne_Obstacle_Type_Rider = 17\n"
 "uint8 ESimOne_Obstacle_Type_Truck = 18\n"
 "uint8 ESimOne_Obstacle_Type_Bus = 19\n"
-"uint8 ESimOne_Obstacle_Type_Train = 20\n"
+"uint8 ESimOne_Obstacle_Type_SpecialVehicle = 20\n"
 "uint8 ESimOne_Obstacle_Type_Motorcycle = 21\n"
 "uint8 ESimOne_Obstacle_Type_Dynamic = 22\n"
 "uint8 ESimOne_Obstacle_Type_GuardRail = 23\n"
