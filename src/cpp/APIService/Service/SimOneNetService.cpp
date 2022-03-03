@@ -1420,29 +1420,27 @@ bool SimOneAPIService::sendVehicleTrajectoryControlReq(int mainVehicleId,
 	return true;
 }
 
-bool SimOneAPIService::sendVehicleDriveModeReq(int mainVehicleId, SimOne_Data_Drive_Mode *pDriveMode) {
+bool SimOneAPIService::sendVehicleDriveModeReq(int mainVehicleId, SimOne_Data_Drive_Mode driveMode) {
 	if (!mpClientSync) {
 		return false;
 	}
 	if (!mbStarted) {
 		return false;
 	}
-	if (!pDriveMode)
-		return false;
-	cybertron::proto::sensor::DataVehicleDriveMode driveMode;
 
-	switch (pDriveMode->driveMode)
+	cybertron::proto::sensor::DataVehicleDriveMode mode;
+	switch (driveMode)
 	{
 	case ESimOne_Drive_Mode_API:
-		driveMode.set_drivemode(cybertron::proto::sensor::EDrive_API);
+		mode.set_drivemode(cybertron::proto::sensor::EDrive_API);
 		break;
 	case ESimOne_Drive_Mode_Driver:
-		driveMode.set_drivemode(cybertron::proto::sensor::EDrive_Driver);
+		mode.set_drivemode(cybertron::proto::sensor::EDrive_Driver);
 		break;
 	default:
 		break;
 	}
-	sendMainVehicleMessage(mainVehicleId, proto::sensor::EDataType_VehicleDriveMode, driveMode);
+	sendMainVehicleMessage(mainVehicleId, proto::sensor::EDataType_VehicleDriveMode, mode);
 	return true;
 }
 
