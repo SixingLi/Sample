@@ -119,15 +119,16 @@ extern "C"
 		\li function:
 		*	SetDriveMode
 		\li brief:
-		*	Set vehicle drive control mode
+		*	Set vehicle drive control mode("API" to send the SimOneDriver control signal to the API and 
+		"Driver" to send SimOneDriver control signal to dynamics)
 		@param[in]
 		*	mainVehicleId: Id of the main vehicle
 		@param[in]
-		*	pDriveMode: vehicle drive control mode
+		*	driveMode: vehicle drive control mode
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool SetDriveMode(const char* mainVehicleId, SimOne_Data_Drive_Mode *pDriveMode);
+		SIMONE_API bool SetDriveMode(const char* mainVehicleId, SimOne_Data_Drive_Mode driveMode);
 
 		/*!
 		主车控制
