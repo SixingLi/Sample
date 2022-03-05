@@ -92,7 +92,7 @@ public:
                                 int64_t pre = get_cur_stamp();
                                 task();
                                 int64_t cur = get_cur_stamp();
-                                int64_t gap = cur - pre;
+                                int64_t gap = (cur - pre) / 1000;
                                 // sleep every interval and do the task again and again until times up
                                 int rel_interval = interval - gap;
                                 if (rel_interval > 0)
