@@ -23,6 +23,8 @@
 
 #ifdef CYBERTRON_WIN
 #include <windows.h>
+#include <MMSystem.h>
+#pragma comment(lib, "winmm.lib")
 #elif CYBERTRON_LINUX
 #include <string.h>
 #include <unistd.h>
@@ -92,10 +94,17 @@ SimOneAPIService::SimOneAPIService() :
 	cybertron::log_enable_net_appender(mLogServerIp, mLogServerPort);
 	log_enable_console_appender();
 	log_enable_file_appender(mLogServerFileName);
+
+#ifdef CYBERTRON_WIN
+	timeBeginPeriod(1);
+#endif
 }
 SimOneAPIService::~SimOneAPIService()
 {
 	mSensorDataTypeMap.clear();
+#ifdef CYBERTRON_WIN
+	timeEndPeriod(1);
+#endif
 }
 float clamp(float Min, float input, float Max)
 {

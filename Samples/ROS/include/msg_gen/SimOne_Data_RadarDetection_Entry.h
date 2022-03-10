@@ -268,7 +268,7 @@ struct Definition< ::msg_gen::SimOne_Data_RadarDetection_Entry_<ContainerAllocat
 "uint8 ESimOne_Obstacle_Type_Rider = 17\n"
 "uint8 ESimOne_Obstacle_Type_Truck = 18\n"
 "uint8 ESimOne_Obstacle_Type_Bus = 19\n"
-"uint8 ESimOne_Obstacle_Type_Train = 20\n"
+"uint8 ESimOne_Obstacle_Type_SpecialVehicle = 20\n"
 "uint8 ESimOne_Obstacle_Type_Motorcycle = 21\n"
 "uint8 ESimOne_Obstacle_Type_Dynamic = 22\n"
 "uint8 ESimOne_Obstacle_Type_GuardRail = 23\n"
