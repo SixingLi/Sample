@@ -1385,7 +1385,8 @@ bool SimOneAPIService::sendVehicleControlPosReq(int mainVehicleId, SimOne_Data_P
 	rot->set_x(pPose->oriX);
 	rot->set_y(pPose->oriY);
 	rot->set_z(pPose->oriZ);
-
+	std::uint64_t mtimestamp = std::uint64_t(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() / 1000.0);
+	state.set_timestamp(mtimestamp);
 	sendMainVehicleMessage(mainVehicleId, proto::sensor::EDataType_VehicleBodyState, state);
 	return true;
 }
