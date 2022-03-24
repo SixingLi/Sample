@@ -71,8 +71,9 @@ SimOneAPIService::SimOneAPIService() :
 	mpFrameEnd = nullptr;
 
 	mNumDesiredMessages = 0;
-	mpDesiredMessageIds = nullptr;
-	mpDesiredMessages = nullptr;
+	//mpDesiredMessageIds = nullptr;
+	//mDesiredMessageIdsList
+	//mpDesiredMessages = nullptr;
 	mNumReceivedDesiredMessages = 0;
 	mOneLoopServerMessageCounter = 0;
 	mMainVehicleId = "0";
@@ -179,25 +180,33 @@ void SimOneAPIService::bridgeLogOutput(ESimOne_LogLevel_Type level, const char *
 	va_end(ap);
 }
 bool SimOneAPIService::Start(void(*startCase)(), void(*endCase)(), int registerNodeId) {
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Start()11111111");
 	SetStartCaseCB(startCase);
 	SetEndCaseCB(endCase);
 	mRegisterNodeId = registerNodeId;
 	return this->Start();
 }
 bool SimOneAPIService::Stop() {
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Stop()11111111");
+
 	mbRecvThreadRun = false;
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 	if (mpClientSync) {
 		mpClientSync->close();
 	}
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Stop()222222");
 
 	while (!mbRecvThreadExit)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Stop()3333333");
+
 	delete mpClientSync;
 	mpClientSync = nullptr;
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Stop()444444");
+
 	return true;
 }
 bool SimOneAPIService::SubMainVehicle(const char* mainVehicleId, bool isJoinTimeLoop) {
@@ -215,7 +224,7 @@ bool SimOneAPIService::SubMainVehicle(const char* mainVehicleId, bool isJoinTime
 
 	Bridge::BridgeResultSubMainVehicle result;
 	uint16_t messageId = Bridge::EBridgeResultSubMainVehicle;
-	if (!processMessagesUntil(&messageId, &result_msg))
+	if (!processMessagesUntil(messageId, &result_msg))
 	{
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "SubMainVehicle Error.");
 		return false;
@@ -247,13 +256,18 @@ bool SimOneAPIService::SimOneNodeReady() {
 bool SimOneAPIService::Start()
 {
 	zeroMemory();
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Start()2222222");
 	bool ret = connectSyncBridgeNode();
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Start()3333333");
+
 	if (ret) {
 		mbRecvThreadRun = true;
 		std::thread thread(&SimOneAPIService::run, this);
 		thread.detach();
 		mPendingState = ENetServiceState_Work;
 	}
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Start()4444444");
+
 	return ret;
 }
 void SimOneAPIService::zeroMemory() {
@@ -285,8 +299,8 @@ void SimOneAPIService::zeroMemory() {
 	mpFrameEnd = nullptr;
 
 	mNumDesiredMessages = 0;
-	mpDesiredMessageIds = nullptr;
-	mpDesiredMessages = nullptr;
+	//mpDesiredMessageIds = nullptr;
+	//mpDesiredMessages = nullptr;
 	mNumReceivedDesiredMessages = 0;
 	mOneLoopServerMessageCounter = 0;
 	mMainVehicleId = "0";
@@ -527,18 +541,24 @@ void SimOneAPIService::onServerMessage(Message& msg) {
 	// Receive desired messages first
 	for (size_t i = 0; i < mNumDesiredMessages; ++i)
 	{
-		if (mpDesiredMessageIds[i] == msgId)
+		if (mpDesiredMessageIds == msgId)
 		{
-			if (mpDesiredMessages[i].parseMsgId() == msgId)
+			if (mpDesiredMessages.parseMsgId() == msgId)
 			{
 				// already received this message
 				continue;
 			}
-			mpDesiredMessages[i] = msg;
+			Bridge::BridgeResultSubMainVehicle result;
+			if (!msg.toProtobuf(result))
+			{
+				//return false;
+			}
+			mpDesiredMessages = msg;
 			++mNumReceivedDesiredMessages;
 			return;
 		}
 	}
+
 	switch (msgId)
 	{
 	case Bridge::EBridgeTimeStepForward:
@@ -605,7 +625,7 @@ int SimOneAPIService::wait() {
 		msg = mTimeStepForward;
 	}
 	else {
-		if (!processMessagesUntil(&messageId, &msg))
+		if (!processMessagesUntil(messageId, &msg))
 		{
 			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "wait failed, server confirm not received.");
 			return -1;
@@ -640,6 +660,7 @@ void SimOneAPIService::run() {
 	while (true)
 	{
 		if (!mbRecvThreadRun) {
+			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "mbRecvThreadRun  Exit");
 			break;
 		}
 		if (!mbStarted) {
@@ -685,6 +706,7 @@ void SimOneAPIService::run() {
 	}
 	mCaseStatus = ESimOne_Case_Status::ESimOne_Case_Status_Stop;
 	mbRecvThreadExit = true;
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::run thread Exit");
 	return;
 }
 bool SimOneAPIService::sendNodeRegisterReq(Bridge::EBridgeClientRole role, int registerNodeId) {
@@ -798,7 +820,7 @@ bool SimOneAPIService::GetMainVehicleStatus(int mainVehicleId, SimOne_Data_MainV
 
 	Message result;
 	uint16_t messageId = Bridge::EBridgeResultMainVehicleStatus;
-	if (!processMessagesUntil(&messageId, &result))
+	if (!processMessagesUntil(messageId, &result))
 	{
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Get MainVehicle Status failed, server confirm not received.");
 		return false;
@@ -1000,7 +1022,7 @@ bool SimOneAPIService::SetEnvironment(SimOne_Data_Environment *pEnvironment) {
 
 	Message result;
 	uint16_t messageId = Bridge::EBridgeMessageFromOut2SimOneWriteResult;
-	if (!processMessagesUntil(&messageId, &result))
+	if (!processMessagesUntil(messageId, &result))
 	{
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "Set Environment failed, server confirm not received.");
 		return false;
@@ -1662,7 +1684,7 @@ bool SimOneAPIService::sendVehicleControlReq(int mainVehicleId, SimOne_Data_Cont
 
 #endif //PNC
 bool SimOneAPIService::processMessagesUntil(
-	uint16_t* pDesiredMessageIds,
+	uint16_t desiredMessageIds,
 	Message* pDesiredMessages,
 	size_t numDesiredMessages,
 	int timeoutMilliseconds,
@@ -1673,8 +1695,8 @@ bool SimOneAPIService::processMessagesUntil(
 		return true;
 	}
 	mNumDesiredMessages = 0;
-	mpDesiredMessageIds = nullptr;
-	mpDesiredMessages = nullptr;
+	//mpDesiredMessageIds = nullptr;
+	//mpDesiredMessages = nullptr;
 	mNumReceivedDesiredMessages = 0;
 
 	if (mpClientSync == nullptr)
@@ -1690,13 +1712,16 @@ bool SimOneAPIService::processMessagesUntil(
 		return false;
 	}
 
+	
+	mpDesiredMessageIds = desiredMessageIds;
+	//mpDesiredMessages = pDesiredMessages;
+	mpDesiredMessages.clear();
 	mNumDesiredMessages = numDesiredMessages;
-	mpDesiredMessageIds = pDesiredMessageIds;
-	mpDesiredMessages = pDesiredMessages;
-	for (size_t i = 0; i < mNumDesiredMessages; ++i)
+	//mpDesiredMessages->clear();
+	/*for (size_t i = 0; i < mNumDesiredMessages; ++i)
 	{
 		mpDesiredMessages[i].clear();
-	}
+	}*/
 
 	std::chrono::high_resolution_clock::time_point t0 = std::chrono::high_resolution_clock::now();
 	for (; ; )
@@ -1711,6 +1736,7 @@ bool SimOneAPIService::processMessagesUntil(
 		}
 		// break if we got the required messages.
 		if (mNumReceivedDesiredMessages >= mNumDesiredMessages) {
+			*pDesiredMessages = mpDesiredMessages;
 			return true;
 		}
 		// batch process, just return
@@ -1727,13 +1753,13 @@ bool SimOneAPIService::processMessagesUntil(
 				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "Process messages failed, timeout. Not received message:");
 				for (int i = 0; i < mNumDesiredMessages; i++)
 				{
-					if (mpDesiredMessages[i].parseMsgId() == mpDesiredMessageIds[i])
+					if (mpDesiredMessages.parseMsgId() == mpDesiredMessageIds)
 						continue;
-					bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "%d", mpDesiredMessageIds[i]);
+					bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Warning, "%d", mpDesiredMessageIds);
 				}
 				mNumDesiredMessages = 0;
-				mpDesiredMessageIds = nullptr;
-				mpDesiredMessages = nullptr;
+				//mpDesiredMessageIds = nullptr;
+				//mpDesiredMessages = nullptr;
 				mNumReceivedDesiredMessages = 0;
 				return false;
 			}

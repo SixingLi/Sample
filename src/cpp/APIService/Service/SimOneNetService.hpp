@@ -139,7 +139,7 @@ public:
 	bool sendMainVehicleMessage(int mainVehicleId, int msgId,const google::protobuf::MessageLite& protobufMsg);
 protected:
 	bool processMessagesUntil(
-		uint16_t* pDesiredMessageIds,
+		uint16_t desiredMessageIds,
 		Message* pDesiredMessages,
 		size_t numDesiredMessages=1,
 		int timeoutMilliseconds = -1,
@@ -302,8 +302,11 @@ private:
 private:
 	// mpDesiredMessageIds and mpDesiredMessages size
 	size_t mNumDesiredMessages;
-	std::uint16_t* mpDesiredMessageIds;
-	Message* mpDesiredMessages;
+	//typedef std::vector<uint16_t> DesiredMessageIdList;
+	//DesiredMessageIdList mDesiredMessageIdsList;
+	std::uint16_t mpDesiredMessageIds;
+	//Message* mpDesiredMessages;
+	Message mpDesiredMessages;
 	size_t mNumReceivedDesiredMessages;
 	//
 	size_t mOneLoopServerMessageCounter;
