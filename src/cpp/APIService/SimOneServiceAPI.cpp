@@ -28,9 +28,15 @@ extern "C"
 		cout << "mainVehicleId:" << mainVehicleId << "isFrameSync:" << isFrameSync<<"serverIP:"<<serverIP<<",port:"<< port<< endl;
 		SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information,"mainVehicleId:%s,isFrameSync:%d", mainVehicleId, isFrameSync);
 		SimOneAPIService::GetInstance()->setServerInfo(serverIP, port);
+		int tryCount = 0;
 		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneAPIService::GetInstance()->SimOneNodeReady()) {
+			tryCount = 0;
 			while (true)
 			{
+				if (tryCount > 10) {
+					return false;
+				}
+				tryCount += 1;
 				bool bRet = SimOneAPIService::GetInstance()->SubMainVehicle(mainVehicleId, isFrameSync);
 				if (!bRet) {
 					std::cout << "failed to subscribe main vehicle" << std::endl;
@@ -41,9 +47,13 @@ extern "C"
 			}
 
 			SimOne_Data_MainVehicle_Status mainVehicleStatus;
-
+			tryCount = 0;
 			while (true)
 			{
+				if (tryCount > 10) {
+					return false;
+				}
+				tryCount += 1;
 				bool bRet = GetMainVehicleStatus(mainVehicleId, &mainVehicleStatus);
 				if (!bRet) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -55,10 +65,16 @@ extern "C"
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			//SimOneAPIService::GetInstance()->SimOneNodeReady();
+			tryCount = 0;
 			while (true) {
+				if (tryCount > 10) {
+					return false;
+				}
+				tryCount += 1;
 				if (GetCaseRunStatus() == ESimOne_Case_Status::ESimOne_Case_Status_Running) {
 					break;
 				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			return true;
 		}
