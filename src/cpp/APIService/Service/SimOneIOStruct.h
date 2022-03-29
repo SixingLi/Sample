@@ -263,7 +263,7 @@ enum ESimone_Vehicle_EventInfo_Type
 
 };
 #define SO_MAX_TRAFFIC_EVENT_NUM 256
-struct TrafficEvent_DetailInfo {
+struct SimOne_Data_JudgeEvent {
 	int hostVehicle;
 	double time;
 	char actualValue[SO_MAX_TRAFFIC_EVENT_NUM];

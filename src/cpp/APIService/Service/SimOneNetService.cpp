@@ -2,7 +2,7 @@
 #include "Version.h"
 #include "UtilUrlRequest.hpp"
 #include "UtilString.h"
-#include "cybertron/core/JsonReader.hpp"
+#include "UtilEvaluation.h"
 #include "UtilId.h"
 #include "LogApi.hpp"
 #include "assert.h"
@@ -53,7 +53,7 @@ SimOneAPIService::SimOneAPIService() :
 	mpObstacleUpdateCB(nullptr),
 	mpTrafficLightUpdateCB(nullptr),
 	mpScenarioEventCB(nullptr),
-	mpTrafficEventCB(nullptr),
+	mpJudgeEventCB(nullptr),
 	mpStartCase(nullptr),
 	mpEndCase(nullptr),
 	mpFrameStart(nullptr),
@@ -282,7 +282,7 @@ void SimOneAPIService::zeroMemory() {
 	mpObstacleUpdateCB = nullptr;
 	mpTrafficLightUpdateCB = nullptr;
 	mpScenarioEventCB = nullptr;
-	mpTrafficEventCB = nullptr;
+	mpJudgeEventCB = nullptr;
 	mpStartCase = nullptr;
 	mpEndCase = nullptr;
 	mpFrameStart = nullptr;
@@ -1167,40 +1167,49 @@ bool SimOneAPIService::onFromBridgeTrafficEvent(Message& msg)
 	}
 	cybertron::proto::traffic::TrafficEvent evt;
 	if (evt.ParseFromString(trafficEvent.buffer())) {
-		if (mpTrafficEventCB != nullptr) {
-			TrafficEvent_DetailInfo trafficEventDetailInfo;
-			memset(&trafficEventDetailInfo, 0, sizeof(trafficEventDetailInfo));
-			cybertron::json trafficEvent;
-			//cybertron::json trafficEventDetailJson;
-			if (!JsonReader::loadString(trafficEvent, evt.data().c_str())) {
-				logInfo("Load traffic event config json failed");
-				return false;
-			}
-			trafficEventDetailInfo.hostVehicle = evt.vehicleid();
-			auto trafficEventDetailJson = JsonReader::getChild(trafficEvent, "detail_for_api");
-			std::string  actualValue = cybertron::JsonReader::getString(trafficEventDetailJson, "actual_value");
-			std::string  expectOp = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_op");
-			std::string  expectValue1 = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_value1");
-			std::string  expectValue2 = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_value2");
-			std::string  judgeId = cybertron::JsonReader::getString(trafficEventDetailJson, "judge_id");
-			std::string  judgeType = cybertron::JsonReader::getString(trafficEventDetailJson, "judge_type");
-			std::string  requireProperty = cybertron::JsonReader::getString(trafficEventDetailJson, "require_property");
-			std::string  taskId = cybertron::JsonReader::getString(trafficEventDetailJson, "task_id");
-			std::string  valueType = cybertron::JsonReader::getString(trafficEventDetailJson, "value_type");
-			std::string  version = cybertron::JsonReader::getString(trafficEventDetailJson, "version");
+		SimOne_Data_JudgeEvent judgeEventDetailInfo;
+		memset(&judgeEventDetailInfo, 0, sizeof(judgeEventDetailInfo));
+		cybertron::json trafficEvent;
+		if (!JsonReader::loadString(trafficEvent, evt.data().c_str())) {
+			logInfo("Load traffic event config json failed");
+			return false;
+		}
+		judgeEventDetailInfo.hostVehicle = evt.vehicleid();
+		auto trafficEventDetailJson = JsonReader::getChild(trafficEvent, "detail_for_api");
+		std::string  actualValue = cybertron::JsonReader::getString(trafficEventDetailJson, "actual_value");
+		std::string  expectOp = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_op");
+		std::string  expectValue1 = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_value1");
+		std::string  expectValue2 = cybertron::JsonReader::getString(trafficEventDetailJson, "expect_value2");
+		std::string  judgeId = cybertron::JsonReader::getString(trafficEventDetailJson, "judge_id");
+		std::string  judgeType = cybertron::JsonReader::getString(trafficEventDetailJson, "judge_type");
+		std::string  requireProperty = cybertron::JsonReader::getString(trafficEventDetailJson, "require_property");
+		std::string  taskId = cybertron::JsonReader::getString(trafficEventDetailJson, "task_id");
+		std::string  valueType = cybertron::JsonReader::getString(trafficEventDetailJson, "value_type");
+		std::string  version = cybertron::JsonReader::getString(trafficEventDetailJson, "version");
 
-			trafficEventDetailInfo.time = cybertron::JsonReader::getDouble(trafficEventDetailJson, "time");
-			memcpy(trafficEventDetailInfo.actualValue, actualValue.c_str(), actualValue.size());
-			memcpy(trafficEventDetailInfo.expectOp, expectOp.c_str(), expectOp.size());
-			memcpy(trafficEventDetailInfo.expectValue1, expectValue1.c_str(), expectValue1.size());
-			memcpy(trafficEventDetailInfo.expectValue2, expectValue2.c_str(), expectValue2.size());
-			memcpy(trafficEventDetailInfo.judgeId, judgeId.c_str(), judgeId.size());
-			memcpy(trafficEventDetailInfo.judgeType, judgeType.c_str(), judgeType.size());
-			memcpy(trafficEventDetailInfo.requireProperty, requireProperty.c_str(), requireProperty.size());
-			memcpy(trafficEventDetailInfo.taskId, taskId.c_str(), taskId.size());
-			memcpy(trafficEventDetailInfo.valueType, valueType.c_str(), valueType.size());
-			memcpy(trafficEventDetailInfo.version, version.c_str(), version.size());
-			mpTrafficEventCB(std::to_string(trafficEventDetailInfo.hostVehicle).c_str(), &trafficEventDetailInfo);
+		judgeEventDetailInfo.time = cybertron::JsonReader::getDouble(trafficEventDetailJson, "time");
+		memcpy(judgeEventDetailInfo.actualValue, actualValue.c_str(), actualValue.size());
+		memcpy(judgeEventDetailInfo.expectOp, expectOp.c_str(), expectOp.size());
+		memcpy(judgeEventDetailInfo.expectValue1, expectValue1.c_str(), expectValue1.size());
+		memcpy(judgeEventDetailInfo.expectValue2, expectValue2.c_str(), expectValue2.size());
+		memcpy(judgeEventDetailInfo.judgeId, judgeId.c_str(), judgeId.size());
+		memcpy(judgeEventDetailInfo.judgeType, judgeType.c_str(), judgeType.size());
+		memcpy(judgeEventDetailInfo.requireProperty, requireProperty.c_str(), requireProperty.size());
+		memcpy(judgeEventDetailInfo.taskId, taskId.c_str(), taskId.size());
+		memcpy(judgeEventDetailInfo.valueType, valueType.c_str(), valueType.size());
+		memcpy(judgeEventDetailInfo.version, version.c_str(), version.size());
+		if (mpJudgeEventCB != nullptr) {	
+			mpJudgeEventCB(std::to_string(judgeEventDetailInfo.hostVehicle).c_str(), &judgeEventDetailInfo);
+		}
+
+		// for evaluation usage
+		std::unique_lock<std::recursive_mutex> lock(mLastEvaluationRecordsMapLock);
+		if (!mLastEvaluationRecordsMap.empty()
+			&& mLastEvaluationRecordsMap.find(judgeEventDetailInfo.hostVehicle) != mLastEvaluationRecordsMap.end()) {
+			// for evaluation usage for vehicle 
+			trafficEvent["category"] = "judge";
+			trafficEvent["timestamp"] = UtilEvaluation::CurrentTimestamp();
+			mLastEvaluationRecordsMap[evt.vehicleid()].push_back(trafficEvent);
 		}
 	}
 	return true;
@@ -1218,15 +1227,30 @@ bool SimOneAPIService::onEndTaskReasonFromNodeTime(Message& msg) {
 	else if (data.endtaskreason() == 6) {
 		endTaskReason = "timeout";
 	}
-	if (mpTrafficEventCB != nullptr) {
-		TrafficEvent_DetailInfo trafficEventDetailInfo;
-		memset(&trafficEventDetailInfo, 0, sizeof(trafficEventDetailInfo));
-		trafficEventDetailInfo.hostVehicle = data.hostvehicleid();
-		trafficEventDetailInfo.time = data.time();
-		memcpy(trafficEventDetailInfo.taskId, data.taskid().c_str(), data.taskid().size());
-		memcpy(trafficEventDetailInfo.judgeType, endTaskReason.c_str(), endTaskReason.size());
-		memcpy(trafficEventDetailInfo.requireProperty, endTaskReason.c_str(), endTaskReason.size());
-		mpTrafficEventCB(std::to_string(trafficEventDetailInfo.hostVehicle).c_str(),&trafficEventDetailInfo);
+	SimOne_Data_JudgeEvent judgeEventDetailInfo;
+	memset(&judgeEventDetailInfo, 0, sizeof(judgeEventDetailInfo));
+	judgeEventDetailInfo.hostVehicle = data.hostvehicleid();
+	judgeEventDetailInfo.time = data.time();
+	memcpy(judgeEventDetailInfo.taskId, data.taskid().c_str(), data.taskid().size());
+	memcpy(judgeEventDetailInfo.judgeType, endTaskReason.c_str(), endTaskReason.size());
+	memcpy(judgeEventDetailInfo.requireProperty, endTaskReason.c_str(), endTaskReason.size());
+	if (mpJudgeEventCB != nullptr) {
+		mpJudgeEventCB(std::to_string(judgeEventDetailInfo.hostVehicle).c_str(),&judgeEventDetailInfo);
+	}
+	// for evaluation usage
+	std::unique_lock<std::recursive_mutex> lock(mLastEvaluationRecordsMapLock);
+	if (!mLastEvaluationRecordsMap.empty()
+		&& mLastEvaluationRecordsMap.find(judgeEventDetailInfo.hostVehicle) != mLastEvaluationRecordsMap.end()) {
+		// for evaluation usage for vehicle 
+		cybertron::json trafficEvent, detail_for_api;
+		trafficEvent["category"] = "judge";
+		trafficEvent["timestamp"] = UtilEvaluation::CurrentTimestamp();
+		detail_for_api["time"] = judgeEventDetailInfo.time;
+		detail_for_api["task_id"] = judgeEventDetailInfo.taskId;
+		detail_for_api["judge_type"] = judgeEventDetailInfo.judgeType;
+		detail_for_api["require_property"] = judgeEventDetailInfo.requireProperty;
+		trafficEvent["detail_for_api"] = detail_for_api;
+		mLastEvaluationRecordsMap[judgeEventDetailInfo.hostVehicle].push_back(trafficEvent);
 	}
 	return true;
 }
@@ -1318,10 +1342,75 @@ bool SimOneAPIService::SetScenarioEventCB(void(*cb)(const char* source, const ch
 	return true;
 }
 
-bool SimOneAPIService::SetTrafficEventCB(void(*cb)(const char* mainVehicleId, TrafficEvent_DetailInfo *trafficEventDetailInfo))
+bool SimOneAPIService::SetJudgeEventCB(void(*cb)(const char* mainVehicleId, SimOne_Data_JudgeEvent *judgeEventDetailInfo))
 {
-	mpTrafficEventCB = cb;
+	mpJudgeEventCB = cb;
 	return true;
+}
+
+void SimOneAPIService::RunEvaluation()
+{
+	{
+		std::unique_lock<std::recursive_mutex> lock(mLastEvaluationRecordsMapLock);
+		mLastEvaluationRecordsMap[mEvaluationMainVehicleId] = std::vector<cybertron::json>();
+	}
+	while (true)
+	{
+		if (!mbRecvThreadRun) {
+			mbEvaluationServerInited = false;
+			mEvaluationServerUrl.clear();
+			break;
+		}
+		if (!mbStarted) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			continue;
+		}
+		if (mbEvaluationRecordsReady) {
+			std::vector<cybertron::json> records;
+			{
+				std::unique_lock<std::recursive_mutex> lock(mLastEvaluationRecordsMapLock);
+				if (mLastEvaluationRecordsMap.find(mEvaluationMainVehicleId) != mLastEvaluationRecordsMap.end()) {
+					records = std::move(mLastEvaluationRecordsMap[mEvaluationMainVehicleId]);
+				}
+				mbEvaluationRecordsReady = false;
+			}
+			if (!records.empty()) {
+				cybertron::json jsonRecords(records);
+				std::string jsonStringToSend = jsonRecords.dump();
+				// [todo] post to evaluation server.
+			}
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::RunEvaluation thread Exit");
+}
+
+bool SimOneAPIService::InitEvaluationService(int mainVehicleId, const char *serviceIP, int port)
+{
+	if (mbEvaluationServerInited) {
+		return false;
+	}
+	mbEvaluationServerInited = true;
+	mbEvaluationRecordsReady = false;
+	mEvaluationMainVehicleId = mainVehicleId;
+	mEvaluationServerUrl = "http://" + std::string(serviceIP) + ":" + std::to_string(port) + "/v1/tasks/" + std::string(mCaseInfo.taskId) + "/judges";
+	std::thread thread(&SimOneAPIService::RunEvaluation, this);
+	thread.detach();
+	
+	return true;
+}
+
+bool SimOneAPIService::AddEvaluationRecord(int mainVehicleId, const cybertron::json& jsonRecord)
+{
+	std::unique_lock<std::recursive_mutex> lock(mLastEvaluationRecordsMapLock);
+	if (!mLastEvaluationRecordsMap.empty()
+		&& mLastEvaluationRecordsMap.find(mainVehicleId) != mLastEvaluationRecordsMap.end()) {
+		mLastEvaluationRecordsMap[mainVehicleId].push_back(jsonRecord);
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 bool SimOneAPIService::GetWayPoints(int mainVehicleId, SimOne_Data_WayPoints* pWayPoints) {
@@ -1815,6 +1904,15 @@ bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, 
 	if (mpSimOneGpsCB != NULL)
 	{
 		mpSimOneGpsCB(&GPS);
+	}
+	{
+		// for evaluation
+		std::unique_lock<std::recursive_mutex> lock(mLastEvaluationRecordsMapLock);
+		if (!mLastEvaluationRecordsMap.empty()
+			&& mLastEvaluationRecordsMap.find(mainVehicleId) != mLastEvaluationRecordsMap.end()) {
+			mLastEvaluationRecordsMap[mainVehicleId].push_back(UtilEvaluation::ConvertToJson(GPS));
+			mbEvaluationRecordsReady = true;
+		}
 	}
 
     SimOne_Data_Vehicle_Extra* pExtraState = nullptr;

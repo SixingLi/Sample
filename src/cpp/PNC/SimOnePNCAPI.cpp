@@ -86,11 +86,6 @@ extern "C"
 		return SimOneAPIService::GetInstance()->SetScenarioEventCB(cb);
 	}
 
-	SIMONE_API bool SimOneAPI::SetTrafficEventCB(void(*cb)(const char* mainVehicleId, TrafficEvent_DetailInfo *trafficEventDetailInfo))
-	{
-		return SimOneAPIService::GetInstance()->SetTrafficEventCB(cb);
-	}
-
 #ifdef __cplusplus
 }
 #endif

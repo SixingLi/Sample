@@ -5,6 +5,7 @@
 #include "cybertron/network/SocketTcpClientSync.hpp"
 #include "cybertron/core/Log.hpp"
 #include "cybertron/core/UtilConsole.hpp"
+#include "cybertron/core/JsonReader.hpp"
 #include "cybertron/network/Message.hpp"
 #include "Traffic/ScenarioEvent.pb.h"
 #include "Traffic/TrafficCommon.pb.h"
@@ -210,7 +211,12 @@ public:
 	bool SetSensorDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth));
 	bool SetUltrasonicRadarsCB(void(*cb)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics));
 	bool SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content));
-	bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, TrafficEvent_DetailInfo *trafficEventDetailInfo));
+
+	// Evaluation related.
+	bool SetJudgeEventCB(void(*cb)(const char* mainVehicleId, SimOne_Data_JudgeEvent *judgeEventDetailInfo));
+	bool InitEvaluationService(int mainVehicleId, const char *serviceIP, int port);
+	bool AddEvaluationRecord(int mainVehicleId, const cybertron::json& jsonRecord);
+	void RunEvaluation();
 
 #ifndef WITHOUT_HDMAP
 	static bool LoadHDMap(const int& timeOutSeconds);
@@ -294,7 +300,7 @@ private:
 	//
 	void(*mpFrameEnd)(int frame);
 	void(*mpScenarioEventCB)(const char* source, const char* target, const char* type, const char* content);
-	void(*mpTrafficEventCB)(const char* mainVehicleId,TrafficEvent_DetailInfo *trafficEventDetailInfo);
+	void(*mpJudgeEventCB)(const char* mainVehicleId, SimOne_Data_JudgeEvent *judgeEventDetailInfo);
 	bool mbCaseStartEventAlreadyCallback;
 	bool mbCaseStopEventAlreadyCallback;
 private:
@@ -330,6 +336,7 @@ private:
 	typedef map<int, SimOne_Data_MainVehicle_Info*> SimOne_Data_MainVehicle_InfoMap;
 	typedef map<int, SimOne_Data_SensorConfigurations> SimOne_Data_SensorConfigurationsMap;
 	typedef map<int, SimOne_Data_WayPoints> SimOne_Data_WayPointsMap;
+	typedef map<int, std::vector<cybertron::json>> SimOne_Data_EvaluationRecordsMap;
 		
 	//  mainVehicleId
 	SimOne_Data_GpsMap mLastGPSDataMap;
@@ -341,6 +348,13 @@ private:
 
 	SimOne_Data_ObstacleMap mLastObstacleMap;
 	mutable std::recursive_mutex mLastObstacleMapLock;
+
+	SimOne_Data_EvaluationRecordsMap mLastEvaluationRecordsMap;
+	mutable std::recursive_mutex mLastEvaluationRecordsMapLock;
+	std::string mEvaluationServerUrl;
+	int mEvaluationMainVehicleId = 0;
+	bool mbEvaluationServerInited = false;
+	bool mbEvaluationRecordsReady = false;
 
 	SimOne_Data_Driver_StatusMap mLastDriverStatusMap;
 	mutable std::recursive_mutex mLastDriverStatusLock;
