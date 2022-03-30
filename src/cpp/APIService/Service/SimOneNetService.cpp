@@ -1377,7 +1377,9 @@ void SimOneAPIService::RunEvaluation()
 			if (!records.empty()) {
 				cybertron::json jsonRecords(records);
 				std::string jsonStringToSend = jsonRecords.dump();
-				// [todo] post to evaluation server.
+				UtilUrlRequest::THeaders headers;
+				headers["Content-Type"] = "application/json";
+				UtilUrlRequest::PostUrl(mEvaluationServerUrl, jsonStringToSend, headers, 3);
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
