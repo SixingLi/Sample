@@ -146,6 +146,7 @@ IF (WIN32)
 			POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/cpp/PNC/SimOnePNCAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOnePNCAPI.h
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOnePNCAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/SimOnePNCAPI.py
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/cpp/PNC/SimOneEvaluationAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneEvaluationAPI.h
 		)
 	ENDIF()	
 
@@ -218,6 +219,7 @@ IF (WIN32)
 		POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/cpp/PNC/SimOnePNCAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOnePNCAPI.h
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOnePNCAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/SimOnePNCAPI.py
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/cpp/PNC/SimOneEvaluationAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOneEvaluationAPI.h
 		)
 	ENDIF()
     
@@ -344,9 +346,10 @@ ELSEIF (UNIX)
 			POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/cpp/PNC/SimOnePNCAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOnePNCAPI.h
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOnePNCAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/SimOnePNCAPI.py
-
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/cpp/PNC/SimOneEvaluationAPI.h ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/SimOneEvaluationAPI.h
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/cpp/PNC/SimOnePNCAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOnePNCAPI.h
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOnePNCAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOnePNCAPI.py
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/cpp/PNC/SimOneEvaluationAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneEvaluationAPI.h
 		)
 	ENDIF()
 

@@ -15,10 +15,11 @@ extern "C"
 	SIMONE_API bool SimOneAPI::InitEvaluationService(
 								const char* mainVehicleId, 
 								const char *serviceIP/* = "127.0.0.1"*/,
-								int port/* = 8078*/)
+								int port/* = 8078*/,
+								bool withGps/* = true*/)
 	{
 		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
-		return SimOneAPIService::GetInstance()->InitEvaluationService(mainVehId, serviceIP, port);
+		return SimOneAPIService::GetInstance()->InitEvaluationService(mainVehId, serviceIP, port, withGps);
 	}
 
 	SIMONE_API bool SimOneAPI::AddEvaluationRecord(const char* mainVehicleId, const char * jsonString)

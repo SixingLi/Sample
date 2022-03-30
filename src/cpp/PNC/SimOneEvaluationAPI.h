@@ -64,10 +64,12 @@ extern "C"
 		*	serviceIP: Evaluation service ip
 		@param[in]
 		*	port: BridgeIO server port
+		@param[in]
+		*	withGps: whether to send Gps data to evaluation server as default
 		@return
 		*	Success or not
 		*/
-		SIMONE_API bool InitEvaluationService(const char* mainVehicleId, const char *serviceIP = "127.0.0.1", int port = 8078);
+		SIMONE_API bool InitEvaluationService(const char* mainVehicleId, const char *serviceIP = "127.0.0.1", int port = 8078, bool withGps = true);
 
 		/*!
 		添加评价算法所需的各类信息(JSON格式)

@@ -1375,11 +1375,18 @@ void SimOneAPIService::RunEvaluation()
 				mbEvaluationRecordsReady = false;
 			}
 			if (!records.empty()) {
-				cybertron::json jsonRecords(records);
+				cybertron::json jsonRecords;
+				jsonRecords["events"] = records;
 				std::string jsonStringToSend = jsonRecords.dump();
 				UtilUrlRequest::THeaders headers;
 				headers["Content-Type"] = "application/json";
-				UtilUrlRequest::PostUrl(mEvaluationServerUrl, jsonStringToSend, headers, 3);
+				try {
+					UtilUrlRequest::PostUrl(mEvaluationServerUrl, jsonStringToSend, headers, 1);
+				}
+				catch (UtilUrlRequest::TException ex) {
+					bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, 
+						"EvaluationServer exception: %s", ex.what());
+				}
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -1387,15 +1394,17 @@ void SimOneAPIService::RunEvaluation()
 	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::RunEvaluation thread Exit");
 }
 
-bool SimOneAPIService::InitEvaluationService(int mainVehicleId, const char *serviceIP, int port)
+bool SimOneAPIService::InitEvaluationService(int mainVehicleId, const char *serviceIP, int port, bool withGps)
 {
 	if (mbEvaluationServerInited) {
 		return false;
 	}
 	mbEvaluationServerInited = true;
 	mbEvaluationRecordsReady = false;
+	mbEvaluationWithGpsData = withGps;
 	mEvaluationMainVehicleId = mainVehicleId;
-	mEvaluationServerUrl = "http://" + std::string(serviceIP) + ":" + std::to_string(port) + "/v1/tasks/" + std::string(mCaseInfo.taskId) + "/judges";
+	// format: http://127.0.0.1:8078/v1/tasks/{id}/records
+	mEvaluationServerUrl = "http://" + std::string(serviceIP) + ":" + std::to_string(port) + "/v1/tasks/" + std::string(mCaseInfo.taskId) + "/records";
 	std::thread thread(&SimOneAPIService::RunEvaluation, this);
 	thread.detach();
 	
@@ -1912,7 +1921,9 @@ bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, 
 		std::unique_lock<std::recursive_mutex> lock(mLastEvaluationRecordsMapLock);
 		if (!mLastEvaluationRecordsMap.empty()
 			&& mLastEvaluationRecordsMap.find(mainVehicleId) != mLastEvaluationRecordsMap.end()) {
-			mLastEvaluationRecordsMap[mainVehicleId].push_back(UtilEvaluation::ConvertToJson(GPS));
+			if (mbEvaluationWithGpsData) {
+				mLastEvaluationRecordsMap[mainVehicleId].push_back(UtilEvaluation::ConvertToJson(GPS));
+			}
 			mbEvaluationRecordsReady = true;
 		}
 	}

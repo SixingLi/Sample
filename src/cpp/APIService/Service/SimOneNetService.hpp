@@ -214,7 +214,7 @@ public:
 
 	// Evaluation related.
 	bool SetJudgeEventCB(void(*cb)(const char* mainVehicleId, SimOne_Data_JudgeEvent *judgeEventDetailInfo));
-	bool InitEvaluationService(int mainVehicleId, const char *serviceIP, int port);
+	bool InitEvaluationService(int mainVehicleId, const char *serviceIP, int port, bool withGps);
 	bool AddEvaluationRecord(int mainVehicleId, const cybertron::json& jsonRecord);
 	void RunEvaluation();
 
@@ -355,6 +355,7 @@ private:
 	int mEvaluationMainVehicleId = 0;
 	bool mbEvaluationServerInited = false;
 	bool mbEvaluationRecordsReady = false;
+	bool mbEvaluationWithGpsData = false;
 
 	SimOne_Data_Driver_StatusMap mLastDriverStatusMap;
 	mutable std::recursive_mutex mLastDriverStatusLock;
