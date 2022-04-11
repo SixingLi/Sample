@@ -101,6 +101,7 @@ int main(int argc, char* argv[])
 					if (gDataImageRgb.format == ESimOne_Streaming_Image_Format_RGB) {
 						cv::Mat img(gDataImageRgb.height, gDataImageRgb.width, CV_8UC3, gDataImageRgb.imageData);
 						cv::imshow("51Sim-One Camera Video Injection Rgb", img);
+						std::cout << "111111111111111111111111111111111  " << gDataImageRgb.frame<< std::endl;
 					}
 					else if (gDataImageRgb.format == ESimOne_Streaming_Image_Format_RLESegmentation) {
 						Horizon_RLE_Header frameHeader;
@@ -111,7 +112,10 @@ int main(int argc, char* argv[])
 						delete ImageRleData;
 					}
 					else if (gDataImageRgb.format == ESimOne_Streaming_Image_Format_JPEG) {
-
+						cv::Mat imgbuf(gDataImageRgb.height, gDataImageRgb.width, CV_8UC3, gDataImageRgb.imageData);
+						cv::Mat img = imdecode(imgbuf, CV_LOAD_IMAGE_COLOR);
+						cv::imshow("51Sim-One Camera Video Injection Jpeg", img);
+						std::cout << "this is jpeg channel" << std::endl;
 					}
 
 					gDataImageRgb.frame = lastFrame;
@@ -120,7 +124,6 @@ int main(int argc, char* argv[])
 			}
 			if (cv::waitKey(1) == 27)
 				break;
-			std::this_thread::sleep_for(std::chrono::milliseconds(30));
 		}
 	});
 
@@ -145,7 +148,10 @@ int main(int argc, char* argv[])
 						delete ImageRleData;
 					}
 					else if (gDataImageRle.format == ESimOne_Streaming_Image_Format_JPEG) {
-
+						cv::Mat imgbuf(gDataImageRgb.height, gDataImageRgb.width, CV_8UC3, gDataImageRgb.imageData);
+						cv::Mat img = imdecode(imgbuf, CV_LOAD_IMAGE_COLOR);
+						cv::imshow("51Sim-One Camera Video Injection Jpeg", img);
+						std::cout << "this is jpeg channel" << std::endl;
 					}
 
 					gDataImageRle.frame = lastFrame;
@@ -154,7 +160,6 @@ int main(int argc, char* argv[])
 			}
 			if (cv::waitKey(1) == 27)
 				break;
-			std::this_thread::sleep_for(std::chrono::milliseconds(30));
 		}
 	});
 
