@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 
+
 typedef unsigned char BYTE;
 
 #pragma pack(1)
@@ -15,39 +16,6 @@ typedef struct RLE_Header {
 	unsigned short width;
 }Horizon_RLE_Header;
 #pragma pack()
-
-
-std::string gIP = "127.0.0.1";
-unsigned short gPortRgb = 13956;
-unsigned short gPortRle = 13966;
-SimOne_Streaming_Image gDataImageRgb;
-SimOne_Streaming_Image gDataImageRle;
-std::mutex        gDataImageRgbMutex;
-std::mutex        gDataImageRleMutex;
-
-void dataImageRgbCallback(SimOne_Streaming_Image *pImage)
-{
-	std::lock_guard<std::mutex> lock(gDataImageRgbMutex);
-	gDataImageRgb.frame = pImage->frame;
-	gDataImageRgb.timestamp = pImage->timestamp;
-	gDataImageRgb.height = pImage->height;
-	gDataImageRgb.width = pImage->width;
-	gDataImageRgb.imageDataSize = pImage->imageDataSize;
-	gDataImageRgb.format = pImage->format;
-	memcpy(&gDataImageRgb.imageData, &pImage->imageData, pImage->imageDataSize);
-}
-
-void dataImageRleCallback(SimOne_Streaming_Image *pImage)
-{
-	std::lock_guard<std::mutex> lock(gDataImageRleMutex);
-	gDataImageRle.frame = pImage->frame;
-	gDataImageRle.timestamp = pImage->timestamp;
-	gDataImageRle.height = pImage->height;
-	gDataImageRle.width = pImage->width;
-	gDataImageRle.imageDataSize = pImage->imageDataSize;
-	gDataImageRle.format = pImage->format;
-	memcpy(&gDataImageRle.imageData, &pImage->imageData, pImage->imageDataSize);
-}
 
 int Rle_Decode_Horizon(Horizon_RLE_Header &frameHeader, BYTE *inbuf, int inSize, BYTE *outbuf) {
 	memcpy(&frameHeader, inbuf, sizeof(Horizon_RLE_Header));
@@ -77,95 +45,65 @@ int Rle_Decode_Horizon(Horizon_RLE_Header &frameHeader, BYTE *inbuf, int inSize,
 	return decSize;
 }
 
+
+std::string gIP = "127.0.0.1";
+unsigned short gPort = 13956;
+SimOne_Streaming_Image gDataImage;
+std::mutex	gDataImageMutex;
+
+void dataImageCallback(SimOne_Streaming_Image *pImage)
+{
+	std::lock_guard<std::mutex> lock(gDataImageMutex);
+	gDataImage.frame = pImage->frame;
+	gDataImage.timestamp = pImage->timestamp;
+	gDataImage.height = pImage->height;
+	gDataImage.width = pImage->width;
+	gDataImage.imageDataSize = pImage->imageDataSize;
+	gDataImage.format = pImage->format;
+	memcpy(&gDataImage.imageData, &pImage->imageData, pImage->imageDataSize);
+}
+
 int main(int argc, char* argv[])
 {
-	if (argc >= 3)
+	if (argc >= 2)
 	{
 		gIP = argv[1];
-		gPortRgb = atoi(&*argv[2]);
-		gPortRle = atoi(&*argv[3]);
+		gPort = atoi(&*argv[2]);
 	}
-	printf("IP: %s; RgbPort: %d\n", gIP.c_str(), gPortRgb);
-	printf("IP: %s; RlePort: %d\n", gIP.c_str(), gPortRle);
+	printf("IP: %s; Port: %d\n", gIP.c_str(), gPort);
 
-	SimOneAPI::SetStreamingImageUpdateCB(gIP.c_str(), gPortRgb, dataImageRgbCallback);
-	SimOneAPI::SetStreamingImageUpdateCB(gIP.c_str(), gPortRle, dataImageRleCallback);
-	std::thread RgbThread([&]() {
-		int lastFrame = 0;
-		while (1)
+	SimOneAPI::SetStreamingImageUpdateCB(gIP.c_str(), gPort, dataImageCallback);
+	int lastFrame = 0;
+	while (1)
+	{
 		{
-			std::lock_guard<std::mutex> lock(gDataImageRgbMutex);
-			{
-				if (gDataImageRgb.frame != lastFrame) {
+			std::lock_guard<std::mutex> lock(gDataImageMutex);
 
-					if (gDataImageRgb.format == ESimOne_Streaming_Image_Format_RGB) {
-						cv::Mat img(gDataImageRgb.height, gDataImageRgb.width, CV_8UC3, gDataImageRgb.imageData);
-						cv::imshow("51Sim-One Camera Video Injection Rgb", img);
-						std::cout << "111111111111111111111111111111111  " << gDataImageRgb.frame<< std::endl;
-					}
-					else if (gDataImageRgb.format == ESimOne_Streaming_Image_Format_RLESegmentation) {
-						Horizon_RLE_Header frameHeader;
-						char * ImageRleData = new char[SOSM_IMAGE_DATA_SIZE_MAX];
-						Rle_Decode_Horizon(frameHeader, (BYTE*)(void*)&(gDataImageRgb.imageData), gDataImageRgb.imageDataSize, (BYTE*)(void*)ImageRleData);
-						cv::Mat img(gDataImageRgb.height, gDataImageRgb.width, CV_8U, ImageRleData);
-						cv::imshow("51Sim-One Camera Video Injection Rle", img);
-						delete ImageRleData;
-					}
-					else if (gDataImageRgb.format == ESimOne_Streaming_Image_Format_JPEG) {
-						cv::Mat imgbuf(gDataImageRgb.height, gDataImageRgb.width, CV_8UC3, gDataImageRgb.imageData);
-						cv::Mat img = imdecode(imgbuf, CV_LOAD_IMAGE_COLOR);
-						cv::imshow("51Sim-One Camera Video Injection Jpeg", img);
-						std::cout << "this is jpeg channel" << std::endl;
-					}
+			if (gDataImage.frame != lastFrame) {
 
-					gDataImageRgb.frame = lastFrame;
+				if (gDataImage.format == ESimOne_Streaming_Image_Format_RGB) {
+					cv::Mat img(gDataImage.height, gDataImage.width, CV_8UC3, gDataImage.imageData);
+					cv::imshow("51Sim-One Camera Video Injection Rgb", img);
 				}
-
-			}
-			if (cv::waitKey(1) == 27)
-				break;
-		}
-	});
-
-	std::thread RleThread([&]() {
-		int lastFrame = 0;
-		while (1)
-		{
-			std::lock_guard<std::mutex> lock(gDataImageRleMutex);
-			{
-				if (gDataImageRle.frame != lastFrame) {
-
-					if (gDataImageRle.format == ESimOne_Streaming_Image_Format_RGB) {
-						cv::Mat img(gDataImageRle.height, gDataImageRle.width, CV_8UC3, gDataImageRle.imageData);
-						cv::imshow("51Sim-One Camera Video Injection Rgb", img);
-					}
-					else if (gDataImageRle.format == ESimOne_Streaming_Image_Format_RLESegmentation) {
-						Horizon_RLE_Header frameHeader;
-						char * ImageRleData = new char[SOSM_IMAGE_DATA_SIZE_MAX];
-						Rle_Decode_Horizon(frameHeader, (BYTE*)(void*)&(gDataImageRle.imageData), gDataImageRle.imageDataSize, (BYTE*)(void*)ImageRleData);
-						cv::Mat img(gDataImageRle.height, gDataImageRle.width, CV_8U, ImageRleData);
-						cv::imshow("51Sim-One Camera Video Injection Rle", img);
-						delete ImageRleData;
-					}
-					else if (gDataImageRle.format == ESimOne_Streaming_Image_Format_JPEG) {
-						cv::Mat imgbuf(gDataImageRgb.height, gDataImageRgb.width, CV_8UC3, gDataImageRgb.imageData);
-						cv::Mat img = imdecode(imgbuf, CV_LOAD_IMAGE_COLOR);
-						cv::imshow("51Sim-One Camera Video Injection Jpeg", img);
-						std::cout << "this is jpeg channel" << std::endl;
-					}
-
-					gDataImageRle.frame = lastFrame;
+				else if (gDataImage.format == ESimOne_Streaming_Image_Format_RLESegmentation) {
+					Horizon_RLE_Header frameHeader;
+					char * ImageRleData = new char[SOSM_IMAGE_DATA_SIZE_MAX];
+					Rle_Decode_Horizon(frameHeader, (BYTE*)(void*)&(gDataImage.imageData), gDataImage.imageDataSize, (BYTE*)(void*)ImageRleData);
+					cv::Mat img(gDataImage.height, gDataImage.width, CV_8U, ImageRleData);
+					cv::imshow("51Sim-One Camera Video Injection Rle", img);
+					delete ImageRleData;
 				}
-
+				else if (gDataImage.format == ESimOne_Streaming_Image_Format_JPEG) {
+					cv::Mat imgbuf(gDataImage.height, gDataImage.width, CV_8UC3, gDataImage.imageData);
+					cv::Mat img = imdecode(imgbuf, CV_LOAD_IMAGE_COLOR);
+					cv::imshow("51Sim-One Camera Video Injection Jpeg", img);
+				}
 			}
-			if (cv::waitKey(1) == 27)
-				break;
 		}
-	});
-
-	RgbThread.detach();
-	RleThread.detach();
-
-	getchar();
+		if (cv::waitKey(1) == 27)
+			break;
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
 	return 0;
 }
+
