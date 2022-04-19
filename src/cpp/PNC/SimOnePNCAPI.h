@@ -119,8 +119,8 @@ extern "C"
 		\li function:
 		*	SetDriveMode
 		\li brief:
-		*	Set vehicle drive control mode("API" to send the SimOneDriver control signal to the API and 
-		"Driver" to send SimOneDriver control signal to dynamics)
+		*	Set vehicle drive control mode(ESimOne_Drive_Mode_API to send the API control signal to dynamics,
+		and ESimOne_Drive_Mode_Driver to send SimOneDriver control signal to dynamics)
 		@param[in]
 		*	mainVehicleId: Id of the main vehicle
 		@param[in]
