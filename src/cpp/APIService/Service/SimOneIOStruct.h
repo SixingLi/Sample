@@ -201,7 +201,7 @@ struct SimOne_Data_Control : public SimOne_Data
     float steering_input_data[SO_MAX_WHEEL_NUM];
 };
 
-enum SimOne_Data_Drive_Mode
+enum ESimOne_Drive_Mode
 {
 	ESimOne_Drive_Mode_API = 0,
 	ESimOne_Drive_Mode_Driver = 1

@@ -146,6 +146,28 @@ def SoSetDriverName(mainVehicleId, driverName):
 	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
 	return SimoneAPI.SetDriverName(_mainVehicleId, _driverName)
 
+def SoSetDriveMode(mainVehicleId, driverMode):
+	"""设置主车控制模式.
+
+	Set vehicle drive control mode for vehicle dynamics.
+
+	Parameters
+	----------
+	mainVehicleId : 
+		Id of the main vehicle
+	driverMode : 
+		ESimOne_Drive_Mode_API for control signal from API,
+		ESimOne_Drive_Mode_Driver for control signal from SimOneDriver.
+
+	Returns
+	-------
+	None
+
+	"""
+	SimoneAPI.SetDriveMode.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.SetDriveMode(_mainVehicleId, driverMode)
+
 def SoSetVehicleEvent(mainVehicleId, vehicleEventInfo):
 	"""设置主车预警消息.
 

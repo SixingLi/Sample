@@ -1366,7 +1366,7 @@ bool SimOneAPIService::sendVehicleTrajectoryControlReq(int mainVehicleId,
 	return true;
 }
 
-bool SimOneAPIService::sendVehicleDriveModeReq(int mainVehicleId, SimOne_Data_Drive_Mode driveMode) {
+bool SimOneAPIService::sendVehicleDriveModeReq(int mainVehicleId, ESimOne_Drive_Mode driveMode) {
 	if (!mpClientSync) {
 		return false;
 	}

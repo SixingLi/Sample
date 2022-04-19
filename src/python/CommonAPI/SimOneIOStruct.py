@@ -859,6 +859,10 @@ class SimOne_Data_Driver_Status(SimOne_Data):
 		('driverStatus', ESimOne_Driver_Status)
 	]
 
+class ESimOne_Drive_Mode(c_int):
+	ESimOne_Drive_Mode_API = 0,
+	ESimOne_Drive_Mode_Driver = 1
+
 class ESimOne_Control_Mode(c_int):
 	ESimOne_Control_Mode_Unknown = 0,
 	ESimOne_Control_Mode_Auto = 1,
