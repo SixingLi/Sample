@@ -565,11 +565,11 @@ class SimOne_Data_SensorConfigurations(Structure):
 		('dataSize', c_int),  # num of Sensors
 		('data', SimOne_Data_SensorConfiguration*SOSM_SENSOR_CONFIGURATION_SIZE_MAX)
 	]
-
-
+    
 class ESimOne_Image_Format(c_int):
 	ESimOne_Image_Format_RGB = 0
-
+	ESimOne_Image_Format_RLESegmentation = 1
+	ESimOne_Image_Format_JPEG = 2
 
 class SimOne_Data_Image(SimOne_Data):
 	_pack_ = 1
