@@ -66,6 +66,8 @@ struct SimOne_Data_Vec3f
 #define SOSM_CASENAME_LENGTH 256
 #define SOSM_CASEID_LENGT 256
 #define SOSM_TASKID_LENGT 256
+
+#define MAX_PREDICTION_TRAJECTORY_SIZE 20
 struct SimOne_Data_Map
 {
 	char openDrive[SOSM_MAP_OD_LENGT];
@@ -529,6 +531,9 @@ struct SimOne_Data_Obstacle_Entry
 	float accelX; // Obstacle Acceleration X on Opendrive (by meter)
 	float accelY; // Obstacle Acceleration Y on Opendrive (by meter)
 	float accelZ; // Obstacle Acceleration Z on Opendrive (by meter)
+	uint32_t predictionTrajectorySize = 0; // point number of prediction trajectory
+	float predictionTrajectoryInterval = 0.0f; // time interval between two adjacent points of prediction trajector. unit is second.
+	SimOne_Data_Vec3f predictionTrajectory[MAX_PREDICTION_TRAJECTORY_SIZE]; // Obstacle prediction trajectory. Positions on Opendrive (by meter)
 };
 
 struct SimOne_Data_Obstacle : public SimOne_Data
