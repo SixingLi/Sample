@@ -510,6 +510,22 @@ enum ESimOne_Obstacle_Type
 	ESimOne_Obstacle_Type_RoadObstacle = 29
 };
 
+struct Rotation
+{
+	float yaw;      // Obstacle Rotation Z on Opendrive (by radian)
+	float pitch;    // Obstacle Rotation Y on Opendrive (by radian)
+	float roll;     // Obstacle Rotation X on Opendrive (by radian)
+};
+
+struct Prediction
+{
+	uint32_t trajectorySize; // point number of prediction trajectory
+	float trajectoryInterval; // time interval between two adjacent points of prediction trajector. unit is second.
+	SimOne_Data_Vec3f trajectory[MAX_PREDICTION_TRAJECTORY_SIZE]; // Obstacle prediction trajectory. Positions on Opendrive (by meter)
+	float speed[MAX_PREDICTION_TRAJECTORY_SIZE]; // point speed of prediction trajectory
+	Rotation rotation[MAX_PREDICTION_TRAJECTORY_SIZE]; // Obstacle prediction trajectory. Rotation on Opendrive
+};
+
 struct SimOne_Data_Obstacle_Entry
 {
 	int id; // Obstacle global unique ID
@@ -531,9 +547,7 @@ struct SimOne_Data_Obstacle_Entry
 	float accelX; // Obstacle Acceleration X on Opendrive (by meter)
 	float accelY; // Obstacle Acceleration Y on Opendrive (by meter)
 	float accelZ; // Obstacle Acceleration Z on Opendrive (by meter)
-	uint32_t predictionTrajectorySize = 0; // point number of prediction trajectory
-	float predictionTrajectoryInterval = 0.0f; // time interval between two adjacent points of prediction trajector. unit is second.
-	SimOne_Data_Vec3f predictionTrajectory[MAX_PREDICTION_TRAJECTORY_SIZE]; // Obstacle prediction trajectory. Positions on Opendrive (by meter)
+	Prediction prediction;
 };
 
 struct SimOne_Data_Obstacle : public SimOne_Data
