@@ -16,6 +16,7 @@ set(SIMONE_SDK_PATH_ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 SET(OPENCV_HOME ${SIMONE_SDK_PATH_ROOT}/SensorRaw/3rdparty/opencv)
 SET(OPENCV_LIB_PATH ${OPENCV_HOME}/lib)	
 include_directories("${SIMONE_SDK_PATH_ROOT}/include")
+include_directories("${SIMONE_SDK_PATH_ROOT}/include/ffmpeg")
 include_directories("${OPENCV_HOME}/include")
 
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
@@ -48,6 +49,12 @@ IF (WIN32)
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.dll ${CMAKE_BINARY_DIR}/bin/SimOneStreamingAPI.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/opencv_world346.dll ${CMAKE_BINARY_DIR}/bin/opencv_world346.dll
     )
+    target_link_libraries(SensorCameraView  ${SIMONE_SDK_PATH_ROOT}/lib/Win64/avcodec.lib)
+    target_link_libraries(SensorCameraView  ${SIMONE_SDK_PATH_ROOT}/lib/Win64/avformat.lib)
+    target_link_libraries(SensorCameraView  ${SIMONE_SDK_PATH_ROOT}/lib/Win64/avutil.lib)
+    target_link_libraries(SensorCameraView  ${SIMONE_SDK_PATH_ROOT}/lib/Win64/swscale.lib)
+    target_link_libraries(SensorCameraView  ${SIMONE_SDK_PATH_ROOT}/lib/Win64/swresample.lib)
+
 
 ELSEIF (UNIX)
 	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libSimOneStreamingAPI.so)
