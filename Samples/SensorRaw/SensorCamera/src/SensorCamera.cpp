@@ -187,7 +187,6 @@ public:
 	void play() {
 		if (matReady) {
 			cv::imshow("51Sim-One Camera Video Injection H265", pCvMat);
-			cv::waitKey(1);
 		}
 	}
 
