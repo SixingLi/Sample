@@ -6,6 +6,8 @@ cd ../../../3rdparty/artifactory/
 
 
 cd $SamplePath
+rm -rf ../Samples/include
+rm -rf ../Samples/lib
 rm -rf build_release
 mkdir build_release
 cd build_release

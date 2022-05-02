@@ -5,6 +5,8 @@ cd ../../../3rdparty/artifactory/
 ./python36.sh
 
 cd $SamplePath
+rm -rf ../Samples/include
+rm -rf ../Samples/lib
 rm -rf build_debug
 mkdir build_debug
 cd build_debug

@@ -119,11 +119,11 @@ public:
 		}
 
 		frame_count = 0;
-		//´æ´¢½âÂëºó×ª»»µÄRGBÊý¾Ý
+		//ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½RGBï¿½ï¿½ï¿½ï¿½
 		pFrameBGR = av_frame_alloc();
 	}
 
-	void H264Decoder::decode(unsigned char *inputbuf, size_t size) {
+	void decode(unsigned char *inputbuf, size_t size) {
 		AVPacket avpkt;
 		av_init_packet(&avpkt);
 		if (avpkt.size == 0)
@@ -184,18 +184,18 @@ public:
 		}
 	}
 
-	void H264Decoder::play() {
+	void play() {
 		if (matReady) {
 			cv::imshow("51Sim-One Camera Video Injection H265", pCvMat);
 			cv::waitKey(1);
 		}
 	}
 
-	H264Decoder::H264Decoder() {
+	H264Decoder() {
 		init();
 	}
 
-	cv::Mat H264Decoder::getMat() {
+	cv::Mat getMat() {
 		if (matReady) {
 			return pCvMat;
 		}
