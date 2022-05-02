@@ -109,6 +109,16 @@ IF (WIN32)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/avutil-56.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/avutil-56.dll
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/swresample-3.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/swresample-3.dll
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/swscale-5.dll ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/swscale-5.dll
+			
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/avcodec.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/avcodec.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/avformat.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/avformat.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/avutil.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/avutil.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/swresample.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/swresample.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/swscale.lib ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/swscale.lib
+			
+			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/include ${SIMONE_API_ROOT}/${OutPutDir}/include/ffmpeg
+
+
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOneStreamingAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Win64/SimOneStreamingAPI.py
 		)
 
@@ -179,6 +189,16 @@ IF (WIN32)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/avutil-56.dll ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/avutil-56.dll
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/swresample-3.dll ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/swresample-3.dll
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/bin/swscale-5.dll ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/swscale-5.dll
+
+						
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/avcodec.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/avcodec.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/avformat.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/avformat.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/avutil.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/avutil.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/swresample.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/swresample.lib
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/swscale.lib ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/swscale.lib
+			
+			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/include ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/ffmpeg
+
 
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOneSensorAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/SimOneSensorAPI.py
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOneStreamingAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Win64/SimOneStreamingAPI.py
@@ -270,6 +290,7 @@ ELSEIF (UNIX)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOneStreamingAPI.py ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/SimOneStreamingAPI.py
 
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_API_ROOT}/../../3rdparty/streaming/lib/libSimOneStreamingAPI.so ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libSimOneStreamingAPI.so
+			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/include ${SIMONE_API_ROOT}/${OutPutDirSDK}/include/ffmpeg
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libavcodec.so.58 ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libavcodec.so.58
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libavformat.so.58 ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libavformat.so.58
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libavutil.so.56 ${SIMONE_API_ROOT}/${OutPutDirSDK}/lib/Linux64/libavutil.so.56
@@ -281,8 +302,10 @@ ELSEIF (UNIX)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_API_ROOT}/../../3rdparty/streaming/include/SimOneStreamingAPI.h ${SIMONE_API_ROOT}/${OutPutDir}/include/SimOneStreamingAPI.h
 
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOneSensorAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOneSensorAPI.py		
+
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/src/python/CommonAPI/SimOneStreamingAPI.py ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/SimOneStreamingAPI.py
 
+			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/include ${SIMONE_API_ROOT}/${OutPutDir}/include/ffmpeg
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_API_ROOT}/../../3rdparty/streaming/lib/libSimOneStreamingAPI.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libSimOneStreamingAPI.so
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libavcodec.so.58 ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libavcodec.so.58
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/artifactory/ffmpeg/lib/libavformat.so.58 ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/libavformat.so.58
