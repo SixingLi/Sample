@@ -30,7 +30,7 @@ typedef struct RLE_Header {
 }Horizon_RLE_Header;
 #pragma pack()
 
-std::string gIP = "127.0.0.1";
+std::string gIP = "10.66.9.46";
 unsigned short gPort = 13956;
 SimOne_Streaming_Image gDataImage;
 std::mutex	gDataImageMutex;
@@ -93,10 +93,8 @@ public:
 public:
 	void init() {
 		matReady = false;
-
 		avcodec_register_all();
-
-		codec = avcodec_find_decoder(AV_CODEC_ID_H265);
+		codec = avcodec_find_decoder(AV_CODEC_ID_HEVC);
 		if (!codec) {
 			fprintf(stderr, "Codec not found\n");
 			exit(1);
@@ -124,24 +122,22 @@ public:
 	}
 
 	void decode(unsigned char *inputbuf, size_t size) {
+
 		AVPacket avpkt;
 		av_init_packet(&avpkt);
-		if (avpkt.size == 0)
-			return;
 		memcpy(&avpkt.pts, inputbuf, 8);
 		memcpy(&avpkt.dts, inputbuf + 8, 8);
 		memcpy(&avpkt.stream_index, inputbuf+16, 8);
-
 		avpkt.size = size-24;
 		avpkt.data = inputbuf+24;
-		//std::string temp_str = Buffer2Hex(avpkt.data, 12);
-		//std::cout << temp_str << std::endl;
-		//if (temp_str == "0000000140010C01FFFF0160") {
-		//	std::cout << "11111111111111111111111111111111111111111" << std::endl;
-		//}
-		//else {
-		//	std::cout << "00000000000000000000000000000000000000000" << std::endl;
-		//}
+		// std::string temp_str = Buffer2Hex(avpkt.data, 12);
+		// std::cout << temp_str << std::endl;
+		// if (temp_str == "0000000140010C01FFFF0160") {
+		// 	std::cout << "11111111111111111111111111111111111111111" << std::endl;
+		// }
+		// else {
+		// 	std::cout << "00000000000000000000000000000000000000000" << std::endl;
+		// }
 		int len, got_frame;
 
 
@@ -239,7 +235,6 @@ int main(int argc, char* argv[])
 				std::lock_guard<std::mutex> lock(gDataImageMutex);
 				SimOne_Streaming_Image *gDataImage = &messgeQueue.front();
 				if (gDataImage->frame != lastFrame) {
-
 					if (gDataImage->format == ESimOne_Streaming_Image_Format_RGB) {
 						cv::Mat img(gDataImage->height, gDataImage->width, CV_8UC3, gDataImage->imageData);
 						cv::imshow("51Sim-One Camera Video Injection Rgb", img);
