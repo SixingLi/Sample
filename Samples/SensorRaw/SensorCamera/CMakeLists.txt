@@ -63,7 +63,7 @@ ELSEIF (UNIX)
 	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56)
 	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswresample.so.3)
 	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswscale.so.5)
-	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libx264.so.148)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libx264.so.155)
     target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/libopencv_highgui.so.3.4)
 	target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/libopencv_core.so.3.4)
 	target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/libopencv_imgcodecs.so.3.4)
@@ -78,7 +78,7 @@ ELSEIF (UNIX)
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libavutil.so.56 ${CMAKE_BINARY_DIR}/bin/libavutil.so.56
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswresample.so.3 ${CMAKE_BINARY_DIR}/bin/libswresample.so.3
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libswscale.so.5 ${CMAKE_BINARY_DIR}/bin/libswscale.so.5
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libx264.so.148 ${CMAKE_BINARY_DIR}/bin/libx264.so.148
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Linux64/libx264.so.155 ${CMAKE_BINARY_DIR}/bin/libx264.so.155
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/libopencv_highgui.so.3.4 ${CMAKE_BINARY_DIR}/bin/libopencv_highgui.so.3.4
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/libopencv_core.so.3.4 ${CMAKE_BINARY_DIR}/bin/libopencv_core.so.3.4
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/libopencv_imgcodecs.so.3.4 ${CMAKE_BINARY_DIR}/bin/libopencv_imgcodecs.so.3.4
