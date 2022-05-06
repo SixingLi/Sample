@@ -784,14 +784,14 @@ struct SimOne_LineCurve_Parameter{
 	float C3;
 	SimOne_Data_Vec3f firstPoints;
 	SimOne_Data_Vec3f endPoints;
-	float length = 7;
+	int length = 0;
 };
 
 struct SimOne_Data_LaneLineInfo 
 {
-	int lineID;
-	ESimOne_Boundary_Type lineType;//laneline BoundaryType
-	ESimOne_Boundary_Color lineColor;//laneline BoundaryColor
+	int lineID = 0;
+	ESimOne_Boundary_Type lineType = ESimOne_Boundary_Type_none ;//laneline BoundaryType
+	ESimOne_Boundary_Color lineColor = ESimOne_Boundary_Color_standard;//laneline BoundaryColor
 	float linewidth;//laneline width
 	SimOne_Data_Vec3f linePoints[SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX];//total laneline Boundary points ,MaX 80
 	SimOne_LineCurve_Parameter linecurveParameter;//laneline boundary curveParameter
@@ -800,7 +800,7 @@ struct SimOne_Data_LaneLineInfo
 struct SimOne_Data_LaneInfo :public SimOne_Data
 {
 	int id = 0;//Lane ID 
-	ESimOne_Lane_Type laneType;//Lane type
+	ESimOne_Lane_Type laneType = ESimOne_Lane_Type_none;//Lane type
 	int laneLeftID = 0;//The Lane's leftLane ID  
 	int laneRightID = 0;//The Lane's rightLane ID 
 	int lanePredecessorID[SOSM_SENSOR_LANE_OBJECT_SIZE_MAX];//total of lane predecessor ID,max 256

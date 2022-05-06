@@ -10,7 +10,7 @@ CYBERTRON_BEGIN
 
 TaskImage::TaskImage()
 {
-	log_taskImage.open("log_taskImage.txt", std::ios::trunc);
+	// log_taskImage.open("log_taskImage.txt", std::ios::trunc);
 }
 
 TaskImage::~TaskImage()
