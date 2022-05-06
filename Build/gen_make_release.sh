@@ -1,7 +1,7 @@
 SamplePath=$(pwd)
 cd ../../../3rdparty/artifactory/
 ./OSIExternal.sh
-./ffmpeg.sh
+./ffmpegstreaming.sh
 ./python36.sh
 
 
