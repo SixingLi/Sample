@@ -30,7 +30,7 @@ typedef struct RLE_Header {
 }Horizon_RLE_Header;
 #pragma pack()
 
-std::string gIP = "10.66.9.46";
+std::string gIP = "10.66.9.244";
 unsigned short gPort = 13956;
 SimOne_Streaming_Image gDataImage;
 std::mutex	gDataImageMutex;
@@ -75,7 +75,7 @@ std::string Buffer2Hex(unsigned char *buffer, int len) {
 	}
 	return finalHex;
 }
-class H264Decoder {
+class HEVCDecoder {
 public:
 	const AVCodec *codec;
 	AVCodecContext *c = nullptr;
@@ -186,7 +186,7 @@ public:
 		}
 	}
 
-	H264Decoder() {
+	HEVCDecoder() {
 		init();
 	}
 
@@ -227,7 +227,7 @@ int main(int argc, char* argv[])
 
 	std::thread mImageProcess([&]() {
 		int lastFrame = 0;
-		H264Decoder decoder;
+		HEVCDecoder decoder;
 		while (1)
 		{
 			if (!messgeQueue.empty())
@@ -259,6 +259,7 @@ int main(int argc, char* argv[])
 				}
 				messgeQueue.pop();
 			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			if (cv::waitKey(1) == 27)
 				break;
 		}
