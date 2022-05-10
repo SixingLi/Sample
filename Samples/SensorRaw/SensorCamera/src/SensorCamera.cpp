@@ -34,7 +34,7 @@ typedef struct RLE_Header {
 #pragma pack()
 
 // std::string gIP = "127.0.0.1";
-std::string gIP = "10.66.9.111";
+std::string gIP = "10.66.9.244";
 unsigned short gPort = 13956;
 SimOne_Streaming_Image gDataImage;
 std::mutex	gDataImageMutex;
@@ -443,8 +443,8 @@ int main(int argc, char* argv[])
 			}
 			// std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			std::this_thread::sleep_for(std::chrono::nanoseconds(1));
-			if (cv::waitKey(1) == 27)
-				break;
+			// if (cv::waitKey(1) == 27)
+			// 	break;
 		}
 
 	});
