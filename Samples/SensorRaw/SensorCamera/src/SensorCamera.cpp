@@ -34,7 +34,7 @@ typedef struct RLE_Header {
 #pragma pack()
 
 // std::string gIP = "127.0.0.1";
-std::string gIP = "10.66.9.244";
+std::string gIP = "10.66.9.111";
 unsigned short gPort = 13956;
 SimOne_Streaming_Image gDataImage;
 std::mutex	gDataImageMutex;
@@ -93,11 +93,9 @@ public:
 	struct SwsContext *img_convert_ctx;
 	cv::Mat pCvMat;
 	bool matReady;
-	AVPacket avpkt;
 
 public:
 	void init() {
-		av_init_packet(&avpkt);
 		matReady = false;
 		avcodec_register_all();
 		codec = avcodec_find_decoder(AV_CODEC_ID_HEVC);
@@ -130,11 +128,12 @@ public:
 	void decode(unsigned char *inputbuf, size_t size) {
 
 		AVPacket avpkt;
+		av_init_packet(&avpkt);
 		memcpy(&avpkt.pts, inputbuf, 8);
 		memcpy(&avpkt.dts, inputbuf + 8, 8);
-		memcpy(&avpkt.stream_index, inputbuf+16, 8);
-		avpkt.size = size-24;
-		avpkt.data = inputbuf+24;
+		memcpy(&avpkt.stream_index, inputbuf + 16, 8);
+		avpkt.size = size - 24;
+		avpkt.data = inputbuf + 24;
 		// std::string temp_str = Buffer2Hex(avpkt.data, 12);
 		// std::cout << temp_str << std::endl;
 		// if (temp_str == "0000000140010C01FFFF0160") {
@@ -143,11 +142,10 @@ public:
 		// else {
 		// 	std::cout << "00000000000000000000000000000000000000000" << std::endl;
 		// }
+
 		int len, got_frame;
-
-
 		len = avcodec_decode_video2(c, frame, &got_frame, &avpkt);
-		// av_packet_unref(&avpkt);
+		av_packet_unref(&avpkt);
 		if (len < 0) {
 			matReady = false;
 			fprintf(stderr, "Error while decoding frame %d\n", frame_count);
@@ -205,168 +203,171 @@ public:
 	}
 };
 
-class HEVCEncoder{
+class HEVCEncoder {
 private:
-    bool mInited;
-    int mWidth;
-    int mHeight;
+	bool mInited;
+	int mWidth;
+	int mHeight;
 	AVCodecContext *mpFFCodecCtx = nullptr;
 	AVCodecContext *mpFFCodec2H265 = nullptr;
 	AVFormatContext* fc = nullptr;
 	AVStream* stream = nullptr;
-    AVFrame *mpFFFrameYuv = nullptr;
-    AVPacket *mpFFPackage = nullptr;
-    AVPacket pkt;
-    SwsContext *mpFFConvertCtx = nullptr;
+	AVFrame *mpFFFrameYuv = nullptr;
+	AVPacket *mpFFPackage = nullptr;
+	AVPacket pkt;
+	SwsContext *mpFFConvertCtx = nullptr;
 
 public:
-bool initFFmpeg2H265(int width,int height) {
+	bool initFFmpeg2H265(int width, int height) {
 
-	// Setting up the codec.
-	// jpeg ---------------------------yuv 420 p
-	av_register_all();
-	avcodec_register_all();
+		// Setting up the codec.
+		// jpeg ---------------------------yuv 420 p
+		av_register_all();
+		avcodec_register_all();
 
-	AVCodec *pCodec = avcodec_find_decoder(AV_CODEC_ID_MJPEG);
-	if (!pCodec)
-	{
-		printf("avcodec_find_decoder failed");
-		return false;
-	}
-	mpFFCodecCtx = avcodec_alloc_context3(pCodec);
-	if (!mpFFCodecCtx)
-	{
-		printf("avcodec_alloc_context3 failed");
-		return false;
-	}
+		AVCodec *pCodec = avcodec_find_decoder(AV_CODEC_ID_MJPEG);
+		if (!pCodec)
+		{
+			printf("avcodec_find_decoder failed");
+			return false;
+		}
+		mpFFCodecCtx = avcodec_alloc_context3(pCodec);
+		if (!mpFFCodecCtx)
+		{
+			printf("avcodec_alloc_context3 failed");
+			return false;
+		}
 
-	if (avcodec_open2(mpFFCodecCtx, pCodec, NULL) < 0)
-	{
-		printf("avcodec_open2 failed");
-		return false;
-	}
+		if (avcodec_open2(mpFFCodecCtx, pCodec, NULL) < 0)
+		{
+			printf("avcodec_open2 failed");
+			return false;
+		}
 
-	mpFFFrameYuv = av_frame_alloc();
-	if (!mpFFFrameYuv)
-	{
-		printf("av_frame_alloc mpFFFrameYuv failed");
-		return false;
-	}
-	mpFFPackage = new AVPacket();
+		mpFFFrameYuv = av_frame_alloc();
+		if (!mpFFFrameYuv)
+		{
+			printf("av_frame_alloc mpFFFrameYuv failed");
+			return false;
+		}
+		mpFFPackage = new AVPacket();
 
-	// yuv420p-------->h265
-	int fps = 30;
-	int bit_rate_ = 8192000;
-	AVCodec *codec = avcodec_find_encoder(AV_CODEC_ID_HEVC);
-	if(!codec){
+		// yuv420p-------->h265
+		int fps = 30;
+		int bit_rate_ = 8192000;
+		AVCodec *codec = avcodec_find_encoder(AV_CODEC_ID_HEVC);
+		if (!codec) {
 			printf("###########can't find hevc encoder\n");
-	}else{
+		}
+		else {
 			printf("########### find hevc encoder\n");
-	}
+		}
 
-	AVDictionary *param = NULL;
-	av_dict_set(&param, "preset", "ultrafast", 0);
-	av_dict_set(&param, "tune", "zero-latency", 0);
+		AVDictionary *param = NULL;
+		av_dict_set(&param, "preset", "ultrafast", 0);
+		av_dict_set(&param, "tune", "zero-latency", 0);
 
-	mpFFCodec2H265 = avcodec_alloc_context3(codec);
-	mpFFCodec2H265->width = width;
-	mpFFCodec2H265->height = height;
-	mpFFCodec2H265->pix_fmt = AV_PIX_FMT_YUV420P;
-	mpFFCodec2H265->time_base = AVRational{ 1, fps };
-	mpFFCodec2H265->bit_rate = bit_rate_;//8192000
-	mpFFCodec2H265->keyint_min = fps;
-	mpFFCodec2H265->max_b_frames = 0;
-	mpFFCodec2H265->gop_size = fps;
+		mpFFCodec2H265 = avcodec_alloc_context3(codec);
+		mpFFCodec2H265->width = width;
+		mpFFCodec2H265->height = height;
+		mpFFCodec2H265->pix_fmt = AV_PIX_FMT_YUV420P;
+		mpFFCodec2H265->time_base = AVRational{ 1, fps };
+		mpFFCodec2H265->bit_rate = bit_rate_;//8192000
+		mpFFCodec2H265->keyint_min = fps;
+		mpFFCodec2H265->max_b_frames = 0;
+		mpFFCodec2H265->gop_size = fps;
 
-	if(&param){
-		printf("param set success!!!!\n");
-	}else{
-		printf("param set fail!!!!\n");
-	}
+		if (&param) {
+			printf("param set success!!!!\n");
+		}
+		else {
+			printf("param set fail!!!!\n");
+		}
 
-	int ret = avcodec_open2(mpFFCodec2H265, codec,&param);
-	if (ret<0)
-	{
-		printf("avcodec_open2 failed\n");
+		int ret = avcodec_open2(mpFFCodec2H265, codec, &param);
+		if (ret < 0)
+		{
+			printf("avcodec_open2 failed\n");
+			av_dict_free(&param);
+			return false;
+		}
 		av_dict_free(&param);
-		return false;
+		return true;
 	}
-	av_dict_free(&param);
-	return true;
-}
-int encodeToH265Image(int width, int height, int inSize, const char *inImage, char *&outImage)
-{
-	if (!mInited || width != mWidth || height != mHeight)
+	int encodeToH265Image(int width, int height, int inSize, const char *inImage, char *&outImage)
 	{
-		mWidth = width;
-		mHeight = height;
-		printf("Init image decoder with size(%d, %d)\n", mWidth, mHeight);
-		freeFFmpeg();
-		mInited = initFFmpeg2H265(width,height);
-	}
-	// JPEG to YUV420
-	mpFFPackage->size = inSize;
-	mpFFPackage->data = (uint8_t *)inImage;
-	int re = 0;
-	int got_frame = 0;
-	re = avcodec_decode_video2(mpFFCodecCtx, mpFFFrameYuv, &got_frame, mpFFPackage);
-	if (got_frame != 1)
-	{
-		printf("avcodec_decode_video2 failed\n");
-		return -1;
-	}
-	av_init_packet(&pkt);
-	pkt.data = NULL;
-	pkt.size = 0;
-	int got_output;
-     int ret = avcodec_encode_video2(mpFFCodec2H265, &pkt, mpFFFrameYuv, &got_output);
-	 if (got_output != 1) {
- 		printf("avcodec_decode_video2 failed\n");
-	}	
+		if (!mInited || width != mWidth || height != mHeight)
+		{
+			mWidth = width;
+			mHeight = height;
+			printf("Init image decoder with size(%d, %d)\n", mWidth, mHeight);
+			freeFFmpeg();
+			mInited = initFFmpeg2H265(width, height);
+		}
+		// JPEG to YUV420
+		mpFFPackage->size = inSize;
+		mpFFPackage->data = (uint8_t *)inImage;
+		int re = 0;
+		int got_frame = 0;
+		re = avcodec_decode_video2(mpFFCodecCtx, mpFFFrameYuv, &got_frame, mpFFPackage);
+		if (got_frame != 1)
+		{
+			printf("avcodec_decode_video2 failed\n");
+			return -1;
+		}
+		av_init_packet(&pkt);
+		pkt.data = NULL;
+		pkt.size = 0;
+		int got_output;
+		int ret = avcodec_encode_video2(mpFFCodec2H265, &pkt, mpFFFrameYuv, &got_output);
+		if (got_output != 1) {
+			printf("avcodec_decode_video2 failed\n");
+		}
 
-	int64_t pts = pkt.pts;
-	int64_t dts =  pkt.dts;
-	int64_t stream_index =  pkt.stream_index;
+		int64_t pts = pkt.pts;
+		int64_t dts = pkt.dts;
+		int64_t stream_index = pkt.stream_index;
 
-	unsigned char * avpacket_current = (uint8_t *)malloc(sizeof(unsigned char)*(24 +  pkt.size));
-	memset(avpacket_current, 0, sizeof(uint8_t) * 3 +  pkt.size);
-	memcpy(avpacket_current, &pts, sizeof(int64_t));
-	memcpy(avpacket_current + sizeof(int64_t), &dts, sizeof(int64_t));
-	memcpy(avpacket_current + 2 * sizeof(int64_t), &stream_index, sizeof(int64_t));
-	memcpy(avpacket_current + 3 * sizeof(int64_t), pkt.data,  pkt.size);
+		unsigned char * avpacket_current = (uint8_t *)malloc(sizeof(unsigned char)*(24 + pkt.size));
+		memset(avpacket_current, 0, sizeof(uint8_t) * 3 + pkt.size);
+		memcpy(avpacket_current, &pts, sizeof(int64_t));
+		memcpy(avpacket_current + sizeof(int64_t), &dts, sizeof(int64_t));
+		memcpy(avpacket_current + 2 * sizeof(int64_t), &stream_index, sizeof(int64_t));
+		memcpy(avpacket_current + 3 * sizeof(int64_t), pkt.data, pkt.size);
 
-	size_t nStreamSize =  pkt.size + 3 * sizeof(int64_t);
-	outImage = (char *)(avpacket_current);
-	return nStreamSize;
-}
+		size_t nStreamSize = pkt.size + 3 * sizeof(int64_t);
+		outImage = (char *)(avpacket_current);
+		av_packet_unref(&pkt);
+		return nStreamSize;
+	}
 
-void freeFFmpeg()
-{
-	if (mpFFCodecCtx)
+	void freeFFmpeg()
 	{
-		avcodec_close(mpFFCodecCtx);
-		mpFFCodecCtx = nullptr;
+		if (mpFFCodecCtx)
+		{
+			avcodec_close(mpFFCodecCtx);
+			mpFFCodecCtx = nullptr;
+		}
+		if (mpFFCodec2H265) {
+			avcodec_close(mpFFCodec2H265);
+			mpFFCodecCtx = nullptr;
+		}
+		if (mpFFConvertCtx)
+		{
+			sws_freeContext(mpFFConvertCtx);
+			mpFFConvertCtx = nullptr;
+		}
+		if (mpFFFrameYuv)
+		{
+			av_frame_free(&mpFFFrameYuv);
+			mpFFFrameYuv = nullptr;
+		}
+		if (mpFFPackage)
+		{
+			av_free_packet(mpFFPackage);
+			mpFFPackage = nullptr;
+		}
 	}
-	if (mpFFCodec2H265) {
-		avcodec_close(mpFFCodec2H265);
-		mpFFCodecCtx = nullptr;
-	}
-	if (mpFFConvertCtx)
-	{
-		sws_freeContext(mpFFConvertCtx);
-		mpFFConvertCtx = nullptr;
-	}
-	if (mpFFFrameYuv)
-	{
-		av_frame_free(&mpFFFrameYuv);
-		mpFFFrameYuv = nullptr;
-	}
-	if (mpFFPackage)
-	{
-		av_free_packet(mpFFPackage);
-		mpFFPackage = nullptr;
-	}
-}
 };
 
 void dataImageCallback(SimOne_Streaming_Image *pImage)
@@ -394,7 +395,7 @@ int main(int argc, char* argv[])
 	printf("IP: %s; Port: %d\n", gIP.c_str(), gPort);
 	SimOneAPI::SetStreamingImageUpdateCB(gIP.c_str(), gPort, dataImageCallback);
 
-    flip.store(false);
+	flip.store(false);
 
 	std::thread mImageProcess([&]() {
 		int lastFrame = 0;
@@ -427,24 +428,25 @@ int main(int argc, char* argv[])
 					}
 					else if (gDataImage->format == ESimOne_Streaming_Image_Format_H265) {
 						char *imageTemp = nullptr;
-						int sizeofhevc = encoder.encodeToH265Image(WIDTH,HEIGHT,gDataImage->imageDataSize,gDataImage->imageData,imageTemp);
+						int sizeofhevc = encoder.encodeToH265Image(WIDTH, HEIGHT, gDataImage->imageDataSize, gDataImage->imageData, imageTemp);
 						// if(sizeofhevc>0){
 						// 	printf("messgeQueue's size = %d ,encode success and size = %d\n",messgeQueue.size(),sizeofhevc);
 						// }else{
 						// 	printf("fail !!!!!!!!!!!!!!\n");
 						// }
-						// decoder.decode((unsigned char *)imageTemp, sizeofhevc);
-						// decoder.play();
+						//decoder.decode((unsigned char *)imageTemp, sizeofhevc);
+						//decoder.play();
+						delete(imageTemp);
 					}
 				}
 				messgeQueue.pop();
 			}
 			// std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			std::this_thread::sleep_for(std::chrono::nanoseconds(1));
-			// if (cv::waitKey(1) == 27)
-			// 	break;
+			if (cv::waitKey(1) == 27)
+				break;
 		}
-	
+
 	});
 	mImageProcess.detach();
 	while (1) {
