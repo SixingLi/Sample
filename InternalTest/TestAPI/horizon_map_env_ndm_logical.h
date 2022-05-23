@@ -25,9 +25,9 @@ namespace HorizonMapEnv {
 	// Lane Attr
 	typedef struct LaneAttr {
 		float curvature;     // curvature, (1/m), 1024--invalid
-		float slope;         // road elevation, (¡ã), 128--invalid
-		float banking;       // super elevation, (¡ã), 128--invalid
-		float headingAngle;  // heading angle, (¡ã), 361--invalid
+		float slope;         // road elevation, (ï¿½ï¿½), 128--invalid
+		float banking;       // super elevation, (ï¿½ï¿½), 128--invalid
+		float headingAngle;  // heading angle, (ï¿½ï¿½), 361--invalid
 		float offset;        // offset relative to the start of lane, (m)
 		float width;         // width, (m), -1--invalid
 	}NDM_LaneAttr;
@@ -117,23 +117,23 @@ namespace HorizonMapEnv {
 	}NDM_Lane;
 
 	typedef struct ParkingSpaceRestriction {
-		int number_limit;// ³µÎ»ÊýÁ¿
-		SSD::SimVector<NDM_TimeLimit> time_limits;// Ê±¼äÏÞÖÆ
-		SSD::SimVector<NDM_VehicleType> vehicle_types;// Í£·Å³µÐÍ
+		int number_limit;// ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½
+		SSD::SimVector<NDM_TimeLimit> time_limits;// Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		SSD::SimVector<NDM_VehicleType> vehicle_types;// Í£ï¿½Å³ï¿½ï¿½ï¿½
 	}NDM_ParkingSpaceRestriction;
 
 
-	// Í£³µÇø
+	// Í£ï¿½ï¿½ï¿½ï¿½
 	typedef struct ParkingSpace {
 		SSD::SimString id;
-		// ÏòÉÏË÷Òý, ´æ´¢ÆäÔÚÍØÆË²ãËùÊôµÄparking(Í£³µ³¡) id
-		// optional string global_id = 2;  // ÔÝÊ±²»ÐèÒª
-		// Ò»¸öÍ£³µÇø°üÀ¨Ò»¸ö»ò¶à¸öÍ£³µÎ»
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½parking(Í£ï¿½ï¿½ï¿½ï¿½) id
+		// optional string global_id = 2;  // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Òª
+		// Ò»ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½Î»
 		SSD::SimStringVector parkingslot_ids;
-		SSD::SimStringVector border_ids;  // ±ß½çÏßid, GeneralLine
+		SSD::SimStringVector border_ids;  // ï¿½ß½ï¿½ï¿½ï¿½id, GeneralLine
 		NDM_Polygon bounding_polygon;
 		SSD::SimStringVector link_ids;  ///ParkingSpace, Section, Junction
-		// restriction of the parking space, ¼ûbase.proto
+		// restriction of the parking space, ï¿½ï¿½base.proto
 		NDM_ParkingSpaceRestriction restriction;
 	}NDM_ParkingSpace;
 
@@ -141,12 +141,12 @@ namespace HorizonMapEnv {
 	typedef enum SpecialSituationType {
 		SpecialSituationType_DeadEnd = 248,
 		SpecialSituationType_FerryTerminal = 249,
-		SpecialSituationType_TollBooth = 250,         // ÊÕ·ÑÕ¾
+		SpecialSituationType_TollBooth = 250,         // ï¿½Õ·ï¿½Õ¾
 		SpecialSituationType_RailroadCrossing = 251,
 		SpecialSituationType_PedestrianCrossing = 252,
 		SpecialSituationType_SpeedBump = 253,
-		SpecialSituationType_CertifiedRoad = 254,     // ¼ì²éÕ¾
-		SpecialSituationType_TollBooth_CertifiedRoad = 255,  // ÊÕ·ÑÕ¾ºÍ¼ì²éÕ¾
+		SpecialSituationType_CertifiedRoad = 254,     // ï¿½ï¿½ï¿½Õ¾
+		SpecialSituationType_TollBooth_CertifiedRoad = 255,  // ï¿½Õ·ï¿½Õ¾ï¿½Í¼ï¿½ï¿½Õ¾
 	}NDM_SpecialSituationType;
 
 	typedef struct Section {
@@ -155,7 +155,7 @@ namespace HorizonMapEnv {
 		SSD::SimStringVector l_border_ids;
 		SSD::SimStringVector r_border_ids;
 		SSD::SimVector<NDM_Link> objs;
-		double length;  // section³¤¶È, µ¥Î»[m]
+		double length;  // sectionï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Î»[m]
 
 		SSD::SimStringVector pred_ids;  ///Section, Junction
 		SSD::SimStringVector succ_ids;  ///Section, Junction
@@ -164,15 +164,15 @@ namespace HorizonMapEnv {
 
 		NDM_Polygon bounding_polygon;
 
-		NDM_SpecialSituationType special_situation_type;// sectionÌØÊâÇé¿öÀàÐÍ£¬ÈçÊÕ·ÑÕ¾¡¢¼ì²éÕ¾µÈ
+		NDM_SpecialSituationType special_situation_type;// sectionï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½Õ·ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½
 	}NDM_Section;
 
 	typedef struct Junction {
 		SSD::SimString id;
 		SSD::SimVector<NDM_Link> objs;
 		/// virtual lanes in Junction
-		/// Ã¿Ò»ÌõLaneÓÃÀ´Á¬½ÓÂ·¿ÚÄÚµÄ¿ÉÍ¨ÐÐµÄÁ½¸ö³µµÀ(´ÓPred_Lane(id´æ´¢ÔÚvirtual laneµÄpred_idsÖÐ)µ½Succ_Lane(id´æ´¢ÔÚsucc_idsÖÐ))
-		/// °üÀ¨Êµ¼Ê´æÔÚµÄlane(±ÈÈçÂ·¿ÚÄÚ×ó×ª´ý×ªÇø)ºÍÉú³ÉµÄvirtual lane
+		/// Ã¿Ò»ï¿½ï¿½Laneï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ÚµÄ¿ï¿½Í¨ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Pred_Lane(idï¿½æ´¢ï¿½ï¿½virtual laneï¿½ï¿½pred_idsï¿½ï¿½)ï¿½ï¿½Succ_Lane(idï¿½æ´¢ï¿½ï¿½succ_idsï¿½ï¿½))
+		/// ï¿½ï¿½ï¿½ï¿½Êµï¿½Ê´ï¿½ï¿½Úµï¿½lane(ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½×ªï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½virtual lane
 		SSD::SimStringVector lane_ids;
 		NDM_Polygon bounding_polygon;
 
@@ -206,7 +206,7 @@ namespace HorizonMapEnv {
 
 			for (HDMapStandalone::MLaneLineInfo mLaneinfo : laneLineInfo)
 			{
-				auto& splitItem = UtilString::split(mLaneinfo.laneName.GetString(), "_");
+				 std::vector<std::string> splitItem = UtilString::split(mLaneinfo.laneName.GetString(), "_");
 				if (splitItem[2] == "0") {
 					continue;
 				}
@@ -479,12 +479,12 @@ namespace HorizonMapEnv {
 
 #ifdef NDM_MAP_LOCAL
 			lane.lane_length = HDMapStandalone::MHDMap::GetLaneLength(laneName);
-			lane.type = int(HDMapStandalone::MHDMap::GetLaneType(laneName));//ÕâÀïÐèÒª¶ÔÏÂÃ¶¾ÙÀàÐÍ¡£
+			lane.type = int(HDMapStandalone::MHDMap::GetLaneType(laneName));//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½Í¡ï¿½
 #else
 			lane.lane_length = SimOneAPI::GetLaneLength(laneName);
 			HDMapStandalone::MLaneType laneType;
 			SimOneAPI::GetLaneType(laneName, laneType);
-			lane.type = (int)laneType;//ÕâÀïÐèÒª¶ÔÏÂÃ¶¾ÙÀàÐÍ¡£
+			lane.type = (int)laneType;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½Í¡ï¿½
 #endif
 			lanes.push_back(lane);
 		}
