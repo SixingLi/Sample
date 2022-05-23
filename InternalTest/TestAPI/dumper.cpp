@@ -484,17 +484,17 @@ void dumper::dump_sensor_laneInfo(const char* mainVehicleId, const char* sensorI
 			break;
 	}
 	std::cout << "c_Line.linewidth: " << pData->c_Line.linewidth << std::endl;
-	// for (int i=0; i<sizeof(pData->c_Line.linePoints) / sizeof(SimOne_Data_Vec3f); i++)
-	// {
-	// 	std::cout << "c_Line.linePoints[" << i << "]: [" << pData->c_Line.linePoints[i].x << ", " << pData->c_Line.linePoints[i].y << ", " << pData->c_Line.linePoints[i].z << "]" << std::endl;
-	// }
-	// std::cout << "c_Line.linecurveParameter.C0: " << pData->c_Line.linecurveParameter.C0 << std::endl;
-	// std::cout << "c_Line.linecurveParameter.C1: " << pData->c_Line.linecurveParameter.C1 << std::endl;
-	// std::cout << "c_Line.linecurveParameter.C2: " << pData->c_Line.linecurveParameter.C2 << std::endl;
-	// std::cout << "c_Line.linecurveParameter.C3: " << pData->c_Line.linecurveParameter.C3 << std::endl;
-	// std::cout << "c_Line.linecurveParameter.firstPoints: [" << pData->c_Line.linecurveParameter.firstPoints.x << ", " << pData->c_Line.linecurveParameter.firstPoints.y << ", " << pData->c_Line.linecurveParameter.firstPoints.z << "]" << std::endl;
-	// std::cout << "c_Line.linecurveParameter.endPoints: [" << pData->c_Line.linecurveParameter.endPoints.x << ", " << pData->c_Line.linecurveParameter.endPoints.y << ", " << pData->c_Line.linecurveParameter.endPoints.z << "]" << std::endl;
-	// std::cout << "c_Line.linecurveParameter.length: " << pData->c_Line.linecurveParameter.length << std::endl;
+	 for (int i=0; i<sizeof(pData->c_Line.linePoints) / sizeof(SimOne_Data_Vec3f); i++)
+	 {
+	 	std::cout << "c_Line.linePoints[" << i << "]: [" << pData->c_Line.linePoints[i].x << ", " << pData->c_Line.linePoints[i].y << ", " << pData->c_Line.linePoints[i].z << "]" << std::endl;
+	 }
+	 std::cout << "c_Line.linecurveParameter.C0: " << pData->c_Line.linecurveParameter.C0 << std::endl;
+	 std::cout << "c_Line.linecurveParameter.C1: " << pData->c_Line.linecurveParameter.C1 << std::endl;
+	 std::cout << "c_Line.linecurveParameter.C2: " << pData->c_Line.linecurveParameter.C2 << std::endl;
+	 std::cout << "c_Line.linecurveParameter.C3: " << pData->c_Line.linecurveParameter.C3 << std::endl;
+	 std::cout << "c_Line.linecurveParameter.firstPoints: [" << pData->c_Line.linecurveParameter.firstPoints.x << ", " << pData->c_Line.linecurveParameter.firstPoints.y << ", " << pData->c_Line.linecurveParameter.firstPoints.z << "]" << std::endl;
+	 std::cout << "c_Line.linecurveParameter.endPoints: [" << pData->c_Line.linecurveParameter.endPoints.x << ", " << pData->c_Line.linecurveParameter.endPoints.y << ", " << pData->c_Line.linecurveParameter.endPoints.z << "]" << std::endl;
+	 std::cout << "c_Line.linecurveParameter.length: " << pData->c_Line.linecurveParameter.length << std::endl;
 
 	std::cout << "r_Line.lineID: " << pData->r_Line.lineID << std::endl;
 	switch (pData->r_Line.lineType)
