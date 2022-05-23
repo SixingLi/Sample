@@ -44,10 +44,17 @@ extern "C"
 		return SimOneAPIService::GetLaneSample(id, info);
 	}
 
+	SIMONE_API bool SimOneAPI::GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& id, const double& forward,
+		SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoLis)
+	{
+		return SimOneAPIService::GetForwardLaneSample(inputPt, id, forward, laneInfoLis);
+	}
+
 	SIMONE_API bool SimOneAPI::GetLaneLink(const SSD::SimString& id, HDMapStandalone::MLaneLink& laneLink)
 	{
 		return SimOneAPIService::GetLaneLink(id, laneLink);
 	}
+
 
 	SIMONE_API bool SimOneAPI::GetLaneType(const SSD::SimString& id, HDMapStandalone::MLaneType& laneType)
 	{
@@ -84,6 +91,10 @@ extern "C"
 		return SimOneAPIService::GetParkingSpaceList(parkingSpaceList);
 	}
 
+	SIMONE_API bool SimOneAPI::GetParkingSpaceIds(const SSD::SimPoint3D& inputPt, double distance, SSD::SimStringVector& ids) {
+		return SimOneAPIService::GetParkingSpaceIds(inputPt, distance, ids);
+	}
+
 	SIMONE_API bool SimOneAPI::GenerateRoute(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimPoint3DVector& route)
 	{
 		return SimOneAPIService::GenerateRoute(inputPoints, indexOfValidPoints, route);
@@ -105,10 +116,21 @@ extern "C"
 		list = std::move(SimOneAPIService::GetTrafficLightList());
 	}
 
+	SIMONE_API void SimOneAPI::GetSpecifiedLaneTrafficLightList(const SSD::SimString & id, SSD::SimVector<HDMapStandalone::MSignal>& list)
+	{
+		//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
+		list = std::move(SimOneAPIService::GetSpecifiedLaneTrafficLightList(id));
+	}
+
 	SIMONE_API void SimOneAPI::GetTrafficSignList(SSD::SimVector<HDMapStandalone::MSignal>& list)
 	{
 		//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
 		list = std::move(SimOneAPIService::GetTrafficSignList());
+	}
+
+	SIMONE_API void  SimOneAPI::GetSpecifiedLaneTrafficSignalList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MSignal>& list) {
+		//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
+		list = std::move(SimOneAPIService::GetSpecifiedLaneTrafficSignList(id));
 	}
 
 	SIMONE_API void SimOneAPI::GetStoplineList(const HDMapStandalone::MSignal& light, const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& stoplineList)
@@ -117,10 +139,20 @@ extern "C"
 		stoplineList = std::move(SimOneAPIService::GetStoplineList(light, id));
 	}
 
+	SIMONE_API void SimOneAPI::GetSpecifiedLaneStoplineList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& stoplineList) {
+		//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
+		stoplineList = std::move(SimOneAPIService::GetSpecifiedLaneStoplineList(id));
+	}
+
 	SIMONE_API void SimOneAPI::GetCrosswalkList(const HDMapStandalone::MSignal& light, const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& crosswalkList)
 	{
 		//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
 		crosswalkList = std::move(SimOneAPIService::GetCrosswalkList(light, id));
+	}
+
+	SIMONE_API void SimOneAPI::GetSpecifiedLaneCrosswalkList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& crosswalkList) {
+		//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
+		crosswalkList = std::move(SimOneAPIService::GetSpecifiedLaneCrosswalkList(id));
 	}
 
 	SIMONE_API void SimOneAPI::GetCrossHatchList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& crossHatchList)
@@ -143,6 +175,10 @@ extern "C"
 	SIMONE_API void SimOneAPI::GetLaneData(SSD::SimVector<HDMapStandalone::MLaneInfo>& data)
 	{
 		return SimOneAPIService::GetLaneData(data);
+	}
+
+	SIMONE_API void SimOneAPI::GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo> & data) {
+		return SimOneAPIService::GetLaneLineInfo(data);
 	}
 
 	SIMONE_API SSD::SimVector<long> SimOneAPI::GetJunctionList()
