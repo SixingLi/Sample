@@ -9,7 +9,7 @@ dumper::~dumper(){}
 void dumper::dump_gps(const char* mainVehicleId, SimOne_Data_Gps* pData)
 {
 	cout.setf(ios::fixed);
-	std::cout<<"------ mainVehicleId:"<< mainVehicleId << std::endl;
+	/*std::cout<<"------ mainVehicleId:"<< mainVehicleId << std::endl;
 	std::cout<<"------ frame:"<< pData->frame << std::endl;	
 	std::cout << "posX/Y/Z: [" << pData->posX << ", " << pData->posY << ", " << pData->posZ << "]" << std::endl;
 	std::cout << "oriX/Y/Z: [" << pData->oriX << ", " << pData->oriY << ", " << pData->oriZ << "]" << std::endl;
@@ -26,7 +26,16 @@ void dumper::dump_gps(const char* mainVehicleId, SimOne_Data_Gps* pData)
 	std::cout << "wheelSpeedRR: " << pData->wheelSpeedRR << std::endl;
 	std::cout << "engineRpm: " << pData->engineRpm << std::endl;
 	std::cout << "odometer: " << pData->odometer << std::endl;
-	std::cout << "extraStateSize: " << pData->extraStateSize << std::endl;
+	std::cout << "extraStateSize: " << pData->extraStateSize << std::endl;*/
+
+	GNSS gnss(12.4, 124.55, 1.0);
+	GNSSMessage g = gnss.getGNSSMessage(pData);
+	std::cout << g.GPGGA_Size << " :: " << g.GNSS_GPGGA;
+	std::cout << g.GPGLL_Size << " :: " << g.GNSS_GPGLL;
+	std::cout << g.GPGSA_Size << " :: " << g.GNSS_GPGSA;
+	std::cout << g.GPRMC_Size << " :: " << g.GNSS_GPRMC;
+	std::cout << g.GPVTG_Size << " :: " << g.GNSS_GPVTG << endl;
+
 	for (int i=0; i<pData->extraStateSize; i++)
 	{
 		std::cout << "extraStates[" << i << "]: " << pData->extraStates[i] << std::endl;

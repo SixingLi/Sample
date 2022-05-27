@@ -3,6 +3,8 @@
 
 #include "Service/SimOneIOStruct.h"
 #include <iostream>
+#include "GNSS.h"
+
 using namespace std;
 
 class dumper

@@ -345,7 +345,10 @@ struct SimOne_Data_Gps : public SimOne_Data
 	float odometer;	// odometer in meter.
 	int extraStateSize;
 	float extraStates[SOSM_EXTRA_STATES_SIZE_MAX];// vehicle states subscripted by MainVehicleExtraDataIndics message
+
+	bool isGPSLost; // GPS signal lost tag
 };
+
 
 enum ESimOne_Data_Vehicle_State
 {
