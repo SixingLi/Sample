@@ -361,6 +361,8 @@ ELSEIF (UNIX)
 
 			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/hdmap/lib/linux/release/ ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/
 			COMMAND ${CMAKE_COMMAND} -E copy_directory  ${SIMONE_API_ROOT}/../../3rdparty/SSD/lib/linux/release/ ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/
+
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different  ${SIMONE_API_ROOT}/../../3rdparty/tsf/lib/linux/release/libtsf.so ${SIMONE_API_ROOT}/${OutPutDir}/lib/Linux64/
 		)
 	ENDIF()	
 
