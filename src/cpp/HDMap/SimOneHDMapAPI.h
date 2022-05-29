@@ -529,7 +529,7 @@ extern "C"
 		/*!
 		获取地图中指定车道关联交通标志列表
 		\li function:
-		*	GetTrafficSignList
+		*	GetSpecifiedLaneTrafficSignalList
 		\li brief:
 		*	Get traffic sign list in the map.
 		@param[in]
@@ -557,7 +557,7 @@ extern "C"
 		/*!
 		获取给定车道的关联停止线列表
 		\li function:
-		*	GetStoplineList
+		*	GetSpecifiedLaneStoplineList
 		\li brief:
 		*	Get the list of stoplines that belongs to traffic light's validity matched to specified lane.
 		@param[in]
@@ -802,6 +802,14 @@ extern "C"
 		*/
 		SIMONE_API bool GetLaneSampleByLocation(const SSD::SimPoint3D& pos, HDMapStandalone::MLaneInfo& info);
 
+		//%%%%%%%%%%%%%% V4 Add %%%%%%%%%%%%%%%
+
+
+		SIMONE_API void GetSignalListOnLaneByType(const SSD::SimString& laneName, const SSD::SimString& type, SSD::SimVector<HDMapStandalone::MSignal> & signalInfo);
+
+		SIMONE_API void GetLaneList(const long& roadId, SSD::SimStringVector &laneList);
+
+		SIMONE_API void GetJunction(const long& junctionId, HDMapStandalone::MJunction &junction);
 	}
 #ifdef __cplusplus
 }

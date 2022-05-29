@@ -2661,6 +2661,38 @@ SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetSpecifiedLaneCross
 	return std::move(HDMapStandalone::MLightAndSign::GetCrosswalkList(id));
 }
 
+SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetSignalListOnLaneByType(const SSD::SimString& laneName, const SSD::SimString& type) {
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetSignalListOnLaneByType failed, HDMap not initialized yet.");
+		return SSD::SimVector<HDMapStandalone::MSignal>();
+	}
+#endif
+	return std::move(HDMapStandalone::MLightAndSign::GetSignalListOnLaneByType(laneName, type));
+}
+
+SSD::SimStringVector SimOneAPIService::GetLaneList(const long& roadId)
+{
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneList failed, HDMap not initialized yet.");
+	}
+#endif
+	return std::move(HDMapStandalone::MHDMap::GetLaneList(roadId));
+}
+
+HDMapStandalone::MJunction SimOneAPIService::GetJunction(const long& junctionId) {
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetJunction failed, HDMap not initialized yet.");
+	}
+#endif
+	return HDMapStandalone::MHDMap::GetJunction(junctionId);
+}
+
 SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetCrossHatchList(const SSD::SimString& id)
 {
 #ifndef API_TEST_LOADXODR_OFFLINE

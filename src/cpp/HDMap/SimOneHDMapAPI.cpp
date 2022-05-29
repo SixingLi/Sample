@@ -228,6 +228,20 @@ extern "C"
 		return SimOneAPIService::GetLaneSampleByLocation(pos, info);
 	}
 
+	//add v4 for hor
+	SIMONE_API void SimOneAPI::GetSignalListOnLaneByType(const SSD::SimString& laneName, const SSD::SimString& type, SSD::SimVector<HDMapStandalone::MSignal> & signalInfo) {
+		signalInfo = std::move(SimOneAPIService::GetSignalListOnLaneByType(laneName, type));
+	}
+
+	SIMONE_API void SimOneAPI::GetLaneList(const long& roadId, SSD::SimStringVector &laneList) {
+		laneList = std::move(SimOneAPIService::GetLaneList(roadId));
+	}
+
+	SIMONE_API void SimOneAPI::GetJunction(const long& junctionId, HDMapStandalone::MJunction &junction) {
+		junction = SimOneAPIService::GetJunction(junctionId);
+	}
+
+
 #ifdef __cplusplus
 }
 #endif

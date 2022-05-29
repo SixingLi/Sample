@@ -84,8 +84,8 @@ namespace HorizonMapEnv {
 		SSD::SimVector<NDM_VehicleType> vehicle_types;
 		SSD::SimVector<NDM_SpeedLimit> speed_limits;
 		SSD::SimVector<NDM_TimeLimit> time_limits;
-		int lanemarking_types;			//spread and inference, see LaneMarkingType
-		int trafficsign_types;			//spread and inference, see TrafficSignType
+		SSD::SimVector<int> lanemarking_types;			//spread and inference, see LaneMarkingType
+		SSD::SimVector<int> trafficsign_types;			//spread and inference, see TrafficSignType
 		// Only set if restriction exists.
 		float weight_limit;				//upper bound, need lower than this
 		float height_limit;				//upper bound, need lower than this
@@ -111,68 +111,58 @@ namespace HorizonMapEnv {
 		//SSD::SimVector<NDM_Link> obstacles;
 		SSD::SimStringVector pred_ids;
 		SSD::SimStringVector succ_ids;
-		SSD::SimStringVector left_ids;
-		SSD::SimStringVector right_ids;
+		SSD::SimStringVector left_ids; //只给临近的一个车道
+		SSD::SimStringVector right_ids; //只给临近的一个车道
 		SSD::SimVector<NDM_LaneRestriction> restrictions;
 	}NDM_Lane;
 
 	typedef struct ParkingSpaceRestriction {
-		int number_limit;// ��λ����
-		SSD::SimVector<NDM_TimeLimit> time_limits;// ʱ������
-		SSD::SimVector<NDM_VehicleType> vehicle_types;// ͣ�ų���
+		int number_limit;
+		SSD::SimVector<NDM_TimeLimit> time_limits;
+		SSD::SimVector<NDM_VehicleType> vehicle_types;
 	}NDM_ParkingSpaceRestriction;
 
-
-	// ͣ����
 	typedef struct ParkingSpace {
 		SSD::SimString id;
-		// ��������, �洢�������˲�������parking(ͣ����) id
-		// optional string global_id = 2;  // ��ʱ����Ҫ
-		// һ��ͣ��������һ������ͣ��λ
 		SSD::SimStringVector parkingslot_ids;
-		SSD::SimStringVector border_ids;  // �߽���id, GeneralLine
+		SSD::SimStringVector border_ids; 
 		NDM_Polygon bounding_polygon;
 		SSD::SimStringVector link_ids;  ///ParkingSpace, Section, Junction
-		// restriction of the parking space, ��base.proto
-		NDM_ParkingSpaceRestriction restriction;
+		NDM_ParkingSpaceRestriction restriction;// restriction of the parking space,base.proto 不用
 	}NDM_ParkingSpace;
-
 
 	typedef enum SpecialSituationType {
 		SpecialSituationType_DeadEnd = 248,
 		SpecialSituationType_FerryTerminal = 249,
-		SpecialSituationType_TollBooth = 250,         // �շ�վ
+		SpecialSituationType_TollBooth = 250,
 		SpecialSituationType_RailroadCrossing = 251,
 		SpecialSituationType_PedestrianCrossing = 252,
 		SpecialSituationType_SpeedBump = 253,
-		SpecialSituationType_CertifiedRoad = 254,     // ���վ
-		SpecialSituationType_TollBooth_CertifiedRoad = 255,  // �շ�վ�ͼ��վ
+		SpecialSituationType_CertifiedRoad = 254,
+		SpecialSituationType_TollBooth_CertifiedRoad = 255
 	}NDM_SpecialSituationType;
 
-	typedef struct Section {
+	typedef struct Section { //双向上两个section
 		SSD::SimString id;
 		SSD::SimStringVector lane_ids;
-		SSD::SimStringVector l_border_ids;
-		SSD::SimStringVector r_border_ids;
+		SSD::SimStringVector l_border_ids; //不用
+		SSD::SimStringVector r_border_ids; //不用
 		SSD::SimVector<NDM_Link> objs;
-		double length;  // section����, ��λ[m]
+		double length;
 
 		SSD::SimStringVector pred_ids;  ///Section, Junction
 		SSD::SimStringVector succ_ids;  ///Section, Junction
-		SSD::SimStringVector left_ids;  ///Section, ParkingSpace
-		SSD::SimStringVector right_ids; ///Section, ParkingSpace
+		SSD::SimStringVector left_ids;  ///Section, ParkingSpace 不用
+		SSD::SimStringVector right_ids; ///Section, ParkingSpace 不用
 
-		NDM_Polygon bounding_polygon;
-
-		NDM_SpecialSituationType special_situation_type;// section����������ͣ����շ�վ�����վ��
+		NDM_Polygon bounding_polygon;  //section内左右车道的采样点
+		NDM_SpecialSituationType special_situation_type; //收费站检查站
 	}NDM_Section;
 
 	typedef struct Junction {
 		SSD::SimString id;
 		SSD::SimVector<NDM_Link> objs;
 		/// virtual lanes in Junction
-		/// ÿһ��Lane��������·���ڵĿ�ͨ�е���������(��Pred_Lane(id�洢��virtual lane��pred_ids��)��Succ_Lane(id�洢��succ_ids��))
-		/// ����ʵ�ʴ��ڵ�lane(����·������ת��ת��)�����ɵ�virtual lane
 		SSD::SimStringVector lane_ids;
 		NDM_Polygon bounding_polygon;
 
@@ -195,18 +185,30 @@ namespace HorizonMapEnv {
 		SSD::SimVector<NDM_Junction> junctions;
 	}NDM_LogicalLayer;
 
+	typedef enum CalculateSide
+	{
+		eLeft,
+		eRight,
+		eBoth
+	}CalculateSide_;
 
+	typedef struct RoadSection
+	{
+		long roadId;
+		int sectionIndex;
+		CalculateSide_ side = CalculateSide_::eRight;
+		SSD::SimString roadSectionSideName;
+		SSD::SimString roadSectionName;
+		SSD::SimStringVector laneNameList;
+	}RoadSection_;
 
 	class NDM_LogicalLayer_Creator {
-
 	public:
 		void GetBoundarySampleList_(SSD::SimVector<NDM_Line> &virtuallines, const SSD::SimString& laneName, const SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo, long junctionId)
 		{
-			NDM_CurveLine lineleft, lineright, linecenter;
-
 			for (HDMapStandalone::MLaneLineInfo mLaneinfo : laneLineInfo)
 			{
-				 std::vector<std::string> splitItem = UtilString::split(mLaneinfo.laneName.GetString(), "_");
+				std::vector<std::string> splitItem = UtilString::split(mLaneinfo.laneName.GetString(), "_");
 				if (splitItem[2] == "0") {
 					continue;
 				}
@@ -220,22 +222,16 @@ namespace HorizonMapEnv {
 				{
 					//std::cout << "mLaneinfo.laneName:" << mLaneinfo.laneName.GetString() << std::endl;
 					auto iter = mVirtualLines.find(mLaneinfo.laneName);
-					//std::find_if(virtuallines.begin(), virtuallines.end(), [&](const NDM_Line & item)
-					//{
-					//	//std::cout << "item.str_id.GetString():" << item.str_id.GetString() << std::endl;
-					//	auto& splitItem = UtilString::split(item.str_id.GetString(), "_");
-					//	auto& splitLaneName = UtilString::split(mLaneinfo.laneName.GetString(), "_");
-					//	return splitItem[0] == splitLaneName[0] && splitItem[1] == splitLaneName[1] && splitItem[2] == splitLaneName[2];
-					//});
 					if (iter == mVirtualLines.end())
 					{
+						NDM_CurveLine lineleft, lineright, linecenter;
 						NDM_Line left;
 						left.str_id.SetString((std::string(mLaneinfo.laneName.GetString()) + "_l").c_str());
-						left.type = NDM_LineType::LineType_LaneLine;
+						left.type = NDM_LineType::LineType_Virtual;
 
 						NDM_Line right;
 						right.str_id.SetString((std::string(mLaneinfo.laneName.GetString()) + "_r").c_str());
-						right.type = NDM_LineType::LineType_LaneLine;
+						right.type = NDM_LineType::LineType_Virtual;
 
 						NDM_Line center;
 						center.str_id.SetString((std::string(mLaneinfo.laneName.GetString()) + "_c").c_str());
@@ -259,20 +255,26 @@ namespace HorizonMapEnv {
 						{
 							for (auto point : points)
 							{
-								lineleft.points.push_back({ point.x,point.y,point.z,0 });
+								NDM_Point point_pt;
+								point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
+								lineleft.points.push_back(point_pt);
 							}
 						}
 						for (SSD::SimPoint3DVector points : mLaneinfo.rightBoundary.segmentList)
 						{
 							for (auto point : points)
 							{
-								lineright.points.push_back({ point.x,point.y,point.z,0 });
+								NDM_Point point_pt;
+								point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
+								lineright.points.push_back(point_pt);
 							}
 						}
 
 						for (auto point : cLaneinfo.centerLine)
 						{
-							linecenter.points.push_back({ point.x,point.y,point.z,0 });
+							NDM_Point point_pt;
+							point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
+							linecenter.points.push_back(point_pt);
 						}
 
 						//break;
@@ -309,7 +311,7 @@ namespace HorizonMapEnv {
 					SimOneAPI::GetLaneSample(predName, laneInfo);
 #endif
 					LaneSample_ sample;
-					sample.laneCode = NDM_Util::codeLane++;
+					sample.laneCode = 0;
 					long juncId = -1;
 #ifdef NDM_MAP_LOCAL
 					sample.inJunction = HDMapStandalone::MHDMap::IsInJunction(laneInfo.laneName, juncId);
@@ -322,23 +324,35 @@ namespace HorizonMapEnv {
 					GetLane_(lanes, predName, sample);
 				}
 			}
-			//leftNeighborLanes
-			while (1)
-			{
-				SSD::SimString leftLane = laneLink.leftNeighborLaneName;
 
-				if (leftLane.Empty())
-				{
-					break;
-				}
+
+			std::vector<std::string> splitItem = UtilString::split(idStr.GetString(), "_");
 #ifdef NDM_MAP_LOCAL
-				auto& laneInfo = HDMapStandalone::MHDMap::GetLaneSample(leftLane);
+			const auto& sectionLanes = HDMapStandalone::MHDMap::GetLaneList(atol(splitItem[0].c_str()));
+#else
+			SSD::SimStringVector sectionLanes;
+			SimOneAPI::GetLaneList(atol(splitItem[0].c_str()), sectionLanes);
+#endif
+			for (auto laneName_s : sectionLanes) {
+
+				std::vector<std::string> splitItem_s = UtilString::split(laneName_s.GetString(), "_");
+				long road_id = atoi(splitItem_s[0].c_str());
+				auto iter = mRoadIds.find(road_id);
+				if (iter != mRoadIds.end()) {
+					mRoadIds[road_id] = false;
+				}
+				else {
+					mRoadIds[road_id] = false;
+				}
+
+#ifdef NDM_MAP_LOCAL
+				auto& laneInfo = HDMapStandalone::MHDMap::GetLaneSample(laneName_s);
 #else
 				HDMapStandalone::MLaneInfo laneInfo;
-				SimOneAPI::GetLaneSample(leftLane, laneInfo);
+				SimOneAPI::GetLaneSample(laneName_s, laneInfo);
 #endif
 				LaneSample_ sample;
-				sample.laneCode = NDM_Util::codeLane++;
+				sample.laneCode = 0;
 				long juncId = -1;
 #ifdef NDM_MAP_LOCAL
 				sample.inJunction = HDMapStandalone::MHDMap::IsInJunction(laneInfo.laneName, juncId);
@@ -349,56 +363,28 @@ namespace HorizonMapEnv {
 				sample.rightBoundary = std::move(laneInfo.rightBoundary);
 				sample.centerLine = std::move(laneInfo.centerLine);
 
-				GetLane_(lanes, leftLane, sample);
-
-#ifdef NDM_MAP_LOCAL
-				laneLink = HDMapStandalone::MHDMap::GetLaneLink(leftLane);
-#else
-				SimOneAPI::GetLaneLink(leftLane, laneLink);
-#endif
-			}
-
-			//rightNeighborLanes
-			while (1)
-			{
-				auto& rightLane = laneLink.rightNeighborLaneName;
-				if (rightLane.Empty())
-				{
-					break;
-				}
-#ifdef NDM_MAP_LOCAL
-				auto& laneInfo = HDMapStandalone::MHDMap::GetLaneSample(rightLane);
-#else
-				HDMapStandalone::MLaneInfo laneInfo;
-				SimOneAPI::GetLaneSample(rightLane, laneInfo);
-#endif
-				LaneSample_ sample;
-				sample.laneCode = NDM_Util::codeLane++;
-				long juncId = -1;
-#ifdef NDM_MAP_LOCAL
-				sample.inJunction = HDMapStandalone::MHDMap::IsInJunction(laneInfo.laneName, juncId);
-#else
-				sample.inJunction = SimOneAPI::IsInJunction(laneInfo.laneName, juncId);
-#endif
-				sample.leftBoundary = std::move(laneInfo.leftBoundary);
-				sample.rightBoundary = std::move(laneInfo.rightBoundary);
-				sample.centerLine = std::move(laneInfo.centerLine);
-
-				GetLane_(lanes, rightLane, sample);
-
-#ifdef NDM_MAP_LOCAL
-				laneLink = HDMapStandalone::MHDMap::GetLaneLink(rightLane);
-#else
-				SimOneAPI::GetLaneLink(rightLane, laneLink);
-#endif
+				GetLane_(lanes, laneName_s, sample);
 			}
 		}
 
 		void GetLane_(SSD::SimVector<NDM_Lane> &lanes, const SSD::SimString &laneName, const LaneSample_ &laneSample)
 		{
 			NDM_Lane lane;
+			long juncId;
 			lane.str_id = laneName;
 			//std::cout << "------lane name = " << laneName.GetString() << std::endl;
+
+			GetJunction_(mLogicalLayer.junctions, laneName);
+#ifdef NDM_MAP_LOCAL
+			if (HDMapStandalone::MHDMap::IsInJunction(laneName, juncId))
+#else
+			if (SimOneAPI::IsInJunction(laneName, juncId))
+#endif
+			{
+				return;
+			}
+
+			GetSection_(mLogicalLayer.sections, laneName);
 
 			SSD::SimString llid;
 			llid.SetString((std::string(laneName.GetString()) + "_l").c_str());
@@ -413,7 +399,6 @@ namespace HorizonMapEnv {
 			lane.transition = NDM_LaneTransition::LaneTransition_Unknown;
 
 			GetLaneAttr_(lane.attrs, laneSample);
-
 #ifdef NDM_MAP_LOCAL
 			lane.type = (int)HDMapStandalone::MHDMap::GetLaneType(laneName);//----------------------------
 			auto& laneLink = HDMapStandalone::MHDMap::GetLaneLink(laneName);
@@ -432,59 +417,30 @@ namespace HorizonMapEnv {
 			{
 				lane.succ_ids.push_back(suc);
 			}
-				
-
-			while (1)
+			
+			//只写相邻的左侧一个车道名
+			SSD::SimString leftLane = laneLink.leftNeighborLaneName;
+			if (!leftLane.Empty())
 			{
-				SSD::SimString leftLane = laneLink.leftNeighborLaneName;
-
-				if (leftLane.Empty())
-				{
-					break;
-				}
-
 				lane.left_ids.push_back(leftLane);
-
-#ifdef NDM_MAP_LOCAL
-				laneLink = HDMapStandalone::MHDMap::GetLaneLink(leftLane);
-#else
-				SimOneAPI::GetLaneLink(leftLane, laneLink);
-#endif
 			}
 
-			while (1)
+			//只写相邻的右侧一个车道名
+			SSD::SimString rightLane = laneLink.rightNeighborLaneName;
+
+			if (!rightLane.Empty())
 			{
-				SSD::SimString rightLane = laneLink.rightNeighborLaneName;
-
-				if (rightLane.Empty())
-				{
-					break;
-				}
-
 				lane.right_ids.push_back(rightLane);
-
-#ifdef NDM_MAP_LOCAL
-				laneLink = HDMapStandalone::MHDMap::GetLaneLink(rightLane);
-#else
-				SimOneAPI::GetLaneLink(rightLane, laneLink);
-#endif
 			}
-
-			long juncId;
-#ifdef NDM_MAP_LOCAL
-			if (HDMapStandalone::MHDMap::IsInJunction(laneName, juncId))
-#else
-			if (SimOneAPI::IsInJunction(laneName, juncId))
-#endif
 
 #ifdef NDM_MAP_LOCAL
 			lane.lane_length = HDMapStandalone::MHDMap::GetLaneLength(laneName);
-			lane.type = int(HDMapStandalone::MHDMap::GetLaneType(laneName));//������Ҫ����ö�����͡�
+			lane.type = int(HDMapStandalone::MHDMap::GetLaneType(laneName));
 #else
 			lane.lane_length = SimOneAPI::GetLaneLength(laneName);
 			HDMapStandalone::MLaneType laneType;
 			SimOneAPI::GetLaneType(laneName, laneType);
-			lane.type = (int)laneType;//������Ҫ����ö�����͡�
+			lane.type = (int)laneType;
 #endif
 			lanes.push_back(lane);
 		}
@@ -503,7 +459,7 @@ namespace HorizonMapEnv {
 
 					SSD::SimPoint2D dir(laneSample.centerLine[index + 1].x - laneSample.centerLine[index].x, laneSample.centerLine[index + 1].y - laneSample.centerLine[index].y);
 					dir.Normalize();
-					laneAttr.headingAngle = NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir) / M_PI * 180;
+					laneAttr.headingAngle = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir));
 					laneAttr.offset = offset_;
 				}
 				else if (index == laneSample.centerLine.size() - 1 && index - 2 > 0) {
@@ -512,7 +468,7 @@ namespace HorizonMapEnv {
 
 					SSD::SimPoint2D dir(laneSample.centerLine[index - 1].x - laneSample.centerLine[index - 2].x, laneSample.centerLine[index - 1].y - laneSample.centerLine[index - 2].y);
 					dir.Normalize();
-					laneAttr.headingAngle = NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir) / M_PI * 180;
+					laneAttr.headingAngle = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir));
 					offset_+=sqrt((laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x)*(laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x) + (laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y)*(laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y));
 					laneAttr.offset = offset_;
 				}
@@ -522,7 +478,7 @@ namespace HorizonMapEnv {
 
 					SSD::SimPoint2D dir(laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x, laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y);
 					dir.Normalize();
-					laneAttr.headingAngle = NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir) / M_PI * 180;
+					laneAttr.headingAngle = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir));
 
 					offset_+=sqrt((laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x)*(laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x) + (laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y)*(laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y));
 					laneAttr.offset = offset_;
@@ -531,17 +487,11 @@ namespace HorizonMapEnv {
 			}
 		}
 
-		void Create_VirtualLines(SSD::SimVector<NDM_Line> &virtuallines, const LaneInfo_t &laneInfo) {
+		void Create_VirtualLines(SSD::SimVector<NDM_Line> &virtuallines, const LaneInfo_t &laneInfo, const SSD::SimVector<HDMapStandalone::MLaneLineInfo> &laneLineInfo) {
+
 			SSD::SimVector<long> JunctionIDs;
 			bool isInJunction;
 			long junctionId;
-#ifdef NDM_MAP_LOCAL
-			auto& laneLineInfo = HDMapStandalone::MHDMap::GetLaneLineInfo();
-			auto& parkingSpaces = HDMapStandalone::MHDMap::GetParkingSpaceList();
-#else
-			SSD::SimVector<HDMapStandalone::MLaneLineInfo> laneLineInfo;
-			SimOneAPI::GetLaneLineInfo(laneLineInfo);
-#endif
 
 #ifdef NDM_MAP_LOCAL
 			isInJunction = HDMapStandalone::MHDMap::IsInJunction(laneInfo.currentLane, junctionId);
@@ -581,153 +531,423 @@ namespace HorizonMapEnv {
 			}
 		}
 
-		void Create_Lanes(SSD::SimVector<NDM_Lane> &lanes, const LaneInfo_t &laneInfo) {
+		void Create_Lanes(SSD::SimVector<NDM_Lane> &lanes, const LaneInfo_t &laneInfo,const SSD::SimVector<HDMapStandalone::MLaneLineInfo> &laneLineInfo) {
 
-#ifdef NDM_MAP_LOCAL
-			auto& laneLineInfo = HDMapStandalone::MHDMap::GetLaneLineInfo();
-			auto& parkingSpaces = HDMapStandalone::MHDMap::GetParkingSpaceList();
-#else
-			SSD::SimVector<HDMapStandalone::MLaneLineInfo> laneLineInfo;
-			SimOneAPI::GetLaneLineInfo(laneLineInfo);
-#endif
-
+			//std::cout << "++++++++++++++++++++++++++++++" << laneInfo.currentLane.GetString() << std::endl;
 			for (auto& laneData : laneInfo.dataList) {
 				for (int laneIndex = 0; laneIndex < laneData.laneSampleList.size();laneIndex++) {
-					GetLane_(lanes, laneData.laneNameList[laneIndex], laneData.laneSampleList[laneIndex]);
 					GetLaneLink_Lanes(lanes, laneData.laneNameList[laneIndex]);
+				}
+			}
+
+			for (auto &kv : mRoadIds) {
+				if (kv.second == true) {
+					kv.second = false;
+					SSD::SimStringVector laneidlist = HDMapStandalone::MHDMap::GetLaneList(kv.first);
+					if(!laneidlist.empty())
+						GetLaneLink_Lanes(lanes, laneidlist[0]);
 				}
 			}
 		}
 
-		void Create_ParkingSpaces(SSD::SimVector<NDM_ParkingSpace> &parkingspaces, const SSD::SimPoint3D& pos, const double forward) {
-		
-			NDM_ParkingSpace parkingSpace;
-			SSD::SimStringVector ids;
-
+		void GetJunctionConectRoad(long junctionId) {
 #ifdef NDM_MAP_LOCAL
-			auto& parkingSpaces = HDMapStandalone::MHDMap::GetParkingSpaceList();
-			if (HDMapStandalone::MHDMap::GetParkingSpaceIds(pos, forward, ids))
+			HDMapStandalone::MJunction mjunction = HDMapStandalone::MHDMap::GetJunction(junctionId);
 #else
-			SSD::SimVector<HDMapStandalone::MParkingSpace> parkingSpaces;
-			SimOneAPI::GetParkingSpaceList(parkingSpaces);
-			if (SimOneAPI::GetParkingSpaceIds(pos, forward, ids))/// TODO
+			HDMapStandalone::MJunction mjunction;
+			SimOneAPI::GetJunction(junctionId, mjunction);
 #endif
-			{
-				for (auto& id : ids)
-				{
-					for (auto& parkingspace : parkingSpaces)
-					{
-						if ((std::string(id.GetString()))== std::to_string(parkingspace.id))
-						{
-							//parking.restriction//TODO
-							parkingSpace.id.SetString(id.GetString());
-							parkingSpace.parkingslot_ids.push_back((std::string(id.GetString()) + "_0").c_str());
-							parkingSpace.link_ids.push_back(std::to_string(parkingspace.roadId).c_str());
-							parkingSpace.bounding_polygon.orientation = { parkingspace.heading.x,parkingspace.heading.y,parkingspace.heading.z ,0 };
-							parkingSpace.bounding_polygon.normal = {0, 0, 0, 0};
-							for (auto& point : parkingspace.boundaryKnots)
-							{
-								parkingSpace.bounding_polygon.points.push_back({ point.x,point.y,point.z,0});
-							}
-							parkingSpace.bounding_polygon.edgeline_width = parkingspace.front.width;
-							auto iter = std::find_if(parkingspaces.begin(), parkingspaces.end(), [&](const ParkingSpace & item)
-							{
-								return item.id == id;
-							});
-							if (iter == parkingspaces.end())
-							{
-								parkingspaces.push_back(std::move(parkingSpace));
-							}
-						}
-					}
+			for (auto& incomingRoadid : mjunction.incomingRoadIds) {
+				auto iter = mRoadIds.find(incomingRoadid);
+				if (iter == mRoadIds.end()) {
+					mRoadIds[incomingRoadid] = true;
 				}
 			}
+		}
+
+		void Create_ParkingSpaces(SSD::SimVector<NDM_ParkingSpace> &parkingspaces, const SSD::SimVector<HDMapStandalone::MParkingSpace> &parkingSpaces_) {
+			
+			for (auto& parkingspace_ : parkingSpaces_)
+			{
+				NDM_ParkingSpace parkingSpace;
+				parkingSpace.id.SetString(std::to_string(parkingspace_.id).c_str());
+				parkingSpace.parkingslot_ids.push_back((std::to_string(parkingspace_.id)+"_0").c_str());
+				parkingSpace.link_ids.push_back(std::to_string(parkingspace_.roadId).c_str());
+				NDM_Point point_pt;
+				point_pt.x = parkingspace_.heading.x; point_pt.y = parkingspace_.heading.y; point_pt.z = parkingspace_.heading.z;
+				parkingSpace.bounding_polygon.orientation = point_pt;
+				for (auto& point : parkingspace_.boundaryKnots)
+				{
+					NDM_Point point_pt;
+					point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
+					parkingSpace.bounding_polygon.points.push_back(point_pt);
+				}
+				parkingSpace.bounding_polygon.edgeline_width = parkingspace_.front.width;
+				auto iter = std::find_if(parkingspaces.begin(), parkingspaces.end(), [&](const ParkingSpace & item)
+				{
+					return item.id == parkingSpace.id;
+				});
+				if (iter == parkingspaces.end())
+				{
+					parkingspaces.push_back(std::move(parkingSpace));
+				}
+			}	
 		}
 
 		void GetJunction_(SSD::SimVector<NDM_Junction>&junctions, const SSD::SimString& laneName)
 		{
 			NDM_Junction junction;
 			long juncId = -1;
-#ifdef DDS_MAP_LOCAL
+#ifdef NDM_MAP_LOCAL
 			if (HDMapStandalone::MHDMap::IsInJunction(laneName, juncId))
 #else
 			if (SimOneAPI::IsInJunction(laneName, juncId))
 #endif
 			{
-				junction.id.SetString(std::to_string(juncId).c_str());
+				junction.id.SetString(("junction_"+std::to_string(juncId)).c_str());
+#ifdef NDM_MAP_LOCAL
 				HDMapStandalone::MJunction mjunction = HDMapStandalone::MHDMap::GetJunction(juncId);
+#else
+				HDMapStandalone::MJunction mjunction;
+				SimOneAPI::GetJunction(juncId, mjunction);
+#endif
 				for (auto& connect : mjunction.connectingRoadIds)
 				{
 					SSD::SimStringVector laneidlist = HDMapStandalone::MHDMap::GetLaneList(connect);
 					for (auto& laneid : laneidlist)
 					{
-
-						int postion = std::string(laneid.GetString()).find_last_of('_');
-						std::string strID = std::string(laneName.GetString()).substr(0, postion);
-						auto iter = std::find_if(junction.in_link_ids.begin(), junction.in_link_ids.end(), [&](const SSD::SimString & item)
-						{
-							return item == strID.c_str();
-						});
-						if (iter == junction.in_link_ids.end())
-						{
-
-							junction.in_link_ids.push_back(std::move(strID.c_str()));
-						}
-
+#ifdef NDM_MAP_LOCAL
+						auto& laneLink = HDMapStandalone::MHDMap::GetLaneLink(laneid);
+#else
+						HDMapStandalone::MLaneLink laneLink;
+						SimOneAPI::GetLaneLink(laneid, laneLink);
+#endif
 						junction.lane_ids.push_back(laneid);
-					}
-				}
 
-				for (auto& incomingRoadid : mjunction.incomingRoadIds)
-				{
-					SSD::SimStringVector laneidlist = HDMapStandalone::MHDMap::GetLaneList(incomingRoadid);
-					for (auto& laneid : laneidlist)
-					{
+						for (auto &lane_pred : laneLink.predecessorLaneNameList) {
+							RoadSection_ roadSection_c;
+							if (!GetRoadSection_(lane_pred, roadSection_c)) {
+								continue;
+							}
+							std::string strID = std::string(roadSection_c.roadSectionSideName.GetString());
+							auto iter = std::find_if(junction.in_link_ids.begin(), junction.in_link_ids.end(), [&](const SSD::SimString & item)
+							{
+								return item == strID.c_str();
+							});
+							if (iter == junction.in_link_ids.end())
+							{
+								std::cout << "inlink:" << strID << std::endl;
+								junction.in_link_ids.push_back(std::move(strID.c_str()));
+							}
+						}
 
-						int postion = std::string(laneid.GetString()).find_last_of('_');
-						std::string strID = std::string(laneName.GetString()).substr(0, postion);
-						auto iter = std::find_if(junction.out_link_ids.begin(), junction.out_link_ids.end(), [&](const SSD::SimString & item)
-						{
-							return item == strID.c_str();
-						});
-						if (iter == junction.out_link_ids.end())
-						{
-							junction.out_link_ids.push_back(std::move(strID.c_str()));
+						for (auto &lane_succ : laneLink.successorLaneNameList) {
+							RoadSection_ roadSection_c;
+							if (!GetRoadSection_(lane_succ, roadSection_c)) {
+								continue;
+							}
+							std::string strID = std::string(roadSection_c.roadSectionSideName.GetString());
+							auto iter = std::find_if(junction.out_link_ids.begin(), junction.out_link_ids.end(), [&](const SSD::SimString & item)
+							{
+								return item == strID.c_str();
+							});
+							if (iter == junction.out_link_ids.end())
+							{
+								std::cout << "outlink:" << strID << std::endl;
+								junction.out_link_ids.push_back(std::move(strID.c_str()));
+							}
+						
 						}
 					}
 				}
-			}
 
-			auto iter = std::find_if(junctions.begin(), junctions.end(), [&](const Junction & item)
-			{
-				return item.id == junction.id;
-			});
-			if (iter == junctions.end())
-			{
-				junctions.push_back(std::move(junction));
+				auto iter = std::find_if(junctions.begin(), junctions.end(), [&](const Junction & item)
+				{
+					return item.id == junction.id;
+				});
+				if (iter == junctions.end())
+				{
+					junctions.push_back(std::move(junction));
+				}
 			}
 		}
 
-		void Create_LogicalLayer(const SSD::SimPoint3D& pos, const double forward) {
-			const auto& laneInfo = NDM_Util::GetForwardLaneInfo(pos, forward);
-			const auto& idStr = laneInfo.currentLane;
+		void GetSectionSampleList_(NDM_Section &section, const SSD::SimString& laneName, CalculateSide_ side)
+		{
+			if (side == eLeft)
+			{
+				SSD::SimString l_border_id = (std::string(laneName.GetString()) + "_l").c_str();
+				section.l_border_ids.push_back(l_border_id);
+				int pos = std::string(laneName.GetString()).find_last_of('_');
+				SSD::SimString cutLsection = (std::string(laneName.GetString()).substr(0, pos).c_str());
+
+				HDMapStandalone::MLaneId id(laneName.GetString());
+				SSD::SimString sectionId;
+				sectionId.SetString((UtilString::ToString(id.roadId) + "_" + UtilString::ToString(id.sectionIndex)).c_str());
+
+				auto iter = std::find_if(section.left_ids.begin(), section.left_ids.end(), [&](const SSD::SimString& item)
+				{
+					return item == sectionId;
+				});
+				if (iter == section.left_ids.end())
+				{
+					section.left_ids.push_back(sectionId);
+				}
+			}
+			else if (side == eRight)
+			{
+				SSD::SimString strR = (std::string(laneName.GetString()) + "_r").c_str();
+				section.r_border_ids.push_back(strR);
+				int pos = std::string(laneName.GetString()).find_last_of('_');
+
+				HDMapStandalone::MLaneId id(laneName.GetString());
+				SSD::SimString sectionId;
+				sectionId.SetString((UtilString::ToString(id.roadId) + "_" + UtilString::ToString(id.sectionIndex)).c_str());
+
+				auto iter = std::find_if(section.right_ids.begin(), section.right_ids.end(), [&](const SSD::SimString& item)
+				{
+					return item == sectionId;
+				});
+				if (iter == section.left_ids.end())
+				{
+					section.right_ids.push_back(sectionId);
+				}
+			}
+			else
+			{
+				SSD::SimString strL = (std::string(laneName.GetString()) + "_l").c_str();
+				section.l_border_ids.push_back(strL);
+				SSD::SimString strR = (std::string(laneName.GetString()) + "_r").c_str();
+				section.r_border_ids.push_back(strR);
+			}
+		}
+
+		void GetSection_(SSD::SimVector<NDM_Section> &sections, const SSD::SimString& laneName)
+		{
+			NDM_Section section;
+			
+			std::vector<std::string> splitItem = UtilString::split(laneName.GetString(), "_");
+			SSD::SimStringVector laneList = HDMapStandalone::MHDMap::GetSectionLaneList(laneName);
+			RoadSection_ roadSection_c;
+			if (!GetRoadSection_(laneName,roadSection_c)) {
+				return;
+			}
+			section.id.SetString(roadSection_c.roadSectionSideName.GetString());
+			//std::cout << "section:	" << roadSection_c.roadSectionSideName.GetString() << std::endl;
+			for (auto laneName_t : laneList)
+			{
+				RoadSection_ roadSection_t;
+				if (!GetRoadSection_(laneName_t, roadSection_t)) {
+					return;
+				}
+				if (roadSection_t.roadSectionSideName == roadSection_c.roadSectionSideName) {
+					section.lane_ids.push_back(laneName_t);
+				}
+			}
+
+			if (!section.lane_ids.empty()) {
+#ifdef NDM_MAP_LOCAL
+				section.length = HDMapStandalone::MHDMap::GetLaneLength(section.lane_ids[0]);
+#else
+				section.length = SimOneAPI::GetLaneLength(section.lane_ids[0]);
+#endif
+			}
+
+			auto iter = std::find_if(sections.begin(), sections.end(), [&](const Section & item)
+			{
+				return item.id == section.id;
+			});
+			if (iter == sections.end())
+			{
+				SSD::SimStringVector laneList = HDMapStandalone::MHDMap::GetSectionLaneList(laneName);
+
+				for (auto laneName_ : laneList) {
+#ifdef NDM_MAP_LOCAL
+					auto& laneLink = HDMapStandalone::MHDMap::GetLaneLink(laneName_);
+#else
+					HDMapStandalone::MLaneLink laneLink;
+					SimOneAPI::GetLaneLink(laneName_, laneLink);
+#endif
+					//GetSectionSampleList_(section, laneName, CalculateSide_::eBoth);
+					for (auto& pre : laneLink.predecessorLaneNameList)
+					{
+						bool isInJunction;
+						long junctionId;
+
+#ifdef NDM_MAP_LOCAL
+						isInJunction = HDMapStandalone::MHDMap::IsInJunction(pre, junctionId);
+#else
+						isInJunction = SimOneAPI::IsInJunction(pre, junctionId);
+#endif
+						if (isInJunction) {
+#ifdef NDM_MAP_LOCAL
+							auto& laneLink_pre = HDMapStandalone::MHDMap::GetLaneLink(pre);
+#else
+							HDMapStandalone::MLaneLink laneLink_pre;
+							SimOneAPI::GetLaneLink(pre, laneLink_pre);
+#endif
+							for (auto& pre_pre : laneLink_pre.predecessorLaneNameList) {
+								RoadSection_ roadSection_c;
+								if (!GetRoadSection_(pre_pre, roadSection_c)) {
+									continue;
+								}
+
+								SSD::SimString pred_PredSectionName = roadSection_c.roadSectionSideName;
+
+								auto iter = std::find_if(section.pred_ids.begin(), section.pred_ids.end(), [&](const SSD::SimString& item)
+								{
+									return item == pred_PredSectionName;
+								});
+								if (iter == section.pred_ids.end())
+								{
+									//std::cout << "predID:" << std::string(pred_PredSectionName.GetString()) << std::endl;
+									section.pred_ids.push_back(pred_PredSectionName);
+								}
+							}
+						}
+						else {
+							RoadSection_ roadSection_c;
+							if (!GetRoadSection_(pre, roadSection_c)) {
+								continue;
+							}
+
+							SSD::SimString predSectionName = roadSection_c.roadSectionSideName;
+
+							auto iter = std::find_if(section.pred_ids.begin(), section.pred_ids.end(), [&](const SSD::SimString& item)
+							{
+								return item == predSectionName;
+							});
+							if (iter == section.pred_ids.end())
+							{
+								section.pred_ids.push_back(predSectionName);
+							}
+						}
+					}
+					for (auto& suc : laneLink.successorLaneNameList)
+					{
+						bool isInJunction;
+						long junctionId;
+
+#ifdef NDM_MAP_LOCAL
+						isInJunction = HDMapStandalone::MHDMap::IsInJunction(suc, junctionId);
+#else
+						isInJunction = SimOneAPI::IsInJunction(suc, junctionId);
+#endif
+						if (isInJunction) {
+#ifdef NDM_MAP_LOCAL
+							auto& laneLink_suc = HDMapStandalone::MHDMap::GetLaneLink(suc);
+#else
+							HDMapStandalone::MLaneLink laneLink_suc;
+							SimOneAPI::GetLaneLink(suc, laneLink_suc);
+#endif
+							for (auto& suc_suc : laneLink_suc.successorLaneNameList) {
+
+								RoadSection_ roadSection_c;
+								if (!GetRoadSection_(suc_suc, roadSection_c)) {
+									continue;
+								}
+
+								SSD::SimString succ_SuccSectionName = roadSection_c.roadSectionSideName;
+
+								auto iter = std::find_if(section.succ_ids.begin(), section.succ_ids.end(), [&](const SSD::SimString& item)
+								{
+									return item == succ_SuccSectionName;
+								});
+								if (iter == section.succ_ids.end())
+								{
+									section.succ_ids.push_back(succ_SuccSectionName);
+								};
+							}
+						}
+						else {
+							RoadSection_ roadSection_c;
+							if (!GetRoadSection_(suc, roadSection_c)) {
+								continue;
+							}
+
+							SSD::SimString succSectionName = roadSection_c.roadSectionSideName;
+
+							auto iter = std::find_if(section.succ_ids.begin(), section.succ_ids.end(), [&](const SSD::SimString& item)
+							{
+								return item == succSectionName;
+							});
+							if (iter == section.succ_ids.end())
+							{
+								//std::cout << "succID:" << std::string(succSectionName.GetString()) << std::endl;
+								section.succ_ids.push_back(succSectionName);
+							};
+						}
+					}
+				}
+
+				std::cout << "========section.id: " << section.id.GetString() << std::endl;
+				for (auto pred : section.pred_ids) {
+					std::cout<<"	pred"<< pred.GetString()<<std::endl;
+				}
+				std::cout << std::endl;
+				for (auto succ : section.succ_ids) {
+					std::cout << "	succ" << succ.GetString() << std::endl;
+				}
+
+				sections.push_back(std::move(section));
+			}
+		}
+
+		bool GetRoadSection_(const SSD::SimString& laneName, RoadSection_& roadSection)
+		{
+			std::vector<std::string> idList = UtilString::split(laneName.GetString(), "_");
+			roadSection.roadId = UtilString::FromString<long>(idList[0]);
+			roadSection.sectionIndex = UtilString::FromString<int>(idList[1]);
+			roadSection.laneNameList.push_back(laneName);
+
+			const auto& laneId = UtilString::FromString<int>(idList[2]);
+			std::string side_name = "right";
+			if (laneId == 0)
+			{
+				return  false;
+			}
+			if (laneId > 0)
+			{
+				side_name = "left";
+				roadSection.side = CalculateSide_::eLeft;
+			}
+
+			roadSection.roadSectionSideName.SetString((idList[0] + "_" + idList[1] + "_" + side_name).c_str());
+			roadSection.roadSectionName.SetString((idList[0] + "_" + idList[1]).c_str());
+			return true;
+		}
+
+		void ResetRoadIdTag(std::map<long, bool> &roadIds) {
+			for (auto &kv : roadIds) {
+				if (kv.second == false) {
+					kv.second = true;
+				}
+			}
+		}
+
+		void Create_LogicalLayer(const SSD::SimPoint3D& pos, const double forward, const HorizonMapEnv::NDM_PhysicalLayer_Creator &physicalLayerCreator)
+		{
+			mRoadIds = physicalLayerCreator.mRoadIds;
+			ResetRoadIdTag(mRoadIds);
+			const auto& idStr = physicalLayerCreator.mLaneInfo.currentLane;
 			mCurrentLaneName = idStr;
 			if (idStr.Empty())
 			{
 				return;
 			}
-			Create_VirtualLines(mLogicalLayer.virtuallines, laneInfo);
-			Create_Lanes(mLogicalLayer.lanes, laneInfo);
-			Create_ParkingSpaces(mLogicalLayer.parkingspaces, pos, forward);
-			//for (auto lane : mLogicalLayer.lanes) {
-			//	std::cout << "__________________" << lane.str_id.GetString() << "_____________________" << std::endl;
-			//	for(auto offset: lane.attrs)
-			//		std::cout <<"offset: "<< offset.offset << std::endl;
-			//}
+			Create_VirtualLines(mLogicalLayer.virtuallines,
+				physicalLayerCreator.mLaneInfo,
+				physicalLayerCreator.mLaneLineInfo);
+			Create_ParkingSpaces(mLogicalLayer.parkingspaces,
+				physicalLayerCreator.mParkingSpaces);
+			Create_Lanes(mLogicalLayer.lanes, 
+				physicalLayerCreator.mLaneInfo,
+				physicalLayerCreator.mLaneLineInfo);
 		}
 	public:
 		NDM_LogicalLayer mLogicalLayer;
 		SSD::SimString mCurrentLaneName;
 		map<SSD::SimString,bool> mVirtualLines;
+		std::map<long,bool> mRoadIds;
 	};
 }

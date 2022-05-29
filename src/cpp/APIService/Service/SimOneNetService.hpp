@@ -248,6 +248,8 @@ public:
 	static SSD::SimVector<HDMapStandalone::MObject> GetCrosswalkList(const HDMapStandalone::MSignal& light, const SSD::SimString& id);
 	static SSD::SimVector<HDMapStandalone::MObject> GetSpecifiedLaneCrosswalkList(const SSD::SimString& id);
 
+	static SSD::SimVector<HDMapStandalone::MSignal> GetSignalListOnLaneByType(const SSD::SimString& laneName, const SSD::SimString& type);
+
 	static SSD::SimVector<HDMapStandalone::MObject> GetCrossHatchList(const SSD::SimString& id);
 	static  bool GetLaneMiddlePoint(const SSD::SimPoint3D& inputPt, const SSD::SimString& id, SSD::SimPoint3D& targetPoint, SSD::SimPoint3D& dir);
 	static bool GetHeights(const SSD::SimPoint3D& inputPt, const double& radius, SSD::SimVector<double>& heights,
@@ -274,7 +276,8 @@ public:
 		SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList);
 	static void GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo);
 	static void GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList);
-
+	static SSD::SimStringVector SimOneAPIService::GetLaneList(const long& roadId);
+	static HDMapStandalone::MJunction GetJunction(const long& junctionId);
 
 	////////////////////////////////
 	//Non-standard gq
