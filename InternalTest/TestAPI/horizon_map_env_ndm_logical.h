@@ -213,12 +213,13 @@ namespace HorizonMapEnv {
 					continue;
 				}
 				bool isInJunction = false;
+				long junctionId_c;
 #ifdef NDM_MAP_LOCAL
-				isInJunction = HDMapStandalone::MHDMap::IsInJunction(mLaneinfo.laneName, junctionId);
+				isInJunction = HDMapStandalone::MHDMap::IsInJunction(mLaneinfo.laneName, junctionId_c);
 #else
-				isInJunction = SimOneAPI::IsInJunction(mLaneinfo.laneName, junctionId);
+				isInJunction = SimOneAPI::IsInJunction(mLaneinfo.laneName, junctionId_c);
 #endif
-				if (laneName == mLaneinfo.laneName || isInJunction)
+				if (laneName == mLaneinfo.laneName || junctionId_c == junctionId)
 				{
 					//std::cout << "mLaneinfo.laneName:" << mLaneinfo.laneName.GetString() << std::endl;
 					auto iter = mVirtualLines.find(mLaneinfo.laneName);
