@@ -448,12 +448,12 @@ namespace HorizonMapEnv {
 		void GetLaneAttr_(SSD::SimVector<NDM_LaneAttr> &attrs,const LaneSample_ &laneSample) {
 
 			double offset_= 0;
-			for (int index = 0; index < laneSample.leftBoundary.size(); index++) {
+			for (int index = 0; index < laneSample.leftBoundary.size(); index+= BOUNDARY_SAMPLE_DISTANCE) {
 				NDM_LaneAttr laneAttr;
 				laneAttr.width = sqrt((laneSample.leftBoundary[index].x - laneSample.rightBoundary[index].x)*(laneSample.leftBoundary[index].x - laneSample.rightBoundary[index].x) + (laneSample.leftBoundary[index].y - laneSample.rightBoundary[index].y)*(laneSample.leftBoundary[index].y - laneSample.rightBoundary[index].y));
-				laneAttr.banking = NDM_Util::Get_Slop_Banking_(laneSample.leftBoundary[index], laneSample.rightBoundary[index + 1]);
+				laneAttr.banking = NDM_Util::Get_Slop_Banking_(laneSample.leftBoundary[index], laneSample.rightBoundary[index]);
 
-				if (index == 0 && laneSample.centerLine.size() > 2) {
+				if (index == 0 && laneSample.centerLine.size() > BOUNDARY_SAMPLE_DISTANCE) {
 					laneAttr.curvature = NDM_Util::GetCurvature_(laneSample.centerLine[index], laneSample.centerLine[index + 1], laneSample.centerLine[index + 2]);
 					laneAttr.slope = NDM_Util::Get_Slop_Banking_(laneSample.centerLine[index], laneSample.centerLine[index + 1]);
 
@@ -469,7 +469,7 @@ namespace HorizonMapEnv {
 					SSD::SimPoint2D dir(laneSample.centerLine[index - 1].x - laneSample.centerLine[index - 2].x, laneSample.centerLine[index - 1].y - laneSample.centerLine[index - 2].y);
 					dir.Normalize();
 					laneAttr.headingAngle = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir));
-					offset_+=sqrt((laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x)*(laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x) + (laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y)*(laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y));
+					offset_+=sqrt((laneSample.centerLine[index].x - laneSample.centerLine[index - BOUNDARY_SAMPLE_DISTANCE].x)*(laneSample.centerLine[index].x - laneSample.centerLine[index - BOUNDARY_SAMPLE_DISTANCE].x) + (laneSample.centerLine[index].y - laneSample.centerLine[index - BOUNDARY_SAMPLE_DISTANCE].y)*(laneSample.centerLine[index].y - laneSample.centerLine[index - BOUNDARY_SAMPLE_DISTANCE].y));
 					laneAttr.offset = offset_;
 				}
 				else {
@@ -480,7 +480,7 @@ namespace HorizonMapEnv {
 					dir.Normalize();
 					laneAttr.headingAngle = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir));
 
-					offset_+=sqrt((laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x)*(laneSample.centerLine[index].x - laneSample.centerLine[index - 1].x) + (laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y)*(laneSample.centerLine[index].y - laneSample.centerLine[index - 1].y));
+					offset_+=sqrt((laneSample.centerLine[index].x - laneSample.centerLine[index - BOUNDARY_SAMPLE_DISTANCE].x)*(laneSample.centerLine[index].x - laneSample.centerLine[index - BOUNDARY_SAMPLE_DISTANCE].x) + (laneSample.centerLine[index].y - laneSample.centerLine[index - BOUNDARY_SAMPLE_DISTANCE].y)*(laneSample.centerLine[index].y - laneSample.centerLine[index - BOUNDARY_SAMPLE_DISTANCE].y));
 					laneAttr.offset = offset_;
 				}
 				attrs.push_back(laneAttr);

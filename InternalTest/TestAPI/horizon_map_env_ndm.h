@@ -188,6 +188,7 @@ namespace HorizonMapEnv {
 			//HorizonMapEnv::NDM_TopologicalLayer_Creator topologicalLayerCreator;
 			//topologicalLayerCreator.Create_TopologicalLayer(logicalLayerCreator.mLogicalLayer);
 			//mNDM_Msg.topological_layer = topologicalLayerCreator.mTopologicalLayer;
+			ofs.close();
 		}
 
 		~MapEnvMsg_Creator() {
