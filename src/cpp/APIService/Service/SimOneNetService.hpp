@@ -276,7 +276,7 @@ public:
 		SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList);
 	static void GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo);
 	static void GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList);
-	static SSD::SimStringVector SimOneAPIService::GetLaneList(const long& roadId);
+	static SSD::SimStringVector GetLaneList(const long& roadId);
 	static HDMapStandalone::MJunction GetJunction(const long& junctionId);
 
 	////////////////////////////////
