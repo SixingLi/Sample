@@ -271,25 +271,37 @@ namespace HorizonMapEnv {
 			left.str_id.SetString((std::string(laneName.GetString()) + "_l").c_str());
 			NDM_Line right;
 			right.str_id.SetString((std::string(laneName.GetString()) + "_r").c_str());
+
+			NDM_Line center;
+			center.str_id.SetString((std::string(laneName.GetString()) + "_c").c_str());
+
 			const char * mlanename = laneName.GetString();
 
 			NDM_LineType type_left;
-			type_left = LineType_LaneLine;
+			type_left = NDM_LineType::LineType_LaneLine;
 			left.type = type_left;
 
 			NDM_LineType type_right;
-			type_right = LineType_LaneLine;
+			type_right = NDM_LineType::LineType_LaneLine;
 			right.type = type_right;
 
-			NDM_CurveLine lineleft, lineright;
+			NDM_LineType type_center;
+			type_center = NDM_LineType::LineType_Center;
+			center.type = type_center;
+
+			NDM_CurveLine lineleft, lineright, linecenter;
 			for (HDMapStandalone::MLaneLineInfo mLaneinfo : laneLineInfo)
 			{
 				if (laneName == mLaneinfo.laneName)
 				{
 					lineleft.marking = NDM_Util::GetMarking_(mLaneinfo.leftBoundary.roadmarkList[0]);  //TODO:
 					lineright.marking = NDM_Util::GetMarking_(mLaneinfo.rightBoundary.roadmarkList[0]);  //TODO:
+					linecenter.marking = NDM_LineMarking::LineMarking_LaneVirtualMarking;
+					
 					lineleft.color = NDM_Util::GetColor_(mLaneinfo.leftBoundary.roadmarkList[0]);
 					lineright.color = NDM_Util::GetColor_(mLaneinfo.rightBoundary.roadmarkList[0]);
+					linecenter.color = NDM_LineColor::UNKNOWN_LINE_COLOR;
+
 					long sample_point_count = 0;
 					for (SSD::SimPoint3DVector points : mLaneinfo.leftBoundary.segmentList)
 					{
@@ -314,15 +326,34 @@ namespace HorizonMapEnv {
 							}
 						}
 					}
+
+#ifdef NDM_MAP_LOCAL
+					HDMapStandalone::MLaneInfo cLaneinfo = HDMapStandalone::MHDMap::GetLaneSample(mLaneinfo.laneName);
+#else
+					HDMapStandalone::MLaneInfo cLaneinfo;
+					SimOneAPI::GetLaneSample(mLaneinfo.laneName, cLaneinfo);
+#endif
+					sample_point_count = 0;
+					for (auto point : cLaneinfo.centerLine)
+					{
+						sample_point_count++;
+						if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
+							NDM_Point point_pt;
+							point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
+							linecenter.points.push_back(point_pt);
+						}
+					}
 					break;
 				}
 			}
 
 			left.lines_3d.push_back(std::move(lineleft));
 			right.lines_3d.push_back(std::move(lineright));
+			center.lines_3d.push_back(std::move(linecenter));
 
 			lines.lines.push_back(std::move(left));
 			lines.lines.push_back(std::move(right));
+			lines.lines.push_back(std::move(center));
 		}
 
 		void GetLanesInSameSection(const SSD::SimString &idStr, const SSD::SimVector<HDMapStandalone::MLaneLineInfo> &laneLineInfo) {
@@ -434,6 +465,7 @@ namespace HorizonMapEnv {
 				for (int i = 0; i < (int)lane_data.laneNameList.size(); i++) {
 
 					SSD::SimString & laneName = lane_data.laneNameList[i];
+					std::cout << "lanename:" << laneName.GetString()<<std::endl;
 					bool isInJunction = false;
 					long junctionId = -1;
 #ifdef NDM_MAP_LOCAL

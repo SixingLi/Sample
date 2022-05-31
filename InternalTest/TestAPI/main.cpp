@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 	bool isJoinTimeLoop = false;
 	const char* serverIP = "10.66.9.111";
 	SimOneAPI::InitSimOneAPI(mv_id, isJoinTimeLoop, serverIP);
-	if (!SimOneAPI::LoadHDMap(5)) {
+	if (!SimOneAPI::LoadHDMap(50)) {
 		std::cout << "load map failed!!!" << std::endl;
 		return -1;
 	}

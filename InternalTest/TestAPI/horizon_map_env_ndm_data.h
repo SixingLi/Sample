@@ -518,7 +518,7 @@ namespace HorizonMapEnv {
 			break;
 			case HDMapStandalone::ERoadMarkColor::red:
 			{
-				color = NDM_LineColor::UNKNOWN_LINE_COLOR;
+				color = NDM_LineColor::ORANGE;
 			}
 			break;
 			case HDMapStandalone::ERoadMarkColor::white:
