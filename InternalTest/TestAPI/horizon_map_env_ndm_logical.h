@@ -506,8 +506,35 @@ namespace HorizonMapEnv {
 				});
 				if (iter == JunctionIDs.end())
 				{
+					JunctionIDs.push_back(junctionId);
 					GetBoundarySampleList_(virtuallines, laneInfo.currentLane, laneLineInfo, junctionId);
 				}
+			}
+			else {
+#ifdef NDM_MAP_LOCAL
+				auto& laneLink = HDMapStandalone::MHDMap::GetLaneLink(laneInfo.currentLane);
+#else
+				HDMapStandalone::MLaneLink laneLink;
+				SimOneAPI::GetLaneLink(laneInfo.currentLane, laneLink);
+#endif
+				for (auto lanePre : laneLink.predecessorLaneNameList) {
+#ifdef NDM_MAP_LOCAL
+					isInJunction = HDMapStandalone::MHDMap::IsInJunction(lanePre, junctionId);
+#else
+					isInJunction = SimOneAPI::IsInJunction(lanePre, junctionId);
+#endif
+					if (isInJunction) {
+						auto iter = std::find_if(JunctionIDs.begin(), JunctionIDs.end(), [&](const long & item)
+						{
+							return item == junctionId;
+						});
+						if (iter == JunctionIDs.end())
+						{
+							JunctionIDs.push_back(junctionId);
+							GetBoundarySampleList_(virtuallines, lanePre, laneLineInfo, junctionId);
+						}
+					}
+				}	
 			}
 
 			for (auto &laneInfoVitural : laneInfo.dataList) {
@@ -637,7 +664,7 @@ namespace HorizonMapEnv {
 							});
 							if (iter == junction.in_link_ids.end())
 							{
-								std::cout << "inlink:" << strID << std::endl;
+								//std::cout << "inlink:" << strID << std::endl;
 								junction.in_link_ids.push_back(std::move(strID.c_str()));
 							}
 						}
@@ -654,7 +681,7 @@ namespace HorizonMapEnv {
 							});
 							if (iter == junction.out_link_ids.end())
 							{
-								std::cout << "outlink:" << strID << std::endl;
+								//std::cout << "outlink:" << strID << std::endl;
 								junction.out_link_ids.push_back(std::move(strID.c_str()));
 							}
 						
@@ -881,14 +908,14 @@ namespace HorizonMapEnv {
 					}
 				}
 
-				std::cout << "========section.id: " << section.id.GetString() << std::endl;
-				for (auto pred : section.pred_ids) {
-					std::cout<<"	pred"<< pred.GetString()<<std::endl;
-				}
-				std::cout << std::endl;
-				for (auto succ : section.succ_ids) {
-					std::cout << "	succ" << succ.GetString() << std::endl;
-				}
+				//std::cout << "========section.id: " << section.id.GetString() << std::endl;
+				//for (auto pred : section.pred_ids) {
+				//	std::cout<<"	pred"<< pred.GetString()<<std::endl;
+				//}
+				//std::cout << std::endl;
+				//for (auto succ : section.succ_ids) {
+				//	std::cout << "	succ" << succ.GetString() << std::endl;
+				//}
 
 				sections.push_back(std::move(section));
 			}
@@ -944,6 +971,7 @@ namespace HorizonMapEnv {
 			Create_Lanes(mLogicalLayer.lanes, 
 				physicalLayerCreator.mLaneInfo,
 				physicalLayerCreator.mLaneLineInfo);
+			std::cout << "=============================finish to create ndm map======================" << std::endl;
 		}
 	public:
 		NDM_LogicalLayer mLogicalLayer;

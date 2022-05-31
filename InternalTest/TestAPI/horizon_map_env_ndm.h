@@ -1,5 +1,5 @@
 #ifndef NDM_MAP_LOCAL
-//#define NDM_MAP_LOCAL
+#define NDM_MAP_LOCAL
 
 #include "horizon_map_env_ndm_data.h"
 #include "horizon_map_env_ndm_physical.h"
