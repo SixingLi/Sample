@@ -449,7 +449,8 @@ namespace HorizonMapEnv {
 		void GetLaneAttr_(SSD::SimVector<NDM_LaneAttr> &attrs,const LaneSample_ &laneSample) {
 
 			double offset_= 0;
-			for (int index = 0; index < laneSample.leftBoundary.size(); index+= BOUNDARY_SAMPLE_DISTANCE) {
+			int index = 0;
+			for (index = 0; index < laneSample.leftBoundary.size(); index+= BOUNDARY_SAMPLE_DISTANCE) {
 				NDM_LaneAttr laneAttr;
 				laneAttr.width = sqrt((laneSample.leftBoundary[index].x - laneSample.rightBoundary[index].x)*(laneSample.leftBoundary[index].x - laneSample.rightBoundary[index].x) + (laneSample.leftBoundary[index].y - laneSample.rightBoundary[index].y)*(laneSample.leftBoundary[index].y - laneSample.rightBoundary[index].y));
 				laneAttr.banking = NDM_Util::Get_Slop_Banking_(laneSample.leftBoundary[index], laneSample.rightBoundary[index]);

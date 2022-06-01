@@ -314,24 +314,24 @@ namespace HorizonMapEnv {
 					for (SSD::SimPoint3DVector points : mLaneinfo.leftBoundary.segmentList)
 					{
 						for (auto & segmentPonit : points) {
-							sample_point_count++;
 							if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 								NDM_Point point_pt;
 								point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 								lineleft.points.push_back(point_pt);
 							}
+							sample_point_count++;
 						}
 					}
 					sample_point_count = 0;
 					for (SSD::SimPoint3DVector points : mLaneinfo.rightBoundary.segmentList)
 					{
 						for (auto & segmentPonit : points) {
-							sample_point_count++;
 							if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 								NDM_Point point_pt;
 								point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 								lineright.points.push_back(point_pt);
 							}
+							sample_point_count++;
 						}
 					}
 
@@ -344,12 +344,12 @@ namespace HorizonMapEnv {
 					sample_point_count = 0;
 					for (auto point : cLaneinfo.centerLine)
 					{
-						sample_point_count++;
 						if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 							NDM_Point point_pt;
 							point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
 							linecenter.points.push_back(point_pt);
 						}
+						sample_point_count++;
 					}
 					break;
 				}
@@ -384,6 +384,7 @@ namespace HorizonMapEnv {
 #else
 					isInJunction = SimOneAPI::IsInJunction(predName, junctionId);
 #endif
+
 					if (isInJunction) {
 						//获取所有和十字路口关联的道路
 						GetJunctionConectRoad(junctionId);
@@ -483,6 +484,7 @@ namespace HorizonMapEnv {
 		}
 		void CreatePhysicalLayer(const SSD::SimPoint3D& pos, const double forward) {
 			std::cout << "=============================start to create ndm map======================" << std::endl;
+			mForwardDistance = forward;
 #ifdef NDM_MAP_LOCAL
 			auto& laneLineInfo = HDMapStandalone::MHDMap::GetLaneLineInfo();
 #else
@@ -563,5 +565,6 @@ namespace HorizonMapEnv {
 		SSD::SimVector<HDMapStandalone::MParkingSpace> mParkingSpaces;
 		SSD::SimVector<HDMapStandalone::MLaneLineInfo> mLaneLineInfo;
 		LaneInfo_t mLaneInfo;
+		double mForwardDistance;
 	};
 }

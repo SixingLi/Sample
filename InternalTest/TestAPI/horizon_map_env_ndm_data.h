@@ -25,9 +25,9 @@
 
 using namespace std;
 
-
 #define M_PI 3.1415926
 #define BOUNDARY_SAMPLE_DISTANCE 5
+
 /*******************************************************************************
 this is ndm convert from simone hdmap api, the origin data format is opendrive
 @ the parameter of each struct have its default, some value is unavailable
