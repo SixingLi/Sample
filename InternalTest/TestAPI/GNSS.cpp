@@ -23,7 +23,7 @@ GNSSMessage GNSS::getGNSSMessage(SimOne_Data_Gps *pData)
 	updateSpeedKPH(pData->velX, pData->velY, pData->velZ, pData->isGPSLost);
 	updateCourceOfGround(pData->oriZ);
 
-	m_strGPGGA = "$GPGGA," + m_timeUTC + m_positionGWS + "1," + m_satellitesNumStr + m_HDOP + m_MSLAltitude;
+	m_strGPGGA = "$GPGGA," + m_timeUTC + m_positionGWS + "2," + m_satellitesNumStr + m_HDOP + m_MSLAltitude;
 	m_strGPGGA += getCheckSum(m_strGPGGA);
 	memset(m_GNSSMessage.GNSS_GPGGA, 0, 100);
 	m_GNSSMessage.GPGGA_Size = m_strGPGGA.length();
@@ -147,18 +147,18 @@ void GNSS::updateSatellitesInfo(bool isGPSLost)
 		m_satellitesUsedStr = ",,,,,,,,,,,,";
 		return;
 	}
-
+	m_satellitesNum = 10;
 	chrono::system_clock::time_point tp = chrono::system_clock::now();
 	int sec = chrono::system_clock::to_time_t(tp);
 
 	if (sec - m_lastStatellitesUpdateTime > 10) {
-		m_satellitesNum = (rand() % (12 - 4 + 1)) + 4;
+		// m_satellitesNum = (rand() % (12 - 4 + 1)) + 4;
 
 		m_satellitesNumStr = to_string(m_satellitesNum) + ",";
 
-		if (m_satellitesNum < 10) {
+		/*if (m_satellitesNum < 10) {
 			m_satellitesNumStr = "0" + m_satellitesNumStr;
-		}
+		}*/
 
 		set<int> satellitesID;
 		int idCount = 0;

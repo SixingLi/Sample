@@ -21,7 +21,8 @@ SimOneLibPaths = [
 "",
 "../Build/build/bin/debug/",
 "Win64/",
-"../Build/build_debug/bin/debug/"
+"../Build/build_debug/bin/debug/",
+"../../../Build/build/bin/Debug/"
 ]
 
 # Append full paths
@@ -435,7 +436,31 @@ class SimOne_Data_Trajectory(SimOne_Data):
 	_fields_ = [
 	('trajectorySize', c_int),
 	('trajectory', SimOne_Data_Trajectory_Entry * SOSM_TRAJECTORY_SIZE_MAX)]
-	
+
+
+class SimOne_Data_IMU(SimOne_Data):
+	_pack_ = 1
+	_fields_ = [
+		('accelX', c_float), # Position X no Opendrive (by meter)
+		('accelY', c_float), # Position Y no Opendrive (by meter)
+		('accelZ', c_float), # Position Z no Opendrive (by meter)
+		('velX', c_float), # MainVehicle Velocity X on Opendrive (by meter)
+		('velY', c_float), # MainVehicle Velocity Y on Opendrive (by meter)
+		('velZ', c_float), # MainVehicle Velocity Z on Opendrive (by meter)
+		('deltaVelX', c_float), # Change in Velocity X Relative to Previous Frame (by meter)
+		('deltaVelY', c_float), # Change in Velocity Y Relative to Previous Frame (by meter)
+		('deltaVelZ', c_float), # Change in Velocity Z Relative to Previous Frame (by meter)
+		('angVelX', c_float), # MainVehicle Angular Velocity X on Opendrive (by meter)
+		('angVelY', c_float), # MainVehicle Angular Velocity Y on Opendrive (by meter)
+		('angVelZ', c_float), # MainVehicle Angular Velocity Z on Opendrive (by meter)
+		('rotX', c_float), # Rotation X on Opendrive (by radian)
+		('rotY', c_float), # Rotation Y on Opendrive (by radian)
+		('rotZ', c_float), # Rotation Z on Opendrive (by radian)
+		('deltaRotX', c_float), # Change in Rotation X Relative to Previous Frame (by radian)
+		('deltaRotY', c_float), # Change in Rotation Y Relative to Previous Frame (by radian)
+		('deltaRotZ', c_float), # Change in Rotation Z Relative to Previous Frame (by radian)
+	]
+
 class SimOne_Data_Gps(SimOne_Data):
 	_pack_ = 1
 	_fields_ = [
@@ -465,7 +490,9 @@ class SimOne_Data_Gps(SimOne_Data):
 	('engineRpm', c_float), # Speed of engine (by r/min)
 	('odometer', c_float),#  odometer in meter.
 	('extraStateSize', c_int),
-	('extraStates', c_float*SOSM_EXTRA_STATES_SIZE_MAX)]# vehicle states subscripted by MainVehicleExtraDataIndics message
+	('extraStates', c_float*SOSM_EXTRA_STATES_SIZE_MAX), # vehicle states subscripted by MainVehicleExtraDataIndics message
+	('isGPSLost', c_bool),
+	('imuData', SimOne_Data_IMU)]
 
 SOSM_OBSTACLE_SIZE_MAX = 255
 

@@ -1,6 +1,7 @@
 from SimOneIOStruct import *
 
 GpsCbFuncType = CFUNCTYPE(c_void_p, c_char_p, POINTER(SimOne_Data_Gps))
+ImuCbFuncType = CFUNCTYPE(c_void_p, c_char_p, POINTER(SimOne_Data_IMU))
 GroundTruthCbFuncType = CFUNCTYPE(c_void_p, c_char_p, POINTER(SimOne_Data_Obstacle))
 SensorLaneInfoCbFuncType = CFUNCTYPE(c_void_p,c_char_p, c_char_p, POINTER(SimOne_Data_LaneInfo))
 UltrasonicsCbFuncType = CFUNCTYPE(c_void_p, c_char_p, POINTER(SimOne_Data_UltrasonicRadars))
@@ -8,6 +9,7 @@ RadarDetectionCbFuncType = CFUNCTYPE(c_void_p, c_char_p, c_char_p,POINTER(SimOne
 SensorDetectionsCbFuncType = CFUNCTYPE(c_void_p, c_char_p, c_char_p,POINTER(SimOne_Data_SensorDetections))
 
 SIMONEAPI_GPS_CB = None
+SIMONEAPI_IMU_CB = None
 SIMONEAPI_GROUNDTRUTH_CB = None
 SIMONEAPI_SENSORLANEINFO_CB = None
 SIMONEAPI_ULTRASONICS_CB = None
@@ -17,6 +19,10 @@ SIMONEAPI_SENSOR_DETECTIONS_CB = None
 def _simoneapi_gps_cb(mainVehicleId, data):
 	global SIMONEAPI_GPS_CB
 	SIMONEAPI_GPS_CB(mainVehicleId, data)
+
+def _simoneapi_imu_cb(mainVehicleId, data):
+	global SIMONEAPI_IMU_CB
+	SIMONEAPI_IMU_CB(mainVehicleId, data)
 
 def _simoneapi_groundtruth_cb(mainVehicleId, data):
 	global SIMONEAPI_GROUNDTRUTH_CB
@@ -39,6 +45,7 @@ def _simoneapi_sensor_detections_cb(mainVehicleId, sensorId, data):
 	SIMONEAPI_SENSOR_DETECTIONS_CB(mainVehicleId, sensorId, data)
 
 simoneapi_gps_cb_func = GpsCbFuncType(_simoneapi_gps_cb)
+simoneapi_imu_cb_func = ImuCbFuncType(_simoneapi_imu_cb)
 simoneapi_groundtruth_cb_func = GroundTruthCbFuncType(_simoneapi_groundtruth_cb)
 simoneapi_sensorlaneinfo_cb_func = SensorLaneInfoCbFuncType(_simoneapi_sensorlaneinfo_cb)
 simoneapi_ultrasonics_cb_func = UltrasonicsCbFuncType(_simoneapi_ultrasonics_cb)
@@ -86,6 +93,48 @@ def SoApiSetGpsUpdateCB(cb):
 	global SIMONEAPI_GPS_CB
 	SimoneAPI.SetGpsUpdateCB(simoneapi_gps_cb_func)
 	SIMONEAPI_GPS_CB = cb
+
+def SoGetImu(mainVehicleId, imuData):
+	"""获取主车IMU信息.
+
+	Get main vehicle IMU
+
+	Parameters
+	----------
+	dmainVehicleI : 
+		Id of the main vehicle
+	imuData : 
+		IMU data
+
+	Returns
+	-------
+	bool
+		Success or not
+
+	"""
+	SimoneAPI.GetImu.restype = c_bool
+	_mainVehicleId = create_string_buffer(mainVehicleId.encode(), 256)
+	return SimoneAPI.GetImu(_mainVehicleId, pointer(imuData))
+
+def SoApiSetImuUpdateCB(cb):
+	"""主车IMU更新回调.
+
+	Register the callback func applying for IMU info
+
+	Parameters
+	----------
+	cb : 
+		IMU data update callback function
+
+	Returns
+	-------
+	bool
+		Success or not
+
+	"""
+	global SIMONEAPI_IMU_CB
+	SimoneAPI.SetImuUpdateCB(simoneapi_imu_cb_func)
+	SIMONEAPI_IMU_CB = cb
 
 def SoGetGroundTruth(mainVehicleId, obstacleData):
 	"""得到仿真场景中的物体的真值.

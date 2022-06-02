@@ -316,6 +316,36 @@ struct SimOne_Data_Trajectory : public SimOne_Data
 // ----------------------------
 #define SOSM_POSE_PREFIX "SOSM_POSE_"
 #define SOSM_EXTRA_STATES_SIZE_MAX 256
+
+struct SimOne_Data_IMU : public SimOne_Data
+{
+	float accelX; // MainVehicle Acceleration X on Opendrive (by meter)
+	float accelY; // MainVehicle Acceleration Y on Opendrive (by meter)
+	float accelZ; // MainVehicle Acceleration Z on Opendrive (by meter)
+
+	float velX; // MainVehicle Velocity X on Opendrive (by meter)
+	float velY; // MainVehicle Velocity Y on Opendrive (by meter)
+	float velZ; // MainVehicle Velocity Z on Opendrive (by meter)
+
+	float deltaVelX; // Change in Velocity X Relative to Previous Frame (by meter)
+	float deltaVelY; // Change in Velocity Y Relative to Previous Frame (by meter)
+	float deltaVelZ; // Change in Velocity Z Relative to Previous Frame (by meter)
+
+
+	float angVelX; // MainVehicle Angular Velocity X on Opendrive (by meter)
+	float angVelY; // MainVehicle Angular Velocity Y on Opendrive (by meter)
+	float angVelZ; // MainVehicle Angular Velocity Z on Opendrive (by meter)
+
+	float rotX; // Rotation X on Opendrive (by radian)
+	float rotY; // Rotation Y on Opendrive (by radian)
+	float rotZ; // Rotation Z on Opendrive (by radian)
+
+	float deltaRotX; // Change in Rotation X Relative to Previous Frame (by radian)
+	float deltaRotY; // Change in Rotation Y Relative to Previous Frame (by radian)
+	float deltaRotZ; // Change in Rotation Z Relative to Previous Frame (by radian)
+
+};
+
 struct SimOne_Data_Gps : public SimOne_Data
 {
 	float posX; // Position X on Opendrive (by meter)
@@ -346,7 +376,10 @@ struct SimOne_Data_Gps : public SimOne_Data
 	int extraStateSize;
 	float extraStates[SOSM_EXTRA_STATES_SIZE_MAX];// vehicle states subscripted by MainVehicleExtraDataIndics message
 
-	bool isGPSLost; // GPS signal lost tag
+	bool isGPSLost;
+
+	SimOne_Data_IMU imuData;
+
 };
 
 
