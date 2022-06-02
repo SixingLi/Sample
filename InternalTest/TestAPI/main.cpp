@@ -16,8 +16,7 @@ int main(int argc, char* argv[])
 	double forward = 2000;
 
 	bool isJoinTimeLoop = false;
-	//const char* serverIP = "10.66.9.111";
-	const char* serverIP = "127.0.0.1";
+	const char* serverIP = "10.66.9.111";
 	SimOneAPI::InitSimOneAPI(mv_id, isJoinTimeLoop, serverIP);
 	if (!SimOneAPI::LoadHDMap(50)) {
 		std::cout << "load map failed!!!" << std::endl;
@@ -25,17 +24,13 @@ int main(int argc, char* argv[])
 	}
 
 	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
-	std::unique_ptr<SimOne_Data_IMU> pImu = std::make_unique<SimOne_Data_IMU>();
 	int lastFrame = 0;
 	while (1)
 	{
 		bool flag = SimOneAPI::GetGps(mv_id, pGps.get());
-		bool flagImu = SimOneAPI::GetImu(mv_id, pImu.get());
 		float posX; // Position X on Opendrive (by meter)
 		float posY; // Position Y on Opendrive (by meter)
 		float posZ; // Position Z on Opendrive (by meter)
-
-		std::cout << " pImu->frame :" << pImu->frame << " pImu->deltaRotX: " << pImu->deltaRotX << std::endl;
 
 		if (flag && pGps->frame != lastFrame)
 		{
