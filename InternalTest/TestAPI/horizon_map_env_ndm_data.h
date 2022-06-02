@@ -27,6 +27,7 @@ using namespace std;
 
 #define M_PI 3.1415926
 #define BOUNDARY_SAMPLE_DISTANCE 5
+#define ROAD_SPLIT_MIN_LENGTH 3000
 
 /*******************************************************************************
 this is ndm convert from simone hdmap api, the origin data format is opendrive
@@ -960,6 +961,9 @@ namespace HorizonMapEnv {
 			}
 			tempAngle = (tempAngle / (2 * M_PI)) * 360;
 			return tempAngle;
+		}
+		static long GetRoadID(const SSD::SimString &laneName) {
+			
 		}
 	public:
 	};
