@@ -16,6 +16,10 @@ def SoGpsCB(mainVehicleId, Data_Gps):
 	if Data_Gps:
 		print("mainVehicleId:{0}, posX:{1}, posY: {2}, posZ: {3}".format(mainVehicleId, Data_Gps[0].posX, Data_Gps[0].posY, Data_Gps[0].posZ))
 
+def SoImuCB(mainVehicleId, Data_Imu):
+	if Data_Imu:
+		print("mainVehicleId:{0}, accelX:{1}, accelY: {2}, accelZ: {3}".format(mainVehicleId, Data_Imu[0].accelX, Data_Imu[0].accelY, Data_Imu[0].accelZ))
+
 def SoV2XCB(mainVehicleId, sensorId, Data_V2XNFS):
 	if Data_V2XNFS:
 		print("Data_V2XNFS:{0}, SensorID:{1}, Data_V2XNFS_Size:{2}, Data_V2XNFS_Frame: {3}".format(mainVehicleId,sensorId,Data_V2XNFS[0].V2XMsgFrameSize,Data_V2XNFS[0].MsgFrameData))
@@ -47,6 +51,7 @@ if __name__ == '__main__':
 	# SoAPISetMainVehicleStatusUpdateCB(SoMainVehicleStaus)
 	# SoApiSetSensorDetectionsUpdateCB(SoSetSensorDetectionUpdateCBTest)
 	SoApiSetGpsUpdateCB(SoGpsCB)
+	SoApiSetImuUpdateCB(SoImuCB)
 
 	while Flag:
 		# waypoint = SimOne_Data_WayPoints()
@@ -68,6 +73,9 @@ if __name__ == '__main__':
 		if SoGetGps(mainVehicleID, gpsData):
 			print("timestamp:{0},posX:{1},posY:{2},brake:{3},steering:{4}".format(gpsData.timestamp,gpsData.posX,gpsData.posY,gpsData.brake,gpsData.steering))
 		
+		imuData = SimOne_Data_IMU()
+		if SoGetImu(mainVehicleID, imuData):
+			print("timestamp:{0}, angVelX:{1}, angVelY: {2}, angVelZ: {3}".format(imuData.timestamp, imuData.angVelX, imuData.angVelY, imuData.angVelZ))
 		# obstacleData = SimOne_Data_Obstacle()
 		# if SoGetGroundTruth(mainVehicleID,obstacleData):
 		# 	print("Size:{0}".format(obstacleData.obstacleSize))

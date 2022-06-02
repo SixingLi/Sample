@@ -50,6 +50,7 @@ SimOneAPIService::SimOneAPIService() :
 	mState(ENetServiceState_Stop),
 	mPendingState(ENetServiceState_Stop),
 	mpGpsUpdateCB(nullptr),
+	mpImuUpdateCB(nullptr),
 	mpObstacleUpdateCB(nullptr),
 	mpTrafficLightUpdateCB(nullptr),
 	mpScenarioEventCB(nullptr),
@@ -265,6 +266,7 @@ void SimOneAPIService::zeroMemory() {
 	mState = ENetServiceState_Stop;
 	mPendingState = ENetServiceState_Stop;
 	mpGpsUpdateCB = nullptr;
+	mpImuUpdateCB = nullptr;
 	mpObstacleUpdateCB = nullptr;
 	mpTrafficLightUpdateCB = nullptr;
 	mpScenarioEventCB = nullptr;
@@ -960,6 +962,22 @@ bool SimOneAPIService::GetGps(int mainVehicleId, SimOne_Data_Gps *pGps) {
 	}
 
 	memcpy(pGps, &it->second, sizeof(SimOne_Data_Gps));
+	return true;
+}
+
+bool SimOneAPIService::GetImu(int mainVehicleId, SimOne_Data_IMU *pImu)
+{
+	if (!pImu)
+		return false;
+	std::unique_lock<std::recursive_mutex> lock(mLastGPSDataMapLock);
+	SimOne_Data_GpsMap::iterator it = mLastGPSDataMap.find(mainVehicleId);
+	if (it == mLastGPSDataMap.end())
+	{
+		return false;
+	}
+
+	memcpy(pImu, &it->second.imuData, sizeof(SimOne_Data_IMU));
+
 	return true;
 }
 
@@ -1782,6 +1800,9 @@ bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, 
 	GPS.timestamp = header.timestamp();
 	GPS.frame = header.frame();
 	GPS.version = header.version();
+	GPS.imuData.timestamp = header.timestamp();
+	GPS.imuData.frame = header.frame();
+	GPS.imuData.version = header.version();
 	//bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "==1==HotAreaGPSData frame:%d posX:%f posY:%f posZ:%f throttle:%f brake:%f steering:%f gear:%d", GPS.frame, GPS.posX, GPS.posY, GPS.posZ, GPS.throttle, GPS.brake, GPS.steering, GPS.gear);
 	if (mbDisplayHotAreaData)
 	{
@@ -1808,6 +1829,10 @@ bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, 
 	if (mpGpsUpdateCB != NULL)
 	{
 		mpGpsUpdateCB(mainVehIdConst, &GPS);
+	}
+	if (mpImuUpdateCB != NULL)
+	{
+		mpImuUpdateCB(mainVehIdConst, &GPS.imuData);
 	}
 	if (mpSimOneGpsCB != NULL)
 	{
@@ -2219,6 +2244,13 @@ bool SimOneAPIService::SetGpsUpdateCB(void(*cb)(const char* mainVehicleId, SimOn
 {
 	//Init();
 	mpGpsUpdateCB = cb;
+	return true;
+}
+
+bool SimOneAPIService::SetImuUpdateCB(void(*cb)(const char *mainVehicleId, SimOne_Data_IMU *pImu))
+{
+	//Init();
+	mpImuUpdateCB = cb;
 	return true;
 }
 

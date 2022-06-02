@@ -90,6 +90,37 @@ extern "C"
 		SIMONE_API bool SetGpsUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Gps *pGps));
 
 		/*!
+		获取主车IMU信息
+		\li function:
+		*	GetImu
+		\li brief:
+		*	Get main vehicle IMU
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[out]
+		*	pImu: IMU data
+		@return
+		*	Success or not
+		*/
+		SIMONE_API bool GetImu(const char* mainVehicleId, SimOne_Data_IMU *pImu);
+
+		/*!
+		主车IMU更新回调
+		\li function:
+		*	SetImuUpdateCB
+		\li brief:
+		*	Register the callback func applying for IMU info
+		@param[in]
+		*	cb: IMU data update callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	pImu: IMU data
+		@return
+		*	Success or not
+		*/
+		SIMONE_API bool SetImuUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_IMU *pImu));
+
+		/*!
 		得到仿真场景中的物体的真值
 		\li function:
 		*	GetGroundTruth

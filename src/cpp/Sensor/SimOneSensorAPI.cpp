@@ -23,6 +23,17 @@ extern "C"
 		return SimOneAPIService::GetInstance()->SetGpsUpdateCB(cb);
 	}
 
+	SIMONE_API bool SimOneAPI::GetImu(const char * mainVehicleId, SimOne_Data_IMU * pImu)
+	{
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->GetImu(mainVehId, pImu);
+	}
+
+	SIMONE_API bool SimOneAPI::SetImuUpdateCB(void(*cb)(const char *mainVehicleId, SimOne_Data_IMU *pImu))
+	{
+		return SimOneAPIService::GetInstance()->SetImuUpdateCB(cb);
+	}
+
 	SIMONE_API bool SimOneAPI::GetTrafficLight(const char* mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight *pTrafficLight) {
 		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
 		return SimOneAPIService::GetInstance()->GetTrafficLight(mainVehId, opendriveLightId, pTrafficLight);
