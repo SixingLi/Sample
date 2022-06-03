@@ -28,6 +28,7 @@ using namespace std;
 #define M_PI 3.1415926
 #define BOUNDARY_SAMPLE_DISTANCE 5
 #define ROAD_SPLIT_MIN_LENGTH 3000
+#define BACKWARD_DISTANCE 200
 
 /*******************************************************************************
 this is ndm convert from simone hdmap api, the origin data format is opendrive

@@ -345,16 +345,16 @@ namespace HorizonMapEnv {
 							sample_point_count++;
 						}
 						sample_point_count = 0;
-						if (atoi(splitItem_Current[2].c_str())>0) { //Õ˘nearstIndex+∫Û’“2000m£¨Õ˘nearstIndex-«∞’“200m
-							for (int i = nearstIndex; i < cLaneinfo.centerLine.size(); i++)
+						if (atoi(splitItem_LaneName[2].c_str())<0) { //Õ˘nearstIndex+∫Û’“2000m£¨Õ˘nearstIndex-«∞’“200m
+
+							for (int i = (nearstIndex- BACKWARD_DISTANCE>0 )? nearstIndex - BACKWARD_DISTANCE:0; i < cLaneinfo.centerLine.size(); i++)
 							{
 								auto &point = cLaneinfo.centerLine[i];
 								if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 									NDM_Point point_pt;
 									point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
 									linecenter.points.push_back(point_pt);
-									linecenter.points.push_back(point_pt);
-									if (linecenter.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
+									if (linecenter.points.size()*BOUNDARY_SAMPLE_DISTANCE >(mForwardDistance+BACKWARD_DISTANCE)) {
 										break;
 									}
 								}
@@ -362,16 +362,16 @@ namespace HorizonMapEnv {
 							}
 
 							sample_point_count = 0;
-							
-							for (auto  &points : mLaneinfo.leftBoundary.segmentList)
+
+							for (auto &points : mLaneinfo.leftBoundary.segmentList)
 							{
-								for (int i = nearstIndex; i < points.size(); i++) {
+								for (int i = nearstIndex- BACKWARD_DISTANCE; i < points.size(); i++) {
 									auto segmentPonit = points[i];
 									if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 										NDM_Point point_pt;
 										point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 										lineleft.points.push_back(point_pt);
-										if (lineleft.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
+										if (lineleft.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
 											break;
 										}
 									}
@@ -382,22 +382,23 @@ namespace HorizonMapEnv {
 							sample_point_count = 0;
 							for (auto &points : mLaneinfo.rightBoundary.segmentList)
 							{
-								for (int i = nearstIndex; i < points.size(); i++) {
+								for (int i = nearstIndex- BACKWARD_DISTANCE; i < points.size(); i++) {
 									auto segmentPonit = points[i];
 									if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 										NDM_Point point_pt;
 										point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 										lineright.points.push_back(point_pt);
-										if (lineright.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
+										if (lineright.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
 											break;
 										}
 									}
 									sample_point_count++;
 								}
+								
 							}
-
 						}else{ //Õ˘nearstIndex-«∞’“2000m£¨Õ˘nearstIndex+∫Û’“200m
-							for (int i = nearstIndex; i < cLaneinfo.centerLine.size(); i--)
+							
+							for (int i = (nearstIndex+BACKWARD_DISTANCE < cLaneinfo.centerLine.size())? nearstIndex + BACKWARD_DISTANCE: cLaneinfo.centerLine.size(); i < cLaneinfo.centerLine.size(); i--)
 							{
 								if (i > 0) {
 									auto &point = cLaneinfo.centerLine[i];
@@ -405,8 +406,7 @@ namespace HorizonMapEnv {
 										NDM_Point point_pt;
 										point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
 										linecenter.points.push_back(point_pt);
-										linecenter.points.push_back(point_pt);
-										if (linecenter.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
+										if (linecenter.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
 											break;
 										}
 									}
@@ -418,14 +418,14 @@ namespace HorizonMapEnv {
 
 							for (auto &points : mLaneinfo.leftBoundary.segmentList)
 							{
-								for (int i = nearstIndex; i < points.size(); i--) {
+								for (int i = nearstIndex + BACKWARD_DISTANCE; i < points.size(); i--) {
 									if (i > 0) {
 										auto segmentPonit = points[i];
 										if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 											NDM_Point point_pt;
 											point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 											lineleft.points.push_back(point_pt);
-											if (lineleft.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
+											if (lineleft.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
 												break;
 											}
 										}
@@ -437,20 +437,20 @@ namespace HorizonMapEnv {
 							sample_point_count = 0;
 							for (auto &points : mLaneinfo.rightBoundary.segmentList)
 							{
-								for (int i = nearstIndex; i < points.size(); i--) {
+								for (int i = nearstIndex + BACKWARD_DISTANCE; i < points.size(); i--) {
 									if (i > 0) {
 										auto segmentPonit = points[i];
 										if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 											NDM_Point point_pt;
 											point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 											lineright.points.push_back(point_pt);
-											if (lineright.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
+											if (lineright.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
 												break;
 											}
 										}
 										sample_point_count++;
 									}
-								}
+								}	
 							}
 						}
 					}
