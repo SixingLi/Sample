@@ -45,9 +45,9 @@ extern "C"
 	}
 
 	SIMONE_API bool SimOneAPI::GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& id, const double& forward,
-		SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoLis)
+		SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList)
 	{
-		return SimOneAPIService::GetForwardLaneSample(inputPt, id, forward, laneInfoLis);
+		return SimOneAPIService::GetForwardLaneSample(inputPt, id, forward, laneInfoList);
 	}
 
 	SIMONE_API bool SimOneAPI::GetLaneLink(const SSD::SimString& id, HDMapStandalone::MLaneLink& laneLink)

@@ -2512,7 +2512,7 @@ void SimOneAPIService::GetParkingSpaceList(SSD::SimVector<HDMapStandalone::MPark
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetParkingSpaceIds failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetParkingSpaceList failed, HDMap not initialized yet.");
 	}
 #endif
 	//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
@@ -2525,7 +2525,7 @@ bool SimOneAPIService::GetParkingSpaceIds(const SSD::SimPoint3D& inputPt, double
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetParkingSpaceIds failed, HDMap not initialized yet.");
 		return false;
 	}
-	return HDMapStandalone::MHDMap::GetParkingSpaceIds(inputPt, distance, ids);
+	return std::move(HDMapStandalone::MHDMap::GetParkingSpaceIds(inputPt, distance, ids));
 }
 
 bool SimOneAPIService::GenerateRoute(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimPoint3DVector& route)
@@ -3067,7 +3067,7 @@ SSD::SimVector<long> SimOneAPIService::GetJunctionList()
 		return std::move(juncionIdList);
 	}
 #endif
-	return HDMapStandalone::MHDMap::GetJunctionList();
+	return std::move(HDMapStandalone::MHDMap::GetJunctionList());
 }
 
 double SimOneAPIService::GetRoadLength(const long& roadId)
@@ -3260,7 +3260,7 @@ bool SimOneAPIService::GetForwardLaneSample(const SSD::SimPoint3D& inputPt, cons
 		return false;
 	}
 #endif
-	laneInfoList = HDMapStandalone::MHDMap::GetLaneSample(inputPt, laneName, forward);
+	laneInfoList = std::move(HDMapStandalone::MHDMap::GetLaneSample(inputPt, laneName, forward));
 	return true;
 }
 
@@ -3273,7 +3273,7 @@ void SimOneAPIService::GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLine
 		return;
 	}
 #endif
-	laneLineInfo = HDMapStandalone::MHDMap::GetLaneLineInfo();
+	laneLineInfo = std::move(HDMapStandalone::MHDMap::GetLaneLineInfo());
 }
 
 
