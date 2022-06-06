@@ -89,24 +89,6 @@ namespace HorizonMapEnv {
 
 			ofs << "++++++++++++++++++++++++++++++logicalLayer.lanes++++++++++++++++++++++++++++++++++++++ size="<< logicalLayer.lanes.size() << std::endl;
 			for (auto lane : logicalLayer.lanes) {
-				//typedef struct Lane {
-				//	SSD::SimString str_id;
-				//	SSD::SimStringVector l_laneline_ids;
-				//	SSD::SimStringVector r_laneline_ids;
-				//	SSD::SimString driveline_id;
-				//	NDM_LaneDirection direction;
-				//	NDM_LaneTransition transition;
-				//	SSD::SimVector<NDM_LaneAttr>  attrs;
-				//	float lane_length;
-				//	int type;
-				//	SSD::SimVector<NDM_Link> objs;
-				//	//SSD::SimVector<NDM_Link> obstacles;
-				//	SSD::SimStringVector pred_ids;
-				//	SSD::SimStringVector succ_ids;
-				//	SSD::SimStringVector left_ids;
-				//	SSD::SimStringVector right_ids;
-				//	SSD::SimVector<NDM_LaneRestriction> restrictions;
-				//}NDM_Lane;
 				ofs << "str_id:	" << lane.str_id.GetString() << std::endl
 					<< "	driveline_id:" << lane.driveline_id.GetString() << std::endl
 					<< "	direction:" << lane.direction << std::endl
@@ -155,18 +137,35 @@ namespace HorizonMapEnv {
 			ofs.flush();
 
 			for (auto parkingspace : logicalLayer.parkingspaces) {
-
-
+				
 			}
 
 			for (auto section : logicalLayer.sections) {
-
-
+				
 			}
-
+			ofs << "++++++++++++++++++++++++++++++logicalLayer.junctions++++++++++++++++++++++++++++++++++++++ size=" << logicalLayer.junctions.size() << std::endl;
 			for (auto junction : logicalLayer.junctions) {
+				//	SSD::SimVector<NDM_Link> objs;
+				ofs << "id:" << junction.id.GetString() << std::endl;
+				ofs << "lane_ids:" << std::endl;
+				for (auto lane : junction.lane_ids) {
+					ofs << "	laneid:" << lane.GetString() << std::endl;
+				}
 
+				ofs << "in_link_ids:" << std::endl;
+				for (auto link : junction.in_link_ids) {
+					ofs << "	inlink:" << link.GetString() << std::endl;
+				}
+				ofs << "out_link_ids:"  << std::endl;
+				for (auto link : junction.out_link_ids) {
+					ofs << "	outlink:" << link.GetString() << std::endl;
+				}
 
+				ofs << "bounding_polygon:" << std::endl;
+				for (auto bounding_point : junction.bounding_polygon.points) {
+					ofs << "		point:" << bounding_point.x << "	" << bounding_point.y << "	" << bounding_point.z << std::endl;
+				}
+				ofs.flush();
 			}
 		}
 

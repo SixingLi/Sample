@@ -53,7 +53,7 @@ namespace HorizonMapEnv {
 		SSD::SimString str_id;		// global id, UUID
 		NDM_Polygon border;			// need
 		NDM_ObjectType type;		// ObjectType need
-		int sub_type = 0;				// LaneMarkingType°¢TrafficSignType£¨etc. need
+		int sub_type=0;				// LaneMarkingType°¢TrafficSignType£¨etc. need
 		int conf = -1;				//-
 		int life_time = -1;			//-
 		int age = -1;				//-
@@ -121,7 +121,7 @@ namespace HorizonMapEnv {
 			SimOneAPI::GetSignalListOnLaneByType(laneName, SSD::SimString("Graphics"), graphicsSignals);
 #endif
 			for (auto signal : graphicsSignals) {
-
+			
 				NDM_Object object;
 				object.str_id.SetString(("lanemarking_" + std::to_string(signal.id)).c_str());
 				object.type = ObjectType_LaneMarking;
@@ -152,7 +152,7 @@ namespace HorizonMapEnv {
 			for (auto& signal : trafficLight)
 			{
 				NDM_Object object;
-				object.str_id.SetString(("traffic_" + std::to_string(signal.id)).c_str());
+				object.str_id.SetString(("traffic_"+std::to_string(signal.id)).c_str());
 				object.type = ObjectType_TrafficLight;
 				//object.border.normal = signal.pt;
 				NDM_Point point_orientation;
@@ -182,7 +182,7 @@ namespace HorizonMapEnv {
 			for (auto& signal : signalList)
 			{
 				NDM_Object object;
-				object.str_id.SetString(("signal_" + std::to_string(signal.id)).c_str());
+				object.str_id.SetString(("signal_"+std::to_string(signal.id)).c_str());
 				object.type = ObjectType_TrafficSign;
 				object.sub_type = (int)NDM_Util::Get_SignalType(signal.type);
 
@@ -212,7 +212,7 @@ namespace HorizonMapEnv {
 			for (auto& stopline : stoplineList)
 			{
 				NDM_Object object;
-				object.str_id.SetString(("stopline_" + std::to_string(stopline.id)).c_str());
+				object.str_id.SetString(("stopline_"+std::to_string(stopline.id)).c_str());
 				object.type = ObjectType_StopLine;
 
 				for (auto& point : stopline.boundaryKnots)
@@ -241,7 +241,7 @@ namespace HorizonMapEnv {
 			for (auto& crosswalk : crosswalkList)
 			{
 				NDM_Object object;
-				object.str_id.SetString(("crosswalk_" + std::to_string(crosswalk.id)).c_str());
+				object.str_id.SetString(("crosswalk_"+std::to_string(crosswalk.id)).c_str());
 				object.type = ObjectType_CrossWalk;
 
 				for (auto& point : crosswalk.boundaryKnots)
@@ -313,39 +313,14 @@ namespace HorizonMapEnv {
 				if (mCurrentLaneLength > ROAD_SPLIT_MIN_LENGTH) {
 					std::vector<std::string> splitItem_Current = UtilString::split(mCurrentLaneName.GetString(), "_");
 					std::vector<std::string> splitItem_LaneName = UtilString::split(laneName.GetString(), "_");
-					double c_length = 0;
+
+					if (laneName == mLaneinfo.laneName && splitItem_Current[0] == splitItem_LaneName[0] && isGetSTSuccess) {
 #ifdef NDM_MAP_LOCAL
-					c_length = HDMapStandalone::MHDMap::GetLaneLength(laneName);
+						HDMapStandalone::MLaneInfo cLaneinfo = HDMapStandalone::MHDMap::GetLaneSample(mLaneinfo.laneName);
 #else
-					c_length = SimOneAPI::GetLaneLength(laneName);
+						HDMapStandalone::MLaneInfo cLaneinfo;
+						SimOneAPI::GetLaneSample(mLaneinfo.laneName, cLaneinfo);
 #endif
-
-#ifdef NDM_MAP_LOCAL
-					HDMapStandalone::MLaneInfo cLaneinfo = HDMapStandalone::MHDMap::GetLaneSample(mLaneinfo.laneName);
-#else
-					HDMapStandalone::MLaneInfo cLaneinfo;
-					SimOneAPI::GetLaneSample(mLaneinfo.laneName, cLaneinfo);
-#endif
-
-					int nearstIndex = 0;
-					float distMin = std::numeric_limits<float>::max();
-					sample_point_count = 0;
-					for (int i = 0; i < cLaneinfo.centerLine.size(); i++)
-					{
-						auto &point = cLaneinfo.centerLine[i];
-						if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
-							float dist_temp = sqrt((point.x - mCurrentPos.x)*(point.x - mCurrentPos.x) + (point.y - mCurrentPos.y)*(point.y - mCurrentPos.y));
-							if (distMin > dist_temp) {
-								distMin = dist_temp;
-								nearstIndex = i;
-							}
-						}
-						sample_point_count++;
-					}
-
-
-					if ((laneName == mLaneinfo.laneName && splitItem_Current[0] == splitItem_LaneName[0] && isGetSTSuccess)) {
-
 						lineleft.marking = NDM_Util::GetMarking_(mLaneinfo.leftBoundary.roadmarkList[0]);  //TODO:
 						lineright.marking = NDM_Util::GetMarking_(mLaneinfo.rightBoundary.roadmarkList[0]);  //TODO:
 						linecenter.marking = NDM_LineMarking::LineMarking_LaneVirtualMarking;
@@ -354,18 +329,32 @@ namespace HorizonMapEnv {
 						lineright.color = NDM_Util::GetColor_(mLaneinfo.rightBoundary.roadmarkList[0]);
 						linecenter.color = NDM_LineColor::UNKNOWN_LINE_COLOR;
 
-
-						if (atoi(splitItem_LaneName[2].c_str())*atoi(splitItem_Current[2].c_str()) > 0) { //Õ˘nearstIndex+∫Û’“2000m£¨Õ˘nearstIndex-«∞’“200m
-
-							for (int i = (nearstIndex - BACKWARD_DISTANCE > 0) ? nearstIndex - BACKWARD_DISTANCE : 0; i < cLaneinfo.centerLine.size(); i++)
+						int nearstIndex = 0;
+						float distMin = std::numeric_limits<float>::max();
+						sample_point_count = 0;
+						for (int i = 0;i< cLaneinfo.centerLine.size();i++)
+						{
+							auto &point = cLaneinfo.centerLine[i];
+							if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
+								float dist_temp = sqrt((point.x - mCurrentPos.x)*(point.x - mCurrentPos.x) + (point.y - mCurrentPos.y)*(point.y - mCurrentPos.y));
+								if (distMin > dist_temp) {
+									distMin = dist_temp;
+									nearstIndex = i;
+								}
+							}
+							sample_point_count++;
+						}
+						sample_point_count = 0;
+						if (atoi(splitItem_LaneName[2].c_str())< 0) { //Õ˘nearstIndex+∫Û’“2000m£¨Õ˘nearstIndex-«∞’“200m
+							for (int i = nearstIndex; i < cLaneinfo.centerLine.size(); i++)
 							{
-								sample_point_count = 0;
 								auto &point = cLaneinfo.centerLine[i];
 								if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 									NDM_Point point_pt;
 									point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
 									linecenter.points.push_back(point_pt);
-									if (linecenter.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
+									linecenter.points.push_back(point_pt);
+									if (linecenter.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
 										break;
 									}
 								}
@@ -373,16 +362,16 @@ namespace HorizonMapEnv {
 							}
 
 							sample_point_count = 0;
-
-							for (auto &points : mLaneinfo.leftBoundary.segmentList)
+							
+							for (auto  &points : mLaneinfo.leftBoundary.segmentList)
 							{
-								for (int i = nearstIndex - BACKWARD_DISTANCE; i < points.size(); i++) {
+								for (int i = nearstIndex; i < points.size(); i++) {
 									auto segmentPonit = points[i];
 									if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 										NDM_Point point_pt;
 										point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 										lineleft.points.push_back(point_pt);
-										if (lineleft.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
+										if (lineleft.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
 											break;
 										}
 									}
@@ -393,24 +382,22 @@ namespace HorizonMapEnv {
 							sample_point_count = 0;
 							for (auto &points : mLaneinfo.rightBoundary.segmentList)
 							{
-								for (int i = nearstIndex - BACKWARD_DISTANCE; i < points.size(); i++) {
+								for (int i = nearstIndex; i < points.size(); i++) {
 									auto segmentPonit = points[i];
 									if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 										NDM_Point point_pt;
 										point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 										lineright.points.push_back(point_pt);
-										if (lineright.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
+										if (lineright.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
 											break;
 										}
 									}
 									sample_point_count++;
 								}
-
 							}
-						}
-						else { //Õ˘nearstIndex-«∞’“2000m£¨Õ˘nearstIndex+∫Û’“200m
 
-							for (int i = (nearstIndex + BACKWARD_DISTANCE < cLaneinfo.centerLine.size()) ? nearstIndex + BACKWARD_DISTANCE : cLaneinfo.centerLine.size(); i < cLaneinfo.centerLine.size(); i--)
+						}else{ //Õ˘nearstIndex-«∞’“2000m£¨Õ˘nearstIndex+∫Û’“200m
+							for (int i = nearstIndex; i < cLaneinfo.centerLine.size(); i--)
 							{
 								if (i > 0) {
 									auto &point = cLaneinfo.centerLine[i];
@@ -418,7 +405,8 @@ namespace HorizonMapEnv {
 										NDM_Point point_pt;
 										point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
 										linecenter.points.push_back(point_pt);
-										if (linecenter.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
+										linecenter.points.push_back(point_pt);
+										if (linecenter.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
 											break;
 										}
 									}
@@ -430,14 +418,14 @@ namespace HorizonMapEnv {
 
 							for (auto &points : mLaneinfo.leftBoundary.segmentList)
 							{
-								for (int i = nearstIndex + BACKWARD_DISTANCE; i < points.size(); i--) {
+								for (int i = nearstIndex; i < points.size(); i--) {
 									if (i > 0) {
 										auto segmentPonit = points[i];
 										if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 											NDM_Point point_pt;
 											point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 											lineleft.points.push_back(point_pt);
-											if (lineleft.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
+											if (lineleft.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
 												break;
 											}
 										}
@@ -449,14 +437,14 @@ namespace HorizonMapEnv {
 							sample_point_count = 0;
 							for (auto &points : mLaneinfo.rightBoundary.segmentList)
 							{
-								for (int i = nearstIndex + BACKWARD_DISTANCE; i < points.size(); i--) {
+								for (int i = nearstIndex; i < points.size(); i--) {
 									if (i > 0) {
 										auto segmentPonit = points[i];
 										if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
 											NDM_Point point_pt;
 											point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
 											lineright.points.push_back(point_pt);
-											if (lineright.points.size()*BOUNDARY_SAMPLE_DISTANCE > (mForwardDistance + BACKWARD_DISTANCE)) {
+											if (lineright.points.size()*BOUNDARY_SAMPLE_DISTANCE > mForwardDistance) {
 												break;
 											}
 										}
@@ -464,104 +452,6 @@ namespace HorizonMapEnv {
 									}
 								}
 							}
-						}
-					}
-					else if (laneName == mLaneinfo.laneName && c_length < ROAD_SPLIT_MIN_LENGTH) {
-
-						bool isNeedPreLane = false;
-						bool isNeedSuccLane = false;
-						if (atoi(splitItem_LaneName[2].c_str())*atoi(splitItem_Current[2].c_str()) > 0) {
-							isNeedPreLane = nearstIndex - BACKWARD_DISTANCE > 0 ? false : true;
-							isNeedSuccLane = nearstIndex + mForwardDistance < cLaneinfo.centerLine.size() ? false : true;
-						}
-						else {
-							
-							isNeedPreLane = nearstIndex + BACKWARD_DISTANCE < cLaneinfo.centerLine.size() ? false : true;
-							isNeedSuccLane = nearstIndex - mForwardDistance > 0 ? false : true;
-						}
-
-						if (isNeedPreLane || isNeedSuccLane) {
-						
-#ifdef NDM_MAP_LOCAL
-							auto& current_laneLink = HDMapStandalone::MHDMap::GetLaneLink(mCurrentLaneName);
-#else
-							HDMapStandalone::MLaneLink current_laneLink;
-							SimOneAPI::GetLaneLink(mCurrentLaneName, current_laneLink);
-#endif
-							bool is_return = true;
-							if (isNeedPreLane) {
-								for (auto pre_lane : current_laneLink.predecessorLaneNameList) {
-									std::vector<std::string> splitpre_LaneName = UtilString::split(pre_lane.GetString(), "_");
-									if (splitItem_LaneName[0] == splitpre_LaneName[0]) {
-										is_return = false;
-										break;
-									}
-								}
-							}
-
-							if (isNeedSuccLane) {
-								for (auto succ_lane : current_laneLink.successorLaneNameList) {
-									std::vector<std::string> splitsucc_LaneName = UtilString::split(succ_lane.GetString(), "_");
-									if (splitItem_LaneName[0] == splitsucc_LaneName[0]) {
-										is_return = false;
-										break;
-									}
-								}
-							}
-							if (is_return) {
-								return;
-							}
-
-							lineleft.marking = NDM_Util::GetMarking_(mLaneinfo.leftBoundary.roadmarkList[0]);  //TODO:
-							lineright.marking = NDM_Util::GetMarking_(mLaneinfo.rightBoundary.roadmarkList[0]);  //TODO:
-							linecenter.marking = NDM_LineMarking::LineMarking_LaneVirtualMarking;
-
-							lineleft.color = NDM_Util::GetColor_(mLaneinfo.leftBoundary.roadmarkList[0]);
-							lineright.color = NDM_Util::GetColor_(mLaneinfo.rightBoundary.roadmarkList[0]);
-							linecenter.color = NDM_LineColor::UNKNOWN_LINE_COLOR;
-
-							sample_point_count = 0;
-							for (auto & points : mLaneinfo.leftBoundary.segmentList)
-							{
-								for (auto & segmentPonit : points) {
-									if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
-										NDM_Point point_pt;
-										point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
-										lineleft.points.push_back(point_pt);
-									}
-									sample_point_count++;
-								}
-							}
-							sample_point_count = 0;
-							for (auto & points : mLaneinfo.rightBoundary.segmentList)
-							{
-								for (auto & segmentPonit : points) {
-									if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
-										NDM_Point point_pt;
-										point_pt.x = segmentPonit.x; point_pt.y = segmentPonit.y; point_pt.z = segmentPonit.z;
-										lineright.points.push_back(point_pt);
-									}
-									sample_point_count++;
-								}
-							}
-
-#ifdef NDM_MAP_LOCAL
-							HDMapStandalone::MLaneInfo cLaneinfo = HDMapStandalone::MHDMap::GetLaneSample(mLaneinfo.laneName);
-#else
-							HDMapStandalone::MLaneInfo cLaneinfo;
-							SimOneAPI::GetLaneSample(mLaneinfo.laneName, cLaneinfo);
-#endif
-							sample_point_count = 0;
-							for (auto &point : cLaneinfo.centerLine)
-							{
-								if (sample_point_count%BOUNDARY_SAMPLE_DISTANCE == 0) {
-									NDM_Point point_pt;
-									point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
-									linecenter.points.push_back(point_pt);
-								}
-								sample_point_count++;
-							}
-							break;
 						}
 					}
 				}
@@ -725,10 +615,10 @@ namespace HorizonMapEnv {
 
 			for (auto roadkv : mRoadIds) {
 				for (auto parkingSpace : parkingSpaces) {
-					if (parkingSpace.roadId == roadkv.first) {
+					if (parkingSpace.roadId== roadkv.first) {
 						mParkingSpaces.push_back(parkingSpace);
 						NDM_Object object;
-						object.str_id.SetString(("parking_" + std::to_string(parkingSpace.id)).c_str());
+						object.str_id.SetString(("parking_"+std::to_string(parkingSpace.id)).c_str());
 						object.type = ObjectType_ParkingSlot;
 
 						for (auto& point : parkingSpace.boundaryKnots)
@@ -746,7 +636,7 @@ namespace HorizonMapEnv {
 							mPhysicalLayer.objects.objects.push_back(std::move(object));
 						}
 					}
-				}
+				}	
 			}
 		}
 		void CreatePhysicalLayer(const SSD::SimPoint3D& pos, const double forward) {
@@ -776,7 +666,7 @@ namespace HorizonMapEnv {
 				for (int i = 0; i < (int)lane_data.laneNameList.size(); i++) {
 
 					SSD::SimString & laneName = lane_data.laneNameList[i];
-					std::cout << "----------lanename:" << laneName.GetString() << std::endl;
+					//std::cout << "lanename:" << laneName.GetString()<<std::endl;
 					bool isInJunction = false;
 					long junctionId = -1;
 #ifdef NDM_MAP_LOCAL
@@ -835,7 +725,7 @@ namespace HorizonMapEnv {
 		NDM_PhysicalLayer mPhysicalLayer;
 		SSD::SimString mCurrentLaneName;
 		std::map<long, bool> mRoadIds;
-		std::map<SSD::SimString, bool> mLaneIds;
+		std::map<SSD::SimString,bool> mLaneIds;
 		SSD::SimVector<HDMapStandalone::MParkingSpace> mParkingSpaces;
 		SSD::SimVector<HDMapStandalone::MLaneLineInfo> mLaneLineInfo;
 		LaneInfo_t mLaneInfo;

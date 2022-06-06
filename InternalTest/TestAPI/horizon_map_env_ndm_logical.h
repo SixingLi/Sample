@@ -640,6 +640,10 @@ namespace HorizonMapEnv {
 				HDMapStandalone::MJunction mjunction;
 				SimOneAPI::GetJunction(juncId, mjunction);
 #endif
+				
+				double center_x = 0;
+				double center_y = 0;
+				SSD::SimVector<NDM_Point> points_junction;
 				for (auto& connect : mjunction.connectingRoadIds)
 				{
 					SSD::SimStringVector laneidlist = HDMapStandalone::MHDMap::GetLaneList(connect);
@@ -651,8 +655,28 @@ namespace HorizonMapEnv {
 						HDMapStandalone::MLaneLink laneLink;
 						SimOneAPI::GetLaneLink(laneid, laneLink);
 #endif
-						junction.lane_ids.push_back(laneid);
 
+#ifdef NDM_MAP_LOCAL
+						HDMapStandalone::MLaneInfo cLaneinfo = HDMapStandalone::MHDMap::GetLaneSample(laneid);
+#else
+						HDMapStandalone::MLaneInfo cLaneinfo;
+						SimOneAPI::GetLaneSample(laneid, cLaneinfo);
+#endif
+						junction.lane_ids.push_back(laneid);
+						NDM_Point point_pt;
+						point_pt.x = cLaneinfo.centerLine[0].x; point_pt.y = cLaneinfo.centerLine[0].y; point_pt.z = cLaneinfo.centerLine[0].z;
+						//junction.bounding_polygon.points.push_back(point_pt);
+						points_junction.push_back(point_pt);
+						//计算十字路口几何中心
+						center_x += point_pt.x;
+						center_y += point_pt.y;
+
+						point_pt.x = cLaneinfo.centerLine[cLaneinfo.centerLine.size()-1].x; point_pt.y = cLaneinfo.centerLine[cLaneinfo.centerLine.size() - 1].y; point_pt.z = cLaneinfo.centerLine[cLaneinfo.centerLine.size() - 1].z;
+						//junction.bounding_polygon.points.push_back(point_pt);
+						points_junction.push_back(point_pt);
+						//计算十字路口几何中心
+						center_x += point_pt.x;
+						center_y += point_pt.y;
 						for (auto &lane_pred : laneLink.predecessorLaneNameList) {
 							RoadSection_ roadSection_c;
 							if (!GetRoadSection_(lane_pred, roadSection_c)) {
@@ -685,10 +709,46 @@ namespace HorizonMapEnv {
 								//std::cout << "outlink:" << strID << std::endl;
 								junction.out_link_ids.push_back(std::move(strID.c_str()));
 							}
-						
+							
 						}
 					}
 				}
+
+				center_x = center_x / points_junction.size();
+				center_y = center_y / points_junction.size();
+				for (int index = 0; index < points_junction.size()-1;index++)
+				{
+					for (int j = 0; j < points_junction.size()-1 - index; j++)
+					{
+						SSD::SimPoint2D dir_j,dir_jaddone;
+						dir_j.x = points_junction[j].x - center_x;
+						dir_j.y = points_junction[j].y - center_y;
+						dir_j.Normalize();
+						dir_jaddone.x = points_junction[j+1].x - center_x;
+						dir_jaddone.y = points_junction[j+1].y - center_y;
+						dir_jaddone.Normalize();
+						double anglej = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir_j));
+						double anglejaddone = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir_jaddone));
+						if(j==6)
+						std::cout << "pointj1:	" << points_junction[j + 1].x << "	" << points_junction[j + 1].y << "	" << points_junction[j + 1].z << std::endl;
+
+						if (anglej > anglejaddone)
+						{
+							NDM_Point temp = std::move(points_junction[j]);
+							points_junction[j] = std::move(points_junction[j + 1]);
+							points_junction[j + 1] = std::move(temp);
+							if (j == 6) {
+								std::cout << "			temp:" << temp.x << "	" << temp.y << "	" << temp.z << std::endl;
+								std::cout << "			pointj:" << points_junction[j].x << "	" << points_junction[j].y << "	" << points_junction[j].z << std::endl;
+								std::cout << "			pointj1:" << points_junction[j+1].x << "	" << points_junction[j+1].y << "	" << points_junction[j+1].z << std::endl;
+							}
+						}
+					}
+				}
+
+				//根据十字路口采样点和几何中心建立方向向量，计算与正北方向的夹角，根据夹角排序顺时针方向
+				junction.bounding_polygon.points = std::move(points_junction);
+
 
 				auto iter = std::find_if(junctions.begin(), junctions.end(), [&](const Junction & item)
 				{
@@ -790,6 +850,7 @@ namespace HorizonMapEnv {
 			{
 				SSD::SimStringVector laneList = HDMapStandalone::MHDMap::GetSectionLaneList(laneName);
 
+				bool have_border = false;
 				for (auto laneName_ : laneList) {
 #ifdef NDM_MAP_LOCAL
 					auto& laneLink = HDMapStandalone::MHDMap::GetLaneLink(laneName_);
@@ -907,17 +968,52 @@ namespace HorizonMapEnv {
 							};
 						}
 					}
+					HDMapStandalone::MLaneType lane_type;
+#ifdef NDM_MAP_LOCAL
+					lane_type = HDMapStandalone::MHDMap::GetLaneType(laneName);
+#else
+					SimOneAPI::GetLaneType(laneName, lane_type);
+#endif
+					std::vector<std::string> idList = UtilString::split(laneName_.GetString(), "_");
+#ifdef NDM_MAP_LOCAL
+					HDMapStandalone::MLaneInfo cLaneinfo = HDMapStandalone::MHDMap::GetLaneSample(laneName_);
+#else
+					HDMapStandalone::MLaneInfo cLaneinfo;
+					SimOneAPI::GetLaneSample(laneName_, cLaneinfo);
+#endif
+					if (abs(atoi(idList[2].c_str()))==1) {
+						for (int i = 0; i < cLaneinfo.leftBoundary.size();i+= BOUNDARY_SAMPLE_DISTANCE) {
+							auto point = cLaneinfo.leftBoundary[i];
+							NDM_Point point_pt;
+							point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
+							section.bounding_polygon.points.push_back(point_pt);
+						}
+					}
+
+					if (lane_type == HDMapStandalone::MLaneType::border && abs(atoi(idList[2].c_str())) < laneList.size()) {
+						for (int i = cLaneinfo.leftBoundary.size()-1; i >0; i -= BOUNDARY_SAMPLE_DISTANCE) {
+							have_border = true;
+							auto point = cLaneinfo.leftBoundary[i];
+							NDM_Point point_pt;
+							point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
+							section.bounding_polygon.points.push_back(point_pt);
+						}
+					}
 				}
-
-				//std::cout << "========section.id: " << section.id.GetString() << std::endl;
-				//for (auto pred : section.pred_ids) {
-				//	std::cout<<"	pred"<< pred.GetString()<<std::endl;
-				//}
-				//std::cout << std::endl;
-				//for (auto succ : section.succ_ids) {
-				//	std::cout << "	succ" << succ.GetString() << std::endl;
-				//}
-
+				if (!have_border) {
+#ifdef NDM_MAP_LOCAL
+					HDMapStandalone::MLaneInfo cLaneinfo = HDMapStandalone::MHDMap::GetLaneSample(laneList[laneList.size() - 1]);
+#else
+					HDMapStandalone::MLaneInfo cLaneinfo;
+					SimOneAPI::GetLaneSample(laneList[laneList.size() - 1], cLaneinfo);
+#endif
+					for (int i = cLaneinfo.rightBoundary.size()-1; i >0; i -= BOUNDARY_SAMPLE_DISTANCE) {
+						auto point = cLaneinfo.rightBoundary[i];
+						NDM_Point point_pt;
+						point_pt.x = point.x; point_pt.y = point.y; point_pt.z = point.z;
+						section.bounding_polygon.points.push_back(point_pt);
+					}
+				}
 				sections.push_back(std::move(section));
 			}
 		}
