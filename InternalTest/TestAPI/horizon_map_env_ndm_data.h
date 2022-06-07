@@ -27,7 +27,7 @@ using namespace std;
 
 #define M_PI 3.1415926
 #define BOUNDARY_SAMPLE_DISTANCE 5
-#define ROAD_SPLIT_MIN_LENGTH 3000
+#define ROAD_SPLIT_MIN_LENGTH 5000
 
 /*******************************************************************************
 this is ndm convert from simone hdmap api, the origin data format is opendrive
@@ -166,7 +166,7 @@ namespace HorizonMapEnv {
 		{"1010301600002416" , 157},
 		{"1010301911002416" , 159},
 		{"1010301917002416" , 162},
-		{ "1010301916002416" , 163 }
+		{"1010301916002416" , 163}
 	};
 	typedef enum DrivingSide {
 		DrivingSide_RightHandDriving = 0,

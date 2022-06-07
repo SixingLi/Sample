@@ -116,6 +116,30 @@ namespace HorizonMapEnv {
 		SSD::SimVector<NDM_LaneRestriction> restrictions;
 	}NDM_Lane;
 
+	typedef enum LaneType {
+		LaneType_Unknown=0x0,
+		LaneType_Normal=0x1,
+		LaneType_Emergency=0x10,
+		LaneType_RestrictedForbidden=0x20,
+		LaneType_RestrictedUsable=0x40,
+		LaneType_HOV=0x80,
+		LaneType_Express=0x100,
+		LaneType_Reversible=0x200,
+		LaneType_Slow=0x400,
+		LaneType_DrivableShoulder=0x800,
+		LaneType_Junciton=0x2000,
+		LaneType_NonMotor=0x4000,
+		LaneType_MotorNonMotor = 0x8000,
+		LaneType_SideWalk=0x10000,
+		LaneType_MotorCycle=0x20000,
+		LaneType_ETC=0x40000,
+		LaneType_Border=0x400000,
+		LaneType_Stop=0x40000000,
+		LaneType_Crub=0x10000000000,
+		LaneType_Tram= 0x20000000000,
+		LaneType_Other = 0xffffffffffffffff
+	}NDM_LaneType;
+
 	typedef struct ParkingSpaceRestriction {
 		int number_limit;
 		SSD::SimVector<NDM_TimeLimit> time_limits;
@@ -709,7 +733,6 @@ namespace HorizonMapEnv {
 								//std::cout << "outlink:" << strID << std::endl;
 								junction.out_link_ids.push_back(std::move(strID.c_str()));
 							}
-							
 						}
 					}
 				}
@@ -729,26 +752,18 @@ namespace HorizonMapEnv {
 						dir_jaddone.Normalize();
 						double anglej = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir_j));
 						double anglejaddone = NDM_Util::ConvertHeading(NDM_Util::GetAngle_(SSD::SimPoint2D(1, 0), dir_jaddone));
-						if(j==6)
-						std::cout << "pointj1:	" << points_junction[j + 1].x << "	" << points_junction[j + 1].y << "	" << points_junction[j + 1].z << std::endl;
 
 						if (anglej > anglejaddone)
 						{
 							NDM_Point temp = std::move(points_junction[j]);
 							points_junction[j] = std::move(points_junction[j + 1]);
 							points_junction[j + 1] = std::move(temp);
-							if (j == 6) {
-								std::cout << "			temp:" << temp.x << "	" << temp.y << "	" << temp.z << std::endl;
-								std::cout << "			pointj:" << points_junction[j].x << "	" << points_junction[j].y << "	" << points_junction[j].z << std::endl;
-								std::cout << "			pointj1:" << points_junction[j+1].x << "	" << points_junction[j+1].y << "	" << points_junction[j+1].z << std::endl;
-							}
 						}
 					}
 				}
 
 				//根据十字路口采样点和几何中心建立方向向量，计算与正北方向的夹角，根据夹角排序顺时针方向
 				junction.bounding_polygon.points = std::move(points_junction);
-
 
 				auto iter = std::find_if(junctions.begin(), junctions.end(), [&](const Junction & item)
 				{
@@ -970,9 +985,9 @@ namespace HorizonMapEnv {
 					}
 					HDMapStandalone::MLaneType lane_type;
 #ifdef NDM_MAP_LOCAL
-					lane_type = HDMapStandalone::MHDMap::GetLaneType(laneName);
+					lane_type = HDMapStandalone::MHDMap::GetLaneType(laneName_);
 #else
-					SimOneAPI::GetLaneType(laneName, lane_type);
+					SimOneAPI::GetLaneType(laneName_, lane_type);
 #endif
 					std::vector<std::string> idList = UtilString::split(laneName_.GetString(), "_");
 #ifdef NDM_MAP_LOCAL
@@ -1050,7 +1065,8 @@ namespace HorizonMapEnv {
 			}
 		}
 
-		void Create_LogicalLayer(const SSD::SimPoint3D& pos, const double forward, const HorizonMapEnv::NDM_PhysicalLayer_Creator &physicalLayerCreator)
+		void Create_LogicalLayer(const SSD::SimPoint3D& pos, const double forward, 
+			const HorizonMapEnv::NDM_PhysicalLayer_Creator &physicalLayerCreator)
 		{
 			mRoadIds = physicalLayerCreator.mRoadIds;
 			ResetRoadIdTag(mRoadIds);
