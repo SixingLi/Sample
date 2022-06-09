@@ -195,6 +195,29 @@ namespace HorizonMapEnv {
 		unsigned int ota_status = 0; // OTA ״̬
 	}NDM_GlobalData;
 
+	typedef enum LaneType {
+		LaneType_Unknown = 0x0,
+		LaneType_Normal = 0x1,
+		LaneType_Emergency = 0x10,
+		LaneType_RestrictedForbidden = 0x20,
+		LaneType_RestrictedUsable = 0x40,
+		LaneType_HOV = 0x80,
+		LaneType_Express = 0x100,
+		LaneType_Reversible = 0x200,
+		LaneType_Slow = 0x400,
+		LaneType_DrivableShoulder = 0x800,
+		LaneType_Junciton = 0x2000,
+		LaneType_NonMotor = 0x4000,
+		LaneType_MotorNonMotor = 0x8000,
+		LaneType_SideWalk = 0x10000,
+		LaneType_MotorCycle = 0x20000,
+		LaneType_ETC = 0x40000,
+		LaneType_Border = 0x400000,
+		LaneType_Stop = 0x40000000,
+		LaneType_Crub = 0x10000000000,
+		LaneType_Tram = 0x20000000000,
+		LaneType_Other = 0xffffffffffffffff
+	}NDM_LaneType;
 
 	typedef struct Point {
 		double x;
@@ -962,9 +985,45 @@ namespace HorizonMapEnv {
 			tempAngle = (tempAngle / (2 * M_PI)) * 360;
 			return tempAngle;
 		}
-		static long GetRoadID(const SSD::SimString &laneName) {
-			
+
+		static NDM_LaneType GetLaneType(HDMapStandalone::MLaneType laneType) {
+			NDM_LaneType ret;
+			if (laneType == HDMapStandalone::MLaneType::driving) {
+				ret = NDM_LaneType::LaneType_Normal;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::stop) {
+				ret = NDM_LaneType::LaneType_Stop;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::shoulder) {
+				ret = NDM_LaneType::LaneType_Crub;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::biking) {
+				ret = NDM_LaneType::LaneType_NonMotor;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::sidewalk) {
+				ret = NDM_LaneType::LaneType_SideWalk;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::border) {
+				ret = NDM_LaneType::LaneType_Border;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::restricted) {
+				ret = NDM_LaneType::LaneType_Emergency;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::tram) {
+				ret = NDM_LaneType::LaneType_Tram;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::offRamp) {
+				ret = NDM_LaneType::LaneType_Slow;
+			}
+			else if (laneType == HDMapStandalone::MLaneType::onRamp) {
+				ret = NDM_LaneType::LaneType_Express;
+			}
+			else {
+				ret = NDM_LaneType::LaneType_Other;
+			}
+			return ret;
 		}
+
 	public:
 	};
 }

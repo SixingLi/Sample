@@ -106,7 +106,7 @@ namespace HorizonMapEnv {
 		NDM_LaneTransition transition;
 		SSD::SimVector<NDM_LaneAttr>  attrs;
 		float lane_length;
-		int type;
+		long long type;
 		SSD::SimVector<NDM_Link> objs;
 		//SSD::SimVector<NDM_Link> obstacles;
 		SSD::SimStringVector pred_ids;
@@ -115,30 +115,6 @@ namespace HorizonMapEnv {
 		SSD::SimStringVector right_ids; //只给临近的一个车道
 		SSD::SimVector<NDM_LaneRestriction> restrictions;
 	}NDM_Lane;
-
-	typedef enum LaneType {
-		LaneType_Unknown=0x0,
-		LaneType_Normal=0x1,
-		LaneType_Emergency=0x10,
-		LaneType_RestrictedForbidden=0x20,
-		LaneType_RestrictedUsable=0x40,
-		LaneType_HOV=0x80,
-		LaneType_Express=0x100,
-		LaneType_Reversible=0x200,
-		LaneType_Slow=0x400,
-		LaneType_DrivableShoulder=0x800,
-		LaneType_Junciton=0x2000,
-		LaneType_NonMotor=0x4000,
-		LaneType_MotorNonMotor = 0x8000,
-		LaneType_SideWalk=0x10000,
-		LaneType_MotorCycle=0x20000,
-		LaneType_ETC=0x40000,
-		LaneType_Border=0x400000,
-		LaneType_Stop=0x40000000,
-		LaneType_Crub=0x10000000000,
-		LaneType_Tram= 0x20000000000,
-		LaneType_Other = 0xffffffffffffffff
-	}NDM_LaneType;
 
 	typedef struct ParkingSpaceRestriction {
 		int number_limit;
@@ -425,14 +401,16 @@ namespace HorizonMapEnv {
 
 			GetLaneAttr_(lane.attrs, laneSample);
 #ifdef NDM_MAP_LOCAL
-			lane.type = (int)HDMapStandalone::MHDMap::GetLaneType(laneName);//----------------------------
+			lane.type = (long long)(NDM_Util::GetLaneType(HDMapStandalone::MHDMap::GetLaneType(laneName)));//----------------------------
 			auto& laneLink = HDMapStandalone::MHDMap::GetLaneLink(laneName);
+			lane.lane_length = HDMapStandalone::MHDMap::GetLaneLength(laneName);
 #else
 			HDMapStandalone::MLaneType type;
 			SimOneAPI::GetLaneType(laneName, type);
-			lane.type = (int)type;
+			//lane.type = (long long)(NDM_Util::GetLaneType(type);
 			HDMapStandalone::MLaneLink laneLink;
 			SimOneAPI::GetLaneLink(laneName, laneLink);
+			lane.lane_length = SimOneAPI::GetLaneLength(laneName);
 #endif
 			for (auto& pre : laneLink.predecessorLaneNameList)
 			{
@@ -457,16 +435,6 @@ namespace HorizonMapEnv {
 			{
 				lane.right_ids.push_back(rightLane);
 			}
-
-#ifdef NDM_MAP_LOCAL
-			lane.lane_length = HDMapStandalone::MHDMap::GetLaneLength(laneName);
-			lane.type = int(HDMapStandalone::MHDMap::GetLaneType(laneName));
-#else
-			lane.lane_length = SimOneAPI::GetLaneLength(laneName);
-			HDMapStandalone::MLaneType laneType;
-			SimOneAPI::GetLaneType(laneName, laneType);
-			lane.type = (int)laneType;
-#endif
 			lanes.push_back(lane);
 		}
 

@@ -2546,6 +2546,26 @@ bool SimOneAPIService::GenerateRoute(const SSD::SimPoint3DVector& inputPoints, S
 	return true;
 }
 
+bool SimOneAPIService::GenerateRoute_V2(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints,
+	HDMapStandalone::MRoutePath& path, SSD::SimVector<HDMapStandalone::MRoutePoint>& routePtList)
+{
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GenerateRoute_V2 failed, HDMap not initialized yet.");
+		return false;
+	}
+#endif
+	HDMapStandalone::MRoutePath routePath;
+	if (!HDMapStandalone::MRouting::GenerateRoute(inputPoints, indexOfValidPoints, path,routePtList))
+	{
+		return false;
+	}
+	return true;
+}
+
+
+
 bool SimOneAPIService::Navigate(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimVector<long>& roadIdList)
 {
 #ifndef API_TEST_LOADXODR_OFFLINE

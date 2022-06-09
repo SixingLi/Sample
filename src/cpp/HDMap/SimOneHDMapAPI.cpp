@@ -241,6 +241,10 @@ extern "C"
 		junction = SimOneAPIService::GetJunction(junctionId);
 	}
 
+	SIMONE_API bool SimOneAPI::GenerateRoute_V2(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints,
+		HDMapStandalone::MRoutePath &path, SSD::SimVector<HDMapStandalone::MRoutePoint>& routePtList) {
+		return SimOneAPIService::GenerateRoute_V2(inputPoints, indexOfValidPoints, path, routePtList);
+	}
 
 #ifdef __cplusplus
 }

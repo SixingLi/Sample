@@ -54,6 +54,7 @@
 #include "public/common/MSignal.h"
 #include "public/common/MObject.h"
 #include "public/common/MParkingSpace.h"
+#include "public/common/MRoutePath.h"
 #include "public/MHDMap.h"
 #include "SSD/SimPoint3D.h"
 #include "SSD/SimString.h"
@@ -810,6 +811,9 @@ extern "C"
 		SIMONE_API void GetLaneList(const long& roadId, SSD::SimStringVector &laneList);
 
 		SIMONE_API void GetJunction(const long& junctionId, HDMapStandalone::MJunction &junction);
+
+		SIMONE_API bool GenerateRoute_V2(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints,
+			HDMapStandalone::MRoutePath &path, SSD::SimVector<HDMapStandalone::MRoutePoint>& routePtList);
 	}
 #ifdef __cplusplus
 }

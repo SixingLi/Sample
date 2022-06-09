@@ -1,12 +1,13 @@
 ﻿#include "horizon_map_env_ndm.h"
 #include "SimOneServiceAPI.h"
 #include "SimOneSensorAPI.h"
+#include "SimOnePNCAPI.h"
 
 #include <thread>
 
-void Test_NDM_MSG(const SSD::SimPoint3D &input, double forward)
+void Test_NDM_MSG(const SSD::SimPoint3D &input, double forward, const SSD::SimPoint3DVector &inputPts)
 {
-	HorizonMapEnv::MapEnvMsg_Creator mMapEnv(input, forward);
+	HorizonMapEnv::MapEnvMsg_Creator mMapEnv(input, forward, inputPts);
 	mMapEnv.CreateMapEnvMsg();
 }
 
@@ -22,6 +23,14 @@ int main(int argc, char* argv[])
 		std::cout << "load map failed!!!" << std::endl;
 		return -1;
 	}
+ 
+	std::unique_ptr<SimOne_Data_WayPoints> pWayPoints = std::make_unique<SimOne_Data_WayPoints>();
+	SSD::SimPoint3DVector inputPts;
+	if (SimOneAPI::GetWayPoints(mv_id, pWayPoints.get())) {
+		for (int index = 0; index < pWayPoints->wayPointsSize; index++) {
+			inputPts.push_back({ pWayPoints->wayPoints[index].posX, pWayPoints->wayPoints[index].posY,0 });
+		}
+	}
 
 	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
 	int lastFrame = 0;
@@ -35,7 +44,8 @@ int main(int argc, char* argv[])
 		if (flag && pGps->frame != lastFrame)
 		{
 			SSD::SimPoint3D input{ pGps->posX,pGps->posY,pGps->posZ };
-			Test_NDM_MSG(input, forward);
+
+			Test_NDM_MSG(input, forward, inputPts);
 			lastFrame = pGps->frame;
 		}
 		if (!flag)

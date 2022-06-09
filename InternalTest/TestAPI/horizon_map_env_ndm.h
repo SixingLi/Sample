@@ -5,6 +5,7 @@
 #include "horizon_map_env_ndm_physical.h"
 #include "horizon_map_env_ndm_logical.h"
 #include "horizon_map_env_ndm_topological.h"
+#include "horizon_navigate.h"
 
 #include <string>
 #include <iostream>
@@ -34,8 +35,8 @@ namespace HorizonMapEnv {
 
 	class MapEnvMsg_Creator {
 	public:
-		MapEnvMsg_Creator(SSD::SimPoint3D input,double forward)
-			:mInput(input),mForward (forward)
+		MapEnvMsg_Creator(const SSD::SimPoint3D input,double forward,const SSD::SimPoint3DVector &inputPts):
+			mInput(input),mInputs(inputPts),mForward(forward)
 		{
 			ofs.open("ndmenv_data.txt");
 			
@@ -184,6 +185,9 @@ namespace HorizonMapEnv {
 			mNDM_Msg.logical_layer = logicalLayerCreator.mLogicalLayer;
 			PrintLogicalLayer(mNDM_Msg.logical_layer);
 
+			HorizonMapEnv::Navigation_Creator navigationCreator;
+			navigationCreator.CreateNavigation(mInputs);
+
 			//HorizonMapEnv::NDM_TopologicalLayer_Creator topologicalLayerCreator;
 			//topologicalLayerCreator.Create_TopologicalLayer(logicalLayerCreator.mLogicalLayer);
 			//mNDM_Msg.topological_layer = topologicalLayerCreator.mTopologicalLayer;
@@ -195,6 +199,7 @@ namespace HorizonMapEnv {
 		}
 	
 	public:
+		SSD::SimPoint3DVector mInputs;
 		SSD::SimPoint3D mInput;
 		double mForward;
 		NDM_MapEnvMsg mNDM_Msg;
