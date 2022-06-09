@@ -23,6 +23,7 @@ public:
 	void dump_environment(SimOne_Data_Environment* pData);
 	void dump_traffic_light(const char* mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight* pData);
 	void dump_sensor_laneInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo* pData);
+	void dump_waypoints(const char* mainVehicleId, SimOne_Data_WayPoints* pData);
 };
 
 #endif

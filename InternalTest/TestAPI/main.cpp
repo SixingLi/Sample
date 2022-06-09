@@ -1,14 +1,16 @@
-﻿#include "horizon_map_env_ndm.h"
-#include "SimOneServiceAPI.h"
-#include "SimOneSensorAPI.h"
+﻿// #include "horizon_map_env_ndm.h"
+// #include "SimOneServiceAPI.h"
+// #include "SimOneSensorAPI.h"
+
+#include "test_bench.h"
 
 #include <thread>
 
-void Test_NDM_MSG(const SSD::SimPoint3D &input, double forward)
-{
-	HorizonMapEnv::MapEnvMsg_Creator mMapEnv(input, forward);
-	mMapEnv.CreateMapEnvMsg();
-}
+// void Test_NDM_MSG(const SSD::SimPoint3D &input, double forward)
+// {
+// 	HorizonMapEnv::MapEnvMsg_Creator mMapEnv(input, forward);
+// 	mMapEnv.CreateMapEnvMsg();
+// }
 
 int main(int argc, char* argv[])
 {
@@ -16,37 +18,37 @@ int main(int argc, char* argv[])
 	double forward = 2000;
 
 	bool isJoinTimeLoop = false;
-	const char* serverIP = "10.66.9.111";
+	const char* serverIP = "127.0.1.1";
 	SimOneAPI::InitSimOneAPI(mv_id, isJoinTimeLoop, serverIP);
 	if (!SimOneAPI::LoadHDMap(50)) {
 		std::cout << "load map failed!!!" << std::endl;
 		return -1;
 	}
 
-	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
-	int lastFrame = 0;
-	while (1)
-	{
-		bool flag = SimOneAPI::GetGps(mv_id, pGps.get());
-		float posX; // Position X on Opendrive (by meter)
-		float posY; // Position Y on Opendrive (by meter)
-		float posZ; // Position Z on Opendrive (by meter)
+	// std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
+	// int lastFrame = 0;
+	// while (1)
+	// {
+	// 	bool flag = SimOneAPI::GetGps(mv_id, pGps.get());
+	// 	float posX; // Position X on Opendrive (by meter)
+	// 	float posY; // Position Y on Opendrive (by meter)
+	// 	float posZ; // Position Z on Opendrive (by meter)
 
-		if (flag && pGps->frame != lastFrame)
-		{
-			SSD::SimPoint3D input{ pGps->posX,pGps->posY,pGps->posZ };
-			Test_NDM_MSG(input, forward);
-			lastFrame = pGps->frame;
-		}
-		if (!flag)
-		{
-			std::cout << "Get GPS Fail" << std::endl;
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-	}
+	// 	if (flag && pGps->frame != lastFrame)
+	// 	{
+	// 		SSD::SimPoint3D input{ pGps->posX,pGps->posY,pGps->posZ };
+	// 		Test_NDM_MSG(input, forward);
+	// 		lastFrame = pGps->frame;
+	// 	}
+	// 	if (!flag)
+	// 	{
+	// 		std::cout << "Get GPS Fail" << std::endl;
+	// 	}
+	// 	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	// }
 
 
-	//tester t(mv_id);
+	tester t(mv_id);
 
 	//t.Test_InitSimOneAPI(isJoinTimeLoop, serverIP);
 
@@ -71,6 +73,7 @@ int main(int argc, char* argv[])
 	// t.Test_GetEnvironment();
 
 	// t.Test_SetVehicleEvent();
+	t.Test_GetWayPoints();
 
 	while (1)
 	{
