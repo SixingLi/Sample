@@ -177,7 +177,6 @@ public:
     bool GetSimOneVehicleState(int mainVehicleId, SimOne_Data_Vehicle_Extra* pVehExtraState);
 
 	bool GetGps(int mainVehicleId, SimOne_Data_Gps *pGps);
-	bool GetImu(int mainVehicleId, SimOne_Data_IMU *pImu);
 	bool GetObstacle(int mainVehicleId, SimOne_Data_Obstacle *pObstacle);
 	bool GetTrafficLight(int mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight *pTrafficLight);
 
@@ -196,7 +195,6 @@ public:
 	bool SetFrameEndCB(void(*cb)(int frame));
 
 	bool SetGpsUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Gps *pGps));
-	bool SetImuUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_IMU *pImu));
 	bool SetObstacleUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle));
 	bool SetTrafficLightUpdateCB(void(*cb)(const char* mainVehicleId, SimOne_Data_TrafficLights *pTrafficLights));
 
@@ -298,7 +296,6 @@ private:
 	void(*mpCaseStop)();
 	void(*mpMainVehicleChangeStatus)(const char* mainVehicleId, SimOne_Data_MainVehicle_Status *pMainVehicleStatus);
 	void(*mpGpsUpdateCB)(const char* mainVehicleId, SimOne_Data_Gps *pGps);
-	void(*mpImuUpdateCB)(const char* mainVehicleId, SimOne_Data_IMU *pImu);
 	void(*mpObstacleUpdateCB)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle);
 	void(*mpTrafficLightUpdateCB)(const char* mainVehicleId, SimOne_Data_TrafficLights *pTrafficLights);
 

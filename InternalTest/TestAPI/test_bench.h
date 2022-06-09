@@ -88,6 +88,7 @@ class tester
 		// ------ bool GetControlMode(const char* mainVehicleId, SimOne_Data_Control_Mode* pControlMode);
 		// ------ bool GetDriverControl(const char* mainVehicleId, SimOne_Data_Control* pControl);
 		// ------ bool GetWayPoints(const char* mainVehicleId, SimOne_Data_WayPoints* pWayPoints);
+		void Test_GetWayPoints();
 		// ------ bool SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content));
 		// ------ bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
 

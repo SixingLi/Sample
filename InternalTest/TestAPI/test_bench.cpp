@@ -351,7 +351,6 @@ void tester::Test_UltrasonicRadar()
 	}
 }
 
-
 void tester::Test_GPS(bool IsCallBackMode)
 {
 	if (IsCallBackMode) {
@@ -532,4 +531,26 @@ void tester::Test_SetVehicleEvent()
 		return;
 	}
 	std::cout << "SetVehicleEvent Done!" << std::endl;
+}
+
+void tester::Test_GetWayPoints()
+{
+	std::unique_ptr<SimOne_Data_WayPoints> pWayPoints = std::make_unique<SimOne_Data_WayPoints>();
+	// int lastFrame = 0;
+
+	while (1)
+	{
+		bool flag = SimOneAPI::GetWayPoints(mainVehicleId.c_str(), pWayPoints.get());
+		// if (flag && pWayPoints->frame != lastFrame)
+		if (flag)
+		{
+			// lastFrame = pWayPoints->frame;
+			dbg_data.dump_waypoints(mainVehicleId.c_str(), pWayPoints.get());
+		}
+		if (!flag)
+		{
+			std::cout << "Get WayPoints Fail" << std::endl;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
 }

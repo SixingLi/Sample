@@ -707,3 +707,20 @@ void dumper::dump_sensor_laneInfo(const char* mainVehicleId, const char* sensorI
 	// std::cout << "rr_Line.linecurveParameter.length: " << pData->rr_Line.linecurveParameter.length << std::endl;
 	std::cout << "dump_sensor_laneInfo ------------------------------------------------------------------------" << std::endl;
 }
+
+void dumper::dump_waypoints(const char* mainVehicleId, SimOne_Data_WayPoints* pData)
+{
+	std::cout <<"------ mainVehicleId:"<< mainVehicleId << std::endl;
+	std::cout <<"------ frame:"<< pData->frame << std::endl;
+	std::cout <<"wayPointsSize:"<< pData->wayPointsSize << std::endl;
+	for (int i=0; i<pData->wayPointsSize; i++)
+	{
+		std::cout << "index : " << pData->wayPoints[i].index << std::endl;
+		std::cout << "posX: " << pData->wayPoints[i].posX << std::endl;
+		std::cout << "posY: " << pData->wayPoints[i].posY << std::endl;
+		std::cout << "heading_x: " << pData->wayPoints[i].heading_x << std::endl;
+		std::cout << "heading_y: " << pData->wayPoints[i].heading_y << std::endl;
+		std::cout << "heading_z: " << pData->wayPoints[i].heading_z << std::endl;
+		std::cout << "heading_w: " << pData->wayPoints[i].heading_w << std::endl;
+	}
+}

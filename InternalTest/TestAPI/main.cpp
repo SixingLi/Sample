@@ -1,7 +1,5 @@
-﻿#include "horizon_map_env_ndm.h"
-#include "SimOneServiceAPI.h"
-#include "SimOneSensorAPI.h"
-#include "SimOnePNCAPI.h"
+#include "test_bench.h"
+#include "horizon_map_env_ndm.h"
 
 #include <thread>
 
@@ -32,6 +30,15 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	// std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
+	// int lastFrame = 0;
+	// while (1)
+	// {
+	// 	bool flag = SimOneAPI::GetGps(mv_id, pGps.get());
+	// 	float posX; // Position X on Opendrive (by meter)
+	// 	float posY; // Position Y on Opendrive (by meter)
+	// 	float posZ; // Position Z on Opendrive (by meter)
+
 	std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
 	int lastFrame = 0;
 	while (1)
@@ -55,8 +62,7 @@ int main(int argc, char* argv[])
 		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 	}
 
-
-	//tester t(mv_id);
+	tester t(mv_id);
 
 	//t.Test_InitSimOneAPI(isJoinTimeLoop, serverIP);
 
@@ -81,6 +87,7 @@ int main(int argc, char* argv[])
 	// t.Test_GetEnvironment();
 
 	// t.Test_SetVehicleEvent();
+	t.Test_GetWayPoints();
 
 	while (1)
 	{
