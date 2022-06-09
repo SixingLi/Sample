@@ -407,7 +407,7 @@ namespace HorizonMapEnv {
 #else
 			HDMapStandalone::MLaneType type;
 			SimOneAPI::GetLaneType(laneName, type);
-			//lane.type = (long long)(NDM_Util::GetLaneType(type);
+			lane.type = (long long)(NDM_Util::GetLaneType(type));
 			HDMapStandalone::MLaneLink laneLink;
 			SimOneAPI::GetLaneLink(laneName, laneLink);
 			lane.lane_length = SimOneAPI::GetLaneLength(laneName);

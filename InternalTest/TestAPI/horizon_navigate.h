@@ -110,8 +110,6 @@ namespace HorizonMapEnv{
 			for (auto segmentInfo : path.segmentInfos) {
 				roadRouteId += std::to_string(segmentInfo.roadId);
 				roadRoute.link_ids.push_back(std::to_string(segmentInfo.roadId).c_str());
-				for (auto laneName : segmentInfo.laneNameList)
-					std::cout << "segmentInfo.laneNameList:" << laneName.GetString()<<std::endl;
 			}
 			std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"<<std::endl;
 			roadRoute.distance_cost_in_meters = path.waypoints.size();
@@ -130,7 +128,38 @@ namespace HorizonMapEnv{
 			}
 			laneRoute.id = laneRouteId.c_str();
 			laneRoute.road_route_id = mNavigation.road_routes[0].id;
-			laneRoute.distance_cost_in_meters = 0;
+			laneRoute.recommendation = 1;
+			bool isInJunction = false;
+			long junctionId = -1;
+			HDMapStandalone::MLaneId LaneIdInJunction;
+			for(auto laneName:routePtList){
+				
+#ifdef NDM_MAP_LOCAL
+				isInJunction = HDMapStandalone::MHDMap::IsInJunction(laneName.laneId.ToString(), junctionId);
+#else
+				isInJunction = SimOneAPI::IsInJunction(laneName.laneId.ToString(), junctionId);
+#endif
+				if (isInJunction) {
+					LaneIdInJunction = laneName.laneId;
+					break;
+				}
+			}
+			if (isInJunction) {
+				for (auto segmentInfo : path.segmentInfos) {
+
+					if (LaneIdInJunction.roadId == segmentInfo.roadId) {
+						if (segmentInfo.from >= LANE_ROUTE_REMOMMENDATION_DISTANCE) {
+						
+							laneRoute.recommendation = 2;
+						}
+						else if (segmentInfo.from < LANE_ROUTE_REMOMMENDATION_DISTANCE) {
+							laneRoute.recommendation = 3;
+						}
+						break;
+					}
+				}
+			}			
+			laneRoute.distance_cost_in_meters = path.waypoints.size();
 			mNavigation.lane_routes.push_back(laneRoute);
 		}
 
@@ -161,20 +190,6 @@ namespace HorizonMapEnv{
 			if (SimOneAPI::GenerateRoute_V2(inputPoints, indexOfValidPoints, path, routePtList))
 #endif
 			{
-				//std::cout << "=========================================================" << std::endl << std::endl;
-				//for (auto route_pt : path.waypoints) {
-				//	std::cout << "route_pt:" << route_pt.x << ":"<<route_pt.y << ":"<< route_pt.z << std::endl;
-				//}
-
-				//std::cout << "--------------------------------------------------------" << std::endl << std::endl;
-				//for (auto route_pt_ : routePtList) {
-				//	std::cout << "route_pt_:" << route_pt_.laneId.ToString().GetString() 
-				//		<< ": " << route_pt_.centerOffset
-				//		<< ": " << route_pt_.startS
-				//		<< ": " << route_pt_.endS
-				//		<< ": " << route_pt_.offsetEnd 
-				//		<< std::endl;
-				//}
 				GetRoadRoute_(path);
 				GetLaneRoute_(path,routePtList);
 			}
