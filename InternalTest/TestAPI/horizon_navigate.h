@@ -111,7 +111,17 @@ namespace HorizonMapEnv
 	{
 	public:
 		Navigation_Creator(SSD::SimPoint3DVector InputPoints): mInputPoints(InputPoints)
-		{};
+		{
+			//generate global navigate info only once
+#ifdef NDM_MAP_LOCAL
+			if (HDMapStandalone::MRouting::GenerateRoute(mInputPoints, mGbobalIndexOfValidPoints, mGlobalPath, mGlobalRoutePtList))
+#else
+			if (SimOneAPI::GenerateRoute_V2(mInputPoints, mGbobalIndexOfValidPoints, mGlobalPath, mGlobalRoutePtList))
+#endif
+			{
+				mGenerateRouteFlag = true;
+			}
+		};
 		~Navigation_Creator(){};
 
 		void GetRoadRoute_(const HDMapStandalone::MRoutePath &path, NDM_Navigation* pNavigation)
@@ -186,6 +196,14 @@ namespace HorizonMapEnv
 
 		void GetRoadNavi_()
 		{
+
+		}
+
+
+		void GetFilterPonits_(const SSD::SimPoint3D& curPoint)
+		{
+			// filter ponit for forward 2000m distance, save sub segment in
+			//mFilterInputPoints;
 		}
 
 		void CreateNavigation(SSD::SimPoint3D& curPoint, NDM_Navigation* pNavigation)
@@ -193,6 +211,7 @@ namespace HorizonMapEnv
 
 			if (mInputPoints.size() < 2)
 			{
+				std::cout << "mInputPoints size is <2 !!!! " << std::endl;
 				return;
 			}
 			NDM_Point point_pt_start, point_pt_end;
@@ -228,5 +247,10 @@ namespace HorizonMapEnv
 
 	private:
 		SSD::SimPoint3DVector mInputPoints;
+		SSD::SimPoint3DVector mFilterInputPoints;
+		SSD::SimVector<int> mGbobalIndexOfValidPoints;
+		HDMapStandalone::MRoutePath mGlobalPath;
+		SSD::SimVector<HDMapStandalone::MRoutePoint> mGlobalRoutePtList;
+		bool mGenerateRouteFlag = false;
 	};
 }
