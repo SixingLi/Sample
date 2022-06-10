@@ -4,78 +4,87 @@
 
 #include <iostream>
 
-namespace HorizonMapEnv{
+namespace HorizonMapEnv
+{
 
-	typedef enum NaviAction {
-		NaviAction_Invalid = 0,    // ÎÞÐ§¶¯×÷
-		NaviAction_Straight = 1,   // Ö±ÐÐ
-		NaviAction_HalfRight = 2,  // ÏòÓÒÇ°·½ÐÐÊ»
-		NaviAction_Right = 3,      // ÓÒ×ª
-		NaviAction_MuchRight = 4,  // ÏòÓÒºó·½Ê»
-		NaviAction_Uturn = 5,      // µôÍ·£¨×óµôÍ·£¬ÓÒ²à½ÐÓÒ×ª£©
-		NaviAction_Left = 6,       // Ïò×ó
-		NaviAction_HalfLeft = 7,   // ×óÇ°·½
-		NaviAction_None = 8        // Î´Öª¶¯×÷
-	}NDM_NaviAction_;
+	typedef enum NaviAction
+	{
+		NaviAction_Invalid = 0,	  // ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½
+		NaviAction_Straight = 1,  // Ö±ï¿½ï¿½
+		NaviAction_HalfRight = 2, // ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Ê»
+		NaviAction_Right = 3,	  // ï¿½ï¿½×ª
+		NaviAction_MuchRight = 4, // ï¿½ï¿½ï¿½Òºï¿½Ê»
+		NaviAction_Uturn = 5,	  // ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
+		NaviAction_Left = 6,	  // ï¿½ï¿½ï¿½ï¿½
+		NaviAction_HalfLeft = 7,  // ï¿½ï¿½Ç°ï¿½ï¿½
+		NaviAction_None = 8		  // Î´Öªï¿½ï¿½ï¿½ï¿½
+	} NDM_NaviAction_;
 
-	typedef struct RoadRoute{
+	typedef struct RoadRoute
+	{
 		SSD::SimString id;
 		long long stamp;
-		SSD::SimStringVector link_ids; // µ¼º½½á¹ûÖÐÒÀ´Î¾­¹ýµÄroad_edges_nodes
+		SSD::SimStringVector link_ids; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¾ï¿½ï¿½ï¿½ï¿½ï¿½road_edges_nodes
 		float time_cost_in_minutes;
 		float distance_cost_in_meters;
-	}NDM_RoadRoute;
+	} NDM_RoadRoute;
 
-	typedef struct LaneRoute{
+	typedef struct LaneRoute
+	{
 		SSD::SimString id;
 		long long stamp;
-		SSD::SimStringVector lane_ids; // µ¼º½½á¹ûÖÐÒÀ´Î¾­¹ýµÄlanes
-		SSD::SimString road_route_id; 	// µ±Ç°LaneRoute¹ØÁªµÄRoadRoute
+		SSD::SimStringVector lane_ids; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¾ï¿½ï¿½ï¿½ï¿½ï¿½lanes
+		SSD::SimString road_route_id;  // ï¿½ï¿½Ç°LaneRouteï¿½ï¿½ï¿½ï¿½ï¿½ï¿½RoadRoute
 		float time_cost_in_minutes;
 		float distance_cost_in_meters;
-		unsigned int recommendation;     // true Ç¿ÍÆ¼ö,false ÈõÍÆ¼ö
-	}NDM_LaneRoute;
+		unsigned int recommendation; // true Ç¿ï¿½Æ¼ï¿½,false ï¿½ï¿½ï¿½Æ¼ï¿½
+	} NDM_LaneRoute;
 
+	// ï¿½ï¿½Â·ï¿½Õµï¿½ï¿½ï¿½Ï¢
+	typedef struct NaviGuideInfo
+	{
+		NDM_NaviAction_ navi_action;   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ó´ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½
+		float speed_limit;			   // ï¿½ï¿½Ç°ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		float remain_distance;		   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ó´ï¿½ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ï¿½ï¿½
+		SSD::SimString next_road_name; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
+	} NDM_NaviGuideInfo;
 
-	// µÀÂ·ÓÕµ¼ÐÅÏ¢
-	typedef struct NaviGuideInfo{
-		NDM_NaviAction_ navi_action;	// µ½´ïÏÂÌõµÀÂ·Á¬½Ó´¦µÄ¶¯×÷
-		float speed_limit;				// µ±Ç°µÀÂ·µÄÏÞËÙ
-		float remain_distance;			// µ½´ïÏÂÌõµÀÂ·Á¬½Ó´¦µÄÊ£Óà¾àÀë
-		SSD::SimString next_road_name;	// ÏÂÌõµÀÂ·Ãû³Æ
-	}NDM_NaviGuideInfo;
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	typedef struct LaneOrientation
+	{
+		bool uturn_able = false;	// ï¿½Ç·ï¿½Éµï¿½Í·ï¿½ï¿½ï¿½ï¿½
+		bool left_able = false;		// ï¿½Ç·ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½
+		bool straight_able = false; // ï¿½Ç·ï¿½ï¿½Ö±ï¿½Ð³ï¿½ï¿½ï¿½
+		bool right_able = false;	// ï¿½Ç·ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½
+		bool bus_only = false;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¨ï¿½Ãµï¿½
+		bool change_able = false;	// ï¿½ï¿½Í¾ï¿½É±ä³µï¿½ï¿½
+		bool right_uturn = false;	// ï¿½Ç·ï¿½ï¿½ï¿½Û½ï¿½Í¨ï¿½ï¿½ï¿½ò£©¡ï¿½ï¿½ï¿½×ªï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½0-ï¿½ï¿½×ªï¿½ï¿½Í·ï¿½ï¿½1-ï¿½ï¿½×ªï¿½ï¿½Í·
+		bool highlight = false;		// ï¿½Ç·ï¿½ï¿½Æ¼ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	} NDM_LaneOrientation;
 
-	// ³µµÀÊôÐÔ
-	typedef struct LaneOrientation{
-		bool uturn_able=false;     // ÊÇ·ñ¿ÉµôÍ·³µµÀ
-		bool left_able=false;      // ÊÇ·ñ¿É×ó×ª³µµÀ
-		bool straight_able=false;  // ÊÇ·ñ¿ÉÖ±ÐÐ³µµÀ
-		bool right_able=false;     // ÊÇ·ñ¿ÉÓÒ×ª³µµÀ
-		bool bus_only=false;       // ¹«¹²Æû³µ×¨ÓÃµÀ
-		bool change_able=false;    // ÓÃÍ¾¿É±ä³µµÀ
-		bool right_uturn=false;    // ÊÇ·ñ£¨Ïã¸Û½»Í¨¹æÔò£©¡°ÓÒ×ªµôÍ·¡±³µµÀÀàÐÍ£¬0-×ó×ªµôÍ·£¬1-ÓÒ×ªµôÍ·
-		bool highlight=false;      // ÊÇ·ñ£¨ÍÆ¼öÂ·¾¶¾­¹ýµÄ£©¡°¸ßÁÁ¡±³µµÀ
-	}NDM_LaneOrientation;
+	// ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+	typedef struct RecommendLane
+	{
+		unsigned int idx;					  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0ï¿½Å³ï¿½ï¿½ï¿½
+		NDM_LaneOrientation lane_orientation; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	} NDM_RecommendLane;
 
-	// ÍÆ¼ö³µµÀÐÅÏ¢
-	typedef struct RecommendLane{
-	  unsigned int idx;                           // ³µµÀ±àºÅ£¬×î×ó²àÊÇ0ºÅ³µµÀ
-	  NDM_LaneOrientation lane_orientation;       // ³µµÀÊôÐÔ
-	}NDM_RecommendLane;
+	typedef struct NaviLaneInfo
+	{
+		unsigned int total_lane_num;					   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		SSD::SimVector<NDM_RecommendLane> recommend_lanes; // ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+	} NDM_NaviLaneInfo;
 
-	typedef struct  NaviLaneInfo{
-		unsigned int total_lane_num;								// ³µµÀÊýÁ¿
-		SSD::SimVector<NDM_RecommendLane> recommend_lanes;			// ÍÆ¼ö³µµÀÐÅÏ¢
-	}NDM_NaviLaneInfo;
-
-	typedef struct RoadNavi{
+	typedef struct RoadNavi
+	{
 		SSD::SimString id;
 		long long stamp;
 		NDM_NaviGuideInfo navi_guide_info;
 		NDM_NaviLaneInfo navi_lane_info;
-	}NDM_RoadNavi;
+	} NDM_RoadNavi;
 
-	typedef struct Navigation{
+	typedef struct Navigation
+	{
 		SSD::SimString id;
 		long long stamp;
 		NDM_Point start_location;
@@ -88,117 +97,138 @@ namespace HorizonMapEnv{
 		// NavStatus_Normal = 1, navigation normal
 		// NavStatus_Abnormal = 2, navigation abnormal
 		unsigned int status;
+
 		// navigation diagnosis code when status is NavStatus_NoNavigation
 		// ERROR_NOT_RECEIVED = 0, no navigation results received
-		// ERROR_MAPPING_FAILED = 1, SD and HD navigation results failed to match 
+		// ERROR_MAPPING_FAILED = 1, SD and HD navigation results failed to match
 		// ERROR_NAV_FINISH = 2, end of the navigation
-
 		// navigation diagnosis code when status is NavStatus_Abnormal
 		// ERROR_OUT_OF_ROUTE = 10, out of the route
 		unsigned int diag_code;
-	}NDM_Navigation;
+	} NDM_Navigation;
 
-	class Navigation_Creator {
+	class Navigation_Creator
+	{
 	public:
-		Navigation_Creator() {};
-		~Navigation_Creator() {};
+		Navigation_Creator(NDM_Navigation* Navigation, SSD::SimPoint3DVector InputPoints): mNavigation(Navigation), mInputPoints(InputPoints)
+		{};
+		~Navigation_Creator(){};
 
-		void GetRoadRoute_(const HDMapStandalone::MRoutePath &path) {
+		void GetRoadRoute_(const HDMapStandalone::MRoutePath &path)
+		{
 			NDM_RoadRoute roadRoute;
 			std::string roadRouteId = "";
-			std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"<<std::endl;
-			for (auto segmentInfo : path.segmentInfos) {
+			std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+			for (auto segmentInfo : path.segmentInfos)
+			{
 				roadRouteId += std::to_string(segmentInfo.roadId);
 				roadRoute.link_ids.push_back(std::to_string(segmentInfo.roadId).c_str());
 			}
-			std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"<<std::endl;
+			std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
 			roadRoute.distance_cost_in_meters = path.waypoints.size();
 			roadRoute.id = roadRouteId.c_str();
-			mNavigation.road_routes.push_back(roadRoute);
+			mNavigation->road_routes.push_back(roadRoute);
 		}
 
 		void GetLaneRoute_(const HDMapStandalone::MRoutePath &path,
-			const SSD::SimVector<HDMapStandalone::MRoutePoint> &routePtList) {
+						   const SSD::SimVector<HDMapStandalone::MRoutePoint> &routePtList)
+		{
 
 			NDM_LaneRoute laneRoute;
 			std::string laneRouteId = "";
-			for (auto route_pt_ : routePtList) {
+			for (auto route_pt_ : routePtList)
+			{
 				laneRouteId += route_pt_.laneId.ToString().GetString();
 				laneRoute.lane_ids.push_back(route_pt_.laneId.ToString());
 			}
 			laneRoute.id = laneRouteId.c_str();
-			laneRoute.road_route_id = mNavigation.road_routes[0].id;
+			laneRoute.road_route_id = mNavigation->road_routes[0].id;
 			laneRoute.recommendation = 1;
 			bool isInJunction = false;
 			long junctionId = -1;
 			HDMapStandalone::MLaneId LaneIdInJunction;
-			for(auto laneName:routePtList){
-				
+			for (auto laneName : routePtList)
+			{
+
 #ifdef NDM_MAP_LOCAL
 				isInJunction = HDMapStandalone::MHDMap::IsInJunction(laneName.laneId.ToString(), junctionId);
 #else
 				isInJunction = SimOneAPI::IsInJunction(laneName.laneId.ToString(), junctionId);
 #endif
-				if (isInJunction) {
+				if (isInJunction)
+				{
 					LaneIdInJunction = laneName.laneId;
 					break;
 				}
 			}
-			if (isInJunction) {
-				for (auto segmentInfo : path.segmentInfos) {
+			if (isInJunction)
+			{
+				for (auto segmentInfo : path.segmentInfos)
+				{
 
-					if (LaneIdInJunction.roadId == segmentInfo.roadId) {
-						if (segmentInfo.from >= LANE_ROUTE_REMOMMENDATION_DISTANCE) {
-						
+					if (LaneIdInJunction.roadId == segmentInfo.roadId)
+					{
+						if (segmentInfo.from >= LANE_ROUTE_REMOMMENDATION_DISTANCE)
+						{
+
 							laneRoute.recommendation = 2;
 						}
-						else if (segmentInfo.from < LANE_ROUTE_REMOMMENDATION_DISTANCE) {
+						else if (segmentInfo.from < LANE_ROUTE_REMOMMENDATION_DISTANCE)
+						{
 							laneRoute.recommendation = 3;
 						}
 						break;
 					}
 				}
-			}			
+			}
 			laneRoute.distance_cost_in_meters = path.waypoints.size();
-			mNavigation.lane_routes.push_back(laneRoute);
+			mNavigation->lane_routes.push_back(laneRoute);
 		}
 
-		void GetRoadNavi_() {
-			
+		void GetRoadNavi_()
+		{
 		}
 
-		void CreateNavigation(const SSD::SimPoint3DVector& inputPoints) {
+		void CreateNavigation(SSD::SimPoint3D& curPoint)
+		{
 
-			if (inputPoints.size() < 2) {
+			if (mInputPoints.size() < 2)
+			{
 				return;
 			}
 			NDM_Point point_pt_start, point_pt_end;
-			int end_index = inputPoints.size() - 1;
-			point_pt_start.x = inputPoints[0].x; point_pt_start.y = inputPoints[0].y; point_pt_start.z = inputPoints[0].z;
-			point_pt_end.x = inputPoints[end_index].x; point_pt_end.y = inputPoints[end_index].y; point_pt_end.z = inputPoints[end_index].z;
-			
-			mNavigation.start_location = point_pt_start;
-			mNavigation.destination = point_pt_end;
+			int end_index = mInputPoints.size() - 1;
+			point_pt_start.x = mInputPoints[0].x;
+			point_pt_start.y = mInputPoints[0].y;
+			point_pt_start.z = mInputPoints[0].z;
+			point_pt_end.x = mInputPoints[end_index].x;
+			point_pt_end.y = mInputPoints[end_index].y;
+			point_pt_end.z = mInputPoints[end_index].z;
+
+			mNavigation->start_location = point_pt_start;
+			mNavigation->destination = point_pt_end;
 
 			SSD::SimVector<int> indexOfValidPoints;
 			HDMapStandalone::MRoutePath path;
 			SSD::SimVector<HDMapStandalone::MRoutePoint> routePtList;
 
 #ifdef NDM_MAP_LOCAL
-			if (HDMapStandalone::MRouting::GenerateRoute(inputPoints, indexOfValidPoints, path, routePtList))
+			if (HDMapStandalone::MRouting::GenerateRoute(mInputPoints, indexOfValidPoints, path, routePtList))
 #else
-			if (SimOneAPI::GenerateRoute_V2(inputPoints, indexOfValidPoints, path, routePtList))
+			if (SimOneAPI::GenerateRoute_V2(mInputPoints, indexOfValidPoints, path, routePtList))
 #endif
 			{
 				GetRoadRoute_(path);
-				GetLaneRoute_(path,routePtList);
+				GetLaneRoute_(path, routePtList);
 			}
-			else {
+			else
+			{
 				std::cout << "Fail to GenerateRoute from inputPoints!! " << std::endl;
 			}
 		}
 
-	public:
-		NDM_Navigation mNavigation;
+	private:
+		NDM_Navigation* mNavigation;
+		SSD::SimPoint3DVector mInputPoints;
 	};
 }
