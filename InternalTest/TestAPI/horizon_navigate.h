@@ -110,11 +110,11 @@ namespace HorizonMapEnv
 	class Navigation_Creator
 	{
 	public:
-		Navigation_Creator(NDM_Navigation* Navigation, SSD::SimPoint3DVector InputPoints): mNavigation(Navigation), mInputPoints(InputPoints)
+		Navigation_Creator(SSD::SimPoint3DVector InputPoints): mInputPoints(InputPoints)
 		{};
 		~Navigation_Creator(){};
 
-		void GetRoadRoute_(const HDMapStandalone::MRoutePath &path)
+		void GetRoadRoute_(const HDMapStandalone::MRoutePath &path, NDM_Navigation* pNavigation)
 		{
 			NDM_RoadRoute roadRoute;
 			std::string roadRouteId = "";
@@ -127,11 +127,10 @@ namespace HorizonMapEnv
 			std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
 			roadRoute.distance_cost_in_meters = path.waypoints.size();
 			roadRoute.id = roadRouteId.c_str();
-			mNavigation->road_routes.push_back(roadRoute);
+			pNavigation->road_routes.push_back(roadRoute);
 		}
 
-		void GetLaneRoute_(const HDMapStandalone::MRoutePath &path,
-						   const SSD::SimVector<HDMapStandalone::MRoutePoint> &routePtList)
+		void GetLaneRoute_(const HDMapStandalone::MRoutePath &path, const SSD::SimVector<HDMapStandalone::MRoutePoint> &routePtList, NDM_Navigation* pNavigation)
 		{
 
 			NDM_LaneRoute laneRoute;
@@ -142,7 +141,7 @@ namespace HorizonMapEnv
 				laneRoute.lane_ids.push_back(route_pt_.laneId.ToString());
 			}
 			laneRoute.id = laneRouteId.c_str();
-			laneRoute.road_route_id = mNavigation->road_routes[0].id;
+			laneRoute.road_route_id = pNavigation->road_routes[0].id;
 			laneRoute.recommendation = 1;
 			bool isInJunction = false;
 			long junctionId = -1;
@@ -182,14 +181,14 @@ namespace HorizonMapEnv
 				}
 			}
 			laneRoute.distance_cost_in_meters = path.waypoints.size();
-			mNavigation->lane_routes.push_back(laneRoute);
+			pNavigation->lane_routes.push_back(laneRoute);
 		}
 
 		void GetRoadNavi_()
 		{
 		}
 
-		void CreateNavigation(SSD::SimPoint3D& curPoint)
+		void CreateNavigation(SSD::SimPoint3D& curPoint, NDM_Navigation* pNavigation)
 		{
 
 			if (mInputPoints.size() < 2)
@@ -205,8 +204,8 @@ namespace HorizonMapEnv
 			point_pt_end.y = mInputPoints[end_index].y;
 			point_pt_end.z = mInputPoints[end_index].z;
 
-			mNavigation->start_location = point_pt_start;
-			mNavigation->destination = point_pt_end;
+			pNavigation->start_location = point_pt_start;
+			pNavigation->destination = point_pt_end;
 
 			SSD::SimVector<int> indexOfValidPoints;
 			HDMapStandalone::MRoutePath path;
@@ -218,8 +217,8 @@ namespace HorizonMapEnv
 			if (SimOneAPI::GenerateRoute_V2(mInputPoints, indexOfValidPoints, path, routePtList))
 #endif
 			{
-				GetRoadRoute_(path);
-				GetLaneRoute_(path, routePtList);
+				GetRoadRoute_(path, pNavigation);
+				GetLaneRoute_(path, routePtList, pNavigation);
 			}
 			else
 			{
@@ -228,7 +227,6 @@ namespace HorizonMapEnv
 		}
 
 	private:
-		NDM_Navigation* mNavigation;
 		SSD::SimPoint3DVector mInputPoints;
 	};
 }
