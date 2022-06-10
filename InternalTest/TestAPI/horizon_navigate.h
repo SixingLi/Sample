@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-namespace HorizonMapEan
+namespace HorizonMapEnv
 {
 
 	typedef enum NaviAction
