@@ -125,20 +125,19 @@ namespace HorizonMapEnv
 			{
 				mGenerateRouteFlag = true;
 			}
-
 		}
 
 		void GetRoadRoute_(const HDMapStandalone::MRoutePath &path, NDM_Navigation* pNavigation)
 		{
 			NDM_RoadRoute roadRoute;
 			std::string roadRouteId = "";
-			std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+			//std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
 			for (auto segmentInfo : path.segmentInfos)
 			{
 				roadRouteId += std::to_string(segmentInfo.roadId);
 				roadRoute.link_ids.push_back(std::to_string(segmentInfo.roadId).c_str());
 			}
-			std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+			//std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
 			roadRoute.distance_cost_in_meters = path.waypoints.size();
 			roadRoute.id = roadRouteId.c_str();
 			pNavigation->road_routes.push_back(roadRoute);
@@ -183,7 +182,6 @@ namespace HorizonMapEnv
 					{
 						if (segmentInfo.from >= LANE_ROUTE_REMOMMENDATION_DISTANCE)
 						{
-
 							laneRoute.recommendation = 2;
 						}
 						else if (segmentInfo.from < LANE_ROUTE_REMOMMENDATION_DISTANCE)
@@ -203,16 +201,41 @@ namespace HorizonMapEnv
 
 		}
 
-
 		void GetFilterPonits_(const SSD::SimPoint3D& curPoint)
 		{
 			// filter ponit for forward 2000m distance, save sub segment in
-			//mFilterInputPoints;
+			float distMin = std::numeric_limits<float>::max();
+			int nearIndex = 0;
+			if (mGenerateRouteFlag) {
+				for (auto point : mGlobalPath.waypoints) {
+					float dist_temp = sqrt((point.x - curPoint.x)*(point.x - curPoint.x) + (point.y - curPoint.y)*(point.y - curPoint.y));
+					if (dist_temp < distMin) {
+						distMin = dist_temp;
+						mInputPointsLocal.push_back(point);
+						nearIndex++;
+					}
+				}
+				if (mGlobalPath.waypoints.size() - nearIndex > SAMPLE_FORWARD_DISTANCE) {
+					mInputPointsLocal.push_back(mGlobalPath.waypoints[mGlobalPath.waypoints.size() - nearIndex]);
+				}
+				else {
+					mInputPointsLocal.push_back(mGlobalPath.waypoints[mGlobalPath.waypoints.size() - 1]);
+				}
+			}
+			else {
+#ifdef NDM_MAP_LOCAL
+				if (HDMapStandalone::MRouting::GenerateRoute(mInputPoints, mGbobalIndexOfValidPoints, mGlobalPath, mGlobalRoutePtList))
+#else
+				if (SimOneAPI::GenerateRoute_V2(mInputPoints, mGbobalIndexOfValidPoints, mGlobalPath, mGlobalRoutePtList))
+#endif
+				{
+					mGenerateRouteFlag = true;
+				}
+			}
 		}
 
 		void CreateNavigation(SSD::SimPoint3D& curPoint, NDM_Navigation* pNavigation)
 		{
-
 			if (mInputPoints.size() < 2)
 			{
 				std::cout << "mInputPoints size is <2 !!!! " << std::endl;
@@ -233,24 +256,33 @@ namespace HorizonMapEnv
 			SSD::SimVector<int> indexOfValidPoints;
 			HDMapStandalone::MRoutePath path;
 			SSD::SimVector<HDMapStandalone::MRoutePoint> routePtList;
-
+			GetFilterPonits_(curPoint);
+			if (mInputPointsLocal.size() < 2)
+			{
+				std::cout << "mInputPointsLocal size is <2 !!!! " << std::endl;
+				return;
+			}
+			std::cout << "=============================start to create ndm navigation======================" << std::endl;
 #ifdef NDM_MAP_LOCAL
-			if (HDMapStandalone::MRouting::GenerateRoute(mInputPoints, indexOfValidPoints, path, routePtList))
+			if (HDMapStandalone::MRouting::GenerateRoute(mInputPointsLocal, indexOfValidPoints, path, routePtList))
 #else
-			if (SimOneAPI::GenerateRoute_V2(mInputPoints, indexOfValidPoints, path, routePtList))
+			if (SimOneAPI::GenerateRoute_V2(mInputPointsLocal, indexOfValidPoints, path, routePtList))
 #endif
 			{
 				GetRoadRoute_(path, pNavigation);
 				GetLaneRoute_(path, routePtList, pNavigation);
+				GetRoadNavi_();
 			}
 			else
 			{
 				std::cout << "Fail to GenerateRoute from inputPoints!! " << std::endl;
 			}
+			std::cout << "=============================finish to create ndm navigation======================" << std::endl;
 		}
 
 	private:
 		SSD::SimPoint3DVector mInputPoints;
+		SSD::SimPoint3DVector mInputPointsLocal;
 		SSD::SimPoint3DVector mFilterInputPoints;
 		SSD::SimVector<int> mGbobalIndexOfValidPoints;
 		HDMapStandalone::MRoutePath mGlobalPath;

@@ -175,15 +175,15 @@ namespace HorizonMapEnv {
 			inputPt.z = 0;
 			double forward = mForward;
 
-			HorizonMapEnv::NDM_PhysicalLayer_Creator physicalLayerCreator;
-			physicalLayerCreator.CreatePhysicalLayer(inputPt, forward);
-			mNDM_Msg.physical_layer = physicalLayerCreator.mPhysicalLayer;
-			PrintPhysicalLayer(mNDM_Msg.physical_layer);
+			//HorizonMapEnv::NDM_PhysicalLayer_Creator physicalLayerCreator;
+			//physicalLayerCreator.CreatePhysicalLayer(inputPt, forward);
+			//mNDM_Msg.physical_layer = physicalLayerCreator.mPhysicalLayer;
+			//PrintPhysicalLayer(mNDM_Msg.physical_layer);
 
-			HorizonMapEnv::NDM_LogicalLayer_Creator logicalLayerCreator;
-			logicalLayerCreator.Create_LogicalLayer(inputPt, forward, physicalLayerCreator);
-			mNDM_Msg.logical_layer = logicalLayerCreator.mLogicalLayer;
-			PrintLogicalLayer(mNDM_Msg.logical_layer);
+			//HorizonMapEnv::NDM_LogicalLayer_Creator logicalLayerCreator;
+			//logicalLayerCreator.Create_LogicalLayer(inputPt, forward, physicalLayerCreator);
+			//mNDM_Msg.logical_layer = logicalLayerCreator.mLogicalLayer;
+			//PrintLogicalLayer(mNDM_Msg.logical_layer);
 
 			HorizonMapEnv::Navigation_Creator navigationCreator;
 			navigationCreator.Navigation_Creator_Ini(mInputs);
