@@ -6,7 +6,6 @@
 
 namespace HorizonMapEnv
 {
-
 	typedef enum NaviAction
 	{
 		NaviAction_Invalid = 0,	  // ��Ч����
@@ -110,8 +109,13 @@ namespace HorizonMapEnv
 	class Navigation_Creator
 	{
 	public:
-		Navigation_Creator(SSD::SimPoint3DVector InputPoints): mInputPoints(InputPoints)
+
+		Navigation_Creator() {};
+		~Navigation_Creator() {};
+
+		void Navigation_Creator_Ini(SSD::SimPoint3DVector InputPoints)
 		{
+			mInputPoints = InputPoints;
 			//generate global navigate info only once
 #ifdef NDM_MAP_LOCAL
 			if (HDMapStandalone::MRouting::GenerateRoute(mInputPoints, mGbobalIndexOfValidPoints, mGlobalPath, mGlobalRoutePtList))
@@ -121,8 +125,8 @@ namespace HorizonMapEnv
 			{
 				mGenerateRouteFlag = true;
 			}
-		};
-		~Navigation_Creator(){};
+
+		}
 
 		void GetRoadRoute_(const HDMapStandalone::MRoutePath &path, NDM_Navigation* pNavigation)
 		{

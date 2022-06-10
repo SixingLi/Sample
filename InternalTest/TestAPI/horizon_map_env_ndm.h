@@ -185,7 +185,8 @@ namespace HorizonMapEnv {
 			mNDM_Msg.logical_layer = logicalLayerCreator.mLogicalLayer;
 			PrintLogicalLayer(mNDM_Msg.logical_layer);
 
-			HorizonMapEnv::Navigation_Creator navigationCreator(mInputs);
+			HorizonMapEnv::Navigation_Creator navigationCreator;
+			navigationCreator.Navigation_Creator_Ini(mInputs);
 			NDM_Navigation navigation;
 			navigationCreator.CreateNavigation(mInputs[0],&navigation);
 
