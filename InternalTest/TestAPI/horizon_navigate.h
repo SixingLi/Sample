@@ -204,6 +204,7 @@ namespace HorizonMapEnv
 		void GetFilterPonits_(const SSD::SimPoint3D& curPoint)
 		{
 			// filter ponit for forward 2000m distance, save sub segment in
+			mInputPointsLocal.resize(0);
 			float distMin = std::numeric_limits<float>::max();
 			int nearIndex = 0;
 			if (mGenerateRouteFlag) {
@@ -238,7 +239,7 @@ namespace HorizonMapEnv
 		{
 			if (mInputPoints.size() < 2)
 			{
-				std::cout << "mInputPoints size is <2 !!!! " << std::endl;
+				std::cout << "mInputPoints size <2 !!!! " << std::endl;
 				return;
 			}
 			NDM_Point point_pt_start, point_pt_end;
