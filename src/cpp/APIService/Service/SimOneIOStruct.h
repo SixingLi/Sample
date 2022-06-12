@@ -742,6 +742,7 @@ struct SimOne_Data_SensorDetections_Entry
 	float bbox2dMinY = 0;	// bbox2d minY in pixel if have
 	float bbox2dMaxX = 0;	// bbox2d maxX in pixel if have
 	float bbox2dMaxY = 0;	// bbox2d maxY in pixel if have
+	std::vector<SimOne_Data_Vec3f> cornerPoints;
 };
 
 struct SimOne_Data_SensorDetections : public SimOne_Data
