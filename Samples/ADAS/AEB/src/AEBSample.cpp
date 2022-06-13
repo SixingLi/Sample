@@ -20,6 +20,7 @@ int main()
 	bool isJoinTimeLoop = true;
 	SimOneAPI::InitSimOneAPI(MainVehicleId, isJoinTimeLoop); 
 	SimOneAPI::SetDriverName(MainVehicleId, "AEB");
+	SimOneAPI::SetDriveMode(MainVehicleId, ESimOne_Drive_Mode_API);
 
 	int timeout = 20;
 	while (true) {

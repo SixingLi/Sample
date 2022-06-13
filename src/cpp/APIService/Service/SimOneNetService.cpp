@@ -240,6 +240,9 @@ bool SimOneAPIService::SubMainVehicle(const char* mainVehicleId, bool isJoinTime
 		//mPendingState = ENetServiceState_Work;
 		return true;
 	}
+	else {
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "SubMainVehicle failed.");
+	}
 
 	return false;
 }
@@ -255,6 +258,11 @@ bool SimOneAPIService::SimOneNodeReady() {
 }
 bool SimOneAPIService::Start()
 {
+	
+	if (mbRecvThreadRun) {
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService:: already is running");
+		return false;
+	}
 	zeroMemory();
 	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Start()2222222");
 	bool ret = connectSyncBridgeNode();
@@ -262,11 +270,12 @@ bool SimOneAPIService::Start()
 
 	if (ret) {
 		mbRecvThreadRun = true;
+		
 		std::thread thread(&SimOneAPIService::run, this);
 		thread.detach();
 		mPendingState = ENetServiceState_Work;
 	}
-	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Start()4444444");
+	bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "SimOneAPIService::Start()4444444:%d",ret);
 
 	return ret;
 }
@@ -287,7 +296,7 @@ void SimOneAPIService::zeroMemory() {
 	mpEndCase = nullptr;
 	mpFrameStart = nullptr;
 	mpFrameEnd = nullptr;
-	mCaseStatus = 0;
+	//mCaseStatus = 0;
 	mpSimOneGpsCB = nullptr;
 	mpSimOneGroundTruthCB = nullptr;
 	mpSimOneTrafficLightCB = nullptr;
@@ -310,7 +319,7 @@ void SimOneAPIService::zeroMemory() {
 	mbInWait = false;
 
 	mbRecvThreadRun = false;
-	mbRecvThreadExit = false;
+	mbRecvThreadExit = true;
 	mpMainVehicleInfo.size = 0;
 
 	mLastGPSDataMap.clear();
@@ -424,6 +433,7 @@ bool SimOneAPIService::connectSyncBridgeNode() {
 			bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "Initializing node succeed, connect time server(%s:%d) succeed.", mServerIP.c_str(), mServerPort);
 
 			if (!this->sendNodeRegisterReq(Bridge::EBridgeClientRole_SimOneOut, mRegisterNodeId)) {
+				bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "sendNodeRegisterReq error.");
 				delete mpClientSync;
 				mpClientSync = nullptr;
 				return false;
@@ -436,6 +446,7 @@ bool SimOneAPIService::connectSyncBridgeNode() {
 				if (!bret) {
 					delete mpClientSync;
 					mpClientSync = nullptr;
+					bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "receive error.");
 					return false;
 				}
 				uint16_t msg_id = msg.parseMsgId();
@@ -447,15 +458,17 @@ bool SimOneAPIService::connectSyncBridgeNode() {
 					}
 					if (declareResult.succeeded()) {
 						mbStarted = true;
-
+						bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "declareResult is sucessful!");
 						break;
 					}
 					else {
 						std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 						this->sendNodeRegisterReq(Bridge::EBridgeClientRole_SimOneOut, mRegisterNodeId);
+						bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "send reg info :%d!", try_count);
 						try_count++;
 					}
 					if (try_count > 30) {
+						bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "try_count :%d!", try_count);
 						mbStarted = false;
 						break;
 					}
@@ -616,6 +629,13 @@ void SimOneAPIService::onDisconnected() {
 	return;
 }
 int SimOneAPIService::wait() {
+	if (!mbRecvThreadRun) {
+		logError("thread exit ====>");
+		return -1;
+	}
+	if (!mpClientSync) {
+		return -1;
+	}
 	mbInWait = true;
 	Message msg;
 	uint16_t messageId = Bridge::EBridgeTimeStepForward;
@@ -649,6 +669,13 @@ int SimOneAPIService::wait() {
 }
 void SimOneAPIService::nextFrame(int frame) {
 
+	if (!mbRecvThreadRun) {
+		logError("thread exit ====>");
+		return;
+	}
+	if (!mpClientSync) {
+		return;
+	}
 	Bridge::BridgeTimeStepForwardConfirm msg;
 	msg.set_framestamp(frame);
 	mpClientSync->send(Bridge::EBridgeTimeStepForwardConfirm, msg);
@@ -656,7 +683,7 @@ void SimOneAPIService::nextFrame(int frame) {
 	return;
 }
 void SimOneAPIService::run() {
-
+	mbRecvThreadExit = false;
 	while (true)
 	{
 		if (!mbRecvThreadRun) {
@@ -773,9 +800,14 @@ void SimOneAPIService::SendMessageEventWriteSimOne(void* pbuffer, int length, Br
 	mpClientSync->send(msg);
 }
 bool SimOneAPIService::sendMessage(int set_fromId, Bridge::EBridgeClientType fromType, int toId, Bridge::EBridgeClientType toType, int msgId, int length, void* pBuffer) {
+	if (!mbRecvThreadRun) {
+		logError("thread exit ====>");
+		return false;
+	}
 	if (!mpClientSync) {
 		return false;
 	}
+	
 	if (!mbStarted) {
 		return false;
 	}
@@ -1485,6 +1517,30 @@ bool SimOneAPIService::sendVehicleTrajectoryControlReq(int mainVehicleId,
 	}
 	state.set_controllername(apiDriverName.data());
 	sendMainVehicleMessage(mainVehicleId, proto::sensor::EDataType_VehicleControlState, state);
+	return true;
+}
+
+bool SimOneAPIService::sendVehicleDriveModeReq(int mainVehicleId, SimOne_Data_Drive_Mode driveMode) {
+	if (!mpClientSync) {
+		return false;
+	}
+	if (!mbStarted) {
+		return false;
+	}
+
+	cybertron::proto::sensor::DataVehicleDriveMode mode;
+	switch (driveMode)
+	{
+	case ESimOne_Drive_Mode_API:
+		mode.set_drivemode(cybertron::proto::sensor::EDrive_API);
+		break;
+	case ESimOne_Drive_Mode_Driver:
+		mode.set_drivemode(cybertron::proto::sensor::EDrive_Driver);
+		break;
+	default:
+		break;
+	}
+	sendMainVehicleMessage(mainVehicleId, proto::sensor::EDataType_VehicleDriveMode, mode);
 	return true;
 }
 
