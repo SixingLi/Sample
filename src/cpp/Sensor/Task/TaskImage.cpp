@@ -160,7 +160,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 			break;
 		}
 
-		pImageDetections->objects[i].cornerPoints.swap(std::vector<SimOne_Data_Vec3f>());
+		pImageDetections->objects[i].cornerPoints.clear();
 		for (auto j = 0; j < ImageDataSrc.ground_truth().obstacles(i).cornerpoints().size(); ++j)
 		{
 			SimOne_Data_Vec3f cornerPoint;
