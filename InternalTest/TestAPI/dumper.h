@@ -1,9 +1,10 @@
 #ifndef DUMPER_H
 #define DUMPER_H
 
-#include "Service/SimOneIOStruct.h"
 #include <iostream>
+#include "Service/SimOneIOStruct.h"
 #include "GNSS.h"
+#include "SimOneStreamingAPI.h"
 
 using namespace std;
 
@@ -24,6 +25,8 @@ public:
 	void dump_traffic_light(const char* mainVehicleId, int opendriveLightId, SimOne_Data_TrafficLight* pData);
 	void dump_sensor_laneInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo* pData);
 	void dump_waypoints(const char* mainVehicleId, SimOne_Data_WayPoints* pData);
+	void dump_streaming_image(SimOne_Streaming_Image* pData, const char* prefix="");
+	void dump_point_cloud(SimOne_Streaming_Point_Cloud* pData, const char* prefix="");
 };
 
 #endif
