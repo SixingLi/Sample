@@ -44,6 +44,7 @@ IF (WIN32)
 	target_link_libraries(TestAPI ${CMAKE_CURRENT_LIST_DIR}/../lib/Win64/HDMapModule.lib)
 	target_link_libraries(TestAPI ${CMAKE_CURRENT_LIST_DIR}/../lib/Win64/SSD.lib)
 	target_link_libraries(TestAPI ${CMAKE_CURRENT_LIST_DIR}/../lib/Win64/tsf.lib)
+	target_link_libraries(TestAPI ${CMAKE_CURRENT_LIST_DIR}/../lib/Win64/SimOneStreamingAPI.lib)
 
 ELSEIF(UNIX)
 	target_link_libraries(TestAPI  ${CMAKE_CURRENT_LIST_DIR}/../lib/Linux64/libSimOneAPI.so)
