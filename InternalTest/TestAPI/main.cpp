@@ -18,7 +18,7 @@ void thread_func_streaming_img(tester* t)
 	// std::this_thread::sleep_for(std::chrono::milliseconds(30));
 }
 
-void thread_func_streaming_rle(tester* t)
+void thread_func_streaming_rle(tester* t
 {
 	while (true)
 	{
