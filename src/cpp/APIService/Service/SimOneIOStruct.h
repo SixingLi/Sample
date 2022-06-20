@@ -708,6 +708,7 @@ struct SimOne_Data_SensorConfigurations
 #define SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX 256
 #define SOSM_SENSOR_LANE_OBJECT_SIZE_MAX 256
 #define SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX 250
+#define SOSM_SENSOR_DETECTIONS_CORNERPOINT_SIZE_MAX 8
 struct SimOne_Data_SensorDetections_Entry
 {
 	int id;					// Detection Object ID
@@ -742,7 +743,8 @@ struct SimOne_Data_SensorDetections_Entry
 	float bbox2dMinY = 0;	// bbox2d minY in pixel if have
 	float bbox2dMaxX = 0;	// bbox2d maxX in pixel if have
 	float bbox2dMaxY = 0;	// bbox2d maxY in pixel if have
-	std::vector<SimOne_Data_Vec3f> cornerPoints;
+	int cornerPointSize;
+	SimOne_Data_Vec3f cornerPoints[SOSM_SENSOR_DETECTIONS_CORNERPOINT_SIZE_MAX];
 };
 
 struct SimOne_Data_SensorDetections : public SimOne_Data
