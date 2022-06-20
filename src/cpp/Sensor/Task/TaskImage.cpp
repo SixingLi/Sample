@@ -160,14 +160,15 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 			break;
 		}
 
-		pImageDetections->objects[i].cornerPoints.clear();
+		pImageDetections->objects[i].cornerPointSize = ImageDataSrc.ground_truth().obstacles(i).cornerpoints().size();
+
 		for (auto j = 0; j < ImageDataSrc.ground_truth().obstacles(i).cornerpoints().size(); ++j)
 		{
 			SimOne_Data_Vec3f cornerPoint;
 			cornerPoint.x = ImageDataSrc.ground_truth().obstacles(i).cornerpoints(j).x();
 			cornerPoint.y = ImageDataSrc.ground_truth().obstacles(i).cornerpoints(j).y();
-			cornerPoint.z = 1;
-			pImageDetections->objects[i].cornerPoints.push_back(cornerPoint);
+			cornerPoint.z = 0;
+			pImageDetections->objects[i].cornerPoints[j] = cornerPoint;
 		}
 	}
 	mLastSensorDetectionsMap[sensorKey] = pImageDetections;
