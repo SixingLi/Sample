@@ -220,7 +220,7 @@ private:
 	AVBufferRef *hw_device_ctx = NULL;
 
 public:
-	int HEVCEncoder::set_hwframe_ctx(AVCodecContext *ctx, AVBufferRef *hw_device_ctx)
+	int set_hwframe_ctx(AVCodecContext *ctx, AVBufferRef *hw_device_ctx)
 	{
 		AVBufferRef *hw_frames_ref;
 		AVHWFramesContext *frames_ctx = NULL;
@@ -250,7 +250,7 @@ public:
 		return err;
 	}
 
-	int HEVCEncoder::hw_encoder_init(AVCodecContext *ctx, const enum AVHWDeviceType type)
+	int hw_encoder_init(AVCodecContext *ctx, const enum AVHWDeviceType type)
 	{
 		int err = 0;
 
@@ -264,7 +264,7 @@ public:
 		return err;
 	}
 
-	bool HEVCEncoder::initFFmpeg2H265(int width, int height)
+	bool initFFmpeg2H265(int width, int height)
 	{
 		// Setting up the codec.
 		int ret;
@@ -357,7 +357,7 @@ public:
 		return true;
 	}
 
-	int HEVCEncoder::encodeToH265Image(int width, int height, int inSize, const char *inImage, char *&outImage)
+	int encodeToH265Image(int width, int height, int inSize, const char *inImage, char *&outImage)
 	{
 		AVFrame *frame = NULL;
 		AVFrame *hw_frame = NULL;
@@ -452,7 +452,7 @@ public:
 		return nStreamSize;
 	}
 
-	void HEVCEncoder::freeFFmpeg()
+	void freeFFmpeg()
 	{
 		if (mpFFCodecCtx)
 		{
