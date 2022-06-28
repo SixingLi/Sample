@@ -17,6 +17,11 @@ ENDIF()
 
 add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 
+OPTION(TestAPI "Build ${CMAKE_BUILD_NAME} TestAPI" OFF)
+IF (TestAPI)
+	add_definitions(-DTestAPI)
+ENDIF()
+
 OPTION(HDMAP "Build ${CMAKE_BUILD_NAME} HDMap" ON)
 IF (HDMAP)
 	add_definitions(-DHDMAP)
@@ -72,8 +77,11 @@ find_package(PythonLibs 3.6 REQUIRED)
 add_custom_target(autoconfig ALL DEPENDS)
 
 add_subdirectory(${SIMONE_API_ROOT}/src/cpp SourceCpp)
+
+IF(TestAPI)
 add_subdirectory(${SIMONE_API_ROOT}/InternalTest/TestAPI TestAPI)
 add_dependencies(TestAPI ${CMAKE_BUILD_NAME})
+ENDIF()
 
 IF (HDMAP)
 	add_subdirectory(${SIMONE_API_ROOT}/src/python/HDMapAPI HDMapAPI)
