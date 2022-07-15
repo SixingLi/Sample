@@ -1520,7 +1520,7 @@ bool SimOneAPIService::sendVehicleTrajectoryControlReq(int mainVehicleId,
 	return true;
 }
 
-bool SimOneAPIService::sendVehicleDriveModeReq(int mainVehicleId, SimOne_Data_Drive_Mode driveMode) {
+bool SimOneAPIService::sendVehicleDriveModeReq(int mainVehicleId, ESimOne_Drive_Mode driveMode) {
 	if (!mpClientSync) {
 		return false;
 	}
@@ -1941,6 +1941,7 @@ bool SimOneAPIService::onFromHotAreaGPSData(Bridge::BridgeHotAreaHeader header, 
 	GPS.timestamp = header.timestamp();
 	GPS.frame = header.frame();
 	GPS.version = header.version();
+
 	//bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information, "==1==HotAreaGPSData frame:%d posX:%f posY:%f posZ:%f throttle:%f brake:%f steering:%f gear:%d", GPS.frame, GPS.posX, GPS.posY, GPS.posZ, GPS.throttle, GPS.brake, GPS.steering, GPS.gear);
 	if (mbDisplayHotAreaData)
 	{
@@ -2650,11 +2651,20 @@ void SimOneAPIService::GetParkingSpaceList(SSD::SimVector<HDMapStandalone::MPark
 #ifndef API_TEST_LOADXODR_OFFLINE
 	if (!mbHDMapInited)
 	{
-		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetParkingSpaceIds failed, HDMap not initialized yet.");
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetParkingSpaceList failed, HDMap not initialized yet.");
 	}
 #endif
 	//use std::move is to avoid killing performance, that extern "C" has limit to expose C++ object as return value
 	parkingSpaceList = std::move(HDMapStandalone::MHDMap::GetParkingSpaceList());
+}
+
+bool SimOneAPIService::GetParkingSpaceIds(const SSD::SimPoint3D& inputPt, double distance, SSD::SimStringVector& ids) {
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetParkingSpaceIds failed, HDMap not initialized yet.");
+		return false;
+	}
+	return std::move(HDMapStandalone::MHDMap::GetParkingSpaceIds(inputPt, distance, ids));
 }
 
 bool SimOneAPIService::GenerateRoute(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimPoint3DVector& route)
@@ -2674,6 +2684,26 @@ bool SimOneAPIService::GenerateRoute(const SSD::SimPoint3DVector& inputPoints, S
 	route = std::move(routePath.waypoints);
 	return true;
 }
+
+bool SimOneAPIService::GenerateRoute_V2(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints,
+	HDMapStandalone::MRoutePath& path, SSD::SimVector<HDMapStandalone::MRoutePoint>& routePtList)
+{
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GenerateRoute_V2 failed, HDMap not initialized yet.");
+		return false;
+	}
+#endif
+	HDMapStandalone::MRoutePath routePath;
+	if (!HDMapStandalone::MRouting::GenerateRoute(inputPoints, indexOfValidPoints, path,routePtList))
+	{
+		return false;
+	}
+	return true;
+}
+
+
 
 bool SimOneAPIService::Navigate(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimVector<long>& roadIdList)
 {
@@ -2738,6 +2768,18 @@ SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetTrafficLightList()
 	return std::move(HDMapStandalone::MLightAndSign::GetTrafficLightList());
 }
 
+SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetSpecifiedLaneTrafficLightList(const SSD::SimString& id)
+{
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetSpecifiedLaneTrafficLightList failed, HDMap not initialized yet.");
+		return SSD::SimVector<HDMapStandalone::MSignal>();
+	}
+#endif
+	return std::move(HDMapStandalone::MLightAndSign::GetTrafficLightList(id));
+}
+
 SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetTrafficSignList()
 {
 #ifndef API_TEST_LOADXODR_OFFLINE
@@ -2748,6 +2790,18 @@ SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetTrafficSignList()
 	}
 #endif
 	return std::move(HDMapStandalone::MLightAndSign::GetTrafficSignList());
+}
+
+SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetSpecifiedLaneTrafficSignList(const SSD::SimString &id)
+{
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetSpecifiedLaneTrafficSignList failed, HDMap not initialized yet.");
+		return SSD::SimVector<HDMapStandalone::MSignal>();
+	}
+#endif
+	return std::move(HDMapStandalone::MLightAndSign::GetTrafficSignList(id));
 }
 
 SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetStoplineList(const HDMapStandalone::MSignal& light, const SSD::SimString& id)
@@ -2762,6 +2816,18 @@ SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetStoplineList(const
 	return std::move(HDMapStandalone::MLightAndSign::GetStoplineList(light, id));
 }
 
+SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetSpecifiedLaneStoplineList(const SSD::SimString& id)
+{
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetSpecifiedLaneStoplineList failed, HDMap not initialized yet.");
+		return SSD::SimVector<HDMapStandalone::MObject>();
+	}
+#endif
+	return std::move(HDMapStandalone::MLightAndSign::GetStoplineList(id));
+}
+
 SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetCrosswalkList(const HDMapStandalone::MSignal& light, const SSD::SimString& id)
 {
 #ifndef API_TEST_LOADXODR_OFFLINE
@@ -2772,6 +2838,50 @@ SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetCrosswalkList(cons
 	}
 #endif
 	return std::move(HDMapStandalone::MLightAndSign::GetCrosswalkList(light, id));
+}
+
+SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetSpecifiedLaneCrosswalkList(const SSD::SimString& id)
+{
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetSpecifiedLaneCrosswalkList failed, HDMap not initialized yet.");
+		return SSD::SimVector<HDMapStandalone::MObject>();
+	}
+#endif
+	return std::move(HDMapStandalone::MLightAndSign::GetCrosswalkList(id));
+}
+
+SSD::SimVector<HDMapStandalone::MSignal> SimOneAPIService::GetSignalListOnLaneByType(const SSD::SimString& laneName, const SSD::SimString& type) {
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetSignalListOnLaneByType failed, HDMap not initialized yet.");
+		return SSD::SimVector<HDMapStandalone::MSignal>();
+	}
+#endif
+	return std::move(HDMapStandalone::MLightAndSign::GetSignalListOnLaneByType(laneName, type));
+}
+
+SSD::SimStringVector SimOneAPIService::GetLaneList(const long& roadId)
+{
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetLaneList failed, HDMap not initialized yet.");
+	}
+#endif
+	return std::move(HDMapStandalone::MHDMap::GetLaneList(roadId));
+}
+
+HDMapStandalone::MJunction SimOneAPIService::GetJunction(const long& junctionId) {
+#ifndef API_TEST_LOADXODR_OFFLINE
+	if (!mbHDMapInited)
+	{
+		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetJunction failed, HDMap not initialized yet.");
+	}
+#endif
+	return HDMapStandalone::MHDMap::GetJunction(junctionId);
 }
 
 SSD::SimVector<HDMapStandalone::MObject> SimOneAPIService::GetCrossHatchList(const SSD::SimString& id)
@@ -3116,7 +3226,7 @@ SSD::SimVector<long> SimOneAPIService::GetJunctionList()
 		return std::move(juncionIdList);
 	}
 #endif
-	return HDMapStandalone::MHDMap::GetJunctionList();
+	return std::move(HDMapStandalone::MHDMap::GetJunctionList());
 }
 
 double SimOneAPIService::GetRoadLength(const long& roadId)
@@ -3302,14 +3412,14 @@ bool SimOneAPIService::GetNearMostLaneWithHeight(const SSD::SimPoint3D& pos, boo
 bool SimOneAPIService::GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& laneName, const double& forward,
 	SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList)
 {
-#ifndef API_TEST_LOADXODR_OFFLINE
+#ifndef API_TEST_LOADXODR_OFFLINE 
 	if (!mbHDMapInited)
 	{
 		bridgeLogOutput(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Error, "GetForwardLaneSample failed, HDMap not initialized yet.");
 		return false;
 	}
 #endif
-	laneInfoList = HDMapStandalone::MHDMap::GetLaneSample(inputPt, laneName, forward);
+	laneInfoList = std::move(HDMapStandalone::MHDMap::GetLaneSample(inputPt, laneName, forward));
 	return true;
 }
 
@@ -3322,7 +3432,7 @@ void SimOneAPIService::GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLine
 		return;
 	}
 #endif
-	laneLineInfo = HDMapStandalone::MHDMap::GetLaneLineInfo();
+	laneLineInfo = std::move(HDMapStandalone::MHDMap::GetLaneLineInfo());
 }
 
 

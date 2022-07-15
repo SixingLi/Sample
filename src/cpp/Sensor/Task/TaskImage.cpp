@@ -10,7 +10,7 @@ CYBERTRON_BEGIN
 
 TaskImage::TaskImage()
 {
-	log_taskImage.open("log_taskImage.txt", std::ios::trunc);
+	// log_taskImage.open("log_taskImage.txt", std::ios::trunc);
 }
 
 TaskImage::~TaskImage()
@@ -158,6 +158,17 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 		if (pImageDetections->objectSize >= SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX)
 		{
 			break;
+		}
+
+		pImageDetections->objects[i].cornerPointSize = ImageDataSrc.ground_truth().obstacles(i).cornerpoints().size();
+
+		for (auto j = 0; j < ImageDataSrc.ground_truth().obstacles(i).cornerpoints().size(); ++j)
+		{
+			SimOne_Data_Vec3f cornerPoint;
+			cornerPoint.x = ImageDataSrc.ground_truth().obstacles(i).cornerpoints(j).x();
+			cornerPoint.y = ImageDataSrc.ground_truth().obstacles(i).cornerpoints(j).y();
+			cornerPoint.z = 0;
+			pImageDetections->objects[i].cornerPoints[j] = cornerPoint;
 		}
 	}
 	mLastSensorDetectionsMap[sensorKey] = pImageDetections;

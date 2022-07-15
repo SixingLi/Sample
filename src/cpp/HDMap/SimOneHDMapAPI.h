@@ -54,6 +54,7 @@
 #include "public/common/MSignal.h"
 #include "public/common/MObject.h"
 #include "public/common/MParkingSpace.h"
+#include "public/common/MRoutePath.h"
 #include "public/MHDMap.h"
 #include "SSD/SimPoint3D.h"
 #include "SSD/SimString.h"
@@ -203,7 +204,7 @@ extern "C"
 		*	True when any lane is found, else returns false
 		*/
 		SIMONE_API bool GetNearMostLane(const SSD::SimPoint3D& pos, SSD::SimString& id, double& s, double& t, double& s_toCenterLine, double& t_toCenterLine);
-
+		
 		/*!
 		获取临近车道列表
 		\li function:
@@ -700,6 +701,164 @@ extern "C"
 		*/
 		SIMONE_API bool GetLaneSampleByLocation(const SSD::SimPoint3D& pos, HDMapStandalone::MLaneInfo& info);
 
+		//%%%%%%%%%%%%%% V4 Add %%%%%%%%%%%%%%%
+
+		/*!
+		获取所有车道线信息列表。
+		\li function:
+		*	GetLaneData
+		\li brief:
+		*	 Get all lane's info in the map
+		@param[out]
+		*	 data: All lane's MLaneLineInfo object as a list
+		*/
+		SIMONE_API void GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo> & data);
+
+		/*!
+		获取给定车道的关联人行横道线列表
+		\li function:
+		*	GetSpecifiedLaneCrosswalkList
+		\li brief:
+		*	Get the list of crosswalks that belongs to matched specified lane.
+		@param[in]
+		*	id: Input lane ID. ID with this format roadId_sectionIndex_laneId
+		@param[out]
+		*	stoplineList: Crosswalks list that is associated
+		*/
+		SIMONE_API void GetSpecifiedLaneCrosswalkList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& crosswalkList);
+
+		/*!
+		获取给定车道的关联停止线列表
+		\li function:
+		*	GetSpecifiedLaneStoplineList
+		\li brief:
+		*	Get the list of stoplines that belongs to specified lane.
+		@param[in]
+		*	id: Input lane ID. ID with this format roadId_sectionIndex_laneId
+		@param[out]
+		*	stoplineList: Stoplines list that is associated
+		*/
+		SIMONE_API void GetSpecifiedLaneStoplineList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MObject>& stoplineList);
+
+		/*!
+		获取地图中指定车道关联交通标志列表
+		\li function:
+		*	GetSpecifiedLaneTrafficSignalList
+		\li brief:
+		*	Get traffic sign list that belongs to specified lane.
+		@param[in]
+		*	id: Input lane ID. ID with this format roadId_sectionIndex_laneId
+		@param[out]
+		*	list: Traffic sign object list
+		*/
+		SIMONE_API void GetSpecifiedLaneTrafficSignalList(const SSD::SimString& id, SSD::SimVector<HDMapStandalone::MSignal>& list);
+
+		/*!
+		获取指定车道绑定的信号的列表
+		\li function:
+		*	GetspecifiedLaneTrafficLightList
+		\li brief:
+		*	Get traffic light list that belongs to specified lane.
+		@param[in]
+		*	id: Input lane ID. ID with this format roadId_sectionIndex_laneId
+		@param[out]
+		*	list: Traffic light object list
+		*/
+		SIMONE_API void GetSpecifiedLaneTrafficLightList(const SSD::SimString & id, SSD::SimVector<HDMapStandalone::MSignal>& list);
+
+		/*!
+		获取地图中指定点前方一定距离停车位列表
+		\li function:
+		*	GetParkingSpaceIds
+		\li brief:
+		*	Get parkingSpace list in range of distance
+		@param[in]
+		*	inputPt: Input 3d location
+		@param[in]
+		*	distance: Input range distance
+		@param[out]
+		*	ids: Parking space list
+		@return
+		*	True if exists, else returns false
+		*/
+		SIMONE_API bool GetParkingSpaceIds(const SSD::SimPoint3D& inputPt, double distance, SSD::SimStringVector& ids);
+
+		/*!
+		获取前方一定距离内的所有车道信息(包含车道ID，左右边缘线，虚拟中心线)
+		\li function:
+		*	GetForwardLaneSample
+		\li brief:
+		*	 Get forward lane sample info .
+		@param[in]
+		*	 inputPt: Input current pos, pos is a 3d point.
+		@param[in]
+		*	 id: Lane ID of founded lane. ID with this format roadId_sectionIndex_laneId
+		@param[in]
+		*	 forward: The forward distance from inputPt
+		@param[out]
+		*	 laneInfoList: Lane information(HDMapStandalone::MLaneInfo) of specified forward range
+		@return
+		*	True if specified lane exists in the map, else returns false
+		*/
+		SIMONE_API bool GetForwardLaneSample(const SSD::SimPoint3D& inputPt, const SSD::SimString& id, const double& forward,
+			SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList);
+
+		/*!
+		通过信号类型获取指定道路的车道指示信息，地面标识（type="Graphics"）
+		\li function:
+		*	GetSignalListOnLaneByType
+		\li brief:
+		*	 Get signal list of Specified type on Specified Lanename.
+		@param[in]
+		*	 laneName: Input lane ID. ID with this format roadId_sectionIndex_laneId
+		@param[in]
+		*	 type: Signal type string like "Graphics"
+		@param[out]
+		* signalInfo：signalInfo list as MSignal
+		*/
+		SIMONE_API void GetSignalListOnLaneByType(const SSD::SimString& laneName, const SSD::SimString& type, SSD::SimVector<HDMapStandalone::MSignal> & signalInfo);
+
+		/*!
+		获取指定道路id内所有的车道名称
+		\li function:
+		*	GetLaneList
+		\li brief:
+		*	 roadId: Get Lane list in road id
+		@param[out]
+		*	 laneList: Lane name list in roadId
+		*/
+		SIMONE_API void GetLaneList(const long& roadId, SSD::SimStringVector &laneList);
+
+		/*!
+		获取指定十字路口的详细信息
+		\li function:
+		*	GetJunction
+		\li brief:
+		*	 Get junction detail info of Specified junctionId
+		@param[out]
+		*	 junction: junction detail info as MJunction
+		*/
+		SIMONE_API void GetJunction(const long& junctionId, HDMapStandalone::MJunction &junction);
+
+		/*!
+		获取路网路径规划详细信息
+		\li function:
+		*	GenerateRoute_V2
+		\li brief:
+		*	Generate route detail info for specified input points
+		@param[in]
+		*	inputPoints: Input points that to guide generated route should pass over
+		@param[out]
+		*	indexOfValidPoints: Pick valid ones from input points. Valid ones will be used for generting route
+		@param[out]
+		*	path: waypoints and segment info of generated route
+		@param[out]
+		*	routePtList: lane detail info of generated route
+		@return
+		*	True if any route has been generated, else returns false
+		*/
+		SIMONE_API bool GenerateRoute_V2(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints,
+			HDMapStandalone::MRoutePath &path, SSD::SimVector<HDMapStandalone::MRoutePoint>& routePtList);
 	}
 #ifdef __cplusplus
 }

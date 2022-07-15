@@ -6,6 +6,9 @@
 #include "SimOnePNCAPI.h"
 #include "SimOneServiceAPI.h"
 #include "SimOneHDMapAPI.h"
+
+#include "SimOneStreamingAPI.h"
+
 #include "dumper.h"
 
 #include <thread> 
@@ -88,6 +91,7 @@ class tester
 		// ------ bool GetControlMode(const char* mainVehicleId, SimOne_Data_Control_Mode* pControlMode);
 		// ------ bool GetDriverControl(const char* mainVehicleId, SimOne_Data_Control* pControl);
 		// ------ bool GetWayPoints(const char* mainVehicleId, SimOne_Data_WayPoints* pWayPoints);
+		void Test_GetWayPoints();
 		// ------ bool SetScenarioEventCB(void(*cb)(const char* source, const char* target, const char* type, const char* content));
 		// ------ bool SetTrafficEventCB(void(*cb)(const char* mainVehicleId, const char* data));
 
@@ -109,7 +113,15 @@ class tester
 		// Sensor-V2X API
 		void Test_V2XInfo(bool IsCallBackMode);
 
+		// Streaming API
+		void Test_GetStreamingImage(const char *ip, unsigned short port, bool IsCallBackMode);
+		void Test_GetStreamingImage_H265(const char *ip, unsigned short port, bool IsCallBackMode, const char* prefix = "");
+		void Test_GetStreamingImage_RLE(const char *ip, unsigned short port, bool IsCallBackMode, const char* prefix = "");
+		void Test_GetStreamingPointCloud(const  char* ip, unsigned short port, unsigned short infoPort, bool IsCallBackMode, const char* prefix = "");
+
 		static dumper dbg_data;
+		static char* prefix_h265;
+		static char* prefix_rle;
 
 	private:
 		std::string mainVehicleId;

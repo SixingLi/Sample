@@ -1,6 +1,8 @@
 #include "test_bench.h"
 
 dumper tester::dbg_data;
+char* tester::prefix_h265 = nullptr;
+char* tester::prefix_rle = nullptr;
 
 tester::tester(const char* mv_id):mainVehicleId(mv_id){}
 
@@ -531,4 +533,144 @@ void tester::Test_SetVehicleEvent()
 		return;
 	}
 	std::cout << "SetVehicleEvent Done!" << std::endl;
+}
+
+void tester::Test_GetWayPoints()
+{
+	std::unique_ptr<SimOne_Data_WayPoints> pWayPoints = std::make_unique<SimOne_Data_WayPoints>();
+	// int lastFrame = 0;
+
+	while (1)
+	{
+		bool flag = SimOneAPI::GetWayPoints(mainVehicleId.c_str(), pWayPoints.get());
+		// if (flag && pWayPoints->frame != lastFrame)
+		if (flag)
+		{
+			// lastFrame = pWayPoints->frame;
+			dbg_data.dump_waypoints(mainVehicleId.c_str(), pWayPoints.get());
+		}
+		if (!flag)
+		{
+			std::cout << "Get WayPoints Fail" << std::endl;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+}
+
+void tester::Test_GetStreamingImage(const  char* ip, unsigned short port, bool IsCallBackMode)
+{
+	if (IsCallBackMode)
+	{
+		auto function = [](SimOne_Streaming_Image* pImage){
+				dbg_data.dump_streaming_image(pImage);
+		};
+		 SimOneAPI::SetStreamingImageUpdateCB(ip, port, function);
+	}
+	else {
+		std::unique_ptr<SimOne_Streaming_Image> pImage = std::make_unique<SimOne_Streaming_Image>();
+		int lastFrame = 0;
+		while(1)
+		{
+			bool flag = SimOneAPI::GetStreamingImage(ip, port, pImage.get());
+			if (flag && pImage->frame != lastFrame)
+			{
+				lastFrame  = pImage->frame;
+				dbg_data.dump_streaming_image(pImage.get());
+			}
+			if (!flag)
+			{
+				std::cout<<"Get Streaming Image Fail"<< std::endl;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+	}
+}
+void tester::Test_GetStreamingImage_H265(const  char* ip, unsigned short port, bool IsCallBackMode, const char* prefix)
+{
+	prefix_h265 = const_cast<char *>(prefix);
+
+	if (IsCallBackMode)
+	{
+		auto function = [](SimOne_Streaming_Image* pImage){
+				dbg_data.dump_streaming_image(pImage, prefix_h265);
+		};
+		 SimOneAPI::SetStreamingImageUpdateCB(ip, port, function);
+	}
+	else {
+		std::unique_ptr<SimOne_Streaming_Image> pImage = std::make_unique<SimOne_Streaming_Image>();
+		int lastFrame = 0;
+		while(1)
+		{
+			bool flag = SimOneAPI::GetStreamingImage(ip, port, pImage.get());
+			if (flag && pImage->frame != lastFrame)
+			{
+				lastFrame  = pImage->frame;
+				dbg_data.dump_streaming_image(pImage.get(), prefix_h265);
+			}
+			if (!flag)
+			{
+				std::cout<<"Get Streaming Image Fail"<< std::endl;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+	}
+}
+void tester::Test_GetStreamingImage_RLE(const  char* ip, unsigned short port, bool IsCallBackMode, const char* prefix)
+{
+	prefix_rle = const_cast<char *>(prefix);
+
+	if (IsCallBackMode)
+	{
+		auto function = [](SimOne_Streaming_Image* pImage){
+				dbg_data.dump_streaming_image(pImage, prefix_rle);
+		};
+		 SimOneAPI::SetStreamingImageUpdateCB(ip, port, function);
+	}
+	else {
+		std::unique_ptr<SimOne_Streaming_Image> pImage = std::make_unique<SimOne_Streaming_Image>();
+		int lastFrame = 0;
+		while(1)
+		{
+			bool flag = SimOneAPI::GetStreamingImage(ip, port, pImage.get());
+			if (flag && pImage->frame != lastFrame)
+			{
+				lastFrame  = pImage->frame;
+				dbg_data.dump_streaming_image(pImage.get(), prefix_rle);
+			}
+			if (!flag)
+			{
+				std::cout<<"Get Streaming Image Fail"<< std::endl;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+	}
+}
+
+void tester::Test_GetStreamingPointCloud(const  char* ip, unsigned short port, unsigned short infoPort, bool IsCallBackMode, const char* prefix)
+{
+	if (IsCallBackMode) {
+		auto function = [](SimOne_Streaming_Point_Cloud *pPointCloud)
+		{
+			dbg_data.dump_point_cloud(pPointCloud);
+		};
+		SimOneAPI::SetStreamingPointCloudUpdateCB(ip, port, infoPort, function);
+	}
+	else {
+		std::unique_ptr<SimOne_Streaming_Point_Cloud> pPointCloud = std::make_unique<SimOne_Streaming_Point_Cloud>();
+		int lastFrame = 0;
+		while(1)
+		{
+			bool flag = SimOneAPI::GetStreamingPointCloud(ip, port, infoPort, pPointCloud.get());
+			if (flag && pPointCloud->frame != lastFrame)
+			{
+				lastFrame  = pPointCloud->frame;
+				dbg_data.dump_point_cloud(pPointCloud.get());
+			}
+			if (!flag)
+			{
+				std::cout<<"Get Streaming Image Fail"<< std::endl;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+	}
 }

@@ -25,9 +25,15 @@ extern "C"
 
 	SIMONE_API bool SimOneAPI::InitSimOneAPI(const char* mainVehicleId, bool isFrameSync, const char *serverIP, int port, void(*startCase)(), void(*endCase)(), int registerNodeId)
 	{
-		cout << "mainVehicleId:" << mainVehicleId << "isFrameSync:" << isFrameSync<<"serverIP:"<<serverIP<<",port:"<< port<< endl;
+		char *serverAddrStr = getenv("SIMONE_SERVER_ADDR");
+		char *serverPortStr = getenv("SIMONE_SERVER_PORT");
+
+		const char *serverAddr = serverAddrStr ? serverAddrStr : serverIP;
+		int serverPort = serverPortStr ? atoi(serverPortStr) : port;
+
+		cout << "mainVehicleId:" << mainVehicleId << "isFrameSync:" << isFrameSync<<"serverIP:"<<serverAddr<<",port:"<<serverPort<< endl;
 		SetLogOut(ESimOne_LogLevel_Type::ESimOne_LogLevel_Type_Information,"mainVehicleId:%s,isFrameSync:%d", mainVehicleId, isFrameSync);
-		SimOneAPIService::GetInstance()->setServerInfo(serverIP, port);
+		SimOneAPIService::GetInstance()->setServerInfo(serverAddr, serverPort);
 		int tryCount = 0;
 		if (SimOneAPIService::GetInstance()->Start(startCase, endCase, registerNodeId)&& SimOneAPIService::GetInstance()->SimOneNodeReady()) {
 			tryCount = 0;

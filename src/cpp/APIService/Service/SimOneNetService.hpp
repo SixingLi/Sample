@@ -132,7 +132,7 @@ public:
 
 	bool sendVehicleEventInfoReq(int mainVehicleId, SimOne_Data_Vehicle_EventInfo *pEvent);
 	bool sendVehicleControlReq(int mainVehicleId, SimOne_Data_Control *pControl, const char* driverName);
-	bool sendVehicleDriveModeReq(int mainVehicleId, SimOne_Data_Drive_Mode driveMode);
+	bool sendVehicleDriveModeReq(int mainVehicleId, ESimOne_Drive_Mode driveMode);
 	bool sendVehicleControlPosReq(int mainVehicleId, SimOne_Data_Pose_Control *pPose);
     bool sendVehicleTrajectoryControlReq(int mainVehicleId, SimOne_Data_Control_Trajectory *pControlTraj, const char* driverName);
 	bool sendVehicleTrajectory(int mainVehicleId, SimOne_Data_Trajectory *pTrajectory, const char* driverName);
@@ -234,15 +234,30 @@ public:
 	static bool GetRoadST(const SSD::SimString& id, const SSD::SimPoint3D& pos, double& s, double& t, double& z);
 	static bool GetInertialFromLaneST(const SSD::SimString& id, const double& s, const double& t, SSD::SimPoint3D& inertial, SSD::SimPoint3D& dir);
 	static bool ContainsLane(const SSD::SimString& id);
+
 	static void GetParkingSpaceList(SSD::SimVector<HDMapStandalone::MParkingSpace>& parkingSpaceList);
+	static bool GetParkingSpaceIds(const SSD::SimPoint3D& inputPt, double distance, SSD::SimStringVector& ids);
 	static bool GenerateRoute(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimPoint3DVector& route);
+	static bool GenerateRoute_V2(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints,
+		HDMapStandalone::MRoutePath& path, SSD::SimVector<HDMapStandalone::MRoutePoint>& routePtList);
 	static bool Navigate(const SSD::SimPoint3DVector& inputPoints, SSD::SimVector<int>& indexOfValidPoints, SSD::SimVector<long>& roadIdList);
 	static bool IsOverlapLaneLine(const SSD::SimPoint3D& pos, const double& radius, SSD::SimString& id);
 	static bool GetRoadMark(const SSD::SimPoint3D& pos, const SSD::SimString& id, HDMapStandalone::MRoadMark& left, HDMapStandalone::MRoadMark& right);
+
 	static SSD::SimVector<HDMapStandalone::MSignal> GetTrafficLightList();
+	static SSD::SimVector<HDMapStandalone::MSignal> GetSpecifiedLaneTrafficLightList(const SSD::SimString& id);
+
 	static SSD::SimVector<HDMapStandalone::MSignal> GetTrafficSignList();
+	static SSD::SimVector<HDMapStandalone::MSignal> GetSpecifiedLaneTrafficSignList(const SSD::SimString &id);
+
 	static SSD::SimVector<HDMapStandalone::MObject> GetStoplineList(const HDMapStandalone::MSignal& light, const SSD::SimString& id);
+	static SSD::SimVector<HDMapStandalone::MObject> GetSpecifiedLaneStoplineList(const SSD::SimString& id);
+
 	static SSD::SimVector<HDMapStandalone::MObject> GetCrosswalkList(const HDMapStandalone::MSignal& light, const SSD::SimString& id);
+	static SSD::SimVector<HDMapStandalone::MObject> GetSpecifiedLaneCrosswalkList(const SSD::SimString& id);
+
+	static SSD::SimVector<HDMapStandalone::MSignal> GetSignalListOnLaneByType(const SSD::SimString& laneName, const SSD::SimString& type);
+
 	static SSD::SimVector<HDMapStandalone::MObject> GetCrossHatchList(const SSD::SimString& id);
 	static  bool GetLaneMiddlePoint(const SSD::SimPoint3D& inputPt, const SSD::SimString& id, SSD::SimPoint3D& targetPoint, SSD::SimPoint3D& dir);
 	static bool GetHeights(const SSD::SimPoint3D& inputPt, const double& radius, SSD::SimVector<double>& heights,
@@ -269,7 +284,8 @@ public:
 		SSD::SimVector<HDMapStandalone::MLaneInfo>& laneInfoList);
 	static void GetLaneLineInfo(SSD::SimVector<HDMapStandalone::MLaneLineInfo>& laneLineInfo);
 	static void GetSectionList(const long& roadId, SSD::SimStringVector& rightList, SSD::SimStringVector& leftList);
-
+	static SSD::SimStringVector GetLaneList(const long& roadId);
+	static HDMapStandalone::MJunction GetJunction(const long& junctionId);
 
 	////////////////////////////////
 	//Non-standard gq

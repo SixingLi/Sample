@@ -9,7 +9,7 @@ dumper::~dumper(){}
 void dumper::dump_gps(const char* mainVehicleId, SimOne_Data_Gps* pData)
 {
 	cout.setf(ios::fixed);
-	std::cout<<"------ mainVehicleId:"<< mainVehicleId << std::endl;
+	/*std::cout<<"------ mainVehicleId:"<< mainVehicleId << std::endl;
 	std::cout<<"------ frame:"<< pData->frame << std::endl;	
 	std::cout << "posX/Y/Z: [" << pData->posX << ", " << pData->posY << ", " << pData->posZ << "]" << std::endl;
 	std::cout << "oriX/Y/Z: [" << pData->oriX << ", " << pData->oriY << ", " << pData->oriZ << "]" << std::endl;
@@ -26,7 +26,16 @@ void dumper::dump_gps(const char* mainVehicleId, SimOne_Data_Gps* pData)
 	std::cout << "wheelSpeedRR: " << pData->wheelSpeedRR << std::endl;
 	std::cout << "engineRpm: " << pData->engineRpm << std::endl;
 	std::cout << "odometer: " << pData->odometer << std::endl;
-	std::cout << "extraStateSize: " << pData->extraStateSize << std::endl;
+	std::cout << "extraStateSize: " << pData->extraStateSize << std::endl;*/
+
+	GNSS gnss(12.4, 124.55, 1.0);
+	GNSSMessage g = gnss.getGNSSMessage(pData);
+	std::cout << g.GPGGA_Size << " :: " << g.GNSS_GPGGA;
+	std::cout << g.GPGLL_Size << " :: " << g.GNSS_GPGLL;
+	std::cout << g.GPGSA_Size << " :: " << g.GNSS_GPGSA;
+	std::cout << g.GPRMC_Size << " :: " << g.GNSS_GPRMC;
+	std::cout << g.GPVTG_Size << " :: " << g.GNSS_GPVTG << endl;
+
 	for (int i=0; i<pData->extraStateSize; i++)
 	{
 		std::cout << "extraStates[" << i << "]: " << pData->extraStates[i] << std::endl;
@@ -484,17 +493,17 @@ void dumper::dump_sensor_laneInfo(const char* mainVehicleId, const char* sensorI
 			break;
 	}
 	std::cout << "c_Line.linewidth: " << pData->c_Line.linewidth << std::endl;
-	// for (int i=0; i<sizeof(pData->c_Line.linePoints) / sizeof(SimOne_Data_Vec3f); i++)
-	// {
-	// 	std::cout << "c_Line.linePoints[" << i << "]: [" << pData->c_Line.linePoints[i].x << ", " << pData->c_Line.linePoints[i].y << ", " << pData->c_Line.linePoints[i].z << "]" << std::endl;
-	// }
-	// std::cout << "c_Line.linecurveParameter.C0: " << pData->c_Line.linecurveParameter.C0 << std::endl;
-	// std::cout << "c_Line.linecurveParameter.C1: " << pData->c_Line.linecurveParameter.C1 << std::endl;
-	// std::cout << "c_Line.linecurveParameter.C2: " << pData->c_Line.linecurveParameter.C2 << std::endl;
-	// std::cout << "c_Line.linecurveParameter.C3: " << pData->c_Line.linecurveParameter.C3 << std::endl;
-	// std::cout << "c_Line.linecurveParameter.firstPoints: [" << pData->c_Line.linecurveParameter.firstPoints.x << ", " << pData->c_Line.linecurveParameter.firstPoints.y << ", " << pData->c_Line.linecurveParameter.firstPoints.z << "]" << std::endl;
-	// std::cout << "c_Line.linecurveParameter.endPoints: [" << pData->c_Line.linecurveParameter.endPoints.x << ", " << pData->c_Line.linecurveParameter.endPoints.y << ", " << pData->c_Line.linecurveParameter.endPoints.z << "]" << std::endl;
-	// std::cout << "c_Line.linecurveParameter.length: " << pData->c_Line.linecurveParameter.length << std::endl;
+	 for (int i=0; i<sizeof(pData->c_Line.linePoints) / sizeof(SimOne_Data_Vec3f); i++)
+	 {
+	 	std::cout << "c_Line.linePoints[" << i << "]: [" << pData->c_Line.linePoints[i].x << ", " << pData->c_Line.linePoints[i].y << ", " << pData->c_Line.linePoints[i].z << "]" << std::endl;
+	 }
+	 std::cout << "c_Line.linecurveParameter.C0: " << pData->c_Line.linecurveParameter.C0 << std::endl;
+	 std::cout << "c_Line.linecurveParameter.C1: " << pData->c_Line.linecurveParameter.C1 << std::endl;
+	 std::cout << "c_Line.linecurveParameter.C2: " << pData->c_Line.linecurveParameter.C2 << std::endl;
+	 std::cout << "c_Line.linecurveParameter.C3: " << pData->c_Line.linecurveParameter.C3 << std::endl;
+	 std::cout << "c_Line.linecurveParameter.firstPoints: [" << pData->c_Line.linecurveParameter.firstPoints.x << ", " << pData->c_Line.linecurveParameter.firstPoints.y << ", " << pData->c_Line.linecurveParameter.firstPoints.z << "]" << std::endl;
+	 std::cout << "c_Line.linecurveParameter.endPoints: [" << pData->c_Line.linecurveParameter.endPoints.x << ", " << pData->c_Line.linecurveParameter.endPoints.y << ", " << pData->c_Line.linecurveParameter.endPoints.z << "]" << std::endl;
+	 std::cout << "c_Line.linecurveParameter.length: " << pData->c_Line.linecurveParameter.length << std::endl;
 
 	std::cout << "r_Line.lineID: " << pData->r_Line.lineID << std::endl;
 	switch (pData->r_Line.lineType)
@@ -697,4 +706,55 @@ void dumper::dump_sensor_laneInfo(const char* mainVehicleId, const char* sensorI
 	// std::cout << "rr_Line.linecurveParameter.endPoints: [" << pData->rr_Line.linecurveParameter.endPoints.x << ", " << pData->rr_Line.linecurveParameter.endPoints.y << ", " << pData->rr_Line.linecurveParameter.endPoints.z << "]" << std::endl;
 	// std::cout << "rr_Line.linecurveParameter.length: " << pData->rr_Line.linecurveParameter.length << std::endl;
 	std::cout << "dump_sensor_laneInfo ------------------------------------------------------------------------" << std::endl;
+}
+
+void dumper::dump_waypoints(const char* mainVehicleId, SimOne_Data_WayPoints* pData)
+{
+	std::cout <<"------ mainVehicleId:"<< mainVehicleId << std::endl;
+	std::cout <<"------ frame:"<< pData->frame << std::endl;
+	std::cout <<"wayPointsSize:"<< pData->wayPointsSize << std::endl;
+	for (int i=0; i<pData->wayPointsSize; i++)
+	{
+		std::cout << "index : " << pData->wayPoints[i].index << std::endl;
+		std::cout << "posX: " << pData->wayPoints[i].posX << std::endl;
+		std::cout << "posY: " << pData->wayPoints[i].posY << std::endl;
+		std::cout << "heading_x: " << pData->wayPoints[i].heading_x << std::endl;
+		std::cout << "heading_y: " << pData->wayPoints[i].heading_y << std::endl;
+		std::cout << "heading_z: " << pData->wayPoints[i].heading_z << std::endl;
+		std::cout << "heading_w: " << pData->wayPoints[i].heading_w << std::endl;
+	}
+}
+
+void dumper::dump_streaming_image(SimOne_Streaming_Image* pData, const char* prefix)
+{
+	std::cout << prefix << "------ frame: " << pData->frame << std::endl;
+	std::cout << prefix << "------ timestamp: " << pData->timestamp << std::endl;
+	std::cout << prefix << "width: " << pData->width << std::endl;
+	std::cout << prefix << "height :" << pData->height << std::endl;
+	switch(pData->format)
+	{
+	case ESimOne_Streaming_Image_Format_RGB:
+		std::cout << prefix << "format: ESimOne_Streaming_Image_Format_RGB" << std::endl;
+	break;
+	case ESimOne_Streaming_Image_Format_RLESegmentation:
+		std::cout << prefix << "format: ESimOne_Streaming_Image_Format_RLESegmentation" << std::endl;
+	break;
+	case ESimOne_Streaming_Image_Format_JPEG:
+		std::cout << prefix << "format: ESimOne_Streaming_Image_Format_JPEG" << std::endl;
+	break;
+	case ESimOne_Streaming_Image_Format_H265:
+		std::cout << prefix << "format: ESimOne_Streaming_Image_Format_H265" << std::endl;
+	}
+	std::cout << prefix << "imageDataSize: " << pData->imageDataSize << std::endl;
+	// char imageData[SOSM_IMAGE_DATA_SIZE_MAX]; // 1920 x 1200 x 3 max
+}
+
+void dumper::dump_point_cloud(SimOne_Streaming_Point_Cloud* pData, const char* prefix)
+{
+	std::cout << prefix << "------ frame: " << pData->frame << std::endl;
+	std::cout << prefix << "width: " << pData->width << std::endl;
+	std::cout << prefix << "height: " << pData->height << std::endl;
+	std::cout << prefix << "pointStep: " << pData->pointStep << std::endl;
+	std::cout << prefix << "pointCloudDataSize: " << pData->pointCloudDataSize << std::endl;
+	// char pointCloudData[SOSM_POINT_DATA_SIZE_MAX];
 }

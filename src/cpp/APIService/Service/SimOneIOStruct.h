@@ -66,6 +66,8 @@ struct SimOne_Data_Vec3f
 #define SOSM_CASENAME_LENGTH 256
 #define SOSM_CASEID_LENGT 256
 #define SOSM_TASKID_LENGT 256
+
+#define MAX_PREDICTION_TRAJECTORY_SIZE 20
 struct SimOne_Data_Map
 {
 	char openDrive[SOSM_MAP_OD_LENGT];
@@ -201,7 +203,7 @@ struct SimOne_Data_Control : public SimOne_Data
     float steering_input_data[SO_MAX_WHEEL_NUM];
 };
 
-enum SimOne_Data_Drive_Mode
+enum ESimOne_Drive_Mode
 {
 	ESimOne_Drive_Mode_API = 0,
 	ESimOne_Drive_Mode_Driver = 1
@@ -314,6 +316,27 @@ struct SimOne_Data_Trajectory : public SimOne_Data
 // ----------------------------
 #define SOSM_POSE_PREFIX "SOSM_POSE_"
 #define SOSM_EXTRA_STATES_SIZE_MAX 256
+
+struct SimOne_Data_IMU
+{
+	float accelX; // MainVehicle Acceleration X on Opendrive (by meter)
+	float accelY; // MainVehicle Acceleration Y on Opendrive (by meter)
+	float accelZ; // MainVehicle Acceleration Z on Opendrive (by meter)
+
+	float velX; // MainVehicle Velocity X on Opendrive (by meter)
+	float velY; // MainVehicle Velocity Y on Opendrive (by meter)
+	float velZ; // MainVehicle Velocity Z on Opendrive (by meter)
+
+	float angVelX; // MainVehicle Angular Velocity X on Opendrive (by meter)
+	float angVelY; // MainVehicle Angular Velocity Y on Opendrive (by meter)
+	float angVelZ; // MainVehicle Angular Velocity Z on Opendrive (by meter)
+
+	float rotX; // Rotation X on Opendrive (by radian)
+	float rotY; // Rotation Y on Opendrive (by radian)
+	float rotZ; // Rotation Z on Opendrive (by radian)
+
+};
+
 struct SimOne_Data_Gps : public SimOne_Data
 {
 	float posX; // Position X on Opendrive (by meter)
@@ -343,7 +366,13 @@ struct SimOne_Data_Gps : public SimOne_Data
 	float odometer;	// odometer in meter.
 	int extraStateSize;
 	float extraStates[SOSM_EXTRA_STATES_SIZE_MAX];// vehicle states subscripted by MainVehicleExtraDataIndics message
+
+	bool isGPSLost;
+
+	SimOne_Data_IMU imuData;
+
 };
+
 
 enum ESimOne_Data_Vehicle_State
 {
@@ -508,6 +537,22 @@ enum ESimOne_Obstacle_Type
 	ESimOne_Obstacle_Type_RoadObstacle = 29
 };
 
+struct Rotation
+{
+	float yaw;      // Obstacle Rotation Z on Opendrive (by radian)
+	float pitch;    // Obstacle Rotation Y on Opendrive (by radian)
+	float roll;     // Obstacle Rotation X on Opendrive (by radian)
+};
+
+struct Prediction
+{
+	uint32_t trajectorySize; // point number of prediction trajectory
+	float trajectoryInterval; // time interval between two adjacent points of prediction trajector. unit is second.
+	SimOne_Data_Vec3f trajectory[MAX_PREDICTION_TRAJECTORY_SIZE]; // Obstacle prediction trajectory. Positions on Opendrive (by meter)
+	float speed[MAX_PREDICTION_TRAJECTORY_SIZE]; // point speed of prediction trajectory
+	Rotation rotation[MAX_PREDICTION_TRAJECTORY_SIZE]; // Obstacle prediction trajectory. Rotation on Opendrive
+};
+
 struct SimOne_Data_Obstacle_Entry
 {
 	int id; // Obstacle global unique ID
@@ -529,6 +574,7 @@ struct SimOne_Data_Obstacle_Entry
 	float accelX; // Obstacle Acceleration X on Opendrive (by meter)
 	float accelY; // Obstacle Acceleration Y on Opendrive (by meter)
 	float accelZ; // Obstacle Acceleration Z on Opendrive (by meter)
+	Prediction prediction;
 };
 
 struct SimOne_Data_Obstacle : public SimOne_Data
@@ -662,6 +708,7 @@ struct SimOne_Data_SensorConfigurations
 #define SOSM_SENSOR_DETECTIONS_OBJECT_SIZE_MAX 256
 #define SOSM_SENSOR_LANE_OBJECT_SIZE_MAX 256
 #define SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX 250
+#define SOSM_SENSOR_DETECTIONS_CORNERPOINT_SIZE_MAX 8
 struct SimOne_Data_SensorDetections_Entry
 {
 	int id;					// Detection Object ID
@@ -696,6 +743,8 @@ struct SimOne_Data_SensorDetections_Entry
 	float bbox2dMinY = 0;	// bbox2d minY in pixel if have
 	float bbox2dMaxX = 0;	// bbox2d maxX in pixel if have
 	float bbox2dMaxY = 0;	// bbox2d maxY in pixel if have
+	int cornerPointSize;
+	SimOne_Data_Vec3f cornerPoints[SOSM_SENSOR_DETECTIONS_CORNERPOINT_SIZE_MAX];
 };
 
 struct SimOne_Data_SensorDetections : public SimOne_Data
@@ -765,14 +814,14 @@ struct SimOne_LineCurve_Parameter{
 	float C3;
 	SimOne_Data_Vec3f firstPoints;
 	SimOne_Data_Vec3f endPoints;
-	float length = 7;
+	int length = 0;
 };
 
 struct SimOne_Data_LaneLineInfo 
 {
-	int lineID;
-	ESimOne_Boundary_Type lineType;//laneline BoundaryType
-	ESimOne_Boundary_Color lineColor;//laneline BoundaryColor
+	int lineID = 0;
+	ESimOne_Boundary_Type lineType = ESimOne_Boundary_Type_none ;//laneline BoundaryType
+	ESimOne_Boundary_Color lineColor = ESimOne_Boundary_Color_standard;//laneline BoundaryColor
 	float linewidth;//laneline width
 	SimOne_Data_Vec3f linePoints[SOSM_SENSOR_Boundary_OBJECT_SIZE_MAX];//total laneline Boundary points ,MaX 80
 	SimOne_LineCurve_Parameter linecurveParameter;//laneline boundary curveParameter
@@ -781,7 +830,7 @@ struct SimOne_Data_LaneLineInfo
 struct SimOne_Data_LaneInfo :public SimOne_Data
 {
 	int id = 0;//Lane ID 
-	ESimOne_Lane_Type laneType;//Lane type
+	ESimOne_Lane_Type laneType = ESimOne_Lane_Type_none;//Lane type
 	int laneLeftID = 0;//The Lane's leftLane ID  
 	int laneRightID = 0;//The Lane's rightLane ID 
 	int lanePredecessorID[SOSM_SENSOR_LANE_OBJECT_SIZE_MAX];//total of lane predecessor ID,max 256

@@ -67,6 +67,7 @@ if __name__ == '__main__':
 		gpsData = SimOne_Data_Gps()
 		if SoGetGps(mainVehicleID, gpsData):
 			print("timestamp:{0},posX:{1},posY:{2},brake:{3},steering:{4}".format(gpsData.timestamp,gpsData.posX,gpsData.posY,gpsData.brake,gpsData.steering))
+			print("IMU: angVelX:{0}, angVelY: {1}, angVelZ: {2}".format(gpsData.imuData.angVelX, gpsData.imuData.angVelY, gpsData.imuData.angVelZ))
 		
 		# obstacleData = SimOne_Data_Obstacle()
 		# if SoGetGroundTruth(mainVehicleID,obstacleData):
