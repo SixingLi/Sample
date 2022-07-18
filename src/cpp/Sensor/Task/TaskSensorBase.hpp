@@ -20,6 +20,7 @@ enum ETaskCommandId
 	ETaskCommandId_ImageObj = 11,
 	ETaskCommandId_ImageOSI = 12,
 	ETaskCommandId_ImageLane = 13,
+	ETaskCommandId_ImageRoadMark = 14,
 
 	ETaskCommandId_ContiRadarObj = 20,
 	ETaskCommandId_ContiRadarOSI = 21,
@@ -101,6 +102,7 @@ public:
 	virtual uint16_t  Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskSensorBase::SensorContext* pSensorContext, const std::string* pBuffer) = 0;
 	virtual int GetCommandIDFromObj() { return -1; };
 	virtual int GetCommandIDFromLane() { return -1; };
+	virtual int GetCommandIDFromRoadMark() { return -1; };
 	std::uint16_t GetSensorDataType() { return mSensorDataType; }
 	void Enbale() {
 		mbEnable = true;
@@ -131,6 +133,7 @@ public:
 	void(*mpSensorFusionUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorFusionObstacles *pDetections);
 	void(*mpSensorDetectionsUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_SensorDetections *pGroundtruth);
 	void(*mpLaneDetectionsUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLane);
+	void(*mpRoadMarkDetectionsUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMark);
 	void(*mpUltrasonicRadarsUpdateCB)(const char* mainVehicleId, SimOne_Data_UltrasonicRadars *pUltrasonics);
 	void(*mpUltrasonicRadarUpdateCB)(const char* mainVehicleId, const char* sensorId, SimOne_Data_UltrasonicRadar *pUltrasonics);
 	void(*mpObstacleUpdateCB)(const char* mainVehicleId, SimOne_Data_Obstacle *pObstacle);

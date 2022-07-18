@@ -165,6 +165,43 @@ extern "C"
 		return SimOneAPIService::GetInstance()->SetSensorLaneInfoCB(cb);
 	}
 
+
+	SIMONE_API bool SimOneAPI::GetSensorRoadMarkInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMarkInfo) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		string key = std::to_string(mainVehId).append("_").append(sensorId);
+		map<std::string, int>::iterator it = SimOneAPIService::GetInstance()->mSensorDataTypeMap.find(key);
+		if (it == SimOneAPIService::GetInstance()->mSensorDataTypeMap.end())
+		{
+			logInfo("Get GetCameraSensorLaneInfo not found");
+			return false;
+		}
+
+		int sensorType = it->second;
+
+		CTaskSensorBase* pTask = TaskSensorManager::getInstance().FindTask(sensorType);
+		if (!pTask) {
+			return false;
+		}
+
+		int commandId = pTask->GetCommandIDFromRoadMark();
+		if (commandId < 0) {
+			return false;
+		}
+
+		if (!pTask->GetData(key, (ETaskCommandId)commandId, pRoadMarkInfo)) {
+			return false;
+		}
+		return true;
+	}
+
+
+	SIMONE_API bool SimOneAPI::SetSensorRoadMarkInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMarkInfo)) {
+		return SimOneAPIService::GetInstance()->SetSensorRoadMarkInfoCB(cb);
+	}
+
+
+
+
 #ifdef __cplusplus
 }
 #endif

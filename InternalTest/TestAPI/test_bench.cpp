@@ -259,15 +259,52 @@ void tester::Test_GetSensorDetections(bool IsCallBackMode)
 		while (true)
 		{
 			// "sensorFusion1" "objectBasedCamera1" "objectBasedLidar1" "perfectPerception1"
-			bool flag = SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "perfectPerception1", pGroundtruth.get());
+			bool flag = SimOneAPI::GetSensorDetections(mainVehicleId.c_str(), "objectBasedCamera1", pGroundtruth.get());
 			if (flag && pGroundtruth->frame != lastFrame)
 			{
 				lastFrame = pGroundtruth->frame;
-				dbg_data.dump_sensor_detections(mainVehicleId.c_str(), "perfectPerception1", pGroundtruth.get());
+				dbg_data.dump_sensor_detections(mainVehicleId.c_str(), "objectBasedCamera1", pGroundtruth.get());
 			}
 			if (!flag)
 			{
 				std::cout << "GetSensorDetections Failed!" << std::endl;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+	}
+}
+
+
+void tester::Test_GetSensorRoadMark(bool IsCallBackMode)
+{
+	if (IsCallBackMode)
+	{
+		auto function = [](const char* MainVehicleID, const char* sensorId, SimOne_Data_RoadMarkInfo* pRoadMark)
+		{
+			std::cout << "pRoadMark's size = " << pRoadMark->detectNum << std::endl;
+
+			//dbg_data.dump_sensor_detections(MainVehicleID, sensorId, pRoadMark);
+		};
+		SimOneAPI::SetSensorRoadMarkInfoCB(function);
+	}
+	else
+	{
+		std::unique_ptr<SimOne_Data_RoadMarkInfo> pRoadMark = std::make_unique<SimOne_Data_RoadMarkInfo>();
+		int lastFrame = 0;
+		while (true)
+		{
+			// "sensorFusion1" "objectBasedCamera1" "objectBasedLidar1" "perfectPerception1"
+			bool flag = SimOneAPI::GetSensorRoadMarkInfo(mainVehicleId.c_str(), "objectBasedCamera1", pRoadMark.get());
+			if (flag && pRoadMark->frame != lastFrame)
+			{
+				lastFrame = pRoadMark->frame;
+
+				std::cout << "pRoadMark's size = " << pRoadMark->detectNum << std::endl;
+				//dbg_data.dump_sensor_detections(mainVehicleId.c_str(), "objectBasedCamera1", pRoadMark.get());
+			}
+			if (!flag)
+			{
+				std::cout << "GetSensorRoadMarkInfo Failed!" << std::endl;
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}

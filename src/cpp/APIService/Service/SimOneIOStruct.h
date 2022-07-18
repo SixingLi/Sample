@@ -795,6 +795,58 @@ struct SimOne_Data_LaneInfo :public SimOne_Data
 };
 
 
+
+enum SimOne_RoadMark_Type {
+	RoadMarkType_UnKnown = 0,
+	RoadMarkType_Graphics = 1,
+	RoadMarkType_StopLine = 2,
+	RoadMarkType_CrossWalk = 3
+};
+
+enum SimOne_RoadMark_SubType {
+	MarkSubType__UnKnown = 0,
+	RoadMarkType_StraightAheadArrow = 1,
+	RoadMarkType_LeftOrRightTurnArrow = 2,
+	RoadMarkType_LeftOrUTurnArrow = 3,
+	RoadMarkType_LeftTurnArrow = 4,
+	RoadMarkType_LeftChangeArrow = 5,
+	RoadMarkType_RightChangeArrow = 6,
+	RoadMarkType_RightTurnArrow = 7,
+	RoadMarkType_StraightOrLeftTurnArrow = 8,
+	RoadMarkType_StraightOrLeftOrRightTurnArrow = 9,
+	RoadMarkType_StraightOrRightTurnArrow = 10,
+	RoadMarkType_StraightOrUTurnArrow = 10,
+	RoadMarkType_UTurnArrow = 11
+};
+
+
+// ----------------------------
+// Millimeter-wave Radar data (SimOne Output) 
+// ----------------------------
+#define SOSM_ROADMARK_SIZE_MAX 256
+#define SOSM_PIX_SIZE_MAX 64
+
+struct RoadMark_Entry{
+	int id;
+	SimOne_RoadMark_Type type;
+	SimOne_RoadMark_SubType subtype;
+	SimOne_Data_Vec3f center;
+	SimOne_Data_Vec3f rotation;
+	SimOne_Data_Vec3f size;
+	int pointSize;
+	SimOne_Data_Vec3f bbox3d[SOSM_PIX_SIZE_MAX];
+	SimOne_Data_Vec3f pixs2d[SOSM_PIX_SIZE_MAX];
+};
+
+
+struct SimOne_Data_RoadMarkInfo : public SimOne_Data
+{
+	int detectNum; // Detection Object number
+	RoadMark_Entry roadMarks[SOSM_ROADMARK_SIZE_MAX]; // Detection Objects, 256 max
+};
+
+
+
 enum ESimOne_Client_Type {
 	ESimOne_Client_Type_None = 0,
 	ESimOne_Client_Type_Web = 1,

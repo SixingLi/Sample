@@ -36,6 +36,7 @@ set_target_properties(SensorCameraView PROPERTIES
 
 IF (WIN32)
 	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.lib)
+	target_link_libraries(SensorCameraView ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneAPI.lib)
 	target_link_libraries(SensorCameraView ${OPENCV_LIB_PATH}/opencv_world346.lib)
 	
 	add_custom_command(TARGET SensorCameraView
@@ -45,8 +46,10 @@ IF (WIN32)
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/avutil-56.dll ${CMAKE_BINARY_DIR}/bin/avutil-56.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/swresample-3.dll ${CMAKE_BINARY_DIR}/bin/swresample-3.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/swscale-5.dll ${CMAKE_BINARY_DIR}/bin/swscale-5.dll
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneAPI.dll ${CMAKE_BINARY_DIR}/bin/SimOneAPI.dll
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SSD.dll ${CMAKE_BINARY_DIR}/bin/SSD.dll
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/HDMapModule.dll ${CMAKE_BINARY_DIR}/bin/HDMapModule.dll
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SIMONE_SDK_PATH_ROOT}/lib/Win64/SimOneStreamingAPI.dll ${CMAKE_BINARY_DIR}/bin/SimOneStreamingAPI.dll
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENCV_LIB_PATH}/opencv_world346.dll ${CMAKE_BINARY_DIR}/bin/opencv_world346.dll
     )
 
 ELSEIF (UNIX)

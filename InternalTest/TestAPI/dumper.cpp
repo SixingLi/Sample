@@ -9,7 +9,7 @@ dumper::~dumper(){}
 void dumper::dump_gps(const char* mainVehicleId, SimOne_Data_Gps* pData)
 {
 	cout.setf(ios::fixed);
-	std::cout<<"------ mainVehicleId:"<< mainVehicleId << std::endl;
+	/*std::cout<<"------ mainVehicleId:"<< mainVehicleId << std::endl;
 	std::cout<<"------ frame:"<< pData->frame << std::endl;	
 	std::cout << "posX/Y/Z: [" << pData->posX << ", " << pData->posY << ", " << pData->posZ << "]" << std::endl;
 	std::cout << "oriX/Y/Z: [" << pData->oriX << ", " << pData->oriY << ", " << pData->oriZ << "]" << std::endl;
@@ -17,16 +17,16 @@ void dumper::dump_gps(const char* mainVehicleId, SimOne_Data_Gps* pData)
 	std::cout << "throttle: " << pData->throttle << std::endl;
 	std::cout << "brake: " << pData->brake << std::endl;
 	std::cout << "steering: " << pData->steering << std::endl;
-	std::cout << "gear: " << pData->gear << std::endl;
+	std::cout << "gear: " << pData->gear << std::endl;*/
 	std::cout << "accelX/Y/Z: " << pData->accelX << ", "  << pData->accelY << ", " << pData->accelZ << "]" << std::endl;
-	std::cout << "angVelX/Y/Z: " << pData->angVelX << ", "  << pData->angVelY << ", " << pData->angVelZ << "]" << std::endl;
+	/*std::cout << "angVelX/Y/Z: " << pData->angVelX << ", "  << pData->angVelY << ", " << pData->angVelZ << "]" << std::endl;
 	std::cout << "wheelSpeedFL: " << pData->wheelSpeedFL << std::endl;
 	std::cout << "wheelSpeedFR: " << pData->wheelSpeedFR << std::endl;
 	std::cout << "wheelSpeedRL: " << pData->wheelSpeedRL << std::endl;
 	std::cout << "wheelSpeedRR: " << pData->wheelSpeedRR << std::endl;
 	std::cout << "engineRpm: " << pData->engineRpm << std::endl;
 	std::cout << "odometer: " << pData->odometer << std::endl;
-	std::cout << "extraStateSize: " << pData->extraStateSize << std::endl;
+	std::cout << "extraStateSize: " << pData->extraStateSize << std::endl;*/
 	for (int i=0; i<pData->extraStateSize; i++)
 	{
 		std::cout << "extraStates[" << i << "]: " << pData->extraStates[i] << std::endl;

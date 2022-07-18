@@ -101,6 +101,7 @@ class tester
 		void Test_UltrasonicRadar();
 		void Test_UltrasonicRadars(bool IsCallBackMode);
 		void Test_GetSensorDetections(bool IsCallBackMode);
+		void Test_GetSensorRoadMark(bool IsCallBackMode);
 		void Test_GetSensorConfigurations();
 		void Test_SetEnvironment();
 		// GetTrafficLight: Test in Test_HDMap_ALL

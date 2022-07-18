@@ -2330,6 +2330,13 @@ bool SimOneAPIService::SetSensorLaneInfoCB(void(*cb)(const char* mainVehicleId, 
 	return true;
 }
 
+bool SimOneAPIService::SetSensorRoadMarkInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMark))
+{
+	//Init();
+	TaskSensorManager::getInstance().mpRoadMarkDetectionsUpdateCB = cb;
+	return true;
+}
+
 #ifndef WITHOUT_HDMAP
 bool SimOneAPIService::SetV2XInfoUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_V2XNFS *pDetections))
 {

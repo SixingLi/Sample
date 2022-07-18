@@ -332,7 +332,10 @@ extern "C"
 		*/
 		SIMONE_API bool SetSensorLaneInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo));
 
-	}
+		SIMONE_API bool GetSensorRoadMarkInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMarkInfo);
+
+		SIMONE_API bool SetSensorRoadMarkInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMarkInfo));
+		}
 #ifdef __cplusplus
 }
 #endif
