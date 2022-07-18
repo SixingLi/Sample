@@ -9,7 +9,7 @@ call "..\..\..\3rdparty\artifactory\ffmpeg.sh"
 
 if not exist build md build
 cd build
-cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_BUILD_NAME=SimOneAPI
+cmake .. -G "Visual Studio 15 2017 Win64" -DPYTHON_INCLUDE_DIR=..\..\..\3rdparty\artifactory\python36  -DPYTHON_LIBRARY=..\..\..\3rdparty\artifactory\python36\libs -DCMAKE_BUILD_TYPE=Debug -DCMAKE_BUILD_NAME=SimOneAPI
 cd ..
 
 pause
