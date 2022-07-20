@@ -172,7 +172,7 @@ extern "C"
 		map<std::string, int>::iterator it = SimOneAPIService::GetInstance()->mSensorDataTypeMap.find(key);
 		if (it == SimOneAPIService::GetInstance()->mSensorDataTypeMap.end())
 		{
-			logInfo("Get GetCameraSensorLaneInfo not found");
+			logInfo("Get GetSensorRoadMarkInfo not found");
 			return false;
 		}
 
