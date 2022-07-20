@@ -46,19 +46,44 @@ int main(int argc, char* argv[])
 			if (gDataImage.frame != lastFrame) {
 				cv::Mat img(gDataImage.height, gDataImage.width, CV_8UC3, gDataImage.imageData);
 				if (SimOneAPI::GetSensorRoadMarkInfo("0", "objectBasedCamera1", &pRoadMark)) {
-					for (int index = 0; index < pRoadMark.detectNum; index++) {
-						for (int i =  0; i < pRoadMark.roadMarks[index].pointSize-1; i++) {
-							if (pRoadMark.roadMarks[index].type == RoadMarkType_Graphics) {
-								cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
-									cv::Point(pRoadMark.roadMarks[index].pixs2d[i+1].x, pRoadMark.roadMarks[index].pixs2d[i+1].y), cv::Scalar(255, 0, 0));
-							}
- 							else if (pRoadMark.roadMarks[index].type == RoadMarkType_StopLine) {
-								cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
-									cv::Point(pRoadMark.roadMarks[index].pixs2d[i + 1].x, pRoadMark.roadMarks[index].pixs2d[i + 1].y), cv::Scalar  (0, 255, 0));
-							}
-							else if (pRoadMark.roadMarks[index].type == RoadMarkType_CrossWalk) {
-								cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
-									cv::Point(pRoadMark.roadMarks[index].pixs2d[i + 1].x, pRoadMark.roadMarks[index].pixs2d[i + 1].y), cv::Scalar(0, 0, 255));
+					/*mRoadMarkMap[(int)(pRoadMark.frame*1000.0 / 60 + 0.5)] = pRoadMark;
+					auto iter = mRoadMarkMap.find(gDataImage.frame+16);
+					auto iter1 = mRoadMarkMap.find(gDataImage.frame -16);
+					auto iter2 = mRoadMarkMap.find(gDataImage.frame -83);
+
+					SimOne_Data_RoadMarkInfo pRoadMarkMap;
+
+					if (iter != mRoadMarkMap.end()) {
+						pRoadMarkMap = iter->second;
+						mRoadMarkMap.erase(iter->first);
+					}
+					else if (iter1 != mRoadMarkMap.end()) {
+						pRoadMarkMap = iter1->second;
+						mRoadMarkMap.erase(iter1->first);
+					}
+					else if(iter1 != mRoadMarkMap.end()){
+						pRoadMarkMap = iter2->second;
+						mRoadMarkMap.erase(iter2->first);
+					}
+					else {
+						printf("pGroundtruth.frame:%d, gDataImage.frame:%d\n", (int)(pRoadMark.frame*1000.0 / 60 + 0.5), gDataImage.frame);
+					}*/
+					{
+						
+						for (int index = 0; index < pRoadMark.detectNum; index++) {
+							for (int i = 0; i < pRoadMark.roadMarks[index].pointSize - 1; i++) {
+								if (pRoadMark.roadMarks[index].type == RoadMarkType_Graphics) {
+									cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
+										cv::Point(pRoadMark.roadMarks[index].pixs2d[i + 1].x, pRoadMark.roadMarks[index].pixs2d[i + 1].y), cv::Scalar(255, 0, 0), 2);
+								}
+								else if (pRoadMark.roadMarks[index].type == RoadMarkType_StopLine) {
+									cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
+										cv::Point(pRoadMark.roadMarks[index].pixs2d[i + 1].x, pRoadMark.roadMarks[index].pixs2d[i + 1].y), cv::Scalar(0, 255, 0), 2);
+								}
+								else if (pRoadMark.roadMarks[index].type == RoadMarkType_CrossWalk) {
+									cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
+										cv::Point(pRoadMark.roadMarks[index].pixs2d[i + 1].x, pRoadMark.roadMarks[index].pixs2d[i + 1].y), cv::Scalar(0, 0, 255), 2);
+								}
 							}
 						}
 					}

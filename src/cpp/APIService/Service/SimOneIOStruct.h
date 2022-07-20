@@ -798,7 +798,7 @@ struct SimOne_Data_LaneInfo :public SimOne_Data
 
 enum SimOne_RoadMark_Type {
 	RoadMarkType_UnKnown = 0,
-	RoadMarkType_Graphics = 1,
+	RoadMarkType_Graphics = 1, 
 	RoadMarkType_StopLine = 2,
 	RoadMarkType_CrossWalk = 3
 };
@@ -827,17 +827,16 @@ enum SimOne_RoadMark_SubType {
 #define SOSM_PIX_SIZE_MAX 64
 
 struct RoadMark_Entry{
-	int id;
-	SimOne_RoadMark_Type type;
-	SimOne_RoadMark_SubType subtype;
-	SimOne_Data_Vec3f center;
-	SimOne_Data_Vec3f rotation;
-	SimOne_Data_Vec3f size;
-	int pointSize;
-	SimOne_Data_Vec3f bbox3d[SOSM_PIX_SIZE_MAX];
-	SimOne_Data_Vec3f pixs2d[SOSM_PIX_SIZE_MAX];
+	int id;											//road mark id same as opendrive road mark id
+	SimOne_RoadMark_Type type;						//road mark type define in SimOne_RoadMark_Type
+	SimOne_RoadMark_SubType subtype;				//road mark sub define in SimOne_RoadMark_SubType
+	SimOne_Data_Vec3f center;						//center position in opendrive
+	SimOne_Data_Vec3f rotation;						//rotation in opendrive
+	SimOne_Data_Vec3f size;							//size as length width and hight
+	int pointSize;									//point size in opendrive coordinate and camera pix
+	SimOne_Data_Vec3f bbox3d[SOSM_PIX_SIZE_MAX];	//road mark bbox in world coordinate
+	SimOne_Data_Vec3f pixs2d[SOSM_PIX_SIZE_MAX];	//road mark bbox in pix coordinate
 };
-
 
 struct SimOne_Data_RoadMarkInfo : public SimOne_Data
 {
