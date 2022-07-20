@@ -188,21 +188,24 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 			pRoadMarkData->roadMarks[index].subtype = (SimOne_RoadMark_SubType)ImageDataSrc.roadmarks(index).subtype();
 			pRoadMarkData->roadMarks[index].center = { ImageDataSrc.roadmarks(index).center().x(), 
 				ImageDataSrc.roadmarks(index).center().y(),ImageDataSrc.roadmarks(index).center().z()};
+
 			pRoadMarkData->roadMarks[index].rotation = { ImageDataSrc.roadmarks(index).rotation().x(),
 				ImageDataSrc.roadmarks(index).rotation().y(),ImageDataSrc.roadmarks(index).rotation().z() };
+
 			pRoadMarkData->roadMarks[index].size = { ImageDataSrc.roadmarks(index).size().x(),
 				ImageDataSrc.roadmarks(index).size().y(),ImageDataSrc.roadmarks(index).size().z()};
-			pRoadMarkData->roadMarks[index].pointSize = ImageDataSrc.roadmarks(index).pixs2d().size();
 
+			pRoadMarkData->roadMarks[index].pointSize = ImageDataSrc.roadmarks(index).pixs2d().size();
+			;
 			for (int i = 0; i < pRoadMarkData->roadMarks[index].pointSize; i++)
 			{
-				pRoadMarkData->roadMarks[index].bbox3d->x = ImageDataSrc.roadmarks(index).bbox3d(i).x();
-				pRoadMarkData->roadMarks[index].bbox3d->y = ImageDataSrc.roadmarks(index).bbox3d(i).y();
-				pRoadMarkData->roadMarks[index].bbox3d->z = ImageDataSrc.roadmarks(index).bbox3d(i).z();
+				pRoadMarkData->roadMarks[index].bbox3d[i].x = ImageDataSrc.roadmarks(index).bbox3d(i).x();
+				pRoadMarkData->roadMarks[index].bbox3d[i].y = ImageDataSrc.roadmarks(index).bbox3d(i).y();
+				pRoadMarkData->roadMarks[index].bbox3d[i].z = ImageDataSrc.roadmarks(index).bbox3d(i).z();
 
-				pRoadMarkData->roadMarks[index].bbox3d->x = ImageDataSrc.roadmarks(index).pixs2d(i).x();
-				pRoadMarkData->roadMarks[index].bbox3d->y = ImageDataSrc.roadmarks(index).pixs2d(i).y();
-				pRoadMarkData->roadMarks[index].bbox3d->z =-1;
+				pRoadMarkData->roadMarks[index].pixs2d[i].x = ImageDataSrc.roadmarks(index).pixs2d(i).x();
+				pRoadMarkData->roadMarks[index].pixs2d[i].y = ImageDataSrc.roadmarks(index).pixs2d(i).y();
+				pRoadMarkData->roadMarks[index].pixs2d[i].z = -1;
 			}
 			
 		}

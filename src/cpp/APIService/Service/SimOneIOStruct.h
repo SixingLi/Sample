@@ -815,8 +815,8 @@ enum SimOne_RoadMark_SubType {
 	RoadMarkType_StraightOrLeftTurnArrow = 8,
 	RoadMarkType_StraightOrLeftOrRightTurnArrow = 9,
 	RoadMarkType_StraightOrRightTurnArrow = 10,
-	RoadMarkType_StraightOrUTurnArrow = 10,
-	RoadMarkType_UTurnArrow = 11
+	RoadMarkType_StraightOrUTurnArrow = 11,
+	RoadMarkType_UTurnArrow = 12
 };
 
 

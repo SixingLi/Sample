@@ -32,10 +32,10 @@ int main(int argc, char* argv[])
 		gPort = atoi(&*argv[2]);
 	}
 	printf("IP: %s; Port: %d\n", gIP.c_str(), gPort);
-	std::map<int, SimOne_Data_SensorDetections> mGroundtruthMap;
+	std::map<int, SimOne_Data_RoadMarkInfo> mRoadMarkMap;
 	bool isinit = SimOneAPI::InitSimOneAPI();
 	SimOneAPI::SetStreamingImageUpdateCB(gIP.c_str(), gPort, dataImageCallback);
-	SimOne_Data_SensorDetections pGroundtruth;
+	SimOne_Data_RoadMarkInfo pRoadMark;
 
 
 	int lastFrame = 0;
@@ -44,38 +44,25 @@ int main(int argc, char* argv[])
 		{
 			std::lock_guard<std::mutex> lock(gDataImageMutex);
 			if (gDataImage.frame != lastFrame) {
-				SimOneAPI::GetSensorDetections("0", "objectBasedCamera1", &pGroundtruth);
 				cv::Mat img(gDataImage.height, gDataImage.width, CV_8UC3, gDataImage.imageData);
-
-				mGroundtruthMap[(int)(pGroundtruth.frame*1000.0/60+0.5)] = pGroundtruth;
-				printf("pGroundtruth.frame:%d, gDataImage.frame:%d\n", (int)((int)(pGroundtruth.frame*1000.0 / 60 + 0.5)), gDataImage.frame);
-				auto iter = mGroundtruthMap.find(gDataImage.frame-16);
-				auto iter1 = mGroundtruthMap.find(gDataImage.frame - 49);
-				auto iter2 = mGroundtruthMap.find(gDataImage.frame -83);
-				if (iter != mGroundtruthMap.end()) {
-					for (int index = 0; index < iter->second.objectSize; index++) {
-						cv::rectangle(img, cv::Point(iter->second.objects[index].bbox2dMinX, iter->second.objects[index].bbox2dMinY),
-							cv::Point(iter->second.objects[index].bbox2dMaxX, iter->second.objects[index].bbox2dMaxY), cv::Scalar(0, 255, 0));
+				if (SimOneAPI::GetSensorRoadMarkInfo("0", "objectBasedCamera1", &pRoadMark)) {
+					for (int index = 0; index < pRoadMark.detectNum; index++) {
+						for (int i =  0; i < pRoadMark.roadMarks[index].pointSize-1; i++) {
+							if (pRoadMark.roadMarks[index].type == RoadMarkType_Graphics) {
+								cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
+									cv::Point(pRoadMark.roadMarks[index].pixs2d[i+1].x, pRoadMark.roadMarks[index].pixs2d[i+1].y), cv::Scalar(255, 0, 0));
+							}
+ 							else if (pRoadMark.roadMarks[index].type == RoadMarkType_StopLine) {
+								cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
+									cv::Point(pRoadMark.roadMarks[index].pixs2d[i + 1].x, pRoadMark.roadMarks[index].pixs2d[i + 1].y), cv::Scalar  (0, 255, 0));
+							}
+							else if (pRoadMark.roadMarks[index].type == RoadMarkType_CrossWalk) {
+								cv::line(img, cv::Point(pRoadMark.roadMarks[index].pixs2d[i].x, pRoadMark.roadMarks[index].pixs2d[i].y),
+									cv::Point(pRoadMark.roadMarks[index].pixs2d[i + 1].x, pRoadMark.roadMarks[index].pixs2d[i + 1].y), cv::Scalar(0, 0, 255));
+							}
+						}
 					}
-					//mGroundtruthMap.erase(iter->first);
 				}
-				else if(iter1 != mGroundtruthMap.end()){
-					for (int index = 0; index < iter1->second.objectSize; index++) {
-						cv::rectangle(img, cv::Point(iter1->second.objects[index].bbox2dMinX, iter1->second.objects[index].bbox2dMinY),
-							cv::Point(iter1->second.objects[index].bbox2dMaxX, iter1->second.objects[index].bbox2dMaxY), cv::Scalar(0, 255, 0));
-					}
-					cv::imshow("51Sim-One Camera Video Injection", img);
-					//mGroundtruthMap.erase(iter1->first);
-				}
-				else if (iter2 != mGroundtruthMap.end()) {
-					for (int index = 0; index < iter1->second.objectSize; index++) {
-						cv::rectangle(img, cv::Point(iter2->second.objects[index].bbox2dMinX, iter2->second.objects[index].bbox2dMinY),
-							cv::Point(iter2->second.objects[index].bbox2dMaxX, iter2->second.objects[index].bbox2dMaxY), cv::Scalar(0, 255, 0));
-					}
-					cv::imshow("51Sim-One Camera Video Injection", img);
-					//mGroundtruthMap.erase(iter2->first);
-				}
-				//mGroundtruthMap[pGroundtruth.timestamp] = pGroundtruth;
 				cv::imshow("51Sim-One Camera Video Injection", img);
 				lastFrame = gDataImage.frame;
 			}
