@@ -166,7 +166,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 		TaskSensorManager::getInstance().mpSensorDetectionsUpdateCB(mainVehId, sensorId.c_str(), pImageDetections);
 	}
 
-	if (ImageDataSrc.roadmarks().size()>0) {
+	if (true) {
 		SimOne_Data_RoadMarkInfo *pRoadMarkData = NULL;
 		SimOne_Data_Object_RoadMarkMap::iterator it = mLastObjectRoadMarkMap.find(sensorKey);
 		if (it != mLastObjectRoadMarkMap.end()) {
@@ -196,7 +196,7 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 				ImageDataSrc.roadmarks(index).size().y(),ImageDataSrc.roadmarks(index).size().z()};
 
 			pRoadMarkData->roadMarks[index].pointSize = ImageDataSrc.roadmarks(index).pixs2d().size();
-			;
+			
 			for (int i = 0; i < pRoadMarkData->roadMarks[index].pointSize; i++)
 			{
 				pRoadMarkData->roadMarks[index].bbox3d[i].x = ImageDataSrc.roadmarks(index).bbox3d(i).x();
@@ -207,10 +207,9 @@ uint16_t  TaskImage::Do(std::uint32_t sensorType, std::uint32_t commanId, CTaskS
 				pRoadMarkData->roadMarks[index].pixs2d[i].y = ImageDataSrc.roadmarks(index).pixs2d(i).y();
 				pRoadMarkData->roadMarks[index].pixs2d[i].z = -1;
 			}
-			
+			mLastObjectRoadMarkMap[sensorKey] = pRoadMarkData;
 		}
-
-		mLastObjectRoadMarkMap[sensorKey] = pRoadMarkData;
+		
 		if (TaskSensorManager::getInstance().mpRoadMarkDetectionsUpdateCB != NULL)
 		{
 			TaskSensorManager::getInstance().mpRoadMarkDetectionsUpdateCB(mainVehId, sensorId.c_str(), pRoadMarkData);

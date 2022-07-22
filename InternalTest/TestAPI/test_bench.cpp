@@ -298,6 +298,11 @@ void tester::Test_GetSensorRoadMark(bool IsCallBackMode)
 			if (flag && pRoadMark->frame != lastFrame)
 			{
 				lastFrame = pRoadMark->frame;
+				for (int index = 0; index < pRoadMark->detectNum; index++) {
+					if(pRoadMark->roadMarks[index].id==22)
+						std::cout <<"size ="<< pRoadMark->detectNum<< " id= "<< pRoadMark->roadMarks[index].id<<" type = "<<(int)pRoadMark->roadMarks[index].type << " subType = " << (int)pRoadMark->roadMarks[index].subtype << " pRoadMark.center" << "ги" << pRoadMark->roadMarks[index].center.x << ", "
+							<< pRoadMark->roadMarks[index].center.y << ", " << pRoadMark->roadMarks[index].center.z << ")" <<" pRoadMark->roadMarks[index].pix3d[0] ("<< pRoadMark->roadMarks[index].bbox3d[0].x <<", " <<pRoadMark->roadMarks[index].bbox3d[0].y << ", " << pRoadMark->roadMarks[index].bbox3d[0].z <<")"<< std::endl;
+				}
 
 				std::cout << "pRoadMark's size = " << pRoadMark->detectNum << std::endl;
 				//dbg_data.dump_sensor_detections(mainVehicleId.c_str(), "objectBasedCamera1", pRoadMark.get());
