@@ -332,7 +332,42 @@ extern "C"
 		*/
 		SIMONE_API bool SetSensorLaneInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLaneInfo));
 
-	}
+		/*!
+		获取传感器检测到地面喷漆信息包括车道停止线、地面箭头、人行横道线
+		\li function:
+		*	GetSensorRoadMarkInfo
+		\li brief:
+		*	Get RoadMark info for current sensor, support camera sensor
+		@param[in]
+		*	mainVehicleId: Id of the main vehicle
+		@param[in]
+		*	sensorId: Sensor Index
+		@param[out]
+		*	pRoadMarkInfo: SimOne_Data_RoadMarkInfo data
+		@return
+		*	Success or not
+		*/
+		SIMONE_API bool GetSensorRoadMarkInfo(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMarkInfo);
+
+		/*!
+		获取传感器检测到地面喷漆信息包括车道停止线、地面箭头、人行横道线数据回调
+		\li function:
+		*	SetSensorRoadMarkInfoCB
+		\li brief:
+		*	Register the callback func applying for road mark from current sensor, support camera sensors.
+		@param
+		*   mainVehicleId: Vehicle index, configure order of web UI, starts from 0
+		@param[in]
+		*	cb: RoadMark data fetch callback function
+		*	param[out]
+		*	mainVehicleId: Id of the main vehicle
+		*	sensorId: Sensor Index
+		*	pRoadMarkInfo: road mark data
+		@return
+		*	Success or not
+		*/
+		SIMONE_API bool SetSensorRoadMarkInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMarkInfo));
+		}
 #ifdef __cplusplus
 }
 #endif

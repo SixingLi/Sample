@@ -17,9 +17,9 @@ void dumper::dump_gps(const char* mainVehicleId, SimOne_Data_Gps* pData)
 	std::cout << "throttle: " << pData->throttle << std::endl;
 	std::cout << "brake: " << pData->brake << std::endl;
 	std::cout << "steering: " << pData->steering << std::endl;
-	std::cout << "gear: " << pData->gear << std::endl;
+	std::cout << "gear: " << pData->gear << std::endl;*/
 	std::cout << "accelX/Y/Z: " << pData->accelX << ", "  << pData->accelY << ", " << pData->accelZ << "]" << std::endl;
-	std::cout << "angVelX/Y/Z: " << pData->angVelX << ", "  << pData->angVelY << ", " << pData->angVelZ << "]" << std::endl;
+	/*std::cout << "angVelX/Y/Z: " << pData->angVelX << ", "  << pData->angVelY << ", " << pData->angVelZ << "]" << std::endl;
 	std::cout << "wheelSpeedFL: " << pData->wheelSpeedFL << std::endl;
 	std::cout << "wheelSpeedFR: " << pData->wheelSpeedFR << std::endl;
 	std::cout << "wheelSpeedRL: " << pData->wheelSpeedRL << std::endl;

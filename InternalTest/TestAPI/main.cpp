@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	double forward = 2000;
 
 	bool isJoinTimeLoop = false;
-	const char* serverIP = "10.66.9.111";
+	const char* serverIP = "127.0.0.1";
 	SimOneAPI::InitSimOneAPI(mv_id, isJoinTimeLoop, serverIP);
 	if (!SimOneAPI::LoadHDMap(50)) {
 		std::cout << "load map failed!!!" << std::endl;
@@ -55,6 +55,8 @@ int main(int argc, char* argv[])
 
 	//t.Test_GPS(false);
 	//t.Test_SensorDetections(true);
+	 //t.Test_GetSensorDetections(false); 
+	 //t.Test_GetSensorRoadMark(false);
 	// t.Test_GetMainVehicleStatus(true);
 	//t.Test_RadarDetection(false);
 	//t.Test_GetGroundTruth(false);

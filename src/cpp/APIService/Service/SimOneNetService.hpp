@@ -203,6 +203,7 @@ public:
 	bool SetPointCloudUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_Point_Cloud *pPointCloud));
 	bool SetRadarDetectionsUpdateCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RadarDetection *pDetections));
 	bool SetSensorLaneInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_LaneInfo *pLane));
+	bool SetSensorRoadMarkInfoCB(void(*cb)(const char* mainVehicleId, const char* sensorId, SimOne_Data_RoadMarkInfo *pRoadMark));
 
 #ifndef WITHOUT_HDMAP
 	static bool GetHDMapData(SimOne_Data_Map* hdMap);
