@@ -69,10 +69,12 @@ int main(int argc, char* argv[])
 	// t.Test_SetVehicleEvent();
 	// t.Test_GetWayPoints();
 
-	std::thread thread_img(&thread_func_streaming_img, &t);
-	thread_img.detach();
-	std::thread thread_rle(&thread_func_streaming_rle, &t);
-	thread_rle.detach();
+	t.Test_SetTrajectory();
+
+	// std::thread thread_img(&thread_func_streaming_img, &t);
+	// thread_img.detach();
+	// std::thread thread_rle(&thread_func_streaming_rle, &t);
+	// thread_rle.detach();
 
 	while (1)
 	{

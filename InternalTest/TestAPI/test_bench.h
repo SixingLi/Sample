@@ -85,6 +85,7 @@ class tester
 		// ------ bool SetDrive(const char* mainVehicleId, SimOne_Data_Control *pControl);
 		// ------ bool SetDriveTrajectory(const char* mainVehicleId, SimOne_Data_Control_Trajectory *pControlTrajectory);
 		// ------ void SetDriverName(const char* mainVehicleId, const char* name);
+		void Test_SetTrajectory();
 		void Test_SetVehicleEvent();
 		// ------ bool SetSignalLights(const char* mainVehicleId, SimOne_Data_Signal_Lights *pSignalLights);
 		// ------ bool GetDriverStatus(const char* mainVehicleId, SimOne_Data_Driver_Status* pDriverStatus);

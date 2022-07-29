@@ -302,7 +302,7 @@ void tester::Test_GetSensorRoadMark(bool IsCallBackMode)
 				lastFrame = pRoadMark->frame;
 				for (int index = 0; index < pRoadMark->detectNum; index++) {
 					if(pRoadMark->roadMarks[index].id==22)
-						std::cout <<"size ="<< pRoadMark->detectNum<< " id= "<< pRoadMark->roadMarks[index].id<<" type = "<<(int)pRoadMark->roadMarks[index].type << " subType = " << (int)pRoadMark->roadMarks[index].subtype << " pRoadMark.center" << "£¨" << pRoadMark->roadMarks[index].center.x << ", "
+						std::cout <<"size ="<< pRoadMark->detectNum<< " id= "<< pRoadMark->roadMarks[index].id<<" type = "<<(int)pRoadMark->roadMarks[index].type << " subType = " << (int)pRoadMark->roadMarks[index].subtype << " pRoadMark.center" << "ï¿½ï¿½" << pRoadMark->roadMarks[index].center.x << ", "
 							<< pRoadMark->roadMarks[index].center.y << ", " << pRoadMark->roadMarks[index].center.z << ")" <<" pRoadMark->roadMarks[index].pix3d[0] ("<< pRoadMark->roadMarks[index].bbox3d[0].x <<", " <<pRoadMark->roadMarks[index].bbox3d[0].y << ", " << pRoadMark->roadMarks[index].bbox3d[0].z <<")"<< std::endl;
 				}
 
@@ -551,6 +551,36 @@ void tester::Test_GetNearLanes()
 	}
 }
 
+void tester::Test_SetTrajectory()
+{
+	while (true)
+	{
+		std::unique_ptr<SimOne_Data_Gps> pGps = std::make_unique<SimOne_Data_Gps>();
+		std::unique_ptr<SimOne_Data_Trajectory> pTrajectory = std::make_unique<SimOne_Data_Trajectory>();
+
+		if (!SimOneAPI::GetGps(mainVehicleId.c_str(), pGps.get()))
+		{
+			std::cout << "Get GPS Fail" << std::endl;
+			continue;
+		}
+		pTrajectory->trajectorySize = 20;
+		pTrajectory->trajectory[0].posX = pGps->posX;
+		pTrajectory->trajectory[0].posY = pGps->posY;
+		pTrajectory->trajectory[0].vel = pGps->velX;
+		for (int i=1; i<pTrajectory->trajectorySize; i++)
+		{
+			pTrajectory->trajectory[i].posX = pGps->posX+i;
+			pTrajectory->trajectory[i].posY = pGps->posY+i;
+			pTrajectory->trajectory[i].vel = pGps->velX;
+		}
+
+		if (!SimOneAPI::SetTrajectory(mainVehicleId.c_str(), pTrajectory.get()))
+		{
+			std::cout << "SetTrajectory Failed!" << std::endl;
+		}
+	}
+}
+
 void tester::Test_SetVehicleEvent()
 {
 	SimOne_Data_Vehicle_EventInfo event; 
@@ -716,3 +746,4 @@ void tester::Test_GetStreamingPointCloud(const  char* ip, unsigned short port, u
 		}
 	}
 }
+

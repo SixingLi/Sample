@@ -41,6 +41,11 @@ extern "C"
 		return SimOneAPIService::GetInstance()->sendVehicleDriveModeReq(mainVehId, driveMode);
 	}
 
+	SIMONE_API bool SimOneAPI::SetTrajectory(const char* mainVehicleId, SimOne_Data_Trajectory *Trajectory) {
+		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
+		return SimOneAPIService::GetInstance()->sendVehicleTrajectory(mainVehId, Trajectory, gDriverNameArray[mainVehId]);
+	}
+
 	SIMONE_API bool SimOneAPI::SetDriveTrajectory(const char* mainVehicleId, SimOne_Data_Control_Trajectory *pControlTrajectory) {
 		int mainVehId = SimOneAPIService::string2Int(mainVehicleId);
 		return SimOneAPIService::GetInstance()->sendVehicleTrajectoryControlReq(mainVehId, pControlTrajectory, gDriverNameArray[mainVehId]);

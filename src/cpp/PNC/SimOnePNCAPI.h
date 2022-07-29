@@ -132,6 +132,21 @@ extern "C"
 		SIMONE_API bool SetDriveMode(const char* mainVehicleId, ESimOne_Drive_Mode driveMode);
 
 		/*!
+		预测轨迹设置
+		\li function:
+		*	SetTrajectory
+		\li brief:
+		*	Set vehicle waypoints
+		@param
+		*   mainVehicleId: Vehicle index, configuration order from scenario editing, starting from 0
+		@param[in]
+		*   pTrajectory: vehicle trajectory data(input)
+		@return
+		*	Success or not
+		*/
+		SIMONE_API bool SetTrajectory(const char* mainVehicleId, SimOne_Data_Trajectory *Trajectory);
+
+		/*!
 		主车控制
 		\li function:
 		*	SetDrive by planning trajectory. Not to use with SetDrive at the same time

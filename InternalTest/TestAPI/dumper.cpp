@@ -735,15 +735,15 @@ void dumper::dump_streaming_image(SimOne_Streaming_Image* pData, const char* pre
 	{
 	case ESimOne_Streaming_Image_Format_RGB:
 		std::cout << prefix << "format: ESimOne_Streaming_Image_Format_RGB" << std::endl;
-	break;
-	case ESimOne_Streaming_Image_Format_RLESegmentation:
-		std::cout << prefix << "format: ESimOne_Streaming_Image_Format_RLESegmentation" << std::endl;
-	break;
-	case ESimOne_Streaming_Image_Format_JPEG:
-		std::cout << prefix << "format: ESimOne_Streaming_Image_Format_JPEG" << std::endl;
-	break;
-	case ESimOne_Streaming_Image_Format_H265:
-		std::cout << prefix << "format: ESimOne_Streaming_Image_Format_H265" << std::endl;
+		break;
+	// case ESimOne_Streaming_Image_Format_RLESegmentation:
+	// 	std::cout << prefix << "format: ESimOne_Streaming_Image_Format_RLESegmentation" << std::endl;
+	// break;
+	// case ESimOne_Streaming_Image_Format_JPEG:
+	// 	std::cout << prefix << "format: ESimOne_Streaming_Image_Format_JPEG" << std::endl;
+	// break;
+	// case ESimOne_Streaming_Image_Format_H265:
+	// 	std::cout << prefix << "format: ESimOne_Streaming_Image_Format_H265" << std::endl;
 	}
 	std::cout << prefix << "imageDataSize: " << pData->imageDataSize << std::endl;
 	// char imageData[SOSM_IMAGE_DATA_SIZE_MAX]; // 1920 x 1200 x 3 max
