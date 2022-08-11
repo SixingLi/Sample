@@ -17,7 +17,7 @@ ENDIF()
 
 add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 
-OPTION(TestAPI "Build ${CMAKE_BUILD_NAME} TestAPI" ON)
+OPTION(TestAPI "Build ${CMAKE_BUILD_NAME} TestAPI" OFF)
 IF (TestAPI)
 	add_definitions(-DTestAPI)
 ENDIF()
